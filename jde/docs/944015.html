@@ -1,0 +1,1282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frequently Asked Questions on Caching in EnterpriseOne</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>doseo - Caching --- title of document comes here</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The purpose of JD Edwards' JDB Database Caching is for <strong>Data Integrity/Coherency</strong> and <strong>Performance Improvement</strong>. Since cache is written to Memory (RAM) it yields better performance (avoiding round trips to database) and it is Shared Cache (read-only cache) coherency problems are easily avoided (so this may cause Dirty/Phantom Reads) for data which are requested frequently/repeatedly. <br /><br />This document will briefly explain frequently asked questions from an end-user's point of view. This document explains <span style="font-weight: bold;">server</span> (as response for a certain request) and <span style="font-weight: bold;">client</span> (issuing request) based on HTML client configuration.</p>
+<p>For cache information and troubleshooting the different scenarios, causes and resolutions for caching issues in Server Manager, refer to &lt;Document 866662.1&gt; - Cache Information And Troubleshooting Caching Issues In Server Manager.</p>
+
+<p> </p>
+<h3 class="km"><big><big><a name="Q1"></a><span style="font-size: medium;"><small>Q1. What is Environment Cache and what tables belong to this cache?</small></span></big></big></h3>
+<p><big><span style="color: red;">Environment Cache</span></big> is the cache which is initialized during E1 login or when starting JDE service(s). This concept is similar to PGA (Program Global Area), a memory region that stores the data and control information for the server processes. Some of the tables that are cached:</p>
+<table class="km" style="width: 412px; height: 153px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; width: 95px; color: white;">TABLE</th>
+<th class="km" style="background-color: #009900; width: 304px; color: white;">TABLE NAME/DESC</th>
+</tr>
+<tr>
+<td class="km" style="width: 95px;">F0009</td>
+<td class="km" style="width: 304px;">General Constants</td>
+</tr>
+<tr>
+<td class="km" style="width: 95px;">F0010</td>
+<td class="km" style="width: 304px;">Company Constants</td>
+</tr>
+<tr>
+<td class="km" style="width: 95px; text-decoration: line-through;">F00921</td>
+<td class="km" style="width: 304px; text-decoration: line-through;">User Display Preferences</td>
+</tr>
+<tr>
+<td class="km" style="width: 95px;">F4009</td>
+<td class="km" style="width: 304px;">Distribution/Manufacturing Constants</td>
+</tr>
+<tr>
+<td class="km" style="width: 95px;">F0092</td>
+<td class="km" style="width: 304px;">Library List - Users</td>
+</tr>
+</tbody>
+</table>
+<p><br /> If any value for the above tables change, the change will take effect after logging off and back on to EnterpriseOne.</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>The table F0009 is unique from above list as this file belongs to neither Service Cache nor Database Cache</li>
+<li>Since F0009 is to control entire EnterpriseOne behavior, try not to change after JDE service has been started</li>
+<li>If a certain Call Object Kernel process is running the change made against the table F0009 may not affect transaction within existing process</li>
+<li>F00921 (User Display Preference) is re-categorized from Environment Cache to User Cache</li>
+<li>Only default company belongs to environment cache in caching Company Constants (F0010)</li>
+<ul>
+<li>Actual query is SELECT CCCO,<strong>CCCRCD</strong>,<strong>CCCRYR</strong>,<strong>CCBKTX</strong>,<strong>CCABIN </strong>FROM PDCURYDTA.F0010 WHERE (CCCO = '00000' )  </li>
+<li><strong>CRCD </strong>- Currency Code - From (<em>CurrencyCodeFrom</em>)</li>
+<li><strong>CRYR </strong>- Currency Conversion Y/N/Z (<em>CurrencyConverYNAR</em>) this is important flag as based on this value it determines system variable SL CurrencyProcessing</li>
+<li>BKTX - Detailed Currency Restatement (<em>BookToTax</em>)</li>
+<li>ABIN - Post Account Balances by Currency (<em>AddressBookInterface</em>)</li>
+<li>Last two columns BKTX and ABIN are changed the usage</li>
+</ul>
+<li>So if it is crucial to change any value against the table F0009,</li>
+<ul>
+<li>Either put running call object kernel process into Kernel Recycling</li>
+<li>Or restart JDE service</li>
+</ul>
+<li>DD Alias <strong>DCYR </strong>(Century Cutoff Year (EnterpriseOne), to get default value) will be cached at this level</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p><strong><br /> </strong></p>
+<h3 class="km"><big><big><a name="Q2"></a><span style="font-size: medium;"><small>Q2. When is the JDB Database Cache Loaded?</small></span></big></big></h3>
+<p>The list of tables defined in <span style="font-weight: bold; text-decoration: underline;">Business View Environment Server (F98613)</span> are <span style="color: red;">NOT pre-loaded into cache during JDE startup.</span> EnterpriseOne reads defined tables in F98613 at startup time, opens the tables specified and caches the information about which tables to be kept in JDB Database cache. In F98613, each table has a limit of how many rows/how much memory will be stored for that table. As the applications fetch a specific row, they are added to cache; and if it exceeds its limit which will be flushed.</p>
+<hr />
+<p> </p>
+<h3 class="km"><span style="font-size: medium;"><big><big><a name="Q3"></a><span style="font-size: medium;"><small>Q3. When is the JDB Database Cache Used?</small></span></big></big></span></h3>
+<p><big>ONLY WHEN</big> it meets the following conditions in a certain EnterpriseOne Business Function:</p>
+<ul>
+<li>    If <span style="color: red;">the table is defined in F98613 AND</span></li>
+<li>    If the business function issued <span style="color: red;">JDB API</span><span style="color: red;">JDB_FetchKeyed() AND</span></li>
+<li>    If the business function <span style="color: red;">specified the Primary key in the Selection AND</span></li>
+<li>    If the business function <span style="color: red;">specified all of the columns as return values</span> in the primary key in the Selection</li>
+</ul>
+<p>When a business function issues a JDB_FetchKeyed(), JDB checks whether that table is defined in F98613.  It will first search cache for the requested record.  If the row is not in cached, it fetches the row from the table and adds it to cache. One of the other JDB I/O APIs uses JDB DB cache. In Performance Viewer, a read from JDB DB cache shows up as a call to JDB_FetchKeyedCache(). In a certain batch, tables can be added to initiate database cache by calling business function B4101380 - CacheTableForUBE.</p>
+
+
+<p><img src="../images/caching_.png" border="0" alt="Database Cache flow" title="Database Cache flow" hspace="0" vspace="0"/></p>
+<hr />
+
+
+<p> </p>
+<h3 class="km"><big><big><a name="Q4"></a><span style="font-size: medium;"><small>Q4. What kind of information is cached in JAS (Java Application Server)?</small></span></big></big></h3>
+<p>The following information will be cached by JAS.  These caches will be handled by JVM in memory (RAM). For example:</p>
+<ul>
+<li>    Data Dictionary Alpha Cache (c.f., DDTEXT)</li>
+<li>    JDBJ OCM Cache</li>
+<li>    Row Column Cache (c.f., FDATEXT)</li>
+<li>    JDBj Service Cache (refer Service Cache)</li>
+<li>    Menu Cache (from F989998/F989999)</li>
+<li>    Data Dictionary Glossary Text (F00165 -Media Object)</li>
+<li>    JDBj Security Cache</li>
+<li>    Serialized Objects (Object Cache data in F989998/F989999 - Java Persistent Data)</li>
+</ul>
+<p>Object cache will contain conventional TAMSpec information. Note that synchronization of this information is important among Central Objects, Serialized Objects and Object Cache.</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>Object Cache can be referred to as RuntimeCache, TAMSpec or metadata per its own usage and status of information.</li>
+<li>Web Browser may use JSP (JavaServer Pages). Detail information how to delete jsp cache can be found at Q28. <a href="#Q28" alt="What is JSP Cache and how to clear JSP Cache?" title="What is JSP Cache and how to clear JSP Cache?">What is JSP Cache and how to clear JSP Cache?</a></li>
+<li>Refer to &lt;Document 1142313.1&gt;<em> E1: ENV: Master Note on Specification (SPEC) in EnterpriseOne</em></li>
+</ul>
+</div>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q5"></a><span style="font-size: medium;"><small>Q5. What kind of information is cached in Logic Server (where BSFNs and UBEs run)?</small></span></big></big></h3>
+<p>Tables that are cached:</p>
+<table style="width: 438px; border-collapse: collapse; height: 146px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 43pt;" width="57" /><col style="width: 215pt;" width="286" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="background-color: #009900; width: 43pt; height: 12.75pt; color: white;">TABLE</th>
+<th style="background-color: #009900; width: 215pt; color: white;">TABLE NAME/DESC</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">F98613</td>
+<td>Database Caching (Table Defined from F98613)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">F98611</td>
+<td>Data Source Master</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">F983051</td>
+<td>Version List (Processing Option)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">F986101</td>
+<td>Object Configuration Master (OCM)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">F00950</td>
+<td>Security Workbench Table (Runtime Security)</td>
+</tr>
+</tbody>
+</table>
+<p>These tables caching fulfill higher data integrity in general. The sequence of cached data will be identical to the sequence of primary key of tabled defined as it returns the best performance in searching data.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q6"></a><span style="font-size: medium;"><small>Q6. Are any other tables cached on the Server other than for object cache?</small></span></big></big></h3>
+<p>It varies between Tools Releases.  For example, JDE makes use of KRNLSPEC.zip to cache bootstrap tables.  The tables defined below are hard coded so overriding OCM will not take effect.  Examples are, KRNLSPEC.zip.  Refer to &lt;Document 644929.1&gt; <em>E1: DD: Impact of Changing a Bootstrap Table Data Dictionary Item.<br /> </em></p>
+<table style="width: 417px; border-collapse: collapse; height: 495px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 101pt;" width="134" /><col style="width: 215pt;" width="286" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="background-color: #009900; width: 112px; height: 12.75pt; color: white;">TABLE</th>
+<th style="background-color: #009900; width: 297px; color: white;">TABLE NAME/DESC</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 112px; height: 12.75pt;" height="17">F00165</td>
+<td style="width: 297px;">Media Objects storage</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F0092</td>
+<td style="width: 297px; vertical-align: top;">Library Lists - User</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00921</td>
+<td style="width: 297px; vertical-align: top;">User Display Preferences</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00922</td>
+<td style="width: 297px; vertical-align: top;">User Preference Tag File</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00924</td>
+<td style="width: 297px; vertical-align: top;">User Install Package</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00925</td>
+<td style="width: 297px; vertical-align: top;">User Access Definition</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00926</td>
+<td style="width: 297px; vertical-align: top;">Anonymous User Access Table</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F0093</td>
+<td style="width: 297px; vertical-align: top;">Library List Control</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F0094</td>
+<td style="width: 297px; vertical-align: top;">Library List Master File</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00941</td>
+<td style="width: 297px; vertical-align: top;">Environment Detail - One World</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00942</td>
+<td style="width: 297px; vertical-align: top;">Object Path Master File</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00945</td>
+<td style="width: 297px; vertical-align: top;">Release Master</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00948</td>
+<td style="width: 297px; vertical-align: top;">Release/Data Source Map</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F00960</td>
+<td style="width: 297px; vertical-align: top;">Machine/Group Identification</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F9200</td>
+<td style="width: 297px; vertical-align: top;">Data Item Master</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F9202</td>
+<td style="width: 297px; vertical-align: top;">Data Field Display Text</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F9203</td>
+<td style="width: 297px; vertical-align: top;">Data Item Alpha Descriptions</td>
+</tr>
+<tr>
+<td style="width: 112px; vertical-align: top;">F9207</td>
+<td style="width: 297px; vertical-align: top;">Data Dictionary - Error Message Information</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9210</td>
+<td style="vertical-align: top;">Data Field Specifications (OneWorld)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9211</td>
+<td style="vertical-align: top;">Data Dictionary - Smart Field</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9312</td>
+<td style="vertical-align: top;">Security History</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F95921</td>
+<td style="vertical-align: top;">Role Relationship Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9650</td>
+<td style="vertical-align: top;">Machine Master</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98101</td>
+<td style="vertical-align: top;">Imaging Constants</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F983051</td>
+<td style="vertical-align: top;">Version List</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9860</td>
+<td style="vertical-align: top;">Object Librarian Master Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9861</td>
+<td style="vertical-align: top;">Object Librarian - Status Detail</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F986101</td>
+<td style="vertical-align: top;">Object Configuration Master</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98611</td>
+<td style="vertical-align: top;">Data Source Master</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F986111</td>
+<td style="vertical-align: top;">Job Number Master File</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98613</td>
+<td style="vertical-align: top;">Business View Environmental Server (Database Caching)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9862</td>
+<td style="vertical-align: top;">Object Librarian - Function Detail</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9863</td>
+<td style="vertical-align: top;">Object Librarian - Object Relationships</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9865</td>
+<td style="vertical-align: top;">Form Information File</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98710</td>
+<td style="vertical-align: top;">Table Header</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98711</td>
+<td style="vertical-align: top;">Table Columns</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98712</td>
+<td style="vertical-align: top;">Primary Index Header</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98713</td>
+<td style="vertical-align: top;">Primary Index Detail</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98720</td>
+<td style="vertical-align: top;">Business View Specfication</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98740</td>
+<td style="vertical-align: top;">Event Rules - Link Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98741</td>
+<td style="vertical-align: top;">Event Rules - Specification Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98743</td>
+<td style="vertical-align: top;">Data Structure Templates</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98745</td>
+<td style="vertical-align: top;">Smart Field Named Mappings</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98750</td>
+<td style="vertical-align: top;">Forms Design Aid Text Information</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98751</td>
+<td style="vertical-align: top;">Forms Design Aid Specification Info</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98752</td>
+<td style="vertical-align: top;">Forms Design Aid/Software Versions Repository Header Info</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98753</td>
+<td style="vertical-align: top;">Forms Design Aid/Software Versions Repository Detail Info</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98760</td>
+<td style="vertical-align: top;">Report Design Aid Text Information</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98761</td>
+<td style="vertical-align: top;">Report Design Aid Specification Info</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98762</td>
+<td style="vertical-align: top;">JDEBLC - Behavior Information</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9885</td>
+<td style="vertical-align: top;">Install Package Header</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9887</td>
+<td style="vertical-align: top;">Install Package Build History</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9888</td>
+<td style="vertical-align: top;">Merge Log</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9889</td>
+<td style="vertical-align: top;">Deployment Location Master</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98891</td>
+<td style="vertical-align: top;">Deployment Location Path Code</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98950</td>
+<td style="vertical-align: top;">User Override Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98DRENV</td>
+<td style="vertical-align: top;">Data Replication Environment Mapping Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98DRPUB</td>
+<td style="vertical-align: top;">Data Replication Publisher</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98DRSUB</td>
+<td style="vertical-align: top;">Data Replication Subscribers</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F98OWSEC</td>
+<td style="vertical-align: top;">OneWorld Security</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox"><strong>Notes:</strong> <br />
+<ul>
+<li>The industry definition of <span style="font-weight: bold;">Bootstrap</span> (<em>"a summary of the process of a simple computer system activating a more complicated computer system or, a self-sustaining process that proceeds without external help"</em>) implies, JDE Service needs restarting to take effect on changes made against the above listed tables for some instances.  Refer to:</li>
+<li>&lt;Document 1348278.1&gt; <em>E1: DB: List of Tables Owned by Server Map (SVM900)</em></li>
+<li>&lt;Document 1142313.1&gt; <em>E1: ENV: Overview of Specification (SPEC) in EnterpriseOne</em></li>
+<li>To find list of tables used by any E1 application, review &lt;Document 1523804.1&gt;<em> E1: How To Generate a List of Tables Updated by a JD Edwards EnterpriseOne Application</em> - for details.</li>
+</ul>
+</div>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q7"></a><span style="font-size: medium;"><small>Q7. Can a custom Service Cache and/or Database Cache be defined?</small></span></big></big></h3>
+<p>Yes.  Ideally you can define your own cache but we discourage you from adding it because it may cause other issues. One possible reason is that the JDE API will determine whether to read the cache table or physical table so this has to work with the actual C code available in executing a certain transaction. As we have discussed earlier, the purpose of caching is not only to have better performance but also to maintain higher consistency across the system.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q8"></a><span style="font-size: medium;"><small>Q8. Where to find information on Database Caching and Service Cache?</small></span></big></big></h3>
+<p>The different caches are as follows:</p>
+<ul>
+<li style="color: red;">Database Cache</li>
+<ul>
+<li>Log on WebDev/HTML client</li>
+<li>Fast Path to P98613 (Work with Database Caching)<br />  </li>
+</ul>
+<li style="color: red;">Service Cache</li>
+<ul>
+<li>Do not change defined values/tables as it may cause unexpected results when running certain applications;</li>
+<li>You can get this information from \System_JAR\com\jdedwards\database\services\serviceobj\ on your JAS server to check tables which are members of ServiceCache in OAS (c.f., ...\webclient.war\WEB-INF\lib for WAS).</li>
+</ul>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q9"></a><span style="font-size: medium;"><small>Q9. Is there a full list of tables for Database Cache and Service Cache?</small></span></big></big></h3>
+<p>P98613 (Work With Database Caching) application will list all tables cached within your own environment because the tables defined can vary between EnterpriseOne versions and Tools Releases. Below is a <em>basic </em>list of tables where data are cached. </p>
+<ul style="color: red;">
+<ul style="color: red;">
+<li><big>Database Cache in Logic server and FAT client</big></li>
+</ul>
+</ul>
+<table style="text-align: left; width: 770px; height: 1756px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="background-color: #009900; color: white; vertical-align: top;">Table</th>
+<th style="background-color: #009900; color: white; vertical-align: top;">Table Name/Description</th>
+<th style="background-color: #009900; color: white; vertical-align: top;">Others</th>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0004</td>
+<td style="vertical-align: top;">User Defined Code Types</td>
+<td style="vertical-align: top;">Database Cache &amp; Service Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0005</td>
+<td style="vertical-align: top;">User Defined Codes</td>
+<td style="vertical-align: top;">Database Cache &amp; Service Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0006</td>
+<td style="vertical-align: top;">Cost Center Master</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0007</td>
+<td style="vertical-align: top;">Work Day Calendar</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0008</td>
+<td style="vertical-align: top;">Date Fiscal Patterns</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0010</td>
+<td style="vertical-align: top;">Company Constants</td>
+<td style="vertical-align: top;">Database Cache &amp; Service Cache<br /> * In Xe and ERP8, this table is not a member of Database Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F0010T</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Company Constants Tag Table</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for Dynamic Cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0012</td>
+<td style="vertical-align: top;">Automatic Accounting Instructions Mater</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0013</td>
+<td style="vertical-align: top;">Currency Codes</td>
+<td style="vertical-align: top;">Database Cache &amp; Service Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0014</td>
+<td style="vertical-align: top;">Payment Terms</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F00141</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Advanced Payment Terms</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for Dynamic Cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F00144</td>
+<td style="vertical-align: top;">Installment Payment Terms</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0015</td>
+<td style="vertical-align: top;">Currency Exchange Rates</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0022</td>
+<td style="vertical-align: top;">Tax Rules</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0025</td>
+<td style="vertical-align: top;">Ledger Type Master File</td>
+<td style="vertical-align: top;">Database Cache &amp; Service Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0026</td>
+<td style="vertical-align: top;">Job Cost Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F01138</td>
+<td style="vertical-align: top;">AB Data Permission List Definitions</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069016</td>
+<td style="vertical-align: top;">Payroll Tax Area Profile</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069036</td>
+<td style="vertical-align: top;">Payroll Transaction Cross Reference</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069056</td>
+<td style="vertical-align: top;">Establishment Constant File</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069086</td>
+<td style="vertical-align: top;">Payroll Corporate Tax Identification</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069096</td>
+<td style="vertical-align: top;">Payroll General Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069106</td>
+<td style="vertical-align: top;">Union Benefits Master</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069116</td>
+<td style="vertical-align: top;">Payroll Transaction Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F069226</td>
+<td style="vertical-align: top;">Unemployment Insurance Rates</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F07901</td>
+<td style="vertical-align: top;">Pre-Payroll DBA Calculation Control Table</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F08040</td>
+<td style="vertical-align: top;">HR History Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0901</td>
+<td style="vertical-align: top;">Account Master</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F1200</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Fixed Asset Constants</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1609</td>
+<td style="vertical-align: top;">Cost Management Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1690</td>
+<td style="vertical-align: top;">Enables Tables by Application</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F17001</td>
+<td style="vertical-align: top;">Service Warranty Constants Table</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1724</td>
+<td style="vertical-align: top;">Service Contract Coverage</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1725</td>
+<td style="vertical-align: top;">Service Contract Services</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1752</td>
+<td style="vertical-align: top;">Case Types</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1753</td>
+<td style="vertical-align: top;">Case Priority</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1790</td>
+<td style="vertical-align: top;">Product Family/Model Master</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1793</td>
+<td style="vertical-align: top;">S/WM Line Type Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F3009</td>
+<td style="vertical-align: top;">Job Ship Manufacturing Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F3009T</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Manufacturing Constants Tag File</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F40039</td>
+<td style="vertical-align: top;">Document Type Master</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F40070</td>
+<td style="vertical-align: top;">Preference Master File</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F40073</td>
+<td style="vertical-align: top;">Preference Hierarchy File</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4008</td>
+<td style="vertical-align: top;">Tax Areas</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4009</td>
+<td style="vertical-align: top;">Distribution/Manufacturing Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F40095</td>
+<td style="vertical-align: top;">Default Locations/Printers</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4009T1</td>
+<td style="vertical-align: top;">Distribution/Manufacturing Constant Tag Table</td>
+<td style="vertical-align: top;">Added for Taxed Unit Price (9.0 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F40203</td>
+<td style="vertical-align: top;">Order Activity Rules</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F40205</td>
+<td style="vertical-align: top;">Line Type Control Constants File</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4070</td>
+<td style="vertical-align: top;">Price Adjustment Schedule</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4071</td>
+<td style="vertical-align: top;">Price Adjustment Type</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4095</td>
+<td style="vertical-align: top;">Distribution/Manufacturing - AAI Values</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F41001</td>
+<td style="vertical-align: top;">Inventory Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F41002</td>
+<td style="vertical-align: top;">Item Units of Measure Conversion Factors</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F41003</td>
+<td style="vertical-align: top;">Unit of Measure standard conversion</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F46L001</td>
+<td style="vertical-align: top;">License Plate Numbering Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F48091</td>
+<td style="vertical-align: top;">Billing System Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F49002</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Transportation Constants</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F49003</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Load Type Constants</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F49004</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Mode of Transport Constants</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F4950</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Routing Entries</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F4953</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Routing Hierarchy</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F4973</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Rate Structure Definition</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F4978</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Charge Code Definitions</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F7306</td>
+<td style="vertical-align: top;">Quantum Sales and Use Tax Constants</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F90CA000</td>
+<td style="vertical-align: top; background-color: #ffffcc;">CRM_Constants Table</td>
+<td style="vertical-align: top; background-color: #ffffcc;">Can be added for dynamic cache (9.1 Update 2 and above)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F95922</td>
+<td style="vertical-align: top;">Permission List Relationship Table</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F99410</td>
+<td style="vertical-align: top;">OneWorld System Control File</td>
+<td style="vertical-align: top;">* Not Server Map</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FF30L011</td>
+<td style="vertical-align: top;">Line Design Control Parameters</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FF30L012</td>
+<td style="vertical-align: top;">Kanban Control Parameters</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FF34S003</td>
+<td style="vertical-align: top;">DFM Planning Parameters</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul style="color: red;">
+<ul style="color: red;">
+<li><big>Service Cache in JAS</big></li>
+</ul>
+</ul>
+<table style="text-align: left; width: 599px; height: 52px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="background-color: #009900; width: 66px; color: white; vertical-align: top;">Table</th>
+<th style="background-color: #009900; width: 240px; color: white; vertical-align: top;">Table Name/Description</th>
+<th style="background-color: #009900; width: 265px; color: white; vertical-align: top;">Others</th>
+</tr>
+<tr>
+<td style="width: 66px; vertical-align: top;">F0004</td>
+<td style="width: 240px; vertical-align: top;">User Defined Code Types</td>
+<td style="width: 265px; vertical-align: top;">&amp; Database Cache</td>
+</tr>
+<tr>
+<td style="width: 66px; vertical-align: top;">F0005</td>
+<td style="width: 240px; vertical-align: top;">User Defined Codes</td>
+<td style="width: 265px; vertical-align: top;">&amp; Database Cache</td>
+</tr>
+<tr>
+<td style="width: 66px; vertical-align: top;">F0005D</td>
+<td style="width: 240px; vertical-align: top;">User Defined Codes - Alternative Language</td>
+<td style="width: 265px; vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+<tr>
+<td style="width: 66px; vertical-align: top;">F0010</td>
+<td style="width: 240px; vertical-align: top;">Company Constants</td>
+<td style="vertical-align: top;">&amp; Database Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0013</td>
+<td style="vertical-align: top;">Currency Codes</td>
+<td style="vertical-align: top;">&amp; Database Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0025</td>
+<td style="vertical-align: top;">Ledger Type Master File</td>
+<td style="vertical-align: top;">&amp; Database Cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0092</td>
+<td style="vertical-align: top;">Library List - User</td>
+<td style="vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F00941</td>
+<td style="vertical-align: top;">Environment Detail - OneWorld</td>
+<td style="vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F0111</td>
+<td style="vertical-align: top;">Address Book - Who's Who</td>
+<td style="vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9500001</td>
+<td style="vertical-align: top;">CFR Configuration Table</td>
+<td style="vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F95921</td>
+<td style="vertical-align: top;">Role Relationship Table</td>
+<td style="vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F9861</td>
+<td style="vertical-align: top;">Object Librarian - Status Detail</td>
+<td style="vertical-align: top;">Only Service Cache (Not Database Cache)</td>
+</tr>
+</tbody>
+</table>
+<p><br /> Refer to &lt;Document 650630.1&gt;<em> E1: FDA: Tables Cached by JDBJ (8.95 and higher)</em> and also the list below of the detailed definition:<br /> <br />     * abfullname<br />     * bootstrap<br />     * cfrconfig<br />     * company<br />     * currency<br />     * datadictionary<br />     * ledgertype<br />     * ocm<br />     * omw<br />     * packagelookup<br />     * pathcode<br />     * role<br />     * security<br />     * serviceobj<br />     * setid<br />     * spec<br />     * tablelookup<br />     * udc</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>Most tables defined here are constant (static) tables which requires low maintenance or data is not added/updated/deleted frequently.</li>
+<li>In EnterpriseOne, tables sitting in system settings (menu ID xxx41 (Ex: G4241)) are good candidates for JDB Database Caching.</li>
+<li>F0006 is a member of Database Caching. When you use this as Job Master try not to modify often and in case you have updated a certain column value (Ex: Address Book Number) and the application does not reflect it, you need to reset database cache.</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q10"></a><span style="font-size: medium;"><small>Q10. How to refresh/ reset/ flush Database Cache and Service Cache?</small></span></big></big></h3>
+<p>Refreshing/resetting/flushing cache can be vary, for example:</p>
+<ul>
+<li style="color: red;">Database Cache</li>
+<ul>
+<li>Log into a FAT/HTML or WebDev client</li>
+<li>Fast Path to WSJ (Work with Submitted Jobs)</li>
+<li>(Optional) if you have the enhancement bug 11734236 <strong>(Form Exit) Advanced (P986116)<br /> </strong></li>
+<li>Highlight your logic Server and from ROW menu click on Reset Cache</li>
+<li>Select Database, then click OK. This will flush database caching</li>
+</ul>
+</ul>
+<p><strong>Update</strong>: EnterpriseOne Tools Release 9.1.2 and above - Two additional options are available to reset database table cache:</p>
+<ul>
+<li>Option 1 - to reset Database Cache in Enterprise Server (through <span style="font-weight: bold;">Server Manager</span>)</li>
+<ul>
+<li>Managed Homes and Managed Instances</li>
+<li>(Combo Box) Select View &gt; Clear Table Cache</li>
+</ul>
+</ul>
+<ul>
+<li>Option 2-  to reset Database Cache in Enterprise Server (through <span style="font-weight: bold;">HTML client</span>)</li>
+<ul>
+<li>Reset Database Table Cache through P986116D|W986116DA</li>
+<li>GH902 (EnterpriseOne Menus &gt; EnterpriseOne Life Cycle Tools &gt; Application Development &gt; Reset Table Cache (P986116D))</li>
+</ul>
+</ul>
+<p><strong>IMPORTANT for E1 9.1 Update 2 onwards</strong>: If you are EnterpriseOne Application Release 9.1 Update 2 onwards, new feature which can delete <strong>Database Table Cache automatically</strong> in your updating/deleting a certain table record through Pre-Configured applications. For detail information refer to &lt;Document 1617534.1&gt; E1: ENV: Resetting Database Table Cache Using a Pre-Configured Application and P986116D.</p>
+<ul>
+<li>Option 3 - Reset/Delete/Flush a specific table (Database Table Cache) automatically as defined in Pre-Configured application/table combination</li>
+<ul>
+<li>Clear Table Cache(TBLREFR) is enabled in System Control File - F99410/P99410</li>
+<li>Set Special Handling Code 11 for UDC 00/RF - Table Cache Auto Refresh</li>
+<li>Run applications listed in UDC 00/RF</li>
+</ul>
+</ul>
+<ul>
+<li style="color: red;">Service Cache</li>
+<ul>
+<li>Use SAW (Server Administration Workbench) or Server Manager (depending on the Tools Release)</li>
+<li>Find the JAS instance you are working with</li>
+<li>In the Runtime Metrics category (SMC), click on JDBJ Database Caches</li>
+<li>Select JDBj Service Caches and click on Clear Cache to flush Service Cache</li>
+<li>Verify that Cache Size is set to zero</li>
+</ul>
+</ul>
+<div class="kmnotebox"><strong>Note:</strong> <br /> Both JDBj Service Caches and Database Caches can be cleared even when these connection has active users associated. The enhancement &lt;Bug 11734236&gt; WSJ USABILITY changes the behavior of Fast Path 'WSJ':<br /> <br /> 1. Read F0005.DL02 (=20/GH9011) where (F0005.KY = 'WSJ') on UDC H90/FP (Fast Path)<br /> 2. Read F9000.OBNM (=P986116) where (F9000.TASKNM = 20/GH9011). So WSJ is calling P986116|ZJDE0001 (which is default version)<br /> 3. In P986116, depending on Processing Option parameters (PO cManagerEntry),
+<ul>
+<li> Blank (ZJDE0001 version, Default): Call P986110B|W986110BA - [Submitted Job Search]</li>
+<li> 1 (ZJDE0002 version): Call P986116|W986116A [Work With Servers]. Same application can be accessed through Form Exit of P986110B|W986110BA where Reset Cache option is available</li>
+</ul>
+   : Reset Cache option is available in P986116 which can be accessed through (Form Exit Menu) W986110BA then choose "Advanced" which is calling P986116|W986116</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q11"></a><span style="font-size: medium;"><small>Q11. How does it make use of the caching data in programming?</small></span></big></big></h3>
+<p>If JDE BSFN is to read cache, JDE API JDB_FetchKeyed will be issued from a certain BSFN.  For Tools Releases 8.97 and above, additional information can be found in our Server Manager Guides on Caching:</p>
+<ul>
+<li>&lt;Document 1396301.2&gt; Information Center: Server Manager in the JD Edwards EnterpriseOne Tools and Technology Product</li>
+<li>To get server manager information, refer to Documentation link at  &lt;Document 861572.1&gt; - E1: SVM: Frequently Asked Questions on Server Manager</li>
+</ul>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q12"></a><small><span style="font-size: small;">Q12. What does "cache can not be updated" mean?</span><br /> </small></big></big></h3>
+<p>Transactional Cache can be updated or manipulated through BSFNs; however Database cache which is <span style="font-weight: bold; color: red;">shared cache</span> can only be inserted and deleted. Deletion\flush takes place when starting or bouncing JDE Service(s) or by clicking the button '<em>Reset Cache</em>' in Work with Server Jobs (WSJ) or when database cache reaches the defined maximum value of Memory or Rows.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q13"></a><span style="font-size: medium;"><small>Q13. What is the impact on applications if you remove any table (Ex: F0008) from F98613 and not re-add it?</small></span></big></big></h3>
+<p><big><em>This action is not recommended</em></big>.  As stated above the purpose of database caching is to maintain high integrity and performance for <span style="font-weight: bold;">constant tables</span> which are to be requested frequently.  Across EnterpriseOne, table F0008 will be accessed numerous times. In removing F0008 from F98613 a certain routine has to take round trip to logic server to DB server so there can be some performance impact especially in running long running UBEs. Most of cases, F0008 is subset of F0010 so it is not proper to remove it from list.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q14"></a><span style="font-size: medium;"><small>Q14. How to determine whether a certain application is making use of cache or not?</small></span></big></big></h3>
+<p>There can be a few methods to determine this.  First; in a long running report, the performance gain may be significant (Ex: run R3482/R3483 with caching on and without caching on).  An alternative way to determine is by analyzing the JDEDEBUG.LOG (Call Object kernel log) which may have the behavior described below:</p>
+<div style="margin-left: 40px;"> <strong>   <span style="text-decoration: underline;">1st request</span>:</strong><br /> <em>    Entering JDB_OpenTable(Table = F0004)</em><br /> <em>     Exiting JDB_OpenTable(Table = F0004) with Success</em><br /> <em>     Entering JDB_FetchKeyed</em><br /> <em>    <span style="color: red;"> ORACLE DBInitReq conn=08A89A20 requ=1AB3AFF0 den60srvs (gsc812) new [ 24]</span></em><br /> <em>     <span style="color: red;">SELECT * FROM PD812.F0004 WHERE ( DTSY = '01' AND DTRT = 'ST' )</span></em><br /> <em>     <span style="color: red;">ORACLE DBFetch conn=08A89A20 requ=1AB3AFF0 maxrows=100</span></em><br /> <em>     Fetched the record</em><br /> <em>     Entering JDB_CloseTable</em><br /> <em>     Entering JDB_CloseTable(Table = F0004)</em><br /> <br />  <strong>   <span style="text-decoration: underline;">2nd request</span>:</strong><br /> <em>    Entering JDB_OpenTable(Table = F0004)</em><br /> <em>     Exiting JDB_OpenTable(Table = F0004) with Success</em><br /> <em>     Entering JDB_FetchKeyed</em><br /> <em>     Fetched the record</em><br /> <em>     Entering JDB_CloseTable</em><br /> <em>     Entering JDB_CloseTable(Table = F0004)</em></div>
+<p><br /> From the above example, it does not make a connection to DB <em>den60srvs </em>because database cache will return a value immediate after JDE API JDB_FetchKeyed(). You may flush database cache in case you need to debug what is actual query issued as it is shown '1st request' above.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="q15_new"></a><span style="font-size: medium;"><small>Q15. How to trace Cache Manager through logging?</small></span></big></big></h3>
+<p> To enable cache manager tracing, change the following setting in server JDE.ini file<br /> [DEBUG]<br /> CMTrace=1    </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>CMTrace=0(CM tracing is disabled)</li>
+<li>CMTrace=1(CM tracing is enabled)</li>
+<li>Do not turn it on unless it is requested by Oracle</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q16"></a><span style="font-size: medium;"><small>Q16. Can database cache be reset/flushed when multiple users are connected to a data source you want to reset?</small></span></big></big></h3>
+<p>Yes.  As stated above, database cache sits in a shared memory area per data source that you have defined so it should not affect cache (private memory) created during transactions . Steps to get certain table information are:</p>
+<ol>
+<li>EnterpriseOne business function issues JDB_FetchKeyed() against the table defined in F98613</li>
+<li>Look up whether table requested is a member of table F98613</li>
+<li>Look up in DB cache</li>
+<li>(If found from DB cache then) read cache</li>
+<li>(Not found then) travel to Database to get requested information in specific data source</li>
+<li>Then insert it into DB cache for next request</li>
+</ol>
+<p><br /> If database cache is flushed in the middle of a transaction, it will do step 5.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q17"></a><span style="font-size: medium;"><small>Q17. What kind of BSFN/API will cache tables?</small></span></big></big></h3>
+<p>Some examples are:</p>
+<ul>
+<li>Call JDE API <span style="font-weight: bold; color: red;">JDB_AddTableToDBCache</span> with parameters (hUser, idTable,lpDS-&gt;idNumberRowsToCache) can be called in long running UBEs</li>
+<ul>
+<li>B3400490 - MRPGetMRPParameters (MRP, Get MRP Parameters) when running R3482/R3483 - MRP/DRP to add tables F4101, F4102 and F4801</li>
+<li>B4101380 - CacheTableForUBE (Cache Table for UBE) when running R42800 to add tables F0101, F4101 and F4102<br />  </li>
+</ul>
+<li>Call a specific APIs <span style="font-weight: bold; color: red;">mrdbCreateTable()</span> and mrdbCreateIndex()</li>
+<ul>
+<li>B4504650 - PricingCacheManager in P4530 (Accelerated Pricing Resolution Engine Workbench) to cache tables F4072, F4092, F40941, F40942 and F40943.</li>
+</ul>
+</ul>
+<p> </p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>For this example, Caching Table returns better performance rather than integrity for data which has to be referenced multiple times.  Note that Table Caching cannot be performed for specific data unless it follows standard JDECACHE process (Ex: InitEnv, InitUser, CreateIndex, CacheInit, CacheAdd, CacheOpenCursor, ManipululationAPIs, CacheCloseCursor, CacheTerminate, CacheTerminateAll, FreeUser, FreeEnv)</li>
+<li>Depending on the settings, B3400490 may cache data from F4101, F4102 and F4801 as this data may be requested from multiple internal routines (which reads all the Supply/Demand related transactions).</li>
+<li>Above APIs just adds defined tables to be cached (because these tables are not defined in P98613) not data.</li>
+<li>For this case, data for item A can be requested multiple times then caching it in Memory can be a better option to read from DB and it minimizes round trips to the DB.</li>
+<li>Most common example can be in tables F0010 and F0005 which get requested multiple times in a single transaction.  In this scenario, the performance gain of database caching can be huge.</li>
+<li>Currently UBEs (R085530, R12800, R15L1091, R17024, R42520, R42565, R42760, R4277701, R42800, R45502, R46171, R47011 and R4981) add tables for Database Cache dynamically by calling B4101380</li>
+<li>idNumberRowsToCache is not specified (that is, 0) then it records 1000 rows in memory.</li>
+<li>API  JDBRS_GetTableSpecs() gets called to get metadata (Table and Index) in Memory for tables listed in B4504650</li>
+<li>If you are suffer performance issue in sales order processing with huge records from tables F4072, F4092, F40941, F40942 and F40943 make use of APRC engine. For detail refer to &lt;Document 760588.1&gt; - E1: 45: Accelerated Pricing Resolution Engine (F4072, F4092, F40941, F40942, F40943)</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q18"></a><span style="font-size: medium;"><small>Q18. Is it possible to cache a certain range of data (not the entire table) in calling CacheTableForUBE?</small></span></big></big><small> </small></h3>
+<p>No. it is not possible to implement this as JDE borrows Database technology to perform this. So if a certain table is huge in size, (and it is optional) do not turn on caching as this may cause 'Memory Allocation Failure' errors. If a certain table is defined for caching through UBE, then it is just ready to be cached supposing that same records may be requested multiple times in a routine. To have some example of standard EnterpriseOne UBEs refer to &lt;Document 1420774.1&gt; E1: 40: Database Cache in Distribution and Manufacturing</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>JDB Database Cache is limited through the max number of rows in F98613. For details refer to &lt;Document 626185.1&gt; <em>E1: DB: How To Adjust Database Caches Within OneWorld/EnterpriseOne.</em></li>
+<li>For the size of memory in Unicode refer to &lt;Document 1272974.1&gt; <em>E1: UBE: Case Study on "MEMORY ALLOCATION FAILURE" Errors in EnterpriseOne Batch Applications.</em></li>
+</ul>
+</div>
+<hr />
+<p><span style="font-size: small;"><big><big><br /> </big></big></span></p>
+<h3 class="km"><span style="font-size: small;"><big><big><a name="Q19"></a><span style="font-size: medium;"><small>Q19. Is there a way to force subsystem process/jobs to pick up changes to UDCs that occurred since the subsystem UBE was first submitted?</small></span></big></big></span></h3>
+<p>No. Due to the nature of subsystem UBEs, these run <big>continuously</big> and by default. So changes to UDC values will not be picked up until EnterpriseOne services are restarted, or the subsystem UBE is stopped and restarted.  Refer section "When is the JDB Database Cache Used?" which explains why it performs dirty read.<a href="944015.1_Caching_all_30April2012.html#TheContent" alt="Back To Top" title="Back To Top"><br /> </a></p>
+<div class="kmnotebox">
+<p>Notes:</p>
+<ul>
+<li>The "Reset Cache" Form Exit ( Clear DB cache option ) from WSJ screen effects only the Call Object Kernels running on the Enterprise Server in terms of clearing the JDE DB cache ( i.e., BSFNs and their tables within the Scope of Call Object Kernel ).</li>
+<li>The "Reset DB Cache" option does not affect any other kernel processes mainly not the UBE processes (runbatch).  UBE processes are always individual runbatch processes and they do not have any relationship to Call Object kernel. ( Note that an interactive app calling a BSFN runs on Call Object Kernel and this BSFN can try to launch the UBE, but once launched the UBEs are separate processes and they are independent of Call object Kernel (BSFN) processes ).</li>
+<li>So, a Subsystem Report, which is nothing but a RUNBATCH process running on the enterprise server is NOT affected by the "Reset DB Cache" option.  You might ask that this Subsystem UBE itself calls some BSFNs and performs some table operations and wonder if they might be affected by the "Reset DB Cache" option. The answer is no. Any tables or BSFNs called with in the UBE processes are "loaded" within the scope of runbatch process and not affected by this Reset DB Cache option.</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q20"></a><span style="font-size: medium;"><small>Q20. What is the memory area name in JDE?</small></span></big></big></h3>
+<p>It is defined at COMMON_POOL which sits in the Shared Memory area and this is accessed globally and should not be updated.<a href="944015.1_Caching_all_30April2012.html#TheContent" alt="Back To Top" title="Back To Top"><br /> </a></p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q21"></a><span style="font-size: medium;"><small>Q21. Which are other types of caches used? Other Industry caches.</small></span></big></big></h3>
+<p>Since EnterpriseOne follows the <span style="color: red;">Distributed Environment</span> in industry, other types of caches used depends on these possible questions:</p>
+<ul>
+<li style="font-style: italic;">What resource/data should be stored in the cache?</li>
+<li style="font-style: italic;">How long should the resource/object/data be stored in the cache?</li>
+<li>So possible industry caching:</li>
+</ul>
+<ul>
+<ul>
+<li>Temporal Cache (Ex: Database Cache, Service Cache)</li>
+<li>Spatial Cache (Ex: Cache in Grid)</li>
+<li>Primed Cache (Ex: Web Browser Cache)</li>
+<li>Demand Cache (Ex: Object Cache)</li>
+<li>Transactional Cache (Ex: Any cache used through application level business functions)</li>
+<li>Shared Cache (Ex: Database Cache)</li>
+</ul>
+</ul>
+<p>Note that certain caches can be categorized in more than 2 cache types depending on Time and Space.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q22"></a><span style="font-size: medium;"><small>Q22. Will the data in table Company Constant (F0010) be cached?</small></span></big></big></h3>
+<p>The Table F0010 is cached for both JAS (Client) and Logic Server (Server). We may call it Service Cache and Database Caching respectively.  In general:</p>
+<ul>
+<li>If the issue is related to Currency Information it will come from Service Cache as Currency Decimal has to be handled at Presentation level along with F0013, F0025 etc. Refer to &lt;Document 1090584.1&gt;<em> E1: BSFN: Frequently Asked Questions on Business Functions Running on JAS</em> to have the full list of Business Method which runs in JAS.</li>
+<li>If the issue is not related to Currency Code then most likely the issue may come from Server Database Caching since the thin/HTML client environment DEFAULT BSFN is mapped to run on the Server through the OCM mapping. So the request for table F0010 will be performed through BSFN(s) so it has to be read Cache in Server (Database Cache)</li>
+</ul>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q23"></a><span style="font-size: medium;"><small>Q23. What are the common errors you may get that are caused by uncompleted Cache Refreshing which is related to data in F0010?</small></span></big></big></h3>
+<p>To determine this observe the BSFN which gives the error.  If the error comes from BSFNs the error may appear as "Record Invalid" or "Fetch From table failed" depending on the application you are running. This is usually caused by Service Cache in Server.</p>
+<ul>
+<li>B0000069 - RetrieveLedgerTypeCurrency</li>
+<li>B0000095 - FormatCompany</li>
+<li>B0000128 - RetrieveCompanyCurrencyCode</li>
+<li>B0000130 - RetrieveCompanyFromBusinessUnit</li>
+<li>B0000198 - GetCurrencyCodeandDecimals</li>
+<li>B0000399 - CurrencyDecimalShift</li>
+</ul>
+<p><br /> If the error is issued by other BSFNs, Database caching may have a problem. The error can vary like this example: <em>Current Period Number may be computed wrongly</em>.  Some examples may be:</p>
+<ul>
+<li>Issue is related to Currency Code: Then service cache is to be refreshed</li>
+<li>Issue is related something other than Currency Code: Database Caching has to be refreshed</li>
+</ul>
+<p>Example of error:</p>
+<div style="margin-left: 80px;">ER Details:<br />     Form                   P4210_W4210A<br />     Control Id            11<br />     Control Title         Invoice Warehouse<br />     Event                  Control Exited/Changed-Inline<br />     Line No                21<br /> BSFN Details:<br />     Source File           RetrieveCompanyCurrencyCode.java (in package com.peoplesoft.e1.bsfn.b0000128)<br />     Error ID               0002<br />     BSFN DSTR Item            1</div>
+<p><br /> For this example, Service Cache in JAS is having problem after changing period number in P0010. As we can see in the error detail, issue is detected by business method RetrieveCompanyCurrencyCode.java. For further detail, refer to &lt;Document 1090584.1&gt; E1: BSFN: Frequently Asked Questions on Business Functions/Methods Running on JAS. So to minimize this type of errors, reset Service Cache in JAS and Database cache in your Logic Server.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q24"></a><span style="font-size: medium;"><small>Q24. How to debug when the issue appears to be caused by data in F0010?</small></span></big></big></h3>
+<p>Whenever there is any issue with table F0010, try to capture the JASDEBUG.LOG from the JAS Server and JDEDEBUG.LOG from the Logic Server. To handle data for both database level and presentation level, some BSFNs will be running in JAS while others run on the logic server though by default,  The DEFAULT BSFN is mapped to Server for J* Environments through OCM mapping.  Some BSFNs run in Local (JAS) which can be found defined in LocalLogicCatalogLocalLogicCatalog.xml (OAS: OAS:</p>
+<blockquote>\\<em>JASMachineName</em>\<em>E1Release</em>\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\classes)</blockquote>
+<p> <br /> Refer to &lt;Document 1090584.1&gt; E1: BSFN: Frequently Asked Questions on Business Functions Running on JAS<a href="#TheContent" alt="Back To Top" title="Back To Top">.<br /> </a></p>
+<hr />
+<p> <a href="#TheContent" alt="Back To Top" title="Back To Top"><br /> </a></p>
+<h3 class="km"><big><big><a name="Q25"></a><span style="font-size: medium;"><small>Q25. How does the system make use of runtime cache when submitting a UBE to the Server?</small></span></big></big></h3>
+<p>With Tools Release 8.97 and 8.98 there are two different object caches, one is in UserOverride and the other is in RuntimeCache. Please note that when deploying a package or submitting version spec, object cache (RDASPEC) will get flushed and created.  Running a UBE, the UBE Kernel will create a temporary file to hold runtime cache (DataSelection and DataSequence information) and at the end of the transaction these files are removed.<a href="#TheContent" alt="Back To Top" title="Back To Top"><br /> </a></p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q25"></a><span style="font-size: medium;"><small>Q26. Unable to see changes to tables F0006 and F0901 listed in P98613 after they are updated. Is there any impact to these tables if they are removed from P98613?</small></span></big></big></h3>
+<p>Custom applications that write to F0006 and F0901 which are listed in P98613, do not show newly updated data after an insert/update.  If these tables are removed from P98613, the new/updated data shows.  Is there any impact to these tables (Ex: data integrity) if they are removed from P98613?</p>
+<p>If these tables are being updated frequently (inserts/updates, etc.), then caching these tables is not recommended; which would mean deleting these tables from P98613.  If these tables are not updated frequently, resetting the database cache after any changes to these tables would be required.<br /> <br /> Tables are cached only when select operation are performed.  For example, when an insert or update to these tables is done, it will not cache at the same time. To reflect changes in cache, a reset/refresh cache is required. </p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q27"></a><span style="font-size: medium;"><small>Q27. What does the message "System cache is full" in the server JDE.LOG mean?</small></span></big></big></h3>
+<p>The Enterprise/Logic server JDE.LOG log is full of thousands of lines the same message:</p>
+<p><strong>JDB9900999999 - System cache is full</strong></p>
+<p>What does this message mean and how can it be eliminated?</p>
+<p style="margin-left: 30px;">The error with "System cache is full" does not mean that it is from the JDE kernel or "system" code.  The error can come from any jdeCache usage, from Apps, BSFNs, and Tools code.  Any call to jdeCacheAdd() or JDECM_CacheAdd(), could result in a code path to the error.  The following are some issues that can cause this message in the log.  Note:  Some of the causes listed below do not have a direct solution.</p>
+<p style="margin-left: 30px;"><strong>Scenario 1:<br /> </strong>The error could happen if the nTotalMemoryUsed starts at size zero, and the very first usage comes in with a negative nDataSize.  However, there is a test for nDataSize &lt;= 0, which should log a different error.</p>
+<p style="margin-left: 30px;"><strong>Scenario 2:<br /> </strong>The error could happen if the actual cache memory usage became larger than 2147483647, at which point the nTotalMemoryUsed would become a negative number. However, it would likely be a large negative number, and would not trigger the error until it was increased enough to be larger than -1000. The error could be created by having nDataSize of (2147483647 minus {1, or 2, or 3, ... through 499}). Adding the second record should trigger the error.</p>
+<p style="margin-left: 30px;"><strong>Scenario 3:<br /> </strong>It can be caused if the previous cache memory was deleted (such as RBTREE_Delete()), and the nNodeDataSize was too large, or the function was called too many times, resulting in a negative nTotalMemoryUsed. This might happen if the nDataSize was not consistent, and data was added using different sizes, and that resulted in incorrect sizes being subtracted as records were dropped.</p>
+<p style="margin-left: 30px;"><strong>Scenario 4:</strong><br /> A memory overwrite, from somewhere else, could write over nTotalMemoryUsed , and change it to a small negative number.<br /> <br /> The function JDECM_GetMemoryStats() can be called to get nTotalMemoryUsed size.<br /> <br /> CMTRACE can be turned on, to track if there was a negative data size or negative total memory.  The functions jdeCacheAdd() or JDECM_CacheAdd() will call JCACH_CacheAddInt(), which will display "JDECM_SUCCESS: Add rec size:%d Total mem:%d Total recs:%d", where "rec size" is the nDataSize being added and the "Total mem" is the nTotalMemoryUsed.</p>
+<p style="margin-left: 30px;">For this type of message, contact Oracle Global Support for further assistance. </p>
+<p>The error could happen if the nTotalMemoryUsed starts at size zero, and the very first usage comes in with a negative nDataSize.  However, there is a test for nDataSize &lt;= 0, which should log a different error.</p>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q28"></a><span style="font-size: medium;"><small>Q28. Is there any manual steps to delete cache and reload javascript in JAS?</small></span></big></big></h3>
+<p>This instruction can be applied as follows:</p>
+<ul>
+<li>when applying a fix from Oracle Development or there is an update that involves JS files</li>
+<li>and/or when restarting the JAS instance does not fix the issue</li>
+</ul>
+<p>Note that Step 1 and 2 is only for situations where Oracle Development has delivered a customer specific fix</p>
+<ol>
+<li>Move the original JDEDTA.js (can be any js file) file from &hellip;\webclient.ear\webclient\js\ to desktop.</li>
+<li>Now place the updated JDEDTA.js file under &hellip;\webclient.ear\webclient\js\</li>
+<li>Run the Internet browser (Ex: Firefox), press ctrl-shift-del and delete all files. (check all check boxes)</li>
+<li>Press ctrl-F5 to reload javascript</li>
+<li>Test the application</li>
+<li>Repeat #3 with Internet Explorer with same command key</li>
+</ol>
+<hr />
+<p> </p>
+<h3 class="km"><big><big><a name="Q29"></a><span style="font-size: medium;"><small>Q29. What is JSP Cache and how to clear JSP Cache?</small></span></big></big></h3>
+<p class="km"><br /> JSP (JavaServer Pages) Cache is the compiled version of JSP files. When JSP gets compiled by Apache Jserv, it gets internally gets converted into a .java file (servlet) and then that .java file gets compiled into a .class file. To optimize runtime performance, it may be required to clear JAS cache.</p>
+<p><span style="font-weight: bold;">In OAS:</span></p>
+<ol>
+<li>Stop OAS application server</li>
+<li>The usual directory that holds the JSP cache is $COMMON_TOP/_pages in the Oracle App sever. Customer can check for the html4login.class, loginDecoration.class in that dir and delete that 2 files only(pls take a back up of file before delete them).</li>
+<li>start the JAS instance and retest the issue.</li>
+</ol>
+<ul>
+<li>Example JSPCache path is:  \denicint2\z$\product\10.1.3.1\OracleAS_1\j2ee\&lt;server_name&gt;\application-deployments\EA_JS_101\webclient\persistence\_pages\_share&hellip;</li>
+<li>Delete _html4login.java, _html4login.class, _html4login.jpa files in this dir.</li>
+<li>Review the loginDecoration.class, loginDecoration.jpa, loginDecoration.class files and delete then under this dir. and bounce the server and re-test this issue.</li>
+</ul>
+<p><br /> <span style="font-weight: bold;">In WebLogic:</span><br /> For Weblogic server under the domain/servers folder go to each server folder. Delete the folders named like "tmp", cache. (Take a backup of the folders before deleting)<br /> Ex: user_projects\domains\&lt;yourdomain&gt;\servers\\tmp</p>
+<p> </p>
+<h3 class="km"><a name="q30"></a>Q30. Can both JDBj Service Cache in JAS and Database Cache in Logic Server can be flushed even when these connection has active users associated?</h3>
+<p>Yes. You can reset/delete/flush both caches to read information from database again. Since it required additional round trip to database for data defined it may cause slower performance till relevant data puts into memory. For call object kernel users, you need to log off/on EnterpriseOne to have a new process gets assigned to your user ID with flushed cache.  </p>
+<hr />
+<h3 class="km">Q31. In Tools Release 8.9, How can we clear single Database Table Cache (Say for F0010) ?</h3>
+<p>JDEDB_RESULT JDB_ClearTableDBCache(HUSER hUser, NID szTable);  This API allows you clear out the F98613 cache for a particular table.</p>
+<p><a href="&lt;&lt;INLINE_BUG:10702589&gt;&gt;" alt="Bug 10702589 - CLEAR SINGLE DB TABLE CACHE - SAR: 3438041 " title="Bug 10702589 - CLEAR SINGLE DB TABLE CACHE - SAR: 3438041 " target="_blank">Bug 10702589</a> - CLEAR SINGLE DB TABLE CACHE - SAR: 3438041</p>
+<div class="kmnotebox"><big>Disclaimer: Oracle may update this document to accommodate with the latest information without giving prior notice.</big></div>
+<p> </p>
+<div class="kmnotebox"><em><strong>Note: With JDE Edwards EnterpriseOne Tools Release 8.97 onwards, Server Manager replaces Server Administration Workbench (SAW) as the administration tool for JDE Edwards EnterpriseOne. So, SAW is not available with 9.0 Release. However, this tool is still available in the System/Bin32 directory on the server. The file name is ServerAdministrationWorkbench.</strong></em></div>
+<p> </p>
+<div class="kmnotebox">
+<ul>
+<li>Did you find this document helpful? If so, please provide your feedback and comments on this document in MOS. Your feedback helps us help you.</li>
+<li>To discuss this information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/cnc__db_and_operating_system_-_jde1" target="_blank">CNC, DB and Operating System - JDE1 Community</a>.</li>
+<li>To look at upcoming or archived Advisor Webcasts, please see the Advisor Webcast JD Edwards EnterpriseOne Schedule &lt;Document 1450327.1&gt;. If your topic is not currently scheduled, please suggest it.</li>
+</ul>
+</div>
+<p> </p>
+
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
