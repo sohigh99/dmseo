@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Memory Violation Part II</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Memory Violation Part II</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<div class="kmnotebox"><strong>Note</strong>: If you encounter business function error while using standard application or UBE, it maybe already reported, install ESU for fix. If issue has not been reported, open service request with team that support the application or UBE, example, select product JD Edwards EnterpriseOne Sales Order Management while opening a SR if encountering business function issue while using P4210.<br />If you encounter issue with standard business function used in custom object (application or UBE), check if issue also appear with standard application or UBE. If issue does not appear, most likely there is no bug with the standard business function.</div>
+<p> </p>
+<p>This document is the second part of &lt;Document 1464687.1&gt; E1: BSFN: Case Study on Memory Violation, Memory Corruption, Memory Overwrite, Access Violation and Zombie Kernel Caused by Standard Business Functions and this document is to cover case studies which you face from both Interactive Application and Batch Application.</p>
+<p>This document is intended to help internal JDE developer on what to check when hitting memory errors in EnterpriseOne and how to apply possible fix for these errors while working on reported bug. But information in this document maybe helpful for developing custom business function.</p>
+<p>This document does not cover any Memory Corruption issues caused by the Tools Foundation Layer which is usually fixed through tools release upgrade. This document mainly focuses on memory errors caused by standard business functions which results in CallObject Kernels to crash or runbatch application to fail.</p>
+<div class="kmnotebox">
+<p><strong>Caution</strong>: This document may contain information, software, products or services which are not supported by Oracle Support Services and are being provided &lsquo;as is&rsquo; without warranty. Please refer to the following site for My Oracle Support Terms of Use: <a href="https://support.oracle.com/CSP/ui/TermsOfUse.html">https://support.oracle.com/CSP/ui/TermsOfUse.html</a>.  For custom business function, field services may need to be engaged.</p>
+</div>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+<p> Refer to &lt;Document 1464687.1&gt; E1: BSFN: Case Study on Memory Violation, Memory Corruption, Memory Overwrite, Access Violation and Zombie Kernel Caused by Standard Business Functions for further detail on Memory Corruption.</p>
+<h3 class="km"><strong><a name="casestudy"></a>Case Study:</strong></h3>
+<h4 class="km"><a name="case1"></a>Case 1 - Memory overwrite</h4>
+<p><br /> For this example, two business functions are not able to communicate properly. The size of string (Character Array) of calling routine is smaller than the size assigned by called routine.<br /> <br /> <span style="text-decoration: underline; font-weight: bold;">JDE.log:</span></p>
+<div style="margin-left: 40px;">INFO: Entering kernel signal handler, process exiting soon: iParam: 1338273596<br /> INFO: In kernel signal handler, starting alarm handler: iParam: 1338273597<br /> INFO: Done setting IPC Handle State structures to abandoned, process exiting immediately: iParam: 1338273597</div>
+<p style="font-weight: bold; text-decoration: underline;">JDEDEBUG.log:</p>
+<div style="margin-left: 40px;">Calling Business function F4211FSEditLine from Level 1 for UserID. Application Name [P4210], Version [ZJDE0001] (BSFNLevel = 1)</div>
+<div style="margin-left: 40px;">Calling Business function ProcessOrderLine from F4211FSEditLine for UserID. Application Name [P4210], Version [ZJDE0001] (BSFNLevel = 2) <br /> Calling Business function DetermineTransportationInterface from ProcessOrderLine for UserID. Application Name [P4210], Version [ZJDE0001] (BSFNLevel = 3) <br /> IN-&gt;[  1] cSuppressErrorMessage            [] <br /> IN-&gt;[  2] szErrorMessageID                 [] <br /> IN-&gt;[  3] szOrderType                      [SO] <br /> IN-&gt;[  4] szLineType                       [S ] <br /> IN-&gt;[  5] cSys49Interface                  [] <br /> IN-&gt;[  6] cSys49TInterface                 [] <br /> IN-&gt;[  7] szInitalShipSts                  []</div>
+<div style="margin-left: 40px;">
+<div style="margin-left: 40px;">
+<div style="margin-left: 80px;">Calling Business function GetEnvironmentValue from DetermineTransportationInterface for UserID. Application Name [P4210], Version [ZJDE0001] (BSFNLevel = 4) <br /> Return value is 2 for GetEnvironmentValue. (BSFNLevel = 4) <br /> Calling Business function GetUDC from DetermineTransportationInterface for UserID. Application Name [P4210], Version [ZJDE0001] (BSFNLevel = 4) <br /> IN-&gt;[  1] szDataDictionaryItem             [] <br /> IN-&gt;[  2] szSystemCode                     [49] <br /> IN-&gt;[  3] szRecordTypeCode                 [SD] <br /> IN-&gt;[  4] szUserDefinedCode                [SOS ] <br /> IN-&gt;[  5] mnKeyFieldLength                 [4] <br /> ...<br /> Entering JDB_FetchKeyed <br /> SELECT  *  FROM PRODCTL.F0004  WHERE  ( DTSY = '49' AND DTRT = 'SD' ) <br /> Entering JDB_FetchKeyed <br /> SELECT  *  FROM PRODCTL.F0005  WHERE  ( DRSY = '49' AND DRRT = 'SD' AND DRKY = '      SOS' ) <br /> Fetched the record <br /> OUT-&gt;[  1] szDataDictionaryItem             [] <br /> OUT-&gt;[  2] szSystemCode                     [49] <br /> OUT-&gt;[  3] szRecordTypeCode                 [SD] <br /> OUT-&gt;[  4] szUserDefinedCode                [SOS] <br /> OUT-&gt;[  5] mnKeyFieldLength                 [4] <br /> ...<br /> Return value is 0 for GetUDC. (BSFNLevel = 4) <br /> Exiting jdeGetCallStack (succeeded): PID=20371</div>
+</div>
+</div>
+<p><br /> <span style="font-weight: bold; text-decoration: underline;">Code example and fix:</span><br /> Based on B4902540 - DetermineTransportationInterface): The size of string (character array) in calling routine is smaller than called routine</p>
+<div style="margin-left: 40px;">*** Break In Code of B4902540 ***<br /> <span style="font-style: italic;">void I4202540_DetermineTransportationInterface   (LPDSD4902540 lpDS,</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                                  LPDSD4902540INTERNAL lpdsInternal)</span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">   /* JCHAR       szOrdLnType[4]       = {0};    SAR 8822535 - change variable to 10 characters plus null */</span><br style="font-style: italic;" /> <span style="font-style: italic;">   JCHAR       </span><span style="color: red; font-style: italic;"><span style="font-weight: bold;">szOrdLnType[11]</span> </span><span style="font-style: italic;">      = {0};   /* SAR 8822535 - variable now same length as UserDefinedCode */</span></div>
+<p style="margin-left: 40px; font-style: italic;">   DSD0005     dsD0005           = {0};      /* Get UDC */<br />    /************************************************************************<br />    * Main Processing<br />    ************************************************************************/<br />     CALLIBF (I4902540_VerifyTMSInstall(lpDS, lpdsInternal)); /*SAR 8706921*/<br />     if(lpDS-&gt;cSys49Interface == _J('Y'))<br />     {<br />         jdeStrncpy(szOrdLnType,lpDS-&gt;szOrderType, DIM(szOrdLnType) - 1);<br />         jdeStrcat(szOrdLnType,lpDS-&gt;szLineType);<br />         jdeStrncpy(dsD0005.szSystemCode, _J("49"), DIM(dsD0005.szSystemCode));<br />         jdeStrncpy(dsD0005.szRecordTypeCode, _J("SD"), DIM(dsD0005.szRecordTypeCode) - 1);<br />         jdeStrncpy(dsD0005.szUserDefinedCode, szOrdLnType, DIM(dsD0005.szUserDefinedCode) - 1);<br />         ParseNumericString(&amp;dsD0005.mnKeyFieldLength, _J("4"));<br />         dsD0005.cSuppressErrorMessage = _J('1');<br />         idReturnCode = jdeCallObject(_J("GetUDC"), NULL, lpdsInternal-&gt;lpBhvrCom, lpdsInternal-&gt;lpVoid, &amp;dsD0005, (CALLMAP *)NULL, (int)0, (JCHAR *)NULL, (JCHAR *)NULL, (int)0);</p>
+<p style="margin-left: 40px;">*** Break In Code ***</p>
+<p>Note: This type of issue is platform specific. In C, string is a character array with termination (NULL Character '\0') so it is important to define valid size of array.</p>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="case2"></a>Case 2 - Buffer Overflow (called Business Function fails into zombie)</h4>
+<p>Called business function fails to return to calling routine. This type of memory error can occur when a certain routine is checking individual characters in a character array (namely, string).</p>
+<p style="font-weight: bold; text-decoration: underline;">JDE.log:</p>
+<div style="margin-left: 40px;">Last Debug Time Stamp: Thu May  3 17:06:10.843219<br /> INFO: Entering kernel signal handler, process exiting soon: iParam: 1336057570<br /> Last Debug Time Stamp: Thu May  3 17:06:11.846414<br /> INFO: In kernel signal handler, starting alarm handler: iParam: 1336057571<br /> Last Debug Time Stamp: Thu May  3 17:06:11.846414<br /> INFO: Done setting IPC Handle State structures to abandoned, process exiting immediately: iParam: 1336057571</div>
+<p style="text-decoration: underline; font-weight: bold;">JDEDEBUG.log:</p>
+<div style="margin-left: 40px;">Calling Business function RemoveLeadingBlanksFromUDC from Level 1 for JDE. Application Name [R09E115], Version [XJDE0001] (BSFNLevel = 1)<br /> IN-&gt;[  1] szSystemCode                     [09E] <br /> IN-&gt;[  2] szUserDefinedCodes               [EL] <br /> IN-&gt;[  3] cError                           [] <br /> SELECT  *  FROM TESTCTL.F0005  WHERE  ( DRSY = '09E' AND DRRT = 'EL' )  ORDER BY DRSY ASC,DRRT ASC,DRKY ASC <br /> Fetched the record</div>
+<div style="margin-left: 80px;">Calling Business function RemoveLeadingBlanks from RemoveLeadingBlanksFromUDC for JDE. Application Name [R09E115], Version [XJDE0001] (BSFNLevel = 2) <br /> IN-&gt;[  1] szString                         [ALHA      ] <br /> Entering jdeCloseDictionary <br /> Exited jdeCloseDictionary with DDType 0 <br /> Entering jdeGetCallStack: PID=24459 <br /> Exiting jdeGetCallStack (succeeded): PID=24459</div>
+<p><br /> <span style="font-weight: bold; text-decoration: underline;">Code example and fix:</span><br /> B0200019 - RemoveLeadingBlanks (Leading Blanks Scrub). The loop exceeds the size allocated (buffer overflow). Similar issue can be found at B980001 - StripTrailingBlanksOnDataSource (Strip Trailing Blanks On Data Source) and B0100068 - AddressBookWordSearchBuild (Address Book Word Search Build).</p>
+<div style="margin-left: 40px;">*** Break In Code of B0200019 ***<br /> <span style="font-style: italic;">JDEBFRTN(ID) JDEBFWINAPI RemoveLeadingBlanks (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD0200019 lpDS)  </span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">    int   n;</span><br style="font-style: italic;" /> <span style="font-style: italic;">    int   w;</span><br style="font-style: italic;" /> <span style="font-style: italic;">    JCHAR    szwExplanationNew[41] = { 0 }; /* Size allocated is 82 bytes */</span><br style="font-style: italic;" /> <span style="font-style: italic;">    JCHAR    szwExplanation[41] = { 0 };</span><br style="font-style: italic;" /> <span style="font-style: italic;">   /************************************************************************</span><br style="font-style: italic;" /> <span style="font-style: italic;">    * Main Processing</span><br style="font-style: italic;" /> <span style="font-style: italic;">    ************************************************************************/</span><br style="font-style: italic;" /> <span style="font-style: italic;">  jdeStrncpy(szwExplanation, (const JCHAR *)(&amp;lpDS-&gt;szString[0]), DIM(szwExplanation) -1 );</span><br style="font-style: italic;" /> <span style="font-style: italic;">  for(</span><span style="color: red; font-style: italic;">w = 0</span><span style="font-style: italic;">; szwExplanation[w] == _J(' ');)</span><br style="font-style: italic;" /> <span style="font-style: italic;">      {</span><br style="font-style: italic;" /> <span style="font-style: italic;">        w++;</span><br style="font-style: italic;" /> <span style="font-style: italic;">      }</span><br style="font-style: italic;" /> <span style="font-style: italic;">  for(n = 0; </span><span style="color: red; font-style: italic;">w &lt;= 40</span><span style="font-style: italic;">; w++)</span><br style="font-style: italic;" /> <span style="font-style: italic;">      {</span><br style="font-style: italic;" /> <span style="font-style: italic;">        szwExplanationNew[n++] = szwExplanation[w];</span><br style="font-style: italic;" /> <span style="font-style: italic;">      }</span><br style="font-style: italic;" /> <span style="font-style: italic;">  szwExplanationNew[41 - 1] = _J('\0');</span><br style="font-style: italic;" /> <span style="font-style: italic;">  jdeStrncpy(&amp;lpDS-&gt;szString[0], (const JCHAR *)(szwExplanationNew), DIM(szwExplanationNew));</span><br /> *** Break In Code ***</div>
+<p>Note: Certain compiler may give you warning message C6201 for this type of coding as below,</p>
+<div style="margin-left: 40px;">C6201: Index &lt;variable&gt; is out of valid index range &lt;start&gt; to &lt;end&gt; for possibly stack allocated buffer &lt;buff&gt;<br /> <span style="font-weight: bold; text-decoration: underline;">Example:</span><br /> Index 41 is out of valid index range 0 to 40 for possibly stack allocated buffer szWordField<br /> <span style="font-style: italic;">   JCHAR   szWordField[41];</span><br style="font-style: italic;" /> <span style="font-style: italic;">   for (n = 0; w &lt;= 41; w++)</span><br style="font-style: italic;" /> <span style="font-style: italic;">   {</span><br style="font-style: italic;" /> <span style="font-style: italic;">      :</span><br style="font-style: italic;" /> <span style="font-style: italic;">      :</span><br style="font-style: italic;" /> <span style="font-style: italic;">   }</span><br /> <span style="font-weight: bold; text-decoration: underline;">Solution:</span><br /> Correct the code so that it does not go past the end of the array bounds.<br /> <span style="font-style: italic;">for (n = 0; w &lt; 41; w++)</span><br style="font-style: italic;" /> <span style="font-style: italic;">--- or ---</span><br style="font-style: italic;" /> <span style="font-style: italic;">for (n = 0; w &lt;= 40; w++)</span></div>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="case3"></a>Case 3 - Integer value is too long</h4>
+<p><br /> This case is to show possible memory corruption which is caused by data. Similar issue can occur when a certain string value contains Special Character in it. For special characters in C language, refer to &lt;Document 1271740.1&gt; E1: BSFN: How to Write a C Business Function to Return a Special Character.</p>
+<p style="font-weight: bold; text-decoration: underline;">e1root_*.log:</p>
+<div style="margin-left: 40px;">View Job Status (P986110B|W986110BA) row exit Print from HTML client causes zombie for jobs executed on second Enterprise Server. The user also receives this error:<br />
+<div style="margin-left: 40px;">There was <span style="font-weight: bold;">a problem with the sever</span> while running the business function GetPrinterInfoFromF986110. Please exit the application and restart it.<br /> Button clicked Line number 2<br /> P986110B_W986110BA</div>
+</div>
+<p style="font-weight: bold; text-decoration: underline;">JDE_*.log:</p>
+<div style="margin-left: 40px;">3532/5112 MAIN_THREAD Wed Feb 22 17:14:13.535004 IPCMISC.C299<br /> Call stack for process 6636, thread 720:<br /> CTOOL.dll/B986162A/GetPrinterInfoFromF986110</div>
+<p style="text-decoration: underline; font-weight: bold;">JDEDEBUG_*.log:</p>
+<div style="margin-left: 40px;">Calling Business function GetPrinterInfoFromF986110 from Level 1 for JDE. Application Name [P986110B], Version [ZJDE0001] (BSFNLevel = 1)<br /> IN-&gt;[  1] szPrinterName                     [] <br /> IN-&gt;[  2] szUserID                             [] <br /> IN-&gt;[  3] szExecutionHostName         [LogicServerMachineName] <br /> IN-&gt;[  4] szEnvironmentName            [PD910]<br /> IN-&gt;[  5] mnServerJobNumber          [<span style="color: red;">123456789</span>] <br /> ...</div>
+<p><span style="font-weight: bold; text-decoration: underline;">Code Example and Fix:</span> <br /> Based on B986162A - GetPrinterInfoFromF986110 (Get Printer Info From F986110)<br /> : No fix is available because issue is caused by faulty input value. Same issue can be found in calling B9861102 - PrintF986110 (Print F986110) which gets called 'View PDF, View CSV, View OSA)</p>
+<div style="margin-left: 40px;">*** Break In Code of B986162A ***<br /> <span style="font-style: italic;">JDEBFRTN (ID) JDEBFWINAPI GetPrinterInfoFromF986110 (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD986162A lpDS)  </span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">   MathNumericToInt( &amp;lpDS-&gt;mnServerJobNumber, </span><span style="color: red; font-style: italic;">&amp;jobNbr</span><span style="font-style: italic;"> );</span><br /> *** Break In Code ***</div>
+<p> </p>
+<div class="kmnotebox">Note:
+<ul>
+<li>The nature of F986111.JCJOBNBR is F0002.N004 so any value in this column has to be shorter than 8 numeric value.</li>
+<li>The first problem is that the column value is updated wrongly (longer than 8) and this is root cause of issue. In other words, through standard application there is no way to populate the value which is bigger than 8 digit.  On a side note ,this appears to be more related with the history of EnterpriseOne. The DD Alias ( DOCO, DCO, ITM, AID and so on ) which are consumers of Next Numbers were written based on 8 digit numeric values. So this may be reason why we have 8 digits definition in F0002/F00021 and so on.</li>
+<li>The address (location in memory) of any variable is obtained by placing the operator ``&amp;'' before its name. Therefore &amp;jobNbr is the (memory) address of jobNbr. The content of the memory location referenced by a pointer is obtained using the ``*'' operator (this is called dereferencing the pointer). Thus, *px refers to the value of x (when px is pointer to x)..</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="case4"></a>Case Study 4 - R42565 (Print Invoice) Falls into Zombie</h4>
+<p> </p>
+<p>R42565 (Print Invoice) falls into zombie in server when the processing options are set to send an email. The UBE fails to run on server but it is running alright when submitted locally.</p>
+<p><span style="font-weight: bold;">JDEDEBUG_*.log</span></p>
+<div style="margin-left: 40px;">End dumping data structure for business function EmailHeadingCache <br /> Entering jdeCacheInit - Name:[12297697B4202370] <br /> Created new cache - hCache:[0766ACF0]<br />     hCache:[0766ACF0] Nm:[<span style="color: red;">012297697B4202370</span>] Recs:0 Curs:0 Hnds:1 Cchs:3 INIT new <br />     jdeCacheAdd</div>
+<p><br /> <span style="font-weight: bold;">Code Sample in B4202370.c</span></p>
+<p style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">JDEBFRTN (ID) JDEBFWINAPI EmailHeadingCache (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD4202370 lpDS)   </span><br style="font-style: italic;" /> <span style="font-style: italic;">{ </span><br style="font-style: italic;" /> <span style="font-style: italic;">   /************************************************************************ </span><br style="font-style: italic;" /> <span style="font-style: italic;">    *  Variable declarations </span><br style="font-style: italic;" /> <span style="font-style: italic;">    ************************************************************************/ </span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br /> <span style="color: red; font-style: italic;">JCHAR          szCacheName[16]= {_J('\0')}; </span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">   /************************************************************************ </span><br style="font-style: italic;" /> <span style="font-style: italic;">    * Main Processing </span><br style="font-style: italic;" /> <span style="font-style: italic;">    ************************************************************************/ </span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">    FormatMathNumeric(szCacheName, &amp;lpDS-&gt;mnJobnumberA_JOBS);</span><br style="font-style: italic;" /> <span style="font-style: italic;">    jdeStrcat(szCacheName, _J("B4202370"));</span><br /> *** Break In Code ***</p>
+<p><span style="font-weight: bold;">Issue in code before fix: </span></p>
+<p style="margin-left: 40px;">For this case study, issue is coming from size of szCacheName with value 16 so during runtime 32 byte memory is to be assigned to hold cache name.</p>
+<ul>
+<li>szCacheName[16]  has to be divided into 3 components</li>
+<ul>
+<li>JobNumber</li>
+<li>Function Name: B4200370 (8 character)</li>
+<li>Termination Character (or, Null Charcter '\0') (1 character)</li>
+</ul>
+</ul>
+<p style="margin-left: 40px;">: So if mnJobnumberA_JOBS is greater than 7digit numeric value, the variable szCacheName is not able to hold it.</p>
+<p><span style="font-weight: bold;">Resolution: </span></p>
+<p style="margin-left: 40px;">This issue is reported in &lt;Bug:13913268&gt; "R42565 FAILS WHEN EMAIL TURNED ON FOR JOB NUMBER WITH EIGHT POSITIONS". You can apply the ESU for this Bug. The size of szCacheName is now increased from 16 to 50.</p>
+<p style="margin-left: 40px;">Note: Similar issue is reported through &lt;Bug 11008628&gt; : SALES UPDATE ENDS IN ERROR - SAR: 8926589 in running R42800 (Sales Update) which is caused by short cache name definition or mismatch in cache name size</p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="case5"></a>Case Study 5 - ACCESS VIOLATION</h4>
+<p>This error is coming usually in</p>
+<ul>
+<li>function cleanup where free memory, close handles and so on</li>
+<li>Copy/Compare memory which is NULL pointer</li>
+</ul>
+<p> is used on 64-bit Windows Servers.</p>
+<p>Example 1: P45550 (F4072 Global Update Engine) ends in error and JDE_*.log contains ACCESS VIOLATION</p>
+<p><span style="font-weight: bold;">Code sample in B4500500.c</span><br /> *** Break In Code ***</p>
+<div style="margin-left: 40px;"><span style="font-style: italic;">ID  IB4500500_FunctionCleanUp (...)</span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">   if ( hRequest1 != (HREQUEST)NULL )</span><br style="font-style: italic;" /> <span style="font-style: italic;">   {</span><br style="font-style: italic;" /> <span style="font-style: italic;">      JDB_CloseTable(hRequest1); /* Check whether HREQUEST is NULL or not before calling JDB_CloseTable() */</span><br style="font-style: italic;" /> <span style="font-style: italic;">   }</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">  </span><span style="color: red; font-style: italic;"> if ( lpList ) /* Check lpList and only this test is success then call jdeFree() to free memory */</span><br style="font-style: italic;" /> <span style="font-style: italic;">   {</span><br style="font-style: italic;" /> <span style="font-style: italic;">      if ( lpList[0] )</span><br style="font-style: italic;" /> <span style="font-style: italic;">      {</span><br style="font-style: italic;" /> <span style="font-style: italic;">         if ( lpList[0][0] )</span><br style="font-style: italic;" /> <span style="font-style: italic;">         {</span><br style="font-style: italic;" /> <span style="font-style: italic;">            </span><span style="color: red; font-style: italic;">jdeFree</span><span style="font-style: italic;"> ( (void *) lpList[0][0] ) ;</span><br style="font-style: italic;" /> <span style="font-style: italic;">         }</span><br style="font-style: italic;" /> <span style="font-style: italic;">         jdeFree ( (void *) lpList[0] ) ;</span><br style="font-style: italic;" /> <span style="font-style: italic;">      }</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeFree ( (void *) lpList ) ;</span><br style="font-style: italic;" /> <span style="font-style: italic;">   }</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br /> *** Break In Code ***</div>
+<p> </p>
+<p>Resolution: Check NULL before accessing array to free memory<br /> <br /> <span style="font-weight: bold;">Code sample in XT4111Z1.c</span></p>
+<div style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">BOOL  IXT4111Z1_GetLotDefault ()</span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">   </span><span style="color: red; font-style: italic;"> if (lpdsF4102)</span><span style="font-style: italic;"> /* Check lpdsF4102 (data pointer to F4102) is NULL or not before use it*/</span><br style="font-style: italic;" /> <span style="font-style: italic;">    {</span><br style="font-style: italic;" /> <span style="font-style: italic;">        dsLotDefault.idF4102ItemBranchPtr = </span><span style="color: red; font-style: italic;">(ID)jdeStoreDataPtr(hUser, lpdsF4102)</span><span style="font-style: italic;">;</span><br style="font-style: italic;" /> <span style="font-style: italic;">    }</span><br style="font-style: italic;" /> <span style="font-style: italic;">    else</span><br style="font-style: italic;" /> <span style="font-style: italic;">    {</span><br style="font-style: italic;" /> <span style="font-style: italic;">        dsLotDefault.idF4102ItemBranchPtr = (ID)0;</span><br style="font-style: italic;" /> <span style="font-style: italic;">    }   </span><br /> *** Break In Code ***</div>
+<p>Resolution: Store Data Pointer only when IF TEST is SUCCESS</p>
+<p>Refer Function Cleanup section for more API which may cause this error. Again it is important to check JDE_*.log and dump file and/or callstacks in hitting error</p>
+<p><br />Example 2: P4210 (Sales Order) falls into zombie in updating Sales Order Header information with JDE_*.log contains ACCESS VIOLATION</p>
+<p><strong>Memory dump:-</strong></p>
+<p style="margin-left: 40px;">====&gt; Exception C0000005 ACCESS_VIOLATION occurred in thread 1992 with call stack:<br /> _<span style="font-weight: bold; color: red;">jdeStrncpy</span>@12! jdeunicode.dll  <br /> _<span style="color: #3333ff; font-weight: bold;">I4200310_WriteHdrRecord</span>@28! CSALES.dll  <br /> _F4211FSEndDoc@12! CSALES.dll  <br /> _jdeCallObjectV2@44! jdekrnl.dll </p>
+<p><strong>Code example and fix:</strong></p>
+<p style="margin-left: 40px;">int <span style="color: #3333ff; font-weight: bold;">I4200310_WriteHdrRecord</span>(LPBHVRCOM lpBhvrCom, LPVOID lpVoid,<br />                             LPDSD4200310G lpDS, LPDS4200310D lpds4200310D,<br />                             HUSER hUser, JCHAR cProcessGenText, HCACHE hF4209Cache) <br /> <br /> {<br /> *** Break In Code ***<br />        [without Bug 17695315]</p>
+<p style="margin-left: 40px;">        if (IsStringBlank(lpdsF42UI01-&gt;zhrorn))<br />         {<br />             jdeStrncpy((JCHAR *)(lpdsF42UI01-&gt;zhrorn), (const JCHAR *)(lpds4200310D-&gt;lpdsF42UI11-&gt;zdrorn), <br />                             DIM(lpdsF42UI01-&gt;zhrorn)-1);<br />         }</p>
+<div style="margin-left: 40px;">       [with Bug 17695315]</div>
+<p style="margin-left: 40px;">        if (IsStringBlank(lpdsF42UI01-&gt;zhrorn) <span style="font-style: italic;">&amp;&amp;</span><span style="color: red; font-style: italic;"> (lpds4200310D-&gt;lpdsF42UI11 !=(LPF42UI11)NULL)</span>) /* ORCL - before reference cache, check whether it is NULL or not */<br />         {<br />             <span style="font-weight: bold; color: red;">jdeStrncpy</span>((JCHAR *)(lpdsF42UI01-&gt;zhrorn), (const JCHAR *)(lpds4200310D-&gt;lpdsF42UI11-&gt;zdrorn), <br />                             DIM(lpdsF42UI01-&gt;zhrorn)-1);<br />         }</p>
+<p style="margin-left: 40px;">*** Break In Code ***</p>
+<p style="margin-left: 40px;">} </p>
+<p>To fix this issue, apply ESU which contains &lt;Bug 17695315&gt; : P42101 TRANSACTION ERROR WITH KIT ITEM WHEN CHANGING CARRIER</p>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="case6"></a>Case Study 6 - Memory Overwrite II</h4>
+<p>This type of error can come in API jdeStrcpy() and jdeStrncpy() when the size between left operand is different from right operand.<br /> Example 1: In AS400, all the inventory transaction fails when transaction UOM is different from Primary UOM</p>
+<p style="font-weight: bold;">Code Sample in XT4111Z1</p>
+<p style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">void I4100940_GetUOM() {</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">    jdeCallObject(_J("GetItemMasterDescUOM"), (LPFNBHVR)NULL, lpBhvrCom, lpVoid, &amp;dsUOM, (CALLMAP *)NULL, 0, (JCHAR *)NULL, (JCHAR *)NULL, 0);</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">   if (!IsStringBlank(dsUOM.szPrimaryUOM))</span><br style="font-style: italic;" /> <span style="font-style: italic;">   {</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)szUOM, (const JCHAR *)dsUOM.szPrimaryUOM); /* before correction: jdeStrncpyTerminate((JCHAR *)szUOM, (const JCHAR *)dsUOM.szPrimaryUOM, </span><span style="color: red; font-style: italic;">DIM</span><span style="font-style: italic;">(szUOM)); */</span><br style="font-style: italic;" /> <span style="font-style: italic;">   }</span><br /> <span style="font-style: italic;">*** Break</span> In Code ***</p>
+<p>Resolution:  sizeof on AS400 returns a large value that causes a memory overwrite. Just copy the nonblank values over, the sizes were coded to match correctly. </p>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Frequently, the mis-use of sizeof() and DIM() operator may cause buffer overwrite problem. Note that DIM(A) = sizeof(A)/sizeof(A[0]).</li>
+<li>&lt;Document 626598.1&gt; E1: BSFN: Unicode and C Business Functions</li>
+</ul>
+</div>
+<p> </p>
+<p><span style="font-weight: bold;">Code Sample in B4900211</span></p>
+<div style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">JDEBFRTN (ID) JDEBFWINAPI ShipmentSequencingSalesOrderEdit (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD4900211A lpDS)   </span><br style="font-style: italic;" /> <span style="font-style: italic;">{ </span><br style="font-style: italic;" /> <span style="font-style: italic;">   /************************************************************************ </span><br style="font-style: italic;" /> <span style="font-style: italic;">    *  Variable declarations </span><br style="font-style: italic;" /> <span style="font-style: italic;">    ************************************************************************/ </span><br style="font-style: italic;" /> <span style="font-style: italic;">   JCHAR       szOrderLineType[11]; /* before correction: JCHAR       szOrderLineType[3]; */</span><br style="font-style: italic;" /> <span style="font-style: italic;">   /************************************************************************ </span><br style="font-style: italic;" /> <span style="font-style: italic;">    * Declare structures </span><br style="font-style: italic;" /> <span style="font-style: italic;">    ************************************************************************/ </span><br style="font-style: italic;" /> <span style="font-style: italic;">    DSD0005             dsD0005;  /*Get UDC*/</span><br style="font-style: italic;" /> <span style="font-style: italic;"> : </span><br style="font-style: italic;" /> <span style="font-style: italic;">   /************************************************************************ </span><br style="font-style: italic;" /> <span style="font-style: italic;">    * Main Processing </span><br style="font-style: italic;" /> <span style="font-style: italic;">    ************************************************************************/ </span><br style="font-style: italic;" /> <span style="font-style: italic;">      /* Build the Order Type/Line Type concatenation */</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(szOrderLineType),(const JCHAR *)lpDS-&gt;szOrderType);</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcat(</span><span style="color: red; font-style: italic;">szOrderLineType</span><span style="font-style: italic;">, lpDS-&gt;szLineType);</span><br style="font-style: italic;" /> <br style="font-style: italic;" /> <span style="font-style: italic;">      /* Check UDC 49/SD */</span><br style="font-style: italic;" /> <span style="font-style: italic;">      memset((void *)(&amp;dsD0005),(int)(_J('\0')),sizeof(DSD0005));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(dsD0005.szSystemCode),(const JCHAR *)(_J("49")));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(dsD0005.szRecordTypeCode),(const JCHAR *)(_J("SD")));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(dsD0005.szUserDefinedCode),(const JCHAR *) </span><span style="color: red; font-style: italic;">szOrderLineType</span><span style="font-style: italic;">);</span><br style="font-style: italic;" /> <span style="font-style: italic;">      ParseNumericString(&amp;dsD0005.mnKeyFieldLength,_J("4"));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      dsD0005.cSuppressErrorMessage =_J('1');</span><br style="font-style: italic;" /> <br style="font-style: italic;" /> <span style="font-style: italic;">      idReturnValue = jdeCallObject(_J("GetUDC"), NULL, lpBhvrCom,lpVoid,(LPVOID)&amp;dsD0005,</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                          (CALLMAP *)NULL,(int)0,(JCHAR *)NULL,</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                          (JCHAR *)NULL,(int)0);</span><br style="font-style: italic;" /> *** Break In Code ***</div>
+<p>Resolution: Synchronize the size of string in calling GetUDC</p>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="b3202030"></a>Case Study 7 - Column Array Mismatch</h4>
+<p>The Columns array used to open the table did not match the data structure used to fetch the data from the table; as a result the fetched record from table got incorrectly mapped to the cache Data Structure in return this resulted in memory overwrite. Most of standard business function stores data pointer rather than returning actual column value but when there is any business function which has to return column value to data structure defined, the sequence of columns for a specific table (through Array) has to be in synch with data structure defined.</p>
+<p>Example: P3210 (Configured Item Revisions) issues WEB CLIENT EXCEPTION and CallObject Kernel ends abruptly (output LPDS does not shows all) or value returns are not valid.</p>
+<p><span style="font-weight: bold;">Code example of  B3202030 - F4101ConfiguratorCache</span></p>
+<div style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">void I3202030_LoadF4101ToCache ()</span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">   NID           szFetchColID4101[40]   = {</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_ITM, NID_LITM, NID_AITM, NID_DSC1, NID_DSC2, </span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             <span style="color: red;">NID_PRGR, NID_RPRC, NID_ORPR, NID_UOM1, NID_UOM2,</span></span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_UOM3, NID_UOM4, NID_UOM6, NID_UOM8, NID_UOM9, </span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_UWUM, NID_UVM1, NID_PLEV, NID_PPLV, NID_CLEV, </span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_CKAV, NID_SRCE, NID_STKT, NID_LNTY, NID_BACK, </span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_TFLA, NID_SRNR, NID_PMTH, NID_LOTS, NID_SNS,                                            </span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_LTLV, NID_LTMF, NID_LTCM, NID_MLQ, NID_LTPU,</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                             NID_MRPP, NID_ITC, NID_XDCK, NID_APSC, NID_CMETH</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                           };</span><br /> *** Break In Code ***</div>
+<p> </p>
+<p style="font-weight: bold;">CallObject Kernel log:</p>
+<div style="margin-left: 40px;">...<br /> SELECT IMITM, IMLITM, IMAITM, IMDSC1, IMDSC2, <span style="color: red;">IMPRGR, IMRPRC, IMORPR, IMUOM1,</span><br style="color: red;" /> <span style="color: red;">IMUOM2</span>, IMUOM3, IMUOM4, IMUOM6, IMUOM8, IMUOM9, IMUWUM, IMUVM1, IMPLEV,<br /> IMPPLV, IMCLEV, IMCKAV, IMSRCE, IMSTKT, IMLNTY, IMBACK, IMTFLA, IMSRNR,<br /> IMPMTH, IMLOTS, IMSNS, IMLTLV, IMLTMF, IMLTCM, IMMLQ, IMLTPU, IMMRPP, IMITC,<br /> IMXDCK, IMAPSC, IMCMETH FROM PRODDTA.F4101  WHERE  ( IMITM = 746224.000000 )<br /> OUT-&gt;[  1] mnJobNumber                      [1]<br /> OUT-&gt;[  2] nIndexNumber                     [1]<br /> OUT-&gt;[  3] nNumberOfKeys                    [1]<br /> OUT-&gt;[  4] cCacheActionCode                 [1]<br /> OUT-&gt;[  5] cCacheCodeError                  [6]<br /> OUT-&gt;[  6] cSuppressErrorMessage            [1]<br /> OUT-&gt;[  7] szErrorMessageID                 [ ]<br /> OUT-&gt;[  8] cRecordFoundInTable              [1]<br /> OUT-&gt;[  9] mnIdentifierShortItem            [746224] *** Assignment starts here ***<br /> OUT-&gt;[ 10] szIdentifier2ndItem              [TEST_LXQ301              ]<br /> OUT-&gt;[ 11] szIdentifier3rdItem              [TEST_LXQ301              ]<br /> OUT-&gt;[ 12] szDescriptionLine1               [DO2000 DOOR OPERATOR          ]<br /> OUT-&gt;[ 13] szDescriptionLine2               [                              ]<br /> OUT-&gt;[ 14] <span style="color: red;">szLineType</span>                       [        ]  *** PRGR is assigned; correct: LNTY ***<br /> OUT-&gt;[ 15] <span style="color: red;">szUnitOfMeasurePrimary</span>           [     ] *** RPRC is assigned; correct: UOM1 ***<br /> OUT-&gt;[ 16] <span style="color: red;">szUnitOfMeasureSecondary</span>         [  ]<br /> OUT-&gt;[ 17] <span style="color: red;">szUnitOfMeasurePurchas</span>           [        ]<br /> OUT-&gt;[ 18] szUnitOfMeasurePricing           [     ]<br /> OUT-&gt;[ 19] szUnitOfMeasureShipping          [  ]<br /> OUT-&gt;[ 20] szUnitOfMeasureProduction        [        ]<br /> ...</div>
+<p><br /> To fix this issue: Either change Column Array or change the sequence of data structure. For this issue refer &lt;Bug 14663809&gt; - 9.1 WRONG COLUMN ARRAY IN B3202030 CAUSE ZOMBIE KERNEL</p>
+<div class="kmnotebox">
+<p>Note: JDE.log may contains below error for this issue (but the cause of above error message is caused by column array mismatch between Column Array and Data Structure),</p>
+<p>====&gt; Exception C0000005 ACCESS_VIOLATION occurred in thread 3824 with call stack:<br /> _jdeStrcpy@8! jdeunicode.dll <br /> _I3201650_RetrieveCostMethod@16! CMFG.dll <br /> _RollupPriceCostWeightVolume@12! CMFG.dll</p>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="batch"></a><strong>Memory violation in Batch Application:</strong></h3>
+<p>Memory Violation message in PDF or JDEDEBUG.log shall not reflect actual offending business function. Because Memory Violation message in PDF is to be written by UBE Kernel, which reads and process line by line based on event rule as a result it only indicates the first level business function (which is called by report). So if a certain UBE is calling any business function through UBE Kernel, which is waiting for called business function to return. If it fails, then Memory Violation Message is to be written in PDF. For this reason if you turn on UBE log, same message can be retrieved. For this case, it is very important for you to capture both UBE kernel log and CallObject Kernel log by setting tracing (which records callobject process) and UBE Logging Level 6.</p>
+<p>As we have describe above, Memory Violation can be understood as violating <span style="text-decoration: underline;">memory safety</span> which in turn returns unexpected result. So you need to resolve this message to guarantee the result you are getting is correct and valid.</p>
+<p>Unlike interactive application, transaction volume in a certain batch may affect result so verify that whether there is any memory leak. If so, resolve memory leak first to move on to memory corruption. Most of time, memory leak and memory corruption can be related in batch.</p>
+<p> </p>
+<h4 class="km"><a name="ube1"></a>Example 1:</h4>
+<ul>
+<li>R47011 (EDI Sales Order) Ends in Memory Error</li>
+</ul>
+<p style="margin-left: 40px;">A. PDF:</p>
+<div style="margin-left: 80px;">EventRule : Business Function R47011DetailDoSectionProcess at line 36 for Event 13 in Section Read/Edit EDI Detail has caused a memory violation.</div>
+<p style="margin-left: 40px;">B. How to debug:</p>
+<div style="margin-left: 80px;">1. Turn on logging for both UBE kernel and CallObject Kernel and focus on the business function ends abruptly and business function called by this termination. <br /> 2. Look for bug based on the business function object ID retrieved by above<br /> 3. (Optionally) review the business function code and make it sure codes for fix exist in it</div>
+<div style="margin-left: 80px;"> </div>
+<div></div>
+<div><hr /></div>
+<p> </p>
+<h4 class="km"><a name="ube2"></a>Example 2:</h4>
+<ul>
+<li>R3483 (MRP) ends in Memory Violation</li>
+</ul>
+<p>A. UBE Log</p>
+<div style="margin-left: 40px;">--UBE--[0]-- EventRule : Business Function MRPWriteDateBuckets at line 295 for Event 13 in Section Read Item Branch Records has caused a memory violation. <br /> --UBE--[2]-- Finished with UBE Message Loop <br /> --UBE--[1]--  Total Pages processed are 1  <br /> --UBE--[6]-- Printing Object Value =  'ERROR:' <br /> --UBE--[6]-- Printing Object Value =  'EventRule : Business Function <span style="font-weight: bold;">MRPWriteDateBuckets</span> at line 295 for Event 13 in Section Read Item Branch Records has caused a memory violation.' <br /> --UBE--[1]-- Before PRT_EndDoc <br /> --UBE--[6]-- Unsuccessfully Finishing Engine.  Review UBE log for errors.</div>
+<p>B. Cause: R3483 heavily uses array and/or array of array heavily because data has to be handled dynamically. Most commonly memory error is coming when allocated memory is smaller than actual cache to be created based on transaction data.</p>
+<p>C. How to fix it:</p>
+<ul>
+<li>nNumberOfDays +  nNumberOfWeeks +  nNumberOfMonths +  nNoOfPastDuePeriods has to be smaller than MAX_CAPACITY_DATES 56 (defined in B3400360.c)</li>
+<li>nInitialBranchCount has to be bigger than actual branches for planning</li>
+</ul>
+<p>For this example, there are more than 400 branches to deal with whereas user did not specify initialbranchcount so default value 100 was used allocating memory. So when 101th branch tries to create date cache (copy based on date branch) it hits memory error. To fix this type of error, make it sure the initialization value is big enough to hold actual data.</p>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="ube3"></a>Example 3:</h4>
+<ul>
+<li>R42800 (Sales Update) ends memory error</li>
+</ul>
+<div style="margin-left: 40px;">A. PDF reads:<br /> <br />
+<div style="margin-left: 40px;">ERROR:<br /> EventRule : Business Function AcctRecFSEndDoc at line 674 for Event 13 in Section Sales Update And Report has caused a memory violation.</div>
+</div>
+<p style="margin-left: 40px;">B. jde_*.log</p>
+<div style="margin-left: 80px;">====&gt; Exception C0000005 ACCESS_VIOLATION occurred in thread 37000<br /> call stack dumped in file &lt;E:\JDEdwards\E900\DDP\log\jde_43532_1333518572_1_dmp.log&gt;:<br />  iParam: 0000000000<br /> INFO: Entering kernel signal handler, process exiting soon: iParam: 1333518575<br /> INFO: Done setting IPC Handle State structures to abandoned, process exiting immediately: iParam: 1333518575<br /> BSFN<br /> C0000005 ACCESS_VIOLATION<br /> E:\JDEdwards\E900\DDP\log\jde_43532_1333518572_1_dmp.log<br /> <br /> JDB4200003 - OPEN TABLE NOT CLOSED = F42119, opened from File=b4200260.c, Function=WriteSalesHistoryOrLedger, Line=185.<br /> JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()<br /> <br /> CAC0001034 - (jdeCacheTerminate) NULL cache handle encountered: jdeCacheTerminate failed<br /> JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()<br /> JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()</div>
+<div style="margin-left: 40px;"><br /> C. jde_*.dmp.log</div>
+<p style="margin-left: 80px;">******************************************<br /> Date Stamp<br /> ******************************************<br /> Generating call stacks for PID 43532<br /> ******************************************<br /> ====&gt; Exception C0000005 ACCESS_VIOLATION occurred in thread 37000 with call stack:<br /> _jdeCacheInitX@48! jdekrnl.dll  <br /> _jdeCacheInitExX@32! jdekrnl.dll  <br /> 0x85cc800.&lt;nosymbols&gt;! CALLBSFN.dll  <br /> _jdeCallObject@40! jdekrnl.dll  <br /> _CallEndBusinessFunction@4! jdekrnl.dll  <br /> _jdbFreeEnvInternal@12! jdekrnl.dll  <br /> <span style="color: red;">_JDB_FreeEnv@4! jdekrnl.dll  </span><br style="color: red;" /> <span style="color: red;">_WinMain@16! runbatch.exe  </span><br /> _WinMainCRTStartup! runbatch.exe  <br /> 0x759bf13c.&lt;nosymbols&gt;! kernel32.dll  <br /> 0x773ed80d.&lt;nosymbols&gt;! ntdll.dll  <br /> 0x773eda1f.&lt;nosymbols&gt;! ntdll.dll  <br /> <br /> =====Call stack of thread 37000=====<br /> _LogNTCallStackDump@8! jdel.dll  <br /> ?NTUnhandledExceptionHandler@NTExceptionHandler@@CGJPAU_EXCEPTION_POINTERS@@@Z! runbatch.exe  <br /> 0x704559b.&lt;nosymbols&gt;! orageneric11.dll  <br /> UnhandledExceptionFilter! kernel32.dll  <br /> _XcptFilter! MSVCR71.dll  <br /> _WinMainCRTStartup! runbatch.exe  <br /> 0x759bf13c.&lt;nosymbols&gt;! kernel32.dll  <br /> 0x773ed80d.&lt;nosymbols&gt;! ntdll.dll  <br /> 0x773eda1f.&lt;nosymbols&gt;! ntdll.dll </p>
+<p style="margin-left: 40px;">D. Queue Kernel log:</p>
+<div style="margin-left: 80px;">31268/43020 MAIN_THREAD                           Wed Apr 04 14:49:47.132000    ipcmisc.c299<br />     Call stack for process 43532:<br /> CDIST.dll/UNKNOWN/SaveARDetailCacheTerminate<br /> CALLBSFN.dll/B0000183/jdeFreeEnvBSFN</div>
+<p style="margin-left: 40px;">E. How to Fix</p>
+<p style="margin-left: 80px;">For this example, error "JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()"  is harmful. Since data pointer can't be referenced after hitting this error, the result you are getting may not be valid. Identify which routine is leacking data pointer and resolve it.</p>
+<p style="margin-left: 80px;">For this example, actual implemenation is written in event rule (either do not call routine to fetch/store data pointer or kill it after using it).</p>
+<p> </p>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="ube4"></a>Example 4:</h4>
+<p><br /> R893201H ends in error:</p>
+<div style="margin-left: 40px;">A. jde_*_dmp.log<br />
+<div style="margin-left: 40px;">******************************************<br /> Mon Jun 25 16:21:54 2012<br /> ******************************************<br /> Generating call stacks for PID 7232<br /> ******************************************<br /> ====&gt; Exception C0000005 ACCESS_VIOLATION occurred in thread 2832 with call stack:<br /> 0x7c82c912.&lt;nosymbols&gt;! ntdll.dll  <br /> 0x7c8338a2.&lt;nosymbols&gt;! ntdll.dll  <br /> 0x7c82b46b.&lt;nosymbols&gt;! ntdll.dll  <br /> calloc! MSVCR71.dll </div>
+B. How to fix it?<br />
+<div style="margin-left: 40px;">This can be unique and extrem example because the behavior of R893201H (which is meant for table conversion for Configurator from B7 to 8.9 and above). Firstly this uses huge amount of resources (depends on volume of data) so this type of error may be written through Windows Heap Memory Manager. As a result, logs created from JDE kernels may not contain any detail information on cause of error. For this example, this type of error can be overcome by running this conversion UBE in deployment server.</div>
+</div>
+<div></div>
+<p> </p>
+<hr />
+<p> </p>
+<div>
+<h4 class="km"><a name="r01800p"></a>Example 5:</h4>
+<p><br /> R01800P (Address Book Purge) ends in error when 8 digit Address Book Number is selected:</p>
+<div style="margin-left: 40px;">This is unique example of memory overriwrite in submitting R01800P to 64 bits windows platform. For this example, Job Status is updated to 'E-Error' but both JDE.log and JDEDEBUG.log may not leave any error in it. The reason is that the 1st level BSFN (which is directly called by R01800P faces Memory Overwrite.<br /> <br /> So it is important to capture full set of CallObject Kernel log and analyze it along with the source code called (for this example, B0100017 - ChecktheABDelete (F0101 Edit Address Book Delete). Note that same function gets called in your clicking Delete button in P01012 WEB CLIENT EXCEPTION error shall be appeared in HTML client.<br /> <br /> A. B0100017.c<br />
+<div style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">JDEBFRTN(ID) JDEBFWINAPI ChecktheABDelete (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD0100017 lpDS)</span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;"> *** Break in Code ***</span><br style="font-style: italic;" /> <span style="font-style: italic;">   <span style="color: red;">JCHAR             Hold[8] ={_J('\0')};</span>  /* Note that 16 bytes of memory is allocated */</span><br style="font-style: italic;" /> <span style="font-style: italic;">*** Break in Code ***</span><br style="font-style: italic;" /> <span style="font-style: italic;">   FormatMathNumeric (Hold, &amp;lpDS-&gt;mnAddressNumber); /* When mnAddressNumber is 8 digit it requires 18 bytes of memory */</span><br /> *** Break In Code ***</div>
+B. How to fix it?<br />
+<div style="margin-left: 40px;">Apply ESU which includes &lt;Bug 11037315&gt;: UNNECESSARY CHECK IN DELETING - SAR: 8956833<br /> Through above fix memory will be allocated 18 bytes as below,<br />    <span style="font-style: italic; color: red;">JCHAR             Hold[9] ={_J('\0')};</span><br />   : For this example, String Variable which is Character Array [9] implements NULL/Termination Character which indicated ends of string.</div>
+</div>
+<div style="margin-left: 40px;"> </div>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h4 class="km"><a name="r47131"></a>Example 6:</h4>
+<div><br />
+<p>R47131 (EDI Inbound Purchase Order Change) ends in memory violation error when Blank UDC values are deleted.</p>
+<div style="margin-left: 40px;">First of all, refer to &lt;Document 1115344.1&gt; E1: 42: Open Cursor for Cache F42UI11 Failed (078M) Error in P4210 <br /> A. Error in UBE log<br /> --UBE--[0]-- EventRule : Business Function F4211FSEditLine at line 479 for Event 13 in Section Detail Table Section has caused a memory violation. <br /> --UBE--[2]-- Finished with UBE Message Loop <br /> --UBE--[1]--  Total Pages processed are 1  <br /> --UBE--[6]-- Printing Object Value =  'ERROR:' <br /> --UBE--[6]-- Printing Object Value =  '<span style="color: red;">EventRule : Business Function F4211FSEditLine at line 479 for Event 13 in Section Detail Table Section has caused a memory violation.</span>' <br /> --UBE--[1]-- Before PRT_EndDoc <br /> --UBE--[6]-- Unsuccessfully Finishing Engine.  Review UBE log for errors. <br /> <br /> B. Error in CallObject Kernel log<br />      SELECT  *  FROM PD910.F0005  WHERE  ( DRSY = '41' AND DRRT = 'S3' AND DRKY = '        ' ) <br />      No More Data Found  /* Message in log indicates Blank Code is missing */<br />     <span style="font-weight: bold;">ERROR INFO JDEERR - ID= 28, Error= 018A - ..\..\Common\jdekrnl\runtime\RTK_DDVL.C, Line= 544 </span><br /> <br /> R47131 - EDI Inbound Purchase Order Change (this application is to update exiting sales order based on EDI table populated)<br />     |--- F4211FSEditLinePreProcess<br />               |--- ERROR INFO JDEERR - ID= 28, Error= 018A - ..\..\Common\jdekrnl\runtime\RTK_DDVL.C, Line= 544<br />           (so this business functions returns Error meaning that it fails to create cache for sales order detail F42UI12)<br />     |--- F4211FSEditLine<br />               |--- CopySOInfoToWorkFiles /* this function copies cache in F42UI12 */<br />                     (So there is no cache created (missing source) as a result it is not able to copy it)<br />               : Since called BSFN B4211FSEditLine fails to return calling routine of R47131, Memory Violation Message will be written 'EventRule : Business Function F4211FSEditLine at line 479 for Event 13 in Section Detail Table Section has caused a memory violation.'<br /> <br /> C. Cause of error<br />      : As described above error is coming in validation routine from F4211FSEditLinePreProcess<br />
+<div style="margin-left: 40px;">*** Break In Code B4200310 F4211FSEditLinePreProcess ***<br /> <span style="font-style: italic;">JDEBFRTN (ID) JDEBFWINAPI F4211FSEditLinePreProcess (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD4200310J lpDS)  </span><br style="font-style: italic;" /> <span style="font-style: italic;">{</span><br style="font-style: italic;" /> <span style="font-style: italic;">     ...</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdsrp1),(const JCHAR *)(&amp;lpDS-&gt;szSalesReportingCode1));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdsrp2),(const JCHAR *)(&amp;lpDS-&gt;szSalesReportingCode2));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdsrp3),(const JCHAR *)(&amp;lpDS-&gt;szSalesReportingCode3));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdsrp4),(const JCHAR *)(&amp;lpDS-&gt;szSalesReportingCode4));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdsrp5),(const JCHAR *)(&amp;lpDS-&gt;szSalesReportingCode5));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdprp1),(const JCHAR *)(&amp;lpDS-&gt;szPurchasingReportCode1));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdprp2),(const JCHAR *)(&amp;lpDS-&gt;szPurchasingReportCode2));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdprp3),(const JCHAR *)(&amp;lpDS-&gt;szPurchasingReportCode3));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdprp4),(const JCHAR *)(&amp;lpDS-&gt;szPurchasingReportCode4));</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)(&amp;dsF42UI12.zdprp5),(const JCHAR *)(&amp;lpDS-&gt;szPurchasingReportCode5));</span><br /> *** Break In Code ***</div>
+D. How to fix it?</div>
+<div style="margin-left: 60px;">: Do not delete Blank UDC value (if you are not going to populate source files. e.g., szSalesReportingCode1) which is loaded in your installation.</div>
+<div><br />
+<div class="kmnotebox"><br /> <span style="font-weight: bold;">Note:</span><br />
+<ul>
+<li>In running P4210 for update mode, which shall issue error on screen however in batch deletion of blank UDC code can cause Memory Corruption (that is, NULL Pointer is being copied).</li>
+<li>So do not delete Blank UDC for DD Alias SRP1 (UDC 41/S1), SRP2 (UDC 41/S2), SRP3 (UDC 41/S3), SRP4 (UDC 41/S4), SRP5 (UDC 41/S5), PRP1 (UDC 41/P1), PRP2 (UDC 41/P2), PRP3 (UDC 41/P3), PRP4 (UDC 41/P4) and PRP5 (UDC 41/P5).</li>
+<li>Same issue can be occurred when you change default value for DD Alias which belongs to F42UI12 (Sales Order Detail Cache 2 (MBF)) table.</li>
+<li>For detail, refer to &lt;Document 1572856.1&gt; - E1: 47: Case Study on R47131 ends in Memory Violation Error owing to missing settings and &lt;Document 1115344.1&gt; E1: 42: Open Cursor for Cache F42UI11 Failed (078M) Error in P4210</li>
+</ul>
+</div>
+ </div>
+</div>
+<hr />
+<p> </p>
+<h4 class="km"><a name="r30450"></a>Example 7:</h4>
+<div></div>
+<p>    R30450 (Kanban Size Calculation) ends memory error when F3413 (MPS/MRP/DRP Summary File)<br />     : This issue shall be simulated any 64 bit platform</p>
+<div><br /> A. Representation error in PDF<br /> ERROR:<br /> <span style="color: red;">EventRule : Business Function KanbanSizeCalculationGeneric at line 30 for Event 13 in Section Calculate Sizes has caused a memory violation.</span><br />    : For this example, 1st level business function which is called by R30450 is KanbanSizeCalculationGeneric so capture callobject kernel log and analyze it. Actual memory corruption is coming 3rd level BSFN B3003940 - GetAvgDailyDemandForKanbanItem (Get Average Daily Demand for Kanban Item).<br /> <br /> B. CallObject Kernel log: B3003940 fails to return to calling routine so log ends eruptively.<br /> <br /> C. Cause: Null Pointer is referenced as below,<br />    : Code Example:-<br /> /* Break In Code */<br /> <span style="font-style: italic;"> mnStartQty = I3003940_GetF3413Demand(hRequest,dsInternal,</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                        cDemandAggregationFlg,</span><br style="font-style: italic;" /> <span style="font-style: italic;">                                        dsF3413.mrstrt,dsF3413.mrstrt);</span><br style="font-style: italic;" /> <span style="font-style: italic;">  lpdsInfo-&gt;mnQty = mnStartQty; <span style="color: #3333ff;">/* this line of code causes memory corruption when I3003940_GetF3413Demand() is NULL */</span></span><br /> /* Break In Code */<br /> <br /> D. Resolution: Refer to &lt;Bug 16677551&gt; STAUTS ERROR FOR FUNCTION FIXEDCONTAINERSIZEAVGDEMAND WITH NO RECORD IN F3413<br />    : Possibly, you may check whether return value is zero or not as below,<br /> /* Break In Code */ <br /> <span style="font-style: italic;"> if(MathZeroTest(&amp;mnStartQty))</span><br style="font-style: italic;" /> <span style="font-style: italic;"> {</span><br style="font-style: italic;" /> <span style="font-style: italic;">     lpdsInfo-&gt;mnQty = mnStartQty;</span><br style="font-style: italic;" /> <span style="font-style: italic;"> }</span><br /> /* Break In code */</div>
+<p> </p>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="knownissue"></a>Known Issues and Bugs:</h3>
+<p>&lt;Document 1237103.1&gt; E1: 12: R12855 Ends In Memory Violation Error on Windows Server 2008 x64<br /> &lt;Document 632629.1&gt; E1: 34: R3482 &amp; R3483 Common Error Messages and Memory Violations<br /> &lt;Document 639397.1&gt; E1: 30: R30601 EventRule: Business Function BillOfMaterialIntegrityCheckT1<br /> &lt;Document 1064662.1&gt; E1: 43: Possible Causes of Memory Violation in P4314 - Voucher Match Application<br /> &lt;Document 1322258.1&gt; E1: 47: R47011 Reads Memory Violation<br /> &lt;Document 1272974.1&gt; E1: UBE: Case Study on "MEMORY ALLOCATION FAILURE" Errors in EnterpriseOne Batch Applications<br /> &lt;Document 1060818.1&gt; E1: UBE: R98306X Ends in Error and Output is Showing Incomplete Data<br />&lt;Document 1179493.1&gt; E1: BSFN: Call Object Kernel Errors Clarification - COB0000*  which explains how JDE API. <br />  </p>
+<div class="kmnotebox"> Note:
+<ul>
+<li>Oracle's JD Edwards do not warranty any memory corruption issue caused by custom code</li>
+<li>This note is to be updated without given any prior notice to indicate more case studies on this topic</li>
+<li>This note is based on EnterpriseOne application release 9.1 and it's tools release 9.1</li>
+<li>This note is created based on thin client configuration, which performs business function logic in your logic server</li>
+</ul>
+</div>
+<p> </p>
+<p>Additional case study can be added into this document without giving prior notice.</p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

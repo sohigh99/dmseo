@@ -1,0 +1,1583 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Light ERP in Cloud for SME</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Light ERP in Cloud for SME</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>CS698-1803B-01 Computer Science Capstone</p>
+<p>Light ERP Implantation Plan for PT Matahari</p>
+<p>&nbsp;Dong Myeong Seo</p>
+<p>09/18/2018</p>
+<p>Colorado Technical University</p>
+
+
+<p><strong>Abstract</strong> &ndash; It is known that the Enterprise Resources Planning (ERP) increases the productivity of a certain company tremendously through the integration between different systems, and planning/forecasting based on the transaction data. However, a small company like PT Matahari cannot make transition to the digital company because software vendors try to sell software on one-for-all basis when a small number of features in it are required, which resulted in the barrier for small enterprises to implement and maintain it. In modern computing environment, the cloud computing with the service oriented architecture (SOA) of enterprise solutions enable small companies to transform its business model without spending millions of dollars upfront. The rapid enhancement of network infrastructure and better security measurement from the cloud computing vendors accelerate these migration for large enterprises as well as small companies. The Software as a Service (SaaS) model in the cloud will enable PT Matahari to enjoy the best crop of enterprise solutions without having ownership of software to use with better security measurement than on-premises solutions available now.</p>
+<p>&nbsp;</p>
+<p><strong>Table of Contents</strong></p>
+<p>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Outline.................................................................................. 3</p>
+<p>1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Company Overview................................................................................... 3</p>
+<p>1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Outline............................................................................................ 3</p>
+<p>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Problem Identification...................................................................... 4</p>
+<p>2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Problem Context and Background.......................................................... 5</p>
+<p>2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Problem Statement..................................................................................... 5</p>
+<p>2.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hypothesis Statement................................................................................ 5</p>
+<p>2.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Subject Matter Areas................................................................................. 6</p>
+<p>2.4.1&nbsp;&nbsp;&nbsp;&nbsp; Unified Modeling Language (UML).................................................. 6</p>
+<p>2.4.2&nbsp;&nbsp;&nbsp;&nbsp; Object Oriented Design (OOD).......................................................... 6</p>
+<p>2.4.3&nbsp;&nbsp;&nbsp;&nbsp; Layered Style &ndash; Enterprise Solutions................................................. 6</p>
+<p>2.4.4&nbsp;&nbsp;&nbsp;&nbsp; Required Feature.................................................................................... 7</p>
+<p>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Topic Research.................................................................................. 8</p>
+<p>3.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Topic Research Using Case Study.......................................................... 8</p>
+<p>3.1.1&nbsp;&nbsp;&nbsp;&nbsp; Research Questions............................................................................... 9</p>
+<p>3.1.2&nbsp;&nbsp;&nbsp;&nbsp; Case Selection and Determine Data Gathering and Analysis Technique.............................................................................................................. 9</p>
+<p>3.1.3&nbsp;&nbsp;&nbsp;&nbsp; Prepare to Collect the Data.................................................................. 9</p>
+<p>3.1.4&nbsp;&nbsp;&nbsp;&nbsp; Collect Data in the Field.................................................................... 10</p>
+<p>3.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Related Works.......................................................................................... 10</p>
+<p>3.2.1&nbsp;&nbsp;&nbsp;&nbsp; ERP Benefit.......................................................................................... 11</p>
+<p>3.2.2&nbsp;&nbsp;&nbsp;&nbsp; ERP in the Cloud................................................................................. 12</p>
+<p>3.2.3&nbsp;&nbsp;&nbsp;&nbsp; Barrier to the Cloud............................................................................ 13</p>
+<p>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Topic Solution................................................................................ 14</p>
+<p>4.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Research Design...................................................................................... 14</p>
+<p>4.1.1&nbsp;&nbsp;&nbsp;&nbsp; Service Oriented Architecture........................................................... 14</p>
+<p>4.1.2&nbsp;&nbsp;&nbsp;&nbsp; Private Cloud and Public Cloud....................................................... 16</p>
+<p>4.1.3&nbsp;&nbsp;&nbsp;&nbsp; Software Defined Network................................................................ 16</p>
+<p>4.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Solution Justification............................................................................... 17</p>
+<p>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Plan for Data Collection &amp; Data Analysis......................... 19</p>
+<p>5.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Plan............................................................................................... 19</p>
+<p>5.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Risk Analysis........................................................................................... 21</p>
+<p>5.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cost-Benefit Analysis............................................................................. 22</p>
+<p>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Conclusion and Future Works........................................................ 24</p>
+<p>6.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Conclusion................................................................................................ 24</p>
+<p>6.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Future Work.............................................................................................. 27</p>
+<p>References............................................................................................... 29</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc525038885"></a><a name="_Toc297821649"></a><a name="_Toc297821545"></a><a name="_Toc297821489"></a><a name="_Toc418686231"></a>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Outline</h1>
+<h2><a name="_Toc525038886"></a>1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Company Overview</h2>
+<p>&nbsp;</p>
+<p>A paint product distributer in Indonesia, PT Matahari, has more than 26 years of business with over 120 employees in different cities in Indonesia. In recent years, the demand for paint products rise rapidly because the city councils mandated to paint commercial buildings every four years. At the same time, the rising disposable income in private sectors elevates the demand for paint products as well. Naturally, lots of new competitors come into the market with advanced information technology as the network infrastructure in this region evolves quickly.</p>
+<h2><a name="_Toc525038887"></a>1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Outline</h2>
+<p>This document is to seek for the opportunity to develop a light Enterprise Resource Planning (ERP) document for PT Matahari using a formal methods in requirements and verification. This document builds complete analysis of dominating commercial ERP software to meet the needs from small and medium size enterprises. The aim is to build a light ERP software which is affordable in both implementing and maintaining it. This document comprises,</p>
+<ul>
+<li>Problem Identification</li>
+<li>Research on on-premises commercial ERP</li>
+<li>A light ERP software in the cloud</li>
+<li>Implementation plan</li>
+<li>Conclusion and future work</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="_Toc328034039"></a><a name="_Toc329585007"></a><a name="_Toc329585138"></a><a name="_Toc329585251"></a><a name="_Toc329585725"></a><a name="_Toc329588407"></a><a name="_Toc329588593"></a><a name="_Toc329588859"></a><a name="_Toc329598491"></a>&nbsp;</p>
+<h1><a name="_Toc525038888"></a><a name="_Toc297821654"></a><a name="_Toc297821550"></a><a name="_Toc297821494"></a><a name="_Toc418686237"></a>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Problem Identification</h1>
+<p><a name="_Toc367365848"></a>The implementation and maintenance of dominant commercial ERP software is expensive because these software have huge array of features to enable to run business in different industries and sizes. Figure 1 depicts a typical modules suites available for these commercial ERP software from SAP, Oracle, and Microsoft. &nbsp;</p>
+
+<p><img src="../images/ctu01201.png" border="0" alt="A Typical ERP" title="Typical ERP Implementation" hspace="0" vspace="0"/></p>
+
+
+
+<p>Figure 1. Typical ERP Modules</p>
+<p>And Figure 2 depicts a typical architecture of on-premises enterprise solutions.</p>
+<p><img src="../images/ctu01202.png" border="0" alt="Layered Architecture" title="Layered Architecture" hspace="0" vspace="0"/></p>
+<p>Figure 2. Layered On-Premises Architecture</p>
+<p>This document will review possible implementation of ERP which is tailored for the small and medium size enterprises by focusing on core features in it.</p>
+<h2><a name="_Toc525038889"></a>2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Problem Context and Background</h2>
+<p>&nbsp;</p>
+<p>The renounced commercial ERP vendors focus on adding the features to market their software across line of business because most enterprises need the backbone system to hold various transactions. These enterprise solutions follow good software characteristics <a name="_Toc257115160"></a><a name="_Toc257114852"></a>meeting following requirements (Barbin, 2013),</p>
+<ul>
+<li>Separation of Concerns (SoC) &ndash; segregate the applications into distinctive units not to overlap each other;</li>
+<li>(Loose) Coupling &ndash; the degree of corelation between components to reuse and to test;</li>
+<li>(High) Cohesion &ndash; the degree of relationship among components with good reason to combine to reuse and maintain; and</li>
+<li>Information Hiding &ndash; the separation of design decisions because it is to be changed during maintenance phase.</li>
+</ul>
+<p>So it is important to build a light ERP software which meets above characteristics and allowing users to configure country specific tax system and localized needs.</p>
+<h2><a name="_Toc525038890"></a>2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Problem Statement</h2>
+<p>&nbsp;</p>
+<p>The implementation and maintenance of commercial on-premises ERP software is expensive because software vendors try to sell software developed based on one-for-all approach such that many features are not needed by a specific customer.</p>
+<h2><a name="_Toc525038891"></a>2.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Hypothesis Statement</h2>
+<p>&nbsp;</p>
+<p>If the cost of ERP implementation and maintenance is related with the architectural style and the number of features unused in on-premises environment, then by correcting architectural style and by focusing on core features available in the cloud will reduce the cost of ERP implementation tremendously.</p>
+<h2><a name="_Toc525038892"></a>2.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Subject Matter Areas</h2>
+<p>This section reviews Unified Modeling Language (UML), Object Oriented Design (OOD), Layered Style, and Features for the discourse.</p>
+<h3><a name="_Toc525038893"></a>2.4.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unified Modeling Language (UML)</h3>
+<p>UML is suitable for requirements gathering, which is several kinds of diagrams to represent different pieces of the system to develop. UML can be categorized into structure diagram and behavior diagram (Stephen, 2015). The benefits of UML are the wide acceptance, suitability for object-oriented analysis and design (OOAD), and different view per roles. The disadvantage will be it is hard to learn because of its complexity.</p>
+<h3><a name="_Toc525038894"></a>2.4.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object Oriented Design (OOD)</h3>
+<p>Since the high-level design are to identify the major types of classes which the application will use, each classes include definitions of the properties, methods, and events. OOD is defined as a programing language with five conceptual tools &ndash; encapsulation, data protection, inheritance, interface, and polymorphism. As a result, this concept is highly useful for encapsulation and abstraction which are good software elements. Well-known benefits are real-world modeling, and high code reusability with weakness in relational database let alone it is not technology (Burleson, n.d.).</p>
+<h3><a name="_Toc525038895"></a>2.4.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Layered Style &ndash; Enterprise Solutions</h3>
+<p>As software architectural style, layered style provides different levels of abstraction where each layer only addresses its concern. The advantages of this architectural styles include high cohesion, loose coupling, and clearly defined function layers. This advantage is in its difficulties in limiting the communication only with adjacent layer. Figure 3 represents a typical layers in the enterprise solutions.</p>
+
+<p><img src="../images/ctu01203.png" border="0" alt="Layered Style" title="Layered Style" hspace="0" vspace="0"/></p>
+
+<p>Figure 3. Layered Style for Enterprise Solutions</p>
+<h3><a name="_Toc525038896"></a>2.4.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Required Feature</h3>
+<p>Since PT Matahari does not have any manufacturing and fabrication facilities, the feature required are very limited as depicted in Figure 4.</p>
+<p><img src="../images/ctu01204.png" border="0" alt="Inventory, Cash, and Data Transition" title="Inventory, Cash, and Data Transition" hspace="0" vspace="0"/></p>
+<p>Figure 4. Inventory, Cash, and Data Transition</p>
+<p>Through ERP implementation, PT Matahari can fulfill real-time inventory management, automatic billing, and some of business intelligence outcome based on the transaction data collected.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc525038897"></a>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Topic Research</h1>
+<p>Rresearch is the systematic investigation into and study of materials, sources, etc. to establish facts and reach new conclusion using logical argument through thesis, antithesis, and synthesis (Johnson, n.d.). For this discourse, the case study research methodology is to be used to solve the problem that the commercial Enterprise Resource Planning (ERP) software is not suitable for small-medium size enterprise because it is expensive to implement and maintain in on-premises environment.</p>
+<h2><a name="_Toc525038898"></a>3.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Topic Research Using Case Study</h2>
+<p>&nbsp;</p>
+<p>Case study methodology focuses on contextual analysis of a limited number of conditions or events along with their relationships. Case study is meaningful when representing and depicting a high-level view of executions on software to develop. Case study is used to organize an extensive range of information about the problem to analyze its contents of information through patterns in the data and using further analysis via cross comparison with other cases when available. So, case study is appropriate especially when the perimeter between phenomenon and context are not clear and palpable (McNamara, n.d.). Table 1 describes the pros and cons of Case Study research methods (Soy, 2006).</p>
+<p>Table 1. Advantages and Disadvantages of Case Study Research Methodology</p>
+<table>
+<tbody>
+<tr>
+<td width="236">
+<p>Advantages</p>
+</td>
+<td width="235">
+<p>Disadvantages</p>
+</td>
+</tr>
+<tr>
+<td width="236">
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Case study excels in understanding complex issue</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Suitable for real-life situation</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Case study is suited for the situation where effects are expected to be wide ranging or take a long time to appear</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Situations where the context is expected to play a key role in the phenomena</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Provide the basis for the application of ideas and extension of methods</p>
+</td>
+<td width="235">
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Generality or reliability issue when a small number of cases are analyzed</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Intense exposure to study can cause biased view on the findings</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Selectin of a case can be challenging</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The data collection and analysis highly relies on the interpretation of context</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3><a name="_Toc525038899"></a>3.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Research Questions</h3>
+<p>Regardless the size of company, it is inevitable to run business through Information Technology (IT) system in modern world. Commonly, ERP is a backbone system for a certain company. But many times, the cost of implementation and maintenance of ERP system is burden for small and medium sized enterprises. So this cost factor is main huddle to transit a company into highly effective and efficient system. Naturally, current situation results into some following questions in implementing Oracle&rsquo;s JDE E1 ERP system,</p>
+<ul>
+<li>How the selection of ERP features affect the implementation cost of system in the cloud for a small enterprise?</li>
+<li>How commercial cloud mitigates the security concern for successful transition from on-premises to the cloud?</li>
+</ul>
+<h3><a name="_Toc525038900"></a>3.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Case Selection and Determine Data Gathering and Analysis Technique</h3>
+<p>There are many well perceived commercial ERP software in the market now. At the outset of design phase, PT Matahari determines that it is worthwhile to review ERP software, JD Edwards (JDE) E1 from Oracle. There are over 400,000 companies which make up 12% market share globally (Infocluch, 2018). However, this huge figure is not suitable for PT Matahari regarding the size of company and their revenue. Hence, the selection of case will focus on 6,000 customer with revenue below $600 million (Quarles, 2018).</p>
+<h3><a name="_Toc525038901"></a>3.1.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Prepare to Collect the Data</h3>
+<p>The researcher contacts the software vendor, Oracle sales team to get the list of JDE clients with the number of users are smaller than 150 and the revenue of $10 million if any. Based on the criteria made, the researcher collects reliable online sources to elicit information gathering in the area of ERP features, engineered system from sale vendor, and rate of the cloud utilization for this product with different level of services.</p>
+<h3><a name="_Toc525038902"></a>3.1.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Collect Data in the Field</h3>
+<p>In software industry, there are numerous sources to collect valuable information for the problem analysis document including marketing data from various cases, price list per stack, success stories, failure stories, and roadmaps. Additionally, questions below need answering based on the research question made above as represented in table 2.</p>
+<p>Table 2. Interview Question</p>
+<table>
+<tbody>
+<tr>
+<td width="51">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="202">
+<p><em>Research Question</em></p>
+</td>
+<td width="219">
+<p><em>Interview/Survey Question</em></p>
+</td>
+</tr>
+<tr>
+<td width="51">
+<p><em>1</em></p>
+</td>
+<td width="202">
+<p>How the selection of ERP features affect the implementation cost of system in the cloud for a small enterprise?</p>
+</td>
+<td width="219">
+<p>What is revenue of your company?</p>
+<p>What is the number of users?</p>
+<p>What are the required features in JDE E1?</p>
+</td>
+</tr>
+<tr>
+<td width="51">
+<p><em>2</em></p>
+</td>
+<td width="202">
+<p>How commercial cloud mitigate security concern for successful transition from on-premises to the cloud?</p>
+<p>&nbsp;</p>
+</td>
+<td width="219">
+<p>What is the level of service (IaaS, PaaS, or SaaS)?</p>
+<p>Who is responsible for the security?</p>
+<p>What is security concern in the cloud?</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h2><a name="_Toc525038903"></a>3.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Related Works</h2>
+<p>The advent of information technology has affected the JDE E1 positively since it is in the market in 1991. JDE started from World Software which is written using Report Program Generator (RPG) when the days run enterprise solution using IBM minicomputer operating systems, which confined the dependency on its platform. Later, whole code got rewritten using C and C++ which made the system to be platform and database independent. The evolution continues from client-server system to layered system to move to the HTML and XML interface in the end. The transformation has been continued since Oracle purchased JD Edwards in 2005. Currently, there is no in-depth research on JDE E1 because there is some gap between the enterprise solution and theory when the technology for enterprise solution evolves quicker than any other area of software development. This section reviews the benefit of ERP implementation, the ERP in the cloud, and the risk of the cloud.</p>
+<h3><a name="_Toc525038904"></a>3.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ERP Benefit</h3>
+<p>According to SelectHub, ERP software has advantages, and disadvantages as the table 3 represents (SelectHub, n.d.). Small companies hesitate to move forward transition because of ERP is expensive even though ERP itself is an IT solution.</p>
+<p>Table 3. ERP Advantages and Disadvantages</p>
+<table>
+<tbody>
+<tr>
+<td width="234">
+<p>Advantages</p>
+</td>
+<td width="237">
+<p>Disadvantages</p>
+</td>
+</tr>
+<tr>
+<td width="234">
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Lower IT Cost</em>: through efficiency</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Total Visibility</em>: through integrity with a single solution for daily transactions</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Improved Reporting and Planning</em>: a single database enables analysis of data</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Improved Efficiency</em>: using standardized business model</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Better Customer Service</em>: comprehensive price rule and history of sales</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Data Security</em>: security in various layer</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Improved Collaboration</em>: through clear cause and effect of data generated</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Deep integration</em>: the flow of status using standard applications</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Improved Data Quality</em>: using relational database&nbsp;</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Standardized Business Process</em>: enabling the company move to the industry standard</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Regulatory Compliance</em>: based on the flexible rule defined</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Superior Scalability</em>: Object driven architecture</p>
+</td>
+<td width="237">
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Direct Cost</em>: the implementation cost about a half million for JDE E1</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Indirect Cost</em>: potential cost for maintenance</p>
+<p>-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>Customization</em>: Each country, and organization may have different way to run business</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h3><a name="_Toc525038905"></a>3.2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ERP in the Cloud</h3>
+<p>Oracle who owns various business solutions has high initiative to move both potential and exiting clients to the cloud. Many argues that on-premises ERP is dead and others do not agree with whole idea of cloud as well. As depicted in figure 6, these services include the Infrastructure as a service (IaaS), Platform as a Service (PaaS), and Software as a Service (SaaS) (Oracle, 2018).</p>
+
+<p><img src="../images/ctu01205.png" border="0" alt="Cloud Stack" title="Cloud Stack" hspace="0" vspace="0"/></p>
+
+<p>Figure 5. Cloud Computing Stack</p>
+<p>The cloud advocates claim that benefits of cloud service with different stack includes (Bonuccelli, 2017),</p>
+<ul>
+<li>Flexibility: it is easy to scale up the cloud capacity for the dynamic organization;</li>
+<li>Low-Cost Disaster Recovery: hosting company maintains foundation of system;</li>
+<li>The cloud update the software up to date;</li>
+<li>Capital-expenditure free: pay based on subscription; and</li>
+<li>Competitiveness: through the adaptation of latest IT technology.</li>
+</ul>
+<p>&nbsp;</p>
+<h3><a name="_Toc525038906"></a>3.2.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Barrier to the Cloud</h3>
+<p>On the other hand, other literatures claim the phenomenon that big companies are not moving their infrastructure to the cloud arguing that there are limited number of fortune 500 companies excluding software company has successfully migrated their infract structure to the cloud. According to Forbes, the fear comes because (Forbes, 2017),</p>
+<ul>
+<li>High failure rate except for PaaS (Platform-as-a-Service): this reports failure story of IaaS (Infrastructure-as-a-Service);</li>
+<li>Conservative people and service: many cases this is true show stopper;</li>
+<li>Case study shows the failure is caused by a lack of clearly defined organization-wise strategy;</li>
+<li>Psychological barriers: thinking of the age of the cloud, this can be one of main factor in following questions: will the cloud be more secure than internal data center? Will the cloud up-and-running without fail?</li>
+<li>Time, Cost, and Security: Clustering and maintaining redundancy between the cloud and local machine and its cost;</li>
+<li>Change management; and</li>
+<li>Translating Security Posture to the cloud.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc525038907"></a>4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Topic Solution</h1>
+<p>The primary goal of research is to formulate a solution based on the analysis made. This section entails the research methodology used and proposed solutions to the problems described in earlier section.</p>
+<h2><a name="_Toc525038908"></a>4.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Research Design</h2>
+<p>&nbsp;</p>
+<p>The selection of the research methodology is crucial for the solution to make based on the observed problem. A case study methodology is to depict a holistic view of a client&rsquo;s experience. Previous section reviewed the research questions, how to select case, preparation for data collection, and data collection in the field. This section entails how to evaluate and analyze the data collected to prepare the report.</p>
+<p>The investigator/consultant studies each organization&rsquo;s written documentation and survey response data to classify unique patterns within the data for an individual company. Then consultants prepare detailed case study write-ups for each companies and segregate each interview and survey questions and answers to evaluate the usefulness of data collected. Then cross case analysis deals with a small company in on premises ERP system and cloud and a large company in on premises ERP and in the public cloud.</p>
+<p>Solution below is made based on the analyze made, which reviews available services in the cloud for small company, the private cloud for both small and large companies, and software defined network to mitigate the security concern.</p>
+<h3><a name="_Toc521474875"></a><a name="_Toc525038909"></a>4.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Service Oriented Architecture &nbsp;</h3>
+<p>&nbsp;</p>
+<p>Service Oriented Architecture (SOA, or Service Oriented Infrastructure) is the organization of the components of a system. The available features in SOA architecture represents its benefits (and its disadvantage). Available features in this organization are (OpenGroup, n.d.),</p>
+<ul>
+<li>Services: various services to meets users and business requirements successful</li>
+<li>Service re-use: since the implementation and maintenance of software are expensive</li>
+<li>Messaging: through flexible configuration among a group of enterprise solutions from different vendors with different architecture and programing language</li>
+<li>Service composition and discovery</li>
+<li>Virtualization: to improve reliability and scalable business needs</li>
+</ul>
+<p>Figure 6 depicts available services in the cloud. This organization is useful when a single product cannot solve problems by enabling mix and match approach and in considering the scalable systems as business grows.</p>
+<p>Figure 6. Service Oriented Architecture in the cloud</p>
+<h3><a name="_Toc525038910"></a>4.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Private Cloud and Public Cloud</h3>
+<p>Since the security is one of main concern for the large enterprises, there should be negotiating point between on-premises, the private cloud, the hybrid cloud, and the public cloud. Figure 7 depicts the available choices based on cost factor and control factor.</p>
+<p>Figure 7. Types of Cloud services</p>
+<p>Commonly, there are three options for cloud: a private cloud, a public cloud, and a hybrid with benefit presented in table 4 (Microsoft, n.d.),</p>
+<p>Table 4. Advantages of the Private, Public, and Hybrid Cloud Options</p>
+<table>
+<tbody>
+<tr>
+<td width="159">
+<p><strong>Public Cloud</strong></p>
+</td>
+<td width="154">
+<p><strong>Private Cloud</strong></p>
+</td>
+<td width="159">
+<p><strong>Hybrid Cloud</strong></p>
+</td>
+</tr>
+<tr>
+<td width="159">
+<p>Lower Cost</p>
+<p>No maintenance</p>
+<p>Scalability</p>
+<p>High reliability</p>
+</td>
+<td width="154">
+<p>More flexibility</p>
+<p>Improved Security</p>
+<p>High Scalability</p>
+</td>
+<td width="159">
+<p>More control</p>
+<p>Higher flexibility</p>
+<p>Cost-effective</p>
+<p>Easier transitioning to the cloud</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>As shown in the table 4, the public cloud with SaaS service is the best choice for the small company like PT Matahari where the budget for the implementation and maintenance is main concern, and the private cloud with PaaS will be better option for the large organization when the data security is main concern. It is important to leverage the cloud for both its efficiency and cost saving but also with consideration of security, privacy, and control of it.</p>
+<h3><a name="_Toc525038911"></a>4.1.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Software Defined Network</h3>
+<p>The primary purpose of Software-Defined Network (SDN) is not to compromise the security vulnerability with proper network congestion control. A typical configuration for SDN is adding layer in between infrastructure layer and application layer to have better control on traffic. Figure 8 depicts the framework of SDN.&nbsp; The benefit of SDN configuration is that it is programmable directly, agile, centrally managed, programmatically configured (Opennetworking, 2017).</p>
+<p>Figure 8. Software Defined Network</p>
+<h2><a name="_Toc525038912"></a>4.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Solution Justification</h2>
+<p>SOA, the Cloud, and SDN can be due course for PT Matahari to maintain sustainable enterprise with minimum cost of implementation and maintenance. The solution discussed in this section is to answer on the problem why a small company does not implement ERP system and why a large company does not transit to the cloud.</p>
+<p>The key factors why a large company hesitate to move to the cloud is concerns on security, performance, and availability because these factors can disrupt its daily business seriously (Kress et al.). These quality of service factors (QoS) are enhanced tremendously as the information technology keeps on evolving. Furthermore, many large companies reckon that one enterprise solution is not sufficient to perform their businesses. Hence, mix and match approach in the cloud enables these users to pick and run from various service providers. For example, client may purchase JDE E1 as a base and extend its transportation capability by subscribing Oracle Transportation Management (OTM) after free trial.</p>
+<p>Many small companies including PT Matahari hesitate to transit to the ERP software even though they are aware of its benefits because of its direct and indirect cost in on-premises environment. Hence, Software as a Service (SaaS) option for these entities are ideal because these companies can run ERP software without owing it. Common benefits of this model comprises easy/fast deployment; pay only for what you use; no in-house IT staff; enjoy the latest functionality and standardized business rules which are most of companies aim.</p>
+<p>Lastly, software is fine result of physical resources, people, technology, and processes. And intelligent security system performs to predict, prevent, detect, and response against its users, network, and context. According to Oracle, Software-Defined Networking enhances application performance and management flexibility by connecting dynamically virtual machines and services to networks, storage devices, and other virtual machines (Oracle, n.d.).</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc525038913"></a>5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Plan for Data Collection &amp; Data Analysis</h1>
+<p>This section reviews a project plan, a risk in implementing the solution reviewed previously, and a cost-benefit analysis in detail.</p>
+<h2><a name="_Toc525038914"></a>5.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Project Plan</h2>
+<p>&nbsp;</p>
+<p>Figure 9 depicts the roadmap of light ERP implementation for PT Matahari in SaaS cloud. As shown in this roadmap, the time for implementation decreases tremendously from 2 years to 0.5 year for a small company like PT Matahari. There is no upfront cost incurred where most cloud vendor allows 3 to 6 months as playing around period.</p>
+<p>Figure 9. ERP Implementation Roadmap in SaaS</p>
+<p>Since the project is to implement the modules of Customer Relationship Management (CRM) and Financial in the cloud, which leads different approach from the conventional on-premises ERP implementation. Table 5 represents high-level plan to implement the ERP in the cloud for PT Matahari, which is given by Oracle as the best practice (Oracle, 2015).</p>
+<p>Table 5. High Level Plan</p>
+<table>
+<tbody>
+<tr>
+<td width="108">
+<p><strong><em>Project Design</em></strong></p>
+</td>
+<td width="236">
+<p><strong><em>What</em></strong></p>
+</td>
+<td width="128">
+<p><strong><em>Who</em></strong></p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>Project Design</em></p>
+</td>
+<td width="236">
+<p>Plan Project</p>
+</td>
+<td width="128">
+<p>Project Manager</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Conduct Kick-off Meeting</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Schedule Workshop</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Conduct Functional Design Workshop</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Conduct Technical Design Workshop</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Conduct Design Review</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Develop Security and Validation Strategy</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>Configure</em></p>
+</td>
+<td width="236">
+<p>Setup Applications</p>
+</td>
+<td width="128">
+<p>Project Manager,</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Validate Configuration</p>
+</td>
+<td width="128">
+<p>Business Analyst, and</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Load &amp; Validate Data</p>
+</td>
+<td width="128">
+<p>Super users</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Build &amp; Validate Integration</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Implement Security</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Prepare Cutover Strategy</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>Validate</em></p>
+</td>
+<td width="236">
+<p>Update setups</p>
+</td>
+<td width="128">
+<p>Business Analysis, and</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Load &amp; Validate Data</p>
+</td>
+<td width="128">
+<p>Super users</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Conduct End-to-End Review</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Prepare for Training</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Train power users</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>Transition</em></p>
+</td>
+<td width="236">
+<p>Migration configuration to the Production</p>
+</td>
+<td width="128">
+<p>Oracle as a Product Vendor</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Load and Validate in Production</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Verify Production &amp; Operational Readiness</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Begin Production Use</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>Realization</em></p>
+</td>
+<td width="236">
+<p>Manage Transition to Steady-state Operations</p>
+</td>
+<td width="128">
+<p>PT Matahari and</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Post Go-Live Support</p>
+</td>
+<td width="128">
+<p>Project Manager</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Handoff to Client Relationship Manager</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Gain Acceptance</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p><em>&nbsp;</em></p>
+</td>
+<td width="236">
+<p>Close Project</p>
+</td>
+<td width="128">
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Table 6 gives detail activities, duration, resource, and its cost breakdown which are relevant to a small company. In this table, the resources comprise Project Manager (PM), Business Analyst (BA) from the consulting firm who has rich experience in implanting Oracle&rsquo;s JD Edwards EnterpriseOne, and Power User (PU) from PT Matahari for configuration and business decision. The denomination of cost is USD where the cost of BA is 50 Dollar per hour.</p>
+<p>Table 6. SaaS Project Plan for PT Matahari</p>
+<table width="0">
+<tbody>
+<tr>
+<td width="210">
+<p><strong><em>Activity</em></strong></p>
+</td>
+<td width="66">
+<p><strong><em>Start</em></strong></p>
+</td>
+<td width="66">
+<p><strong><em>End</em></strong></p>
+</td>
+<td width="97">
+<p><strong><em>Resource</em></strong></p>
+</td>
+<td width="99">
+<p><strong><em>On-Premises</em></strong></p>
+</td>
+<td width="86">
+<p><strong><em>SaaS</em></strong></p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Finalize Solution Configuration &amp; Customization Plan (<em>5 months</em>)</p>
+</td>
+<td width="66">
+<p>10/01/18</p>
+</td>
+<td width="66">
+<p>02/28/19</p>
+</td>
+<td width="97">
+<p>PM (1), BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>100,000.00</p>
+</td>
+<td width="86">
+<p>100,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Plan Implementation (<em>1 month</em>)</p>
+</td>
+<td width="66">
+<p>03/01/19</p>
+</td>
+<td width="66">
+<p>03/31/19</p>
+</td>
+<td width="97">
+<p>BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>40,000.00</p>
+</td>
+<td width="86">
+<p>40,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Provide Data Center Facility</p>
+</td>
+<td width="66">&nbsp;</td>
+<td width="66">&nbsp;</td>
+<td width="97">&nbsp;</td>
+<td width="99">
+<p>50,000.00</p>
+</td>
+<td width="86">
+<p>0.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Acquire, Implement, and Test Hardware</p>
+</td>
+<td width="66">
+<p>&nbsp;</p>
+</td>
+<td width="66">
+<p>&nbsp;</p>
+</td>
+<td width="97">
+<p>&nbsp;</p>
+</td>
+<td width="99">
+<p>500,000.00</p>
+</td>
+<td width="86">
+<p>0.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Acquire, Implement, and Test Software</p>
+</td>
+<td width="66">&nbsp;</td>
+<td width="66">&nbsp;</td>
+<td width="97">&nbsp;</td>
+<td width="99">
+<p>500,000.00</p>
+</td>
+<td width="86">
+<p>0.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Setup SSO Security with SaaS Provider (<em>1/4 month</em>)</p>
+</td>
+<td width="66">
+<p>04/01/19</p>
+</td>
+<td width="66">
+<p>04/07/19</p>
+</td>
+<td width="97">
+<p>PU (2), SP (1)</p>
+</td>
+<td width="99">
+<p>0.00</p>
+</td>
+<td width="86">
+<p>0.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Configure Application Functionality (<em>1 &frac34; month</em>)</p>
+</td>
+<td width="66">
+<p>04/08/19</p>
+</td>
+<td width="66">
+<p>05/31/19</p>
+</td>
+<td width="97">
+<p>BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>40,000.00</p>
+</td>
+<td width="86">
+<p>40,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Customize Application for PT Matahari (<em>1 month</em>)</p>
+</td>
+<td width="66">
+<p>06/01/19</p>
+</td>
+<td width="66">
+<p>06/30/19</p>
+</td>
+<td width="97">
+<p>BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>20,000.00</p>
+</td>
+<td width="86">
+<p>20,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Data Migrations, Conversions, Integrations (<em>1/2 Month</em>)</p>
+</td>
+<td width="66">
+<p>07/01/19</p>
+</td>
+<td width="66">
+<p>07/14/19</p>
+</td>
+<td width="97">
+<p>PU (1), SP (1)</p>
+</td>
+<td width="99">
+<p>0.00</p>
+</td>
+<td width="86">
+<p>0.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Test Customized App in User Environment (<em>2 &frac12; Month</em>)</p>
+</td>
+<td width="66">
+<p>07/15/19</p>
+</td>
+<td width="66">
+<p>09/30/19</p>
+</td>
+<td width="97">
+<p>BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>60,000.00</p>
+</td>
+<td width="86">
+<p>60,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>SaaS Subscription Activation</p>
+</td>
+<td width="66">&nbsp;</td>
+<td width="66">&nbsp;</td>
+<td width="97">
+<p>PU (1), SP (1)</p>
+</td>
+<td width="99">
+<p>0.00</p>
+</td>
+<td width="86">
+<p>144,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Solution Rollout</p>
+</td>
+<td width="66">
+<p>10/01/19</p>
+</td>
+<td width="66">
+<p>10/30/19</p>
+</td>
+<td width="97">
+<p>PM (1), BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>40,000.00</p>
+</td>
+<td width="86">
+<p>40,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>End User Training</p>
+</td>
+<td width="66">
+<p>11/01/19</p>
+</td>
+<td width="66">
+<p>11/30/19</p>
+</td>
+<td width="97">
+<p>BA (2), PU (2)</p>
+</td>
+<td width="99">
+<p>40,000.00</p>
+</td>
+<td width="86">
+<p>40,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Change Management</p>
+</td>
+<td width="66">
+<p>10/01/19</p>
+</td>
+<td width="66">
+<p>~</p>
+</td>
+<td width="97">
+<p>&nbsp;</p>
+</td>
+<td width="99">
+<p>&nbsp;</p>
+</td>
+<td width="86">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Solution Management</p>
+</td>
+<td width="66">
+<p>10/01/19</p>
+</td>
+<td width="66">
+<p>~</p>
+</td>
+<td width="97">&nbsp;</td>
+<td width="99">&nbsp;</td>
+<td width="86">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="210">
+<p>Help Desk</p>
+</td>
+<td width="66">
+<p>10/01/19</p>
+</td>
+<td width="66">
+<p>~</p>
+</td>
+<td width="97">
+<p>&nbsp;</p>
+</td>
+<td width="99">
+<p>100,000.00</p>
+</td>
+<td width="86">
+<p>100,000.00</p>
+</td>
+</tr>
+<tr>
+<td width="210">&nbsp;</td>
+<td width="66">&nbsp;</td>
+<td colspan="2" width="163">
+<p><strong>12 Months</strong></p>
+</td>
+<td width="99">
+<p><strong>$&nbsp; 1,490,000.00 </strong></p>
+</td>
+<td width="86">
+<p><strong>&nbsp;$ 584,000.00 </strong></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note</em>: Above table is written based on figure 9 which is a guided methods from Enterprise Software Initiative (DoD, n.d)</p>
+<h2><a name="_Toc525038915"></a>5.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Risk Analysis</h2>
+<p>Risks affect the success of project directly. Project manager lists up possible risk caused by budget, cost, and resource and share it with high level management for the success of the ERP implementation project as depicted in figure 10.</p>
+<p>Figure 10. Project Constraints</p>
+<p>Table 7 represents three main risks in cloud ERP implementation and its mitigation activities. The risk factors are directly related with why large enterprises hesitate to move to their enterprise solutions to the cloud.&nbsp;</p>
+<p>Table 7. Cloud ERP Risk and Mitigation</p>
+<table>
+<tbody>
+<tr>
+<td width="106">
+<p><em>Risk</em></p>
+</td>
+<td width="191">
+<p><em>Detail</em></p>
+</td>
+<td width="176">
+<p><em>Mitigation</em></p>
+</td>
+</tr>
+<tr>
+<td width="106">
+<p><em>Security</em></p>
+</td>
+<td width="191">
+<p>Main concern of cloud-based enterprise solutions. Since all computers are connected to each other, the security risk is inevitable.</p>
+</td>
+<td width="176">
+<p>The software vendor Oracle assures the strongest security through Software Defined Network. Preventive, detective and administrative security measures are in place</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="106">
+<p><em>Change Management</em></p>
+</td>
+<td width="191">
+<p>The standardization makes it possible faster implementation than on-premises implementation.</p>
+</td>
+<td width="176">
+<p>The hosting providers assures the maintenance and deployment of updates and fixes through Agile development methodology. This plan is related with the financial health of vendor, Oracle.</p>
+<p>Another approach commonly used is phased ERP implementation instead of a &lsquo;Big Bang&rsquo; approach.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="106">
+<p><em>Regulation &amp; Compliance</em></p>
+</td>
+<td width="191">
+<p>Depending on the types of business there are rules and regulations to comply with. This factor is related with the benefit of ERP which ships these regulation and compliance</p>
+</td>
+<td width="176">
+<p>A bigger solution provider enables various line of business to meet the legal requirements across the industry. It is important to approach the solution from the business process point of view than technical view.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>There are other risks which can be categorized by technical risks, scheduling risks, commercial risks, resource (organizational, human resources, information delivery) risks, outsourcing risks, environmental risks, contractual risks, product responsibility risks, and localization risks (Johansson, 2013).</p>
+<h2><a name="_Toc525038916"></a>5.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cost-Benefit Analysis</h2>
+<p>A cost-benefit analysis is to determine how well the planned action will turn out based on the benefits in positive and the costs in negative (Reh, 2018). Table 8 reviews cost-benefit analysis in implementing ERP in SaaS which is offered by Oracle who is the vendor for enterprise solutions and the cloud service.</p>
+<p>Table 8. Cost-Benefit Analysis &ndash; Implementing SaaS ERP</p>
+<table width="0">
+<tbody>
+<tr>
+<td width="240">
+<p><strong><em>Activity</em></strong></p>
+</td>
+<td width="99">
+<p><strong><em>On-Premises</em></strong></p>
+</td>
+<td width="106">
+<p><strong><em>SaaS</em></strong></p>
+</td>
+<td width="180">
+<p><strong><em>Others</em></strong></p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><strong><em>Upfront Cost</em></strong></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; Facility Maintenance (Space, Electricity)</em></p>
+</td>
+<td width="99">
+<p>(5,000.00)</p>
+</td>
+<td width="106">
+<p>0.00</p>
+</td>
+<td width="180">
+<p>Space, electricity usage, insurance and so on</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; Acquisition of Engineered System</em></p>
+</td>
+<td width="99">
+<p>(50,000.00)</p>
+</td>
+<td width="106">
+<p>0.00</p>
+</td>
+<td width="180">
+<p>Cheapest engineered system including operating system, database server, and hardware</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; Acquisition of ERP Solution </em></p>
+</td>
+<td width="99">
+<p>(500,000.00)</p>
+</td>
+<td width="106">
+<p>0.00</p>
+</td>
+<td width="180">
+<p>Based on all-in-one package</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><strong><em>Operating Cost</em></strong></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; IT Staffing (2)</em></p>
+</td>
+<td width="99">
+<p>(20,000.00)</p>
+</td>
+<td width="106">
+<p>0.00</p>
+</td>
+<td width="180">
+<p>Salary for 2 IT staffs</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; ERP Maintenance Contract</em></p>
+</td>
+<td width="99">
+<p>(4,167.00)</p>
+</td>
+<td width="106">
+<p>&nbsp;</p>
+</td>
+<td width="180">
+<p>Based on 50,000.00 annual plan</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>Deployment Cost/Speed</em></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p>&nbsp;</p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>Upgrades and Updates</em></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p>&nbsp;</p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>Subscription Expenses (10 users * 2 modules)</em></p>
+</td>
+<td width="99">
+<p>0.00</p>
+</td>
+<td width="106">
+<p>(12,000.00)</p>
+</td>
+<td width="180">
+<p>10 users with 2 modules per month</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>System Performance (productivity loss)</em></p>
+</td>
+<td width="99">
+<p>0.00</p>
+</td>
+<td width="106">
+<p>(5,000.00)</p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><strong><em>Increased Revenue</em></strong></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p><strong>&nbsp;</strong></p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; Reduce Labor Cost</em></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p>20,000.00</p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; Engineered System</em></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p>833.00</p>
+</td>
+<td width="180">
+<p>5 Years amortization</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; ERP Solution Acquisition</em></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p>8,333.00</p>
+</td>
+<td width="180">
+<p>5 Years amortization</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><em>&nbsp; ERP Maintenance Cost Saving</em></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p>4,167.00</p>
+</td>
+<td width="180">
+<p>Subscription includes maintenance of system</p>
+</td>
+</tr>
+<tr>
+<td width="240">
+<p><strong><em>Net Saving Per Month</em></strong></p>
+</td>
+<td width="99">&nbsp;</td>
+<td width="106">
+<p><strong>&nbsp;$&nbsp; 17,000.00</strong></p>
+</td>
+<td width="180">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note</em>: Cost shown per month and amortized over five years.</p>
+<p>Cost-Benefit analysis shows that the implementation of ERP in SaaS environment save costs even excluding other intangible benefits as ERP software promises. ERP implementation in SaaS can save over $17,000 per month which yields $204,000 a year.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc525038917"></a>6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Conclusion and Future Works</h1>
+<p>This section formulates conclusions against the hypothesis formed and additionally, reviews some emerging technology in ERP which may affect the enterprise solutions to implement for PT Matahari in coming years.</p>
+<h2><a name="_Toc525038918"></a>6.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Conclusion</h2>
+<p>Here reviews overall approaches made in yielding the conclusion of the research work made so far. Table 9 represents the methods and its corresponding contents for this research document for PT Matahari. &nbsp;&nbsp;</p>
+<p>Table 9. Summary of Research Activities</p>
+<table>
+<tbody>
+<tr>
+<td width="154">
+<p><strong><em>Methods&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</em></strong></p>
+</td>
+<td width="318">
+<p><strong><em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Implementation</em></strong></p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Choose the Topic</em></p>
+</td>
+<td width="318">
+<p>The enterprise solution based upon over 17 years of experience. For this research, Oracle&rsquo;s JD Edwards EnterpriseOne ERP software is chosen because this product is best known ERP for the small and medium size enterprises like the client, PT Matahari.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Identify a Problem</em></p>
+</td>
+<td width="318">
+<p>The implementation and maintenance of commercial on-premises ERP is expensive because software vendors try to sell software developed based on one-for-all approach such that many features are not needed by a specific customer.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Research the Problem</em></p>
+</td>
+<td width="318">
+<p>Through a case study research method, the researchers review the benefit of ERP software, the cost of on-premises ERP and infrastructure, the available cloud services and its cost including why bigger companies does not migrate to the cloud.&nbsp;</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Form a Hypothesis</em></p>
+</td>
+<td width="318">
+<p>If the cost of ERP implementation and maintenance is related with the architectural style and the number of features unused in on-premises environment, then by correcting architectural style and by focusing on core features available in the cloud will reduce the cost of ERP implementation tremendously.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Design the Experiments</em></p>
+</td>
+<td width="318">
+<p>There is not an actual experiment to justify the hypothesis since this project is not directly related with software development.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Test the Hypothesis</em></p>
+</td>
+<td width="318">
+<p>This document is more about current market analysis by collecting various sources of data. Hence, collecting data and cases through a case study method suffices the analysis.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Analyze the Result</em></p>
+</td>
+<td width="318">
+<p>The approach to justify the hypothesis is the time and cost effectiveness by comparing the time, budget, resources between on-premises and the cloud system. The comparison is made between the cost of on-premises implementation and the cost of the cloud implementation.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="154">
+<p><em>Formulate and Report Conclusions</em></p>
+</td>
+<td width="318">
+<p>The Cost-Benefit analysis derives that the cost of ERP implementation in SaaS cloud makes a small company to have a viable option to employ the ERP software. To reach this conclusion, the cost-benefit analysis compares reviews the cost incurred what-if basis. This approach is natural because the ERP implementation is not migration but a brand new utilization of enterprise solution.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>The realization of enterprise solutions in the developing countries like Indonesia is tardy because there are widespread ignorance of modern IT technology and insufficient IT infrastructure especially in the area of computer network. On the other hand, the overwhelming usage of Internet or social media in the globe and advent of its Internet infrastructure enable the business player in Indonesia to keep pace with other models in developed countries.</p>
+<p>It is high time for a small company to analyze available enterprise solutions in the market and seek for the most cost effective applications to compete with the bigger market players. The main barrier in moving one organization to the digital domain is that the software is too expensive in implementing it in on-premises environment because the software vendor tries to sell it as one-for-all approach where a small company is wanting a small fraction of those available features because of the constraint of budget.</p>
+<p>Overall, the hypothesis in this research document proves that the implementation of limited modules through SaaS service in the cloud become very much viable option to have competitive edge against its larger competitors. The solutions in this research document entails below,</p>
+<ul>
+<li>Budget: the cost-benefit analysis reveals that the SaaS model saves 555,000.00 upfront investment. At the same time, five years cost analysis repeats this conclusion that additional cost saving comes from the staffing, change management, and acquiring the latest trends.</li>
+<li>Scope: the modules which PT Matahari needed are supply chain management along with integrated financial data when on-premises provides more than ten different suites which are not need for a small company like PT Matahari. Furthermore, the SaaS model enable to implement other services in the future when it is needed.</li>
+<li>Time: the time factor is directly related with the cost of one organization. Firstly, most of service providers allow the potential users to play around its offerings, which is great way to determine the most suitable software or software group without paying any. By adapting the standard business practices, the time to implement, and time to market decreases tremendously. Some argues two years to a half year where there are lots of success story with no more than three</li>
+</ul>
+<p>In conclusion, it is highly recommended for PT Matahari to implement Oracle&rsquo;s JD Edwards EnterpriseOne ERP in the SaaS cloud service which is offered by Oracle because this transition shall enable PT Mathari to embrace the modern enterprise solutions without spending huge amount for the same.</p>
+<h2><a name="_Toc525038919"></a>6.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Future Work</h2>
+<p>According to PwC, the outlook of emerging technology in coming decades are Internet of Things (IoT), Augmented Reality (AR), Virtual Reality (VR), Blockchain, Artificial Intelligence (AI), 3D Printing, Drones, Robots, and so forth (Eckert, 2016).</p>
+<p>The biggest benefit of ERP applications is its nature of planning and forecasting based on data. Hence, it is natural to adapt the emerging technology which is pertinent to the ERP systems. Some of applicable essential emerging technologies in the business solutions are (Linden, 2017),</p>
+<ul>
+<li>Integrated ERP with Social Platform &amp; Technlogy: there are various attempt to have better communication internally and externally. So the integration with none business applications are essential to analyze human behavior.</li>
+<li>Mobile: Some vendors have developed the mobile applications which runs on ERP platform through Application Interface Service (AIS) server with limited area like approvals and real-time inventory availability checking. This trend will move further to accommodate imaging and its recognition.</li>
+<li>Big Data: The real benefit of enterprise solutions is its ability of planning and forecasting. Along with the blockchain, the data across the chain will be used for analysis for better planning and forecasting.</li>
+<li>SOA in the Cloud: The need to run business changes continously. There is not a single ERP software which meets all the requirements and expectations from end-users. Various cloud services will enable clients to mix and match various applications without investing any. Point of Sales (POS) using Microsoft Dynamics 365, Oracle Transportation Management (OTM) for the logistics, JD Edwards Financial for Account Payable.</li>
+</ul>
+<p>As Heraclitus said around 2500 years ago, &ldquo;The only thing that is constant is cahnge.&rdquo; Things around us change, but the methodology and frameworks in the software engineering remains. It is important to get ready to change (or, the change readiness) to the future to come and build applicable knowledge to cope with the challenges using the frameworks and methodologies learnt. Probably, the machine learning in the artificial engineering area may do its job in the computer science research area soon when these machines learn, understand, and reason the IT ecosystem beyond the subject matter.</p>
+<p>&nbsp;</p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<p><strong>&nbsp;</strong></p>
+<h1><a name="_Toc525038920"></a><a name="_Toc297821661"></a><a name="_Toc297821557"></a><a name="_Toc297821501"></a>References</h1>
+<p>Barbin, L. (2013). <em>Software Design Principles</em>. [Kindle Edition]. ISBN: 978-0-9920839-0-8</p>
+<p>Bonuccelli, G. (2017). <em>Why are so many Business moving to the Cloud?</em> Retrieved August 29, 2018, from https://www.parallels.com/blogs/ras/why-cloud-computing/</p>
+<p>Burleson, D. (n.d.). <em>Advantages and Disadvantages of Object-Oriented Approach</em>. Retrieved August 16, 2018, from http://www.dba-oracle.com/t_object_oriented_approach.htm</p>
+<p>Collins, M. (1998). <em>Formal Methods</em>. Retrieved August 15, 2018, from https://users.ece.cmu.edu/~koopman/des_s99/formal_methods/</p>
+<p>DoD. (n.d.). <em>Process Roadmap</em>. Retrieved September 10, 2018, from http://www.esi.mil/saas_toolkit/process_roadmap.html</p>
+<p>Eckert, H. V. (2016). <em>What are the Eight Essential Emerging Technologies for Business?</em> Retrieved September 14, 2018, from https://www.voxcreative.com/sponsored/12522932/what-are-the-eight-essential-emerging-technologies-for-business</p>
+<p>Forbes. (2017). <em>13 Biggest Challenges When Moving Your Business to the Cloud</em>. Retrieved August 29, 2018, from</p>
+<p>Gupta, A. (2014). <em>Research Methods in CS</em>. Retrieved August 23, 2018, from https://drive.google.com/file/d/0BzJcmXkDVbG_ZURBUWR4NVFJaFE/view</p>
+<p>Infocluch. (n.d.). <em>JD Edwards Customers List</em>. Retrieved August 27, 2018, from https://www.infoclutch.com/installed-base/erp/jd-edwards/</p>
+<p>Johansson, T. (2013). <em>Defining an Implementation Project for a Cloud Based Enterprise POS System</em>. Retrieved September 10, 2018, from https://www.theseus.fi/bitstream/handle/10024/62608/Opinnaytetyo_Johansson_Final.pdf?sequence=1</p>
+<p>Johnson, C. (n.d.). <em>What is Research in Computing Science?</em> Retrieved August 24, 2018, from http://www.dcs.gla.ac.uk/~johnson/teaching/research_skills/research.html</p>
+<p>Kress, J. et al. (2014). <em>SOA and Cloud Computing</em>. Retrieved September 3, 2018, from https://www.oracle.com/technetwork/articles/soa/ind-soa-cloud-2190513.html</p>
+<p>Linden, G. (2017). <em>Four Technology Trends and Their Impact on ERP</em>. Retrieved September 14, 2018, from https://www.avanade.com/en/blogs/avanade-insights/erp/four-technology-trends-and-their-impact-on-erp</p>
+<p>McNamara, C. (n.d.). <em>Basics of Developing Case Studies</em>. Retrieved August 23, 2018, from https://managementhelp.org/businessresearch/case-studies.htm</p>
+<p>Microsoft. (n.d.). <em>What are Public, Private, and Hybrid Clouds?</em> Retrieved September 3, 2018, from https://azure.microsoft.com/en-us/overview/what-are-private-public-hybrid-clouds/</p>
+<p>Open Network Foundation. (2012). <em>Software-Defined Networking: The New Norm for Networks</em>. Retrieved September 3, 2018, from https://www.opennetworking.org/images/stories/downloads/sdn-resources/white-papers/wp-sdn-newnorm.pdf</p>
+<p>OpenGroup. (n.d.). <em>Service-Oriented Architecture &ndash; SOA Features and Benefits</em>. Retrieved September 3, 2018, from http://www.opengroup.org/soa/source-book/soa/p4.htm#tbl1</p>
+<p>Oracle. (2015). <em>Oracle Enterprise Resource Planning Cloud Service Implementation Leading Practices</em>. Retrieved September 10, 2018, from https://cloud.oracle.com/_downloads/WhitePaper_ERP_ImplLeadPract_es_ES/Oracle-ERP-Cloud-Implementation-Leading-Practices-white-paper.pdf</p>
+<p>Oracle. (n.d.). <em>Oracle SDN Performance Acceleration with Software-Defined Networking</em>. Retrieved September 3, 2018, from http://www.oracle.com/us/products/networking/virtual-networking/sdn/oracle-sdn-ds-1873198.pdf</p>
+<p>Oracle. (2018). <em>Why Move to the Oracle Cloud</em>. Retrieved August 28, 2018, from https://cloud.oracle.com/home</p>
+<p>Quarles, W. (2018). <em>Is JD Edwards Dead?</em> Retrieved August 27, 2018, from https://cloud.oracle.com/en_US/homehttps://whitelightgrp.com/jd-edwards-dead/</p>
+<p>Reh, F. J. (2018). <em>Cost Benefit Analysis Example</em>. Retrieved September 10, 2018, from https://www.thebalancecareers.com/cost-benefit-analysis-2275277</p>
+<p>SelectHub. (n.d.). <em>ERP Advantages and Disadvantages</em>. Retrieved August 29, 2018, from https://selecthub.com/enterprise-resource-planning/erp-advantages-and-disadvantages/</p>
+<p>Soy, S. K. (2006). <em>The Case Study as a Research Method</em>. Retrieved August 23, 2018, from https://www.ischool.utexas.edu/~ssoy/usesusers/l391d1b.htm</p>
+<p>Stephens, R. (2015). <em>Beginning software engineering</em>. Indianapolis, IN. Wrox, a Wiley Brand.</p>
+<p>Tsui, F. F. (2017).&nbsp;<em>Essentials of Software Engineering</em>. Sudbury: Jones &amp; Bartlett Learning. Retrieved August 15, 2018, from CTU Online Library http://proquestcombo.safaribooksonline.com.proxy.cecybrary.com/book/software-engineering-and-development/9781284106077</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

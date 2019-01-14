@@ -1,0 +1,2462 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Transaction Processing</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Transaction, Transaction Processing, Commit, Rollback</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>In industry, a <strong>transaction </strong>is a transformation of state which has the properties of <strong>atomicity </strong>(<span style="text-decoration: underline;"><em>all or nothing</em></span>), <strong>durability </strong>(<em><span style="text-decoration: underline;">effects survive failures</span></em>) and <strong>consistency </strong>(<span style="text-decoration: underline;"><em>a correct transformation</em></span>).&nbsp; The transaction concept is key to the structuring of data management applications. The concept may have applicability to programming systems in general. <br /> <br /> More commonly, <strong>ACID </strong>(<strong>Atomicity, Consistency, Isolation, Durability</strong>) is known as <strong>database transaction properties</strong>. That is, <big style="color: red;"><strong>All or Nothing for critical commitment</strong>.</big>&nbsp; So it is important to understand what is a Transaction not only in EnterpriseOne but also industry common.&nbsp; This document contains some possible questions you may have when getting errors such as the ones described here.</p>
+<p>Example of Error Message:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li><em>Commit Failed or was Cancelled. Transaction not committed. See jde.log for more information.</em></li>
+<li><em>ASYNCHRONOUS BUSINESS FUNCTION ERROR</em></li>
+<li><em>TRANSACTION ERROR</em></li>
+<li><em>And/Or hint in error WEB CLIENT EXCEPTION with xxxEndDocument</em></li>
+</ul>
+<p>&nbsp;</p>
+</li>
+<li>&nbsp;Most commonly, &lt;Document 625535.1&gt; Transaction Processing in EnterpriseOne Distribution Applications explains and provides a brief concept on Transaction Processing in EnterpriseOne.</li>
+<li>An EnterpriseOne Transaction has to be understood in the context of Transaction File Master Business Function. Refer to &lt;Document 1265902.1&gt; <em>E1: BSFN: Master Business Function in EnterpriseOne.</em></li>
+</ul>
+
+
+<p> </p>
+<h3 class="km"><a name="sub1"></a><strong>Transaction and Transaction Processing</strong></h3>
+<h4 class="km"><a name="transaction"></a>Transaction:</h4>
+<p>In industry, a <strong>transaction </strong>is a transformation of state which has the properties of <strong>atomicity </strong>(<span style="text-decoration: underline;"><em>all or nothing</em></span>), <strong>durability </strong>(<em><span style="text-decoration: underline;">effects survive failures</span></em>) and <strong>consistency </strong>(<span style="text-decoration: underline;"><em>a correct transformation</em></span>).&nbsp; The transaction concept is key to the structuring of data management applications. The concept may have applicability to programming systems in general. <br /> <br /> More commonly, <a href="#acid" alt="ACID" title="ACID"><strong>ACID </strong>(<strong>Atomicity, Consistency, Isolation, Durability</strong>)</a> is known as <strong>database transaction properties</strong>. That is, <big style="color: red;"><strong>All or Nothing for critical commitment</strong>.</big>&nbsp; So it is important to understand what is Transaction not only in EnterpriseOne but also industry common.</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="typeoftransaction"></a>Type of Transaction</h4>
+<ul>
+<li><strong>System Transaction (or Implicit Transaction)</strong>: Database Server itself handles this. In case there is UPDATE Database Server automatically does handle it</li>
+<li><strong>Explicit Transaction (user defined transaction)</strong>: In case you do not set COMMIT TRAN there will be BLOCKING for update issued</li>
+</ul>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>SQL and Oracle server behavior differently in UPDATE as Oracle DB will commit data only through explicit sql&gt; commit; statement whereas in SQL Database system commit happens (system transaction without explicitly committing the transaction).</li>
+<li>It is good practice to issue an UPDATE as shown below:</li>
+</ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; BEGIN TRAN<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UPDATE PRODDTA.F0101 SET ABALPH = 'COMMIT TEST' WHERE ABAN8 = 123456;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMMIT TRAN</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="transactionprocessing"></a>Transaction Processing:</h4>
+<p><strong>Transaction Processing</strong> is designed to maintain a computer system (typically a database or some modern file system) in a known, consistent state, by ensuring that any operations carried out on the system that are interdependent are either all completed successfully or all canceled successfully.<br /> <br /> Transaction processing allows multiple individual operations to be linked together automatically as a single, individual transaction. The transaction-processing system ensures that either all operations in a transaction are completed without error, or none of them are. If some of the operations are completed but errors occur when the others are attempted, the transaction-processing system <strong>rolls back</strong> all of the operations of the transaction (including the successful ones), thereby erasing all traces of the transaction and restoring the system to the consistent, known state that it was in before processing of the transaction began. If all operations of a transaction are completed successfully, the transaction is committed by the system, and all changes to the database are made permanent; the transaction cannot be rolled back once this is done.</p>
+<p>To have full list of transaction processing in EnterpriseOne refer to &lt;Document 1320968.1&gt; E1: DB: Listing of Applications with Transaction Processing by EnterpriseOne Release.&nbsp; For instance, P4114 commits data&nbsp; as below,</p>
+<p style="margin-left: 80px;"><small>1. Calling Business Function <span style="text-decoration: underline;"><strong>F4114EndDocument</strong></span> <a href="#r1">Ref #1</a><a href="strict.html#r1" alt="Reference 1" title="Reference 1"></a><br /> &nbsp;&nbsp; 2. Calling Business Function F0911FSEditDoc <a href="#r2">Ref #2</a><a href="strict.html#r2" alt="Reference 2" title="Reference 2"></a><br /> &nbsp;&nbsp; 2. Return Value is 0 for for F0911FSEditDoc<br /> <br /> &nbsp;&nbsp; 2. Calling Business Function F0911FSSummarizeDoc <a href="#r3">Ref #3</a><a href="strict.html#r3" alt="Reference 3" title="Reference 3"></a><br /> &nbsp;&nbsp; 2. Return Value is 0 for for F0911FSSummarizeDoc<br /> <br /> &nbsp;&nbsp; 2. Calling Business Function <span style="text-decoration: underline;"><strong>F4111EndDocument</strong></span>&nbsp; <a href="#r4">Ref #4</a><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Calling Business Function <span style="text-decoration: underline;"><strong>F0911FSEndDoc</strong></span>&nbsp; <a href="#r5">Ref #5</a><a href="strict.html#r5" alt="Reference 5" title="Reference 5"></a><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>INSERT INTO PRODDTA.F0911</strong></span> <em>*<span style="color: #006600;">** Write Credit ***</span></em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>INSERT INTO PRODDTA.F0911</strong></span> <em style="color: #006600;">*** Write Debit ***</em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Calling Business Function BatchReviseOnTransactionCommit <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>UPDATE PRODDTA.F0011</strong></span>&nbsp; <a href="#r6">Ref #6</a><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Return Value is 0 for for BatchReviseOnTransactionCommit<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Return Value is 0 for for F0911FSEndDoc<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>UPDATE PRODDTA.F41021</strong></span>&nbsp; <a href="#r7">Ref #7</a><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>INSERT INTO PRODDTA.F41021WF</strong></span> <em style="color: #006600;">*** To enables rollback data from F41021 in the event commit fails ***</em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Calling Business Function <strong>InventoryCardexShell </strong><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Calling Business Function <strong>WriteCardexRecord </strong><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>INSERT INTO PRODDTA.F4111</strong></span> <em style="color: #006600;">*** Insert Cardex Information so long as inventory is involved ***</em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Return Value is 0 for for WriteCardexRecord<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Return Value is 0 for for InventoryCardexShell<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Calling Business Function <strong>AverageCostUpdate </strong><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Calling Business Function UpdateItemCost <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>UPDATE PRODDTA.F4105</strong></span> <em style="color: #006600;">*** Update relevant cost if needed ***</em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Return Value is 0 for for UpdateItemCost<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Return Value is 0 for for AverageCostUpdate<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>DELETE FROM PRODDTA.F41021WF</strong></span> <a href="#r8">Ref #8</a><br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Calling Business Function BatchReviseOnExit <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sql&gt; <span style="text-decoration: underline;"><strong>UPDATE PRODDTA.F0011</strong></span> <em style="color: #006600;">*** to release reserved batch ***</em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Return Value is 0 for for BatchReviseOnExit<br /> &nbsp;&nbsp; 2. Return Value is 0 for for F4111EndDocument<br /> 1. Return Value is 0 for for F4114EndDocument</small></p>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li><a name="r1"></a>Ref #1&gt; F4114EndDoc: gets called ASYNCHRNONOUSLY with 'Include in Transaction' ON to handle "Transaction Processing"</li>
+<ul>
+<li>This is why you are getting ASYNCHRONOUS BUSINESS FUNCTION ERROR or Web Client Exception with information of xxxEndDoc as it is called asynchronously</li>
+<li>In general, xxxEndDoc commits various caches which were created in the routine of xxxEditLine</li>
+<li>Only when all the validations are successful, related caches are to be created through xxxEditLine which gets called 'Row Is Exited/Changed - Asynch' event</li>
+<li>xxxEndDoc can be called either '(OK) Post button clicked' event or '(OK) Button Clicked - Asynch'</li>
+<li>If localization is on (or there is additional transaction to handle) then xxxEndDoc may get called synchronously because additional transaction has to be handled by only committed data. In general, we can't guarantee commit take place earlier than additional user interface</li>
+<li>So it is very important that you capture jdedebug.log (namely call object kernel log) and refer jde.log which contains system level errors (DB error or kernel error)</li>
+</ul>
+<li><a name="r2"></a>Ref #2&gt; F0911FSEditDoc: compare G/L header cache against G/L Detail cache which were created during F0911FSEditLine</li>
+<li><a name="r3"></a>Ref #3&gt; F0911FSSummarizeDoc: If G/L summarized option (from the processing option of a certain application or through P0900049) is ON, G/L detail cache created through F0911FSEditLine will be sum up</li>
+<li><a name="r4"></a>Ref #4&gt; F4111EndDocument: This is the BSFN which handles inventory related transaction (Location, Lot, Item Cost, Item Price and Cardex) so review the functionality of F4111EditLine</li>
+<li><a name="r5"></a>Ref #5&gt; F0911FSEndDoc to commit G/L cache created/validated</li>
+<li><a name="r6"></a>Ref #6&gt; To reserve the batch you are working on when transaction affects G/L</li>
+<li><a name="r7"></a>Ref #7&gt; To update (on hand and if needed others) quantity against F41021</li>
+<ul>
+<li>As you can refer &lt;Document 625535.1&gt; this table is sitting on outside transaction boundary along with F41021WF</li>
+<li>Though it failed to update/insert any of tables within transaction processing boundaries rollback is not to take place</li>
+<li>In case auto rollback is on, rollback transaction will take place at (Form Level event) 'Post Commit'</li>
+<li>In case system dies before it comes to this event auto rollback won't take place so it is important to check integrity between F4111 and F41021 regular basis</li>
+<li>Simplified auto-rollback routine is if a certain value is positive from F41021WF subtract it from F41021 and if the value is negative add it from F41021</li>
+</ul>
+<li><a name="r8"></a>Ref #8&gt; if any of tables are not updated/inserted data from F41021WF will not be deleted till rollback process is comes in</li>
+<ul>
+<li>P42210 - F41021 Commitments Recovery, R42210 - F41021 Commitments Recovery or B4101810 - ProcessF41021WFRecords (Process F41021WF Records) will rollback quantity from F41021 b based on F41021WF</li>
+<li>In interactive application this routine (calling of B4101810) is implemented at 'Post Commit' form event</li>
+</ul>
+</ul>
+<ul>
+<li>In short, it is important to:</li>
+<ul>
+<li>Review JDE.LOG which will contain system level error (kernel crash, DB error and so on)</li>
+<li>Capture call object kernel log (i.e., jdedebug.log) which contain detail routine of business functions as major applications in E1 distribution module handles data through master business functions</li>
+</ul>
+</ul>
+</div>
+<p><br /> For this example, the actual transaction will be:</p>
+<div class="kmnotebox" style="margin-left: 80px;">sql1&gt; begin transaction<br />
+<blockquote>sql&gt; INSERT INTO PRODDTA.F0911 <br /> sql&gt; INSERT INTO PRODDTA.F0911 <br /> sql&gt; UPDATE PRODDTA.F0011 <br /> sql&gt; UPDATE PRODDTA.F41021 <br /> sql&gt; INSERT INTO PRODDTA.F41021WF <br /> sql&gt; INSERT INTO PRODDTA.F4111 <br /> sql&gt; UPDATE PRODDTA.F4105</blockquote>
+<br /> (If success)<br /> sql2&gt; <span style="font-weight: bold;">commit</span> transaction<br /> <br /> (If fail)<br /> sql3&gt; <span style="font-weight: bold;">rollback</span> transaction</div>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes</strong>:<br />
+<ul>
+<li>DB Blocking takes place from DML statement is issued till commit or rollback is issued</li>
+<li>If any routine tries to access the same table within transaction processing boundaries, it falls into a deadlock because the 2nd request fails to get locking information (owing to db blocking)</li>
+<li>To exclude a certain table (for example, F41021, F4108 etc.) AUTO_COMMIT can be implemented when certain tables are to be accessed often. For this case, this is to suffice blocking time and possible deadlock</li>
+</ul>
+</div>
+<hr />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4 class="km"><a name="benefit"></a>Benefit of Transaction Processing:</h4>
+<ul>
+<li>It allows sharing of computer resources among many users</li>
+<li>It shifts the time of job processing to when the computing resources are less busy</li>
+<li>It avoids idling the computing resources without minute-by-minute human interaction and supervision</li>
+<li>It is used on expensive classes of computers to help amortize the cost by keeping high rates of utilization of those expensive resources</li>
+<li>A transaction is an atomic unit of processing.</li>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<h4 class="km">&nbsp;Transaction Isolation Level:</h4>
+<ol>
+<li>Level 1: READ COMMITTED<br />
+<ul>
+<li>This is default setting in SQL Server to prevent SQL from dirty read (which reads dirty page which is (not-yet) committed data)</li>
+</ul>
+</li>
+<li>Level 0: READ UNCOMMITTED<br />
+<ul>
+<li>This is to read uncommitted data that is, intentionally to have dirty read</li>
+</ul>
+</li>
+</ol>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>In Oracle and SQL it only reads committed data whereas DB2 may read uncommitted data.</li>
+<li>Occasionally it may take a long time in reading committed data so it is good practice to wait some time (few minutes) to review committed data.</li>
+<li>For example, if you add J line type order through P4310 with checking of Budget it may take a longer time to write F0911 after writing F4301/F4311</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="mbf"></a>Master Business Functions and Transaction Processing:</h4>
+<p>Listed applications from &lt;Document 625535.1&gt; handles commit as below:</p>
+<ul>
+<li>(Conditionally) xxxBegiDoc</li>
+<ul>
+<li>Validate header (customer/supplier) information and validation is successful then create header cache</li>
+<li>This function may be called when a certain transaction has header/detail relationship</li>
+<li>Called in clicking OK button in header or exiting from header<br />&nbsp;</li>
+</ul>
+<li>xxxEditLine</li>
+<ul>
+<li>Validate detail (item) information and validation is successful then create detail cache</li>
+<li>This routine can call another subroutine of xxxEditLine</li>
+<li>Usually gets called in your exiting from specific grid 'Row is Exited/Changed - Asynch'</li>
+<li>In importing excel, or copy/paste may yield faulty result<br />&nbsp;</li>
+</ul>
+<li>(Conditionally) xxxEditDoc</li>
+<ul>
+<li>A certain routine needs additional validation between header and detail</li>
+<li>This has to be called before xxxEndDoc gets called</li>
+<li>If this BSFN contains error it may exit from routine without giving you any error on screen as this BSFN gets called '(OK) post button clicked' event</li>
+<li>Check jasdebug.log and jdedebug.log if any<br />&nbsp;</li>
+</ul>
+<li>xxxEndDoc</li>
+<ul>
+<li>Commit header/detail cache and related information to database</li>
+<li>Gets called at '(OK) Post Button Clicked' or '(OK) Post Button Clicked - Asynch'</li>
+<li>Commit Fail Error or ASYNCHRONOUS BUSINESS FUNCTION error will reference this BSFN<br />&nbsp;</li>
+</ul>
+<li>xxxClearCache</li>
+<ul>
+<li>Most of cases, this BSFN is subroutine of xxxEndDoc</li>
+<li>But if a user click 'Close' or 'Cancel' before click OK button this routine has to come to delete cache created from header or detail</li>
+</ul>
+</ul>
+<p><br /> <a href="strict.html#TheContent" alt="Back To Top" title="Back To Top"></a></p>
+<hr />
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>The contents of this document may be updated without prior notice to accommodate the latest information/Technology.</li>
+<li>Transaction and/or Transaction processing is not JDE specific and in most cases it borrows the technology from the database system.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<h3 class="km"><a name="sub2"></a><strong>Locking</strong></h3>
+<h4 class="km"><a name="transactionandlocking"></a>Transaction and Locking</h4>
+<p>Why it is needed? In case there is an Excel file in a shared area that multiple users can modify,&nbsp; the user modifying may not have the result they want. So grant the author read/write and grant others read only option. If this document is not locked the information referenced by other users will be not accurate (so called, dirty read (against update) or phantom read (against delete).)<br /> <br /> In EnterpriseOne the first purpose of locking is when a user<em> modifies data through </em><strong>transaction </strong><em>A</em>, which gets locked by same data till transaction&nbsp; A <em>gets committed or rolled back</em>. In other words, a certain transaction A has to be locked till this transaction is completed (Data Concurrency). <br /> <br /> Another purpose is that by blocking a certain data modified by other transaction, the original data can be handled within transaction A (Read Concurrency). <br /> <br /> These two attributes (Data Concurrency and Read Concurrency) can be understood better by removing locking in a certain transaction.</p>
+<div class="kmnotebox"><strong>Note:</strong><br /> In EnterpriseOne to minimize dirty read for control/critical controlling data, database cache will be defined and used as all the users are sharing same sets of data across E1.&nbsp; Refer to &lt;Document 944015.1&gt;<em> E1: ENV: General Questions on Caching in EnterpriseOne</em></div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="howtoget"></a>How to get information on Transaction and Locking?</h4>
+<p>Example of an SQL Server:</p>
+<div class="kmcodeblock" style="width: 95%; margin-left: 80px;">SQL&gt; exec sp_lock<br /> SQL&gt; sp_lock @@spid<br /> SQL&gt; sp_who</div>
+<p><br /> Example of an Oracle database server:</p>
+<div class="kmcodeblock" style="width: 95%; margin-left: 80px;">sql&gt;select a.owner, a.object_name, b.oracle_username, b.os_user_name, b.process, b.session_id from dba_objects a, v$locked_object b where a.object_id=b.object_id order by b.process;</div>
+<p><br /> and commonly in Oracle database server:</p>
+<div class="kmcodeblock" style="width: 95%; margin-left: 80px;">sql&gt; SELECT SUBSTR(TO_CHAR(session_id),1,5) "SID",<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUBSTR(lock_type,1,15) "Lock Type",<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUBSTR(mode_held,1,15) "Mode Held",<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SUBSTR(blocking_others,1,15) "Blocking?"<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FROM dba_locks</div>
+<p><br /> Then to detect deadlock in Oracle:</p>
+<div class="kmcodeblock" style="width: 95%; margin-left: 80px;">sql&gt; select name, value<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; from v$sysstat<br /> where name = 'enqueue deadlocks';</div>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes:</strong><span style="text-decoration: underline;"> </span><br />
+<ul>
+<li>DBA for your database system should be aware of how to check locking information as it can vary between different database systems.</li>
+<li>In case a deadlock happens, a specific process may need to be killed after getting process ID(Ex: sql&gt; KILL processID to trigger rollback through your DB system). This may relieve issues in restarting JDE service.</li>
+<li><span style="text-decoration: underline;"><strong>Locks are released only when changes are committed or rolled back</strong></span>. So if a certain transaction takes time (in dealing with Excel upload for example) then a user has to wait until a screen disappears rather than clicking Cancel button or Close button.<span style="text-decoration: underline;"><strong><br /> </strong></span></li>
+<li><strong>Oracle/EnterpriseOne is not responsible for how to get locking information from DB and how to kill a specific process.</strong></li>
+<li>Available script for Oracle database server is <strong><span style="text-decoration: underline;">show_dml_locks.sql</span></strong></li>
+<li>In Oracle Database Server you may get Session ID (SID) from 2nd query then go to session detail and check the owner and action to be performed. You may need to kill the session to release the deadlock.<strong><span style="text-decoration: underline;"><br /> </span></strong></li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="howstrong"></a>How strong it locks?</h4>
+<table style="border-collapse: collapse; width: 996px; height: 43px;" border="3" cellspacing="3" cellpadding="3"><colgroup><col style="width: 128pt;" width="171" /><col style="width: 112pt;" width="149" /><col style="width: 146pt;" width="195" /><col style="width: 189pt;" width="252" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="background-color: #009900; width: 128pt; height: 12.75pt; color: white;">Type</th><th style="background-color: #009900; width: 112pt; color: white;">When</th><th style="background-color: #009900; width: 146pt; color: white;">How long?</th><th style="background-color: #009900; width: 189pt; color: white;">Details</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">Shared Lock, Read Lock</td>
+<td>SELECT</td>
+<td>It ends once SELECT is over</td>
+<td>It shares locking with other locking methods. Exclusive Locking cannot be locked together</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">Exclusive Lock, Write Lock</td>
+<td>INSERT, UPDATE, DELETE</td>
+<td>In the end of Transaction</td>
+<td>It cannot be locked together with other locking as it is exclusive</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>Update Locking is special locking. When we modify data it will lock exclusively but first it gets UPDATE LOCKING and when we actually change data then it upgrades locking to Exclusive. Update Locking is compatible with Shared Locking (can be locked together)</li>
+<li>It appears with hint "with (UPDLOCK)"</li>
+<li>High concurrency option message may be seen in log(s) for SQL Database system</li>
+<li>Shared Lock is compatible with other locks except Exclusive lock</li>
+<li>Exclusive lock is not compatible with any other locks</li>
+<li>Update Lock is only compatible with Shared Lock</li>
+<li>A <strong>deadlock </strong>can occur when <strong>two or more users are <span style="text-decoration: underline;">waiting for data locked</span> by each other</strong>.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="blocking"></a>Blocking and Deadlock:</h4>
+<p><span style="text-decoration: underline;"><strong>Blocking: </strong></span><br /> tx1(transaction1) locks certain data and tx2(transaction2) is waiting to lock the same data.&nbsp; In case tx1 did not COMMIT or ROLLBACK for long long time then it can impact performance seriously. But BLOCKING is different from "<strong>dead lock</strong>" rather BLOCKING is "<strong>live lock</strong>". For example, you have issued update statement <em>sql&gt; update proddta.f0101 set abalpha = 'Alpha Name' where aban8 = 4245;</em> through sqlPlus then table F0101 gets locked for designated time and/or till <em>sql&gt; commit;</em> issued.<br /> <br /> <span style="text-decoration: underline;"><strong>Deadlock: </strong></span><br /> More than 2 transactions keep on locking a certain table in turn, so it ends in infinite loop. For example, Tx1 tries to update table A and Table B and at the same time tx2 tries to update table B and table A. when tx2 tries to update table A, txt2 is not allowed to do so as table A is locked by tx1 till tx1 COMMIT table B. But in same manner table B is locked by tx2 so it has to wait till it gets unlocked. In case deadlock occurs the error code 1205 (in SQL database server for example) will be returned.<br /> <br /> Deadlocks can also occur between/among three or more transactions. The more transactions involved, the more difficult they are to detect, to the point that transaction processing systems find there is a practical limit to the deadlocks they can detect.</p>
+<div class="kmnotebox"><strong>Notes:</strong><span style="text-decoration: underline;"> </span><br />
+<ul>
+<li>It is impossible to make any system which does not have deadlock. The DBMS is trying is to minimize deadlock.</li>
+<li>If you can identify the E1 application causing the deadlock you can search for specific bugs on BSFN or tools.</li>
+<li>To minimize locking/deadlock (and maintain high integrity) most JDE transactions will be handled 'Business Object Reservation' in updating existing transaction. Review &lt;Document 625589.1&gt; <em>E1: 40: User Record Reservations</em></li>
+<li>Example of deadlock can be found in &lt;Document 1228683.1&gt; <em>E1: DB: Case Study on Deadlock in EnterpriseOne Applications</em></li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="minimizedeadlock"></a>Minimize Deadlock:</h4>
+<ul>
+<li>Set same directional transaction</li>
+<li>Set shorter transactional time</li>
+<li>Monitor deadlock regular basis. If you identify the application which is causing deadlock, check the logic of this application</li>
+</ul>
+<ul>
+<li>Currently locking APIs can be found at jdeapis.chm &gt; Application Program Interface &gt; JDEBase &gt; Data Manipulation &gt; Locking APIs</li>
+<ul>
+<li>JDB_DeleteCurrent</li>
+<li>JDB_FetchForUpdate</li>
+<li>JDB_FetchKeyedForUpdate</li>
+<li>JDB_SelectAllForUpdate</li>
+<li>JDB_SelectKeyedForUpdate</li>
+<li>JDB_SelectKeyedPositionForUpdate</li>
+<li>JDB_UpdateCurrent</li>
+<li>jdeGetCriticalSection</li>
+<li>jdeLockCriticalSection</li>
+<li>jdeUnLockCriticalSection</li>
+</ul>
+</ul>
+<ul>
+<li>And JDEBase APIs can be found as below,</li>
+<ul>
+<li>&lt;Document 644419.1&gt;<em> E1: BSFN: Where to Find the Documentation on EnterpriseOne C APIs</em></li>
+<li>&lt;Document 705446.1&gt; <em>JD Edwards EnterpriseOne Tools 8.98 API Reference</em></li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Locking APIs:</strong>
+<ul>
+<li>Major databases use sophisticated locking techniques to handle concurrent transactions in SQL for many simultaneous users. However, the underlying concepts behind locking and transaction processing in any database are essentially the same, in that the locking technique used, temporarily gives a transaction exclusive access to a piece of a database, which may be a row or a table which is being currently modified, preventing other transactions from modifying the locked data. Locking thus resolves all three of the concurrent transaction problems:
+<ul>
+<li>Prevents lost updates</li>
+<li>Prevents uncommitted data</li>
+<li>Prevents inconsistent data from corrupting the database.</li>
+</ul>
+</li>
+</ul>
+Locking, however introduces drawbacks. It may cause a transaction to wait a long time while the pieces of the database that the transaction wants to access are locked by other transactions with priority.</div>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>In higher level below parameter can be examined (but E1 may not hold any responsibility on this).</li>
+<ul>
+<li>Make use of <strong>SET LOCK_TIMEOUT</strong></li>
+<li>Make use of READ UNCOMMITTED in case it is not necessary to have shared lock</li>
+<li>Set <strong>SET DEADLOCK_PRIORITY LOW</strong> for the application which is not that important so let it be fired by itself in case DEADLOCK occurs</li>
+</ul>
+<li>In JDE, the direction of commit will be always identical as master business function(s) deal(s) with commit a specific transaction. For example, Inventory related information will be handled by XT4111Z1 and G/L related information will be handled by B0900049</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km"><a name="sub3"></a><strong>Rollback</strong></h3>
+<h4 class="km"><a name="rollback"></a>Rollback:</h4>
+<p>Transaction-processing systems ensure database integrity by recording <em>intermediate states of the database</em> as it is modified, then using these records to restore the database to a known state if a transaction cannot be committed. For example, copies of information on the database prior to its modification by a transaction are set aside by the system before the transaction can make any modifications (this is sometimes called a before image). If any part of the transaction fails before it is committed, these copies are used to restore the database to the state it was in before the transaction began.</p>
+<div class="kmnotebox"><strong>Note</strong>: Redo logs In Oracle and journals in DB2/400 are example of intermediate files.</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="memoryandrollback"></a>Memory and Rollback:</h4>
+<p><br /> In this scenario the result can be vary depends on where memory violation/error has occurred. In general, commit won't take place as we have defined above actual commitment will take place only when sql&gt; COMMIT TRANS gets issued at the end of Transaction Processing routine. However blocking may be observed for a specific amount of time as both 'rollback transaction' and 'commit transaction' or simply 'commit' may not take place</p>
+<div class="kmnotebox"><strong>Note:</strong> Rarely you may observe transaction were not committed without returning any error on the screen. If this is the case, turn on logging and check how cache has been handled. Possible cause can be no cache (through xxxEditLine) to commit.</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km"><a name="sub4"></a><strong>Other Reference</strong></h3>
+<h4 class="km"><a name="acid"></a>Transaction and ACID criteria (Atomicity, Consistency, Isolation, Durability):</h4>
+<p>In computer science, ACID (atomicity, consistency, isolation, durability) is a set of properties/characteristics that guarantee database transactions are processed reliably. In the context of databases, a single logical operation on the data is called a transaction. For example, during Purchase Order receipt, which involves multiple changes (such as item cost change, inventory increase, monetary changes and so on), is a single transaction.</p>
+<table style="width: 1130px; border-collapse: collapse; height: 115px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" width="64" /><col style="width: 470pt;" width="626" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="background-color: #009900; width: 87px; height: 12.75pt; color: white;">Criteria</th><th style="background-color: #009900; width: 1037px; color: white;">Description</th></tr>
+<tr style="height: 12.75pt;">
+<td style="width: 87px; height: 12.75pt;" height="17"><strong>Atomicity</strong></td>
+<td style="width: 1037px;">Atomicity requires that database modifications must follow an "all or nothing" rule. Each transaction is said to be atomic if when one part of the transaction fails, the entire transaction fails and database state is left unchanged. It is critical that the database management system maintains the atomic nature of transactions in spite of any application, DBMS, operating system or hardware failure.<br /> <br /> An atomic transaction cannot be subdivided, and must be processed in its entirety or not at all. Atomicity means that users do not have to worry about the effect of incomplete transactions.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 87px; height: 12.75pt;" height="17"><strong>Consistency</strong></td>
+<td style="width: 1037px;">The consistency property ensures that the database remains in a consistent state; more precisely, it says that any transaction will take the database from one consistent state to another consistent state. To maintain consistency;<br />
+<ul>
+<li>abort the transaction, rolling back to the consistent, prior state;</li>
+<li>delete all records that reference the deleted record (this is known as cascade delete); or,</li>
+<li>nullify the relevant fields in all records that point to the deleted record.</li>
+<li>These are examples of propagation constraints; some database systems allow the database designer to specify which option to choose when setting up the schema for a database.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 87px; height: 12.75pt;" height="17"><strong>Isolation</strong></td>
+<td style="width: 1037px;">Isolation refers to the requirement that other operations cannot access data that has been modified during a transaction that has not yet completed. The question of isolation occurs in case of concurrent transactions (multiple transactions occurring at the same time). Each transaction must remain unaware of other concurrently executing transactions, except that one transaction may be forced to wait for the completion of another transaction that has modified data that the waiting transaction requires. If the isolation system does not exist, then the data could be put into an inconsistent state. This could happen if one transaction is in the process of modifying data but has not yet completed, and then a second transaction reads and modifies that uncommitted data from the first transaction. If the first transaction fails and the second one succeeds, that violation of transactional isolation will cause data inconsistency. Due to performance and deadlocking concerns with multiple competing transactions, many modern databases allow dirty reads which is a way to bypass some of the restrictions of the isolation system. A dirty read means that a transaction is allowed to read, but not modify, the uncommitted data from another transaction.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 87px; height: 12.75pt;" height="17"><strong>Durability</strong></td>
+<td style="width: 1037px;">Durability is the ability of the DBMS to recover the committed transaction updates against any kind of system failure (hardware or software). Durability is the DBMS's guarantee that once the user has been notified of a transaction's success the transaction will not be lost, the transaction's data changes will survive system failure, and that all integrity constraints have been satisfied, so the DBMS won't need to reverse the transaction. Many DBMSs implement durability by writing transactions into a transaction log that can be reprocessed to recreate the system state right before any later failure. A transaction is deemed committed only after it is entered in the log.<br /> <br /> Durability does not imply a permanent state of the database. A subsequent transaction may modify data changed by a prior transaction without violating the durability principle.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Note:</strong><br /> Processing a transaction often requires a sequence of operations that is subject to failure for a number of reasons. For instance, the system may have no room left on its disk drives, or it may have used up its allocated CPU time, key is duplicated, falls into memory error, failed to commit cache within designated time limit, the size of cache is too big to handle and so on.</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km">&nbsp;<a name="commitfail"></a>Possible cause of Commit Fail:</h4>
+<p>Commonly:</p>
+<ul>
+<li>The size of transaction is relatively huge</li>
+<ul>
+<li>Review timeout parameters</li>
+<li>Check how many detail lines are entered</li>
+</ul>
+<li>Locking/Deadlock took place</li>
+<ul>
+<li>Specify which tables gets locked</li>
+<li>Try again after removing DB level routines</li>
+</ul>
+<li>Calling/Called BSFN falls into memory error</li>
+<ul>
+<li>Capture call object kernel log and analyze it</li>
+<li>Look for exiting bugs for the issue</li>
+</ul>
+<li>Calling/Called BSFN results in infinite looping</li>
+<ul>
+<li>If there is exceptionally high CPU usage</li>
+<li>In turning on logging it grows very fast (a few GB for a minute for example)</li>
+</ul>
+<li>Inaccurate Customization</li>
+<li>Custom Stored Procedure, Table Trigger and/or Function</li>
+<ul>
+<li>Competing JDE routine and custom routne to commit a certain data</li>
+</ul>
+<li>Primary Key Constraint</li>
+<ul>
+<li>(Data) Setup Issue</li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h4 class="km"><a name="timeout"></a>Timeout settings:</h4>
+<blockquote>A. JDE.INI <br />
+<blockquote>[JDENET]<br /> <strong>enterpriseServerTimeout=</strong>60000
+<ul>
+<li>This parameter is the max time when certain logic (BSFN) can be running. So this is time limit between client (which requests) and server (which responds). If it fails to return within this time error will be issued on client with return value 99. This business function is not specific to xxxEndDoc</li>
+</ul>
+<br /> [NETWORK QUEUE SETTINGS]<br /> <strong>JDENETTimeout</strong>=60
+<ul>
+<li>This is parameter which is related with the Commit Fail error. In case you do not have this parameter in jde.ini it is considered default settings which is 60 seconds and the max value for this parameter is 360 seconds. For the problematic BSFN XT4311Z1 - F4311EndDoc is to be called with option as below,</li>
+</ul>
+<ul>
+<li>Transaction Processing ON (At once Transaction Processing is on, which is MANUAL commit) F4311EndDoc can consume to commit cache to DB same amount of time.</li>
+<li>Asynchronously</li>
+</ul>
+</blockquote>
+<blockquote>[PERFMON]<br /> jdenetTimeout=120<br /> <strong>transactionTimeout</strong>=60000
+<ul>
+<li>This option is only valid when using a Transaction server</li>
+</ul>
+</blockquote>
+<br /> B. JAS.INI<br />
+<blockquote>[JDENET]<br /> # Time out value for requests sent to the Enterprise Server<br /> <strong>enterpriseServerTimeout</strong>=90000
+<ul>
+<li>When the JAS Server is calling a certain BSFN, it has to return to the calling routine within this amount of time. This affects not only xxxEndDoc but also any type of BSFN even when 'Transaction Processing' is OFF. So this value has to be equal to or greater than JDENETTimeout settings in server.</li>
+</ul>
+</blockquote>
+<br /> C. JDBJ.INI<br />
+<blockquote># <strong>transactionTimeout</strong>=120000
+<ul>
+<li>This parameter is only valid when using a Transaction server</li>
+</ul>
+</blockquote>
+</blockquote>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>Refer to JDE.INI &lt;Document 654975.1&gt;<em> E1: KER: JDE.INI Tuning &amp; Recommended JDE.INI Settings</em> (From Development))</li>
+<li>For this example, <strong>enterpriseserverTimeout </strong>has to be greater than or equal to parameter value of JDENETTimeout</li>
+<li>Do not exceed 360 seconds for JDENETTimeout parameter&nbsp;</li>
+<ul>
+<li>maximum connection between logic server and database server can be (based on jdbodbc between logic server and database server),<br /> = (CONNECTION_TIMEOUT * CONNECTION_TIMEOUT_MULT) + PHYS_CONNECTION_WAIT_TIME = (60*5) + 60 = 360 seconds</li>
+<li>#define CONNECTION_TIMEOUT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; /* Time, in seconds, used in calculating connection timeout. */</li>
+<li>#define CONNECTION_TIMEOUT_MULT&nbsp;&nbsp; &nbsp; &nbsp; 5&nbsp;&nbsp;&nbsp; /* Multiplier, used in calculating connection timeout. */</li>
+<li>#define CONNECTION_EXPIRE_TIME&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; (time(NULL) + gnCnctTimeout)</li>
+<li>#define CONNECTION_SHARE_LIMIT&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; 1000&nbsp; /* Limit on connection sharing. */</li>
+<li>#define PHYS_CONNECTION_WAIT_TIME&nbsp;&nbsp; 60&nbsp;&nbsp; /* Total time, in secs, to wait for a physical connection to be made. */</li>
+</ul>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 709px; height: 2841px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 90pt;" width="120" /> <col style="width: 207pt;" width="276" /> <col style="width: 29pt;" width="39" /> <col style="width: 17pt;" width="23" /> <col style="width: 11pt;" width="15" /> <col style="width: 20pt;" span="2" width="27" /> <col style="width: 26pt;" width="35" /> <col style="width: 47pt;" width="63" /> <col style="width: 26pt;" width="35" /> <col style="width: 11pt;" width="15" /></colgroup>
+<tbody>
+<tr style="height: 13.5pt;"><th class="xl63" style="height: 13.5pt; width: 79px; background-color: #009900; color: white;">Object</th><th class="xl64" style="width: 249px; background-color: #009900; color: white;">Description</th><th class="xl64" style="width: 72px; background-color: #009900; color: white;">Type</th><th class="xl65" style="width: 17pt; background-color: #009900; color: white;">Xe</th><th class="xl65" style="width: 11pt; background-color: #009900; color: white;">8.0</th><th class="xl65" style="width: 20pt; background-color: #009900; color: white;">8.9</th><th class="xl65" style="width: 20pt; background-color: #009900; color: white;">8.10</th><th class="xl65" style="width: 26pt; background-color: #009900; color: white;">8.11</th><th class="xl65" style="width: 47pt; background-color: #009900; color: white;">8.11 SP1</th><th class="xl65" style="width: 26pt; background-color: #009900; color: white;">8.12</th><th class="xl65" style="width: 11pt; background-color: #009900; color: white;">9.0</th></tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P01301</td>
+<td class="xl67" style="width: 249px; color: red;">Edit Activity</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P01302</td>
+<td class="xl67" style="width: 249px; color: red;">Edit Activity Lite</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P03B102</td>
+<td class="xl67" style="width: 249px;">Standard Receipt Entry</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P03B11</td>
+<td class="xl67" style="width: 249px;">Standard Invoice Entry</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P03B11SI</td>
+<td class="xl67" style="width: 249px;">Speed Invoice Entry</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P03B41Z1</td>
+<td class="xl67" style="width: 249px;">Deductions Interop Revision</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P03B41Z2</td>
+<td class="xl67" style="width: 249px;">Deductions Interop Revision</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P041016</td>
+<td class="xl67" style="width: 249px; color: red;">Multi Company - Single Supplier</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P041017</td>
+<td class="xl67" style="width: 249px; color: red;">Multi-Voucher Entry</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P0411</td>
+<td class="xl67" style="width: 249px; color: red;">A/P Standard Voucher Entry</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P0411SV</td>
+<td class="xl67" style="width: 249px; color: red;">A/P Speed Voucher Entry</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P0411Z1</td>
+<td class="xl67" style="width: 249px; color: red;">A/P Batch Voucher Entry</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P0413M</td>
+<td class="xl67" style="width: 249px; color: red;">A/P Manual Payments</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P0413V</td>
+<td class="xl67" style="width: 249px;">A/P Void Payment</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P05601</td>
+<td class="xl67" style="width: 249px; color: red;">Revise Component Instructionss</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P059022</td>
+<td class="xl67" style="width: 249px; color: red;">Revise Pay Calculation Tables</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P073111</td>
+<td class="xl67" style="width: 249px; color: red;">Associate Pay Types with Activity Types</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P07315</td>
+<td class="xl67" style="width: 249px; color: red;">Manage Schedules for Employee Groups</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P076311</td>
+<td class="xl67" style="width: 249px; color: red;">Manager Self Service Leave Review</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P07916</td>
+<td class="xl67" style="width: 249px; color: red;">Item Master</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P07918</td>
+<td class="xl67" style="width: 249px; color: red;">Item Piece Rate Revisions</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P09106</td>
+<td class="xl67" style="width: 249px;">Journal Entries with VAT</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P0911</td>
+<td class="xl67" style="width: 249px;">Journal Entries</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P09631</td>
+<td class="xl67" style="width: 249px; color: red;">Manual Bank Statement Reconciliation</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P3002</td>
+<td class="xl67" style="width: 249px; color: #000099;">Bill of Material Maintenance</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P3003</td>
+<td class="xl67" style="width: 249px; color: #000099;">Routing Maintenance</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P311221</td>
+<td class="xl67" style="width: 249px; color: #000099;">WO Time Entry</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B317B</td>
+<td class="xl67" style="width: 249px; color: #000099;">Speed Advanced Comment</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B65A</td>
+<td class="xl67" style="width: 249px; color: #000099;">Create/Edit Operations</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B67</td>
+<td class="xl67" style="width: 249px; color: #000099;">Speed Actuals Update</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B76</td>
+<td class="xl67" style="width: 249px; color: #000099;">Speed Quality Results</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B78</td>
+<td class="xl67" style="width: 249px; color: #000099;">Create Operations From Vessel List</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B94</td>
+<td class="xl67" style="width: 249px; color: #000099;">Search for Operations</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B95</td>
+<td class="xl67" style="width: 249px; color: #000099;">Search for Work Order</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P31B96</td>
+<td class="xl67" style="width: 249px; color: #000099;">Speed Operation Update</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: #000099;" height="18">P3411</td>
+<td class="xl67" style="width: 249px; color: #000099;">MRP/MPS Detail Message Revisions</td>
+<td class="xl68" style="width: 72px; color: #000099;">APPL</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl68" style="color: #000099;">N</td>
+<td class="xl69" style="color: #000099;">Y</td>
+<td class="xl69" style="color: #000099;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P3460</td>
+<td class="xl67" style="width: 249px;">Forecast Revisions</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G003</td>
+<td class="xl67" style="width: 249px;">Harvest Period Patterns</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G01</td>
+<td class="xl67" style="width: 249px;">Grower Farm Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G02</td>
+<td class="xl67" style="width: 249px;">Grower Block Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G020</td>
+<td class="xl67" style="width: 249px;">Speed Block Update</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G021</td>
+<td class="xl67" style="width: 249px;">Block Descriptors Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G022</td>
+<td class="xl67" style="width: 249px;">Block Styles Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G023</td>
+<td class="xl67" style="width: 249px;">Block Coordinates Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G03</td>
+<td class="xl67" style="width: 249px;">Grower Harvest Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G030</td>
+<td class="xl67" style="width: 249px;">Speed Harvest Update</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G100</td>
+<td class="xl67" style="width: 249px;">Advance Voucher</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G101</td>
+<td class="xl67" style="width: 249px;">Manage Ownership Distribution</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G102</td>
+<td class="xl67" style="width: 249px;">Manage Contacts Info</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G103</td>
+<td class="xl67" style="width: 249px;">Manage EUR - Intended Use Distribution</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G104</td>
+<td class="xl67" style="width: 249px;">Action Dates Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G10A</td>
+<td class="xl67" style="width: 249px;">Operation Edit Create - Farming Activity</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G10C</td>
+<td class="xl67" style="width: 249px;">Farming Activities - Multiple Harvest Assignments</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G11A</td>
+<td class="xl67" style="width: 249px;">Speed Actuals - Spray Activity</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G20</td>
+<td class="xl67" style="width: 249px;">Harvest Estimate</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G200</td>
+<td class="xl67" style="width: 249px;">Price Review</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G21</td>
+<td class="xl67" style="width: 249px;">Frozen Harvest Estimate</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G23</td>
+<td class="xl67" style="width: 249px;">Continuous Harvest Estimate</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G30</td>
+<td class="xl67" style="width: 249px;">Grower Harvest and Weigh Tag Receipt Operations</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G300</td>
+<td class="xl67" style="width: 249px;">Final Setllement</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G40A</td>
+<td class="xl67" style="width: 249px;">Operation Edit Create - Spray Activity</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G40C</td>
+<td class="xl67" style="width: 249px;">Farming Activities - Single Harvest Assignment</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40G41A</td>
+<td class="xl67" style="width: 249px;">Speed Actuals - Farming Activity</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P40R10</td>
+<td class="xl67" style="width: 249px;">Demand Maintenance</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P4112</td>
+<td class="xl67" style="width: 249px; color: red;">Inventory Issues</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P4113</td>
+<td class="xl67" style="width: 249px; color: red;">Inventory Transfers</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P4114</td>
+<td class="xl67" style="width: 249px; color: red;">Inventory Adjustments</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P4116</td>
+<td class="xl67" style="width: 249px; color: red;">Item Reclassifications</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P4205</td>
+<td class="xl67" style="width: 249px; color: red;">Shipment Confirmation</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; color: red; width: 79px;" height="18">P4210</td>
+<td class="xl67" style="width: 249px; color: red;">Sales Order Entry</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P42101</td>
+<td class="xl67" style="width: 249px;">Sales Order Entry</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P42117</td>
+<td class="xl67" style="width: 249px;">Backorder Release</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P4310</td>
+<td class="xl67" style="width: 249px;">Purchase Orders</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P4312</td>
+<td class="xl67" style="width: 249px;">PO Receipts</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P4314</td>
+<td class="xl67" style="width: 249px; color: red;">Voucher Match</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px; color: red;" height="18">P43291</td>
+<td class="xl67" style="width: 249px; color: red;">Landed Cost Selection</td>
+<td class="xl68" style="width: 72px; color: red;">APPL</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl68" style="color: red;">N</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+<td class="xl69" style="color: red;">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C00</td>
+<td class="xl67" style="width: 249px;">Search for Contracts</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C00C</td>
+<td class="xl67" style="width: 249px;">Copy Contract</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C01</td>
+<td class="xl67" style="width: 249px;">Edit Header Contract</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C05</td>
+<td class="xl67" style="width: 249px;">Contract Action Dates</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C10</td>
+<td class="xl67" style="width: 249px;">Contract Block</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C10S</td>
+<td class="xl67" style="width: 249px;">Block Subform</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C11</td>
+<td class="xl67" style="width: 249px;">Contracts Detail</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C20</td>
+<td class="xl67" style="width: 249px;">Payee SubForm</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C40</td>
+<td class="xl67" style="width: 249px;">Contract Assessment and Donation</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C50</td>
+<td class="xl67" style="width: 249px;">Push from Header to Blk/Harvest Dtl</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C60</td>
+<td class="xl67" style="width: 249px;">Contract Clauses SubForm</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C70</td>
+<td class="xl67" style="width: 249px;">Harvests for Block</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43C80</td>
+<td class="xl67" style="width: 249px;">Push from Block to Harvest detail</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43E060</td>
+<td class="xl67" style="width: 249px;">Requisition Expeditor</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43E22</td>
+<td class="xl67" style="width: 249px;">Direct Connect Setup Application</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43Q411</td>
+<td class="xl67" style="width: 249px;">Bidder Response Detail Questions</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43Q51</td>
+<td class="xl67" style="width: 249px;">SRM - Score Text Questions</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P43Q52</td>
+<td class="xl67" style="width: 249px;">View/Edit Question Responses</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P48013</td>
+<td class="xl67" style="width: 249px;">Manufacturing Work Order Processing</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P76CCIC</td>
+<td class="xl67" style="width: 249px;">Input Tax Setup - COL - 00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76C</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P76H001</td>
+<td class="xl67" style="width: 249px;">Legal Document Next Number - CHI - 03B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76H</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P76H3B20</td>
+<td class="xl67" style="width: 249px;">Invoices not Printed - CHI - 03B&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76H</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">P76H3B50</td>
+<td class="xl67" style="width: 249px;">Lot of Printing Review - CHI - 03B - 76H</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF30L201</td>
+<td class="xl67" style="width: 249px;">Volume Design</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF30L702</td>
+<td class="xl67" style="width: 249px;">Product Synch</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF30L901</td>
+<td class="xl67" style="width: 249px;">Process Maps</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF30L912</td>
+<td class="xl67" style="width: 249px;">Line Design</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF30L950</td>
+<td class="xl67" style="width: 249px;">Operational Def</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF31010B</td>
+<td class="xl67" style="width: 249px;">Daily Planning</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF31K10</td>
+<td class="xl67" style="width: 249px;">Kanban Demand</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF31K21</td>
+<td class="xl67" style="width: 249px;">Assign Comp to Pull Chain</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF34S001</td>
+<td class="xl67" style="width: 249px;">Daily Sequencing</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">PF34S002</td>
+<td class="xl67" style="width: 249px;">Daily Planning</td>
+<td class="xl68" style="width: 72px;">APPL</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R03B41Z2</td>
+<td class="xl67" style="width: 249px;">Interop Deduction Dispositions</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R03B50A</td>
+<td class="xl67" style="width: 249px;">Invoice Selection Match</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R03B50B</td>
+<td class="xl67" style="width: 249px;">Balance Forward Match</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R03B50D</td>
+<td class="xl67" style="width: 249px;">Known Invoice Match With Amount</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R03B50E</td>
+<td class="xl67" style="width: 249px;">Known Invoice Match Without Amount</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R03B50F</td>
+<td class="xl67" style="width: 249px;">Combination Invoice Match</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R04110ZB</td>
+<td class="xl67" style="width: 249px;">Inbound AP Claims</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R04110ZC</td>
+<td class="xl67" style="width: 249px;">AP Confirmation</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R04586</td>
+<td class="xl67" style="width: 249px;">Generate Positive Pay Text File</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R05601</td>
+<td class="xl67" style="width: 249px;">Component Pay Generation - Driver Section</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R07311</td>
+<td class="xl67" style="width: 249px;">Generate Timecards from Schedule</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R083800</td>
+<td class="xl67" style="width: 249px;">Batch Enrollment</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R09110Z</td>
+<td class="xl67" style="width: 249px;">Journal Entry Batch Processor</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R09110ZS</td>
+<td class="xl67" style="width: 249px;">Store and Forward JE Batch Processor</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R09801</td>
+<td class="xl67" style="width: 249px;">General Ledger Post</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R30510</td>
+<td class="xl67" style="width: 249px;">ECO Change Population</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R30835</td>
+<td class="xl67" style="width: 249px;">Frozen Cost Update</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R31422</td>
+<td class="xl67" style="width: 249px;">Hrs &amp; Qty Update</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R31802A</td>
+<td class="xl67" style="width: 249px;">Manufacturing Accounting</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R31B65AZ</td>
+<td class="xl67" style="width: 249px;">Operations&nbsp; Inbound Processor</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R42800</td>
+<td class="xl67" style="width: 249px;">Sales Update</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R42800G</td>
+<td class="xl67" style="width: 249px;">Sales Update Summarized COGS-Inv Recovery</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R45640</td>
+<td class="xl67" style="width: 249px;">Inbound Promotional Pricing</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R45720ZB</td>
+<td class="xl67" style="width: 249px;">Live Promotions Update</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R46151</td>
+<td class="xl67" style="width: 249px;">Carton Recommendations Report</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R46474</td>
+<td class="xl67" style="width: 249px;">Generated Sequenced Carton Packing Recommendations</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R48132</td>
+<td class="xl67" style="width: 249px;">G/L Journal Generation</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R48S781</td>
+<td class="xl67" style="width: 249px;">Create Retroactive Adjustments</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">R49500</td>
+<td class="xl67" style="width: 249px;">Batch Transportation Shipment Confirmation</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31011A</td>
+<td class="xl67" style="width: 249px;">Multi Level Item Completions</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31011B</td>
+<td class="xl67" style="width: 249px;">Multi Level Item Completions</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31011C</td>
+<td class="xl67" style="width: 249px;">Multi Level Item Completions</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31011L</td>
+<td class="xl67" style="width: 249px;">Multi Level Item Completions</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31012</td>
+<td class="xl67" style="width: 249px;">BOM and Routing Detail Generation - Item/Branch</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31200</td>
+<td class="xl67" style="width: 249px;">Lean MFG Accounting</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31210</td>
+<td class="xl67" style="width: 249px;">Lean MFG Variance Acctg</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+<tr style="height: 13.5pt;">
+<td class="xl66" style="height: 13.5pt; width: 79px;" height="18">RF31220</td>
+<td class="xl67" style="width: 249px;">Lean WIP Revaluation</td>
+<td class="xl68" style="width: 72px;">UBE</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl68">N</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+<td class="xl69">Y</td>
+</tr>
+</tbody>
+</table>
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
