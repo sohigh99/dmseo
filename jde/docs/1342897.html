@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Functions in R00460 for the interface</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Functions in R00460 for Interface</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>This note is to explain business functions can be implemented through R00460 -<span style="text-decoration: underline;"> Interoperability Generic Outbound Subsystem UBE</span>.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>This document is to explain possible issue you may face in dealing with a report R00460 - <span style="text-decoration: underline;">Interoperability Generic Outbound Subsystem UBE</span>.  Currently this report is made up of 2 sections as below,</p>
+<ul>
+<li>1st. Section "<strong>Load Processing Log</strong>" (no Business View) which writes F0046 conditionally</li>
+<li>2nd. Section "<strong>Processing Log - Outbound Subs</strong>" (based on Business View V0046B which is joined view between F0046 and F0047) which may call Vendor's UBE or BSFN to extract Outbound Interoperability table data depending on the setup you are on</li>
+</ul>
+<p><br />This document is made up of,</p>
+<ul>
+<li>Primary Keys of table related</li>
+<li>Related Business Functions</li>
+</ul>
+<p><br />Primary Key for tables related: Individual Table possibly give you better idea to get the purpose of each tables</p>
+<ul>
+<li>F47002 - Flat File Cross-Reference Table</li>
+<ul>
+<li>TYTN - <span style="text-decoration: underline;"><strong>TypeTransaction </strong></span>(Type - Transaction) UDC 00/TT</li>
+<li>DRIN - <span style="text-decoration: underline;"><strong>DirectionIndicator </strong></span>(Direction Indicator), UDC 00/DN</li>
+<li>EDTY - EDIType (Type Record), UDC 00/RD</li>
+</ul>
+<li>F0047 - Data Export Control</li>
+<ul>
+<li>TYTN - <span style="text-decoration: underline;"><strong>TypeTransaction </strong></span>(Type - Transaction)</li>
+<li>DCTO - <span style="text-decoration: underline;"><strong>OrderType </strong></span>(Order Type)</li>
+<li>SEQ - SequenceNumber1 (Sequence Number)</li>
+</ul>
+<li>F4801Z1 - Outbound Work Order Header</li>
+<ul>
+<li>EDUS - EdiUserId (EDI - User ID)</li>
+<li>EDBT - EdiBatchNumber (EDI - Batch Number)</li>
+<li>EDTN - EdiTransactNumber (EDI - Transaction Number)</li>
+<li>EDLN - EdiLineNumber (EDI - Line Number)</li>
+</ul>
+<li>F0046 - Processing Log</li>
+<ul>
+<li>EDUS - EdiUserId (EDI - User ID)</li>
+<li>EDBT - EdiBatchNumber (EDI - Batch Number)</li>
+<li>EDTN - EdiTransactNumber (EDI - Transaction Number)</li>
+<li>EDLN - EdiLineNumber (EDI - Line Number)</li>
+<li>TYTN - TypeTransaction (Type - Transaction)</li>
+<li>DCTO - OrderType (Order Type)</li>
+</ul>
+</ul>
+<p><br /><br /></p>
+<div style="border-bottom: 1pt solid; border-left: medium none; border-top: medium none; border-right: medium none; padding: 0in 0in 1pt 0in;"></div>
+<p><big><big>1. B0000195 - F0046CreateProcessingLogRecords (F0046 Create Processing Log Records)</big></big></p>
+<ul>
+<ul>
+<li><strong>Purpose</strong>:  This business function is to populate data from F0046 depends on your business requirement through R00460 which is to be handled by subsystem kernel. Data are to be populated only when some of setup is done correctly (refer to &lt;Document 1342363.1&gt; - E1:31: How to implement Work Order Extraction through R00460 in P48013)</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure: B0000195A - Create Processing Log Records</li>
+</ul>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 730px; height: 147px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 152pt;" width="202" /><col style="width: 50pt;" width="67" /><col style="width: 83pt;" width="110" /><col style="width: 20pt;" width="27" /><col style="width: 23pt;" width="31" /><col style="width: 178pt;" width="237" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="background-color: #009900; width: 152pt; height: 15pt; color: white;">Parameter Name</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 50pt; color: white;">Data Item</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 83pt; color: white;">Data Type</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 20pt; color: white;">I/O</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 23pt; color: white;">Req</th>
+<th class="xl64" style="border-left: medium none; background-color: #009900; width: 178pt; color: white;">Purpose</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szUserId[11]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDUS</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">* Primary Key. User ID for the user who edits any transaction which has interoperability interface</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szBatchNumber[16]   </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDBT</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">* Primary Key of F0046</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTransactionNumber[23]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> *</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">mnLineNumber</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDLN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">MATH_NUMERIC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> *</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTransactionType[9]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">TYTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> *</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szOrderType[3] </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">DCTO</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> *</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTransactionAction[3]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">TNAC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cErrorEncountered</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">ERR1</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> O</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ul>
+<li>Detail Routine: </li>
+</ul>
+</blockquote>
+<ol>
+<ol>
+<li>I0000195_CheckIfF0046RecordsExist: If record does exist, exit from routine</li>
+<ol>
+<li>(when data do not reside from F00460) I0000195_CreateF0046Records</li>
+<li>Validate szTransactionAction through BSFN N0000179 - TNACConvertToActionCode (Transaction Action, Convert To Action Code) to get the 1st Character of Description 02 from UDC 00/TA - Transaction Action. For example, if szTransactionAction is 02 the first character of UDC 00/TA is 'A' which determines Add of data. Currently valid action codes are 'A - Add', 'D -  Delete', 'I - Inquiry', 'C - Change', 'R - Replace' and 'U - Update'.</li>
+<li>While loop to read data from F0047 based on 1st 2 columns (F0047.TYTN and F0047.DCTO) to check existence of F0047 (and if any) to return F0047.SEQ, OBNM, VERS</li>
+</ol>
+<li>Insert data into F0046</li>
+<li>Call B0000194 - UpdateUneditedTransactionTableAs (Update Unedited Transaction Table As Processed)</li>
+</ol>
+</ol>
+<p> </p>
+<div style="border-bottom: 1pt solid; border-left: medium none; border-top: medium none; border-right: medium none; padding: 0in 0in 1pt 0in;"></div>
+<p> </p>
+<p><big><big>2. B0000194 - UpdateUneditedTransactionTableAs (Update Unedited Transaction Table As Processed)</big></big></p>
+<ul>
+<ul>
+<li><strong>Purpose</strong>:  This business function is to update/set InteropTable.EDSP='Y' after getting F47002.FILE (=InteropTable) when definition for a specific Transaction Type is defined at F47002 - Flat File Cross-Reference File where F47002.TYTN = 'szTypeTransaction' AND F47002.DRIN = '&amp;cOutBoundDir' (&amp;cOutBoundDir='2').</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure: B0000194 - Update Unedited Transaction Table As Processed</li>
+</ul>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 730px; height: 113px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 152pt;" width="202" /><col style="width: 50pt;" width="67" /><col style="width: 83pt;" width="110" /><col style="width: 20pt;" width="27" /><col style="width: 23pt;" width="31" /><col style="width: 178pt;" width="237" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="background-color: #009900; width: 152pt; height: 15pt; color: white;">Parameter Name</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 50pt; color: white;">Data Item</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 83pt; color: white;">Data Type</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 20pt; color: white;">I/O</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 23pt; color: white;">Req</th>
+<th class="xl64" style="border-left: medium none; background-color: #009900; width: 178pt; color: white;">Purpose</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTypeTransaction[9]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">TYTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">Type Transaction (e.g., JDEWO)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szUserId[11]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDUS</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szBatchNumber[16]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDBT</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTransactionNumber[23]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">mnLineNumber</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDLN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">MATH_NUMERIC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cErrorEncountered</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">ERR1</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> O</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<ul>
+<li>Detail Routine: </li>
+</ul>
+1. Read F47002 and return F47002.FILE<br />    sql&gt; SELECT SVTYTN, SVDRIN, SVEDTY, SVFILE FROM PRODDTA.F47002  WHERE  ( SVTYTN = 'JDEWO' AND SVDRIN = '2' )  ORDER BY SVEDTY ASC <br />2. Update InteropTable.EDSP = 'Y'<br />    sql&gt; UPDATE PRODDTA.F4801Z1  SET SYEDUS='SDONGMYE',SYEDBT='0',SYEDTN='125918',SYEDLN=2000.000000,SYEDSP='Y' WHERE  ( SYEDUS = 'SDONGMYE' AND SYEDBT = '0' AND SYEDTN = '125918' AND SYEDLN = 2000.000000 )<br />     : If F47002 does not have proper definition  EDSP will be remained as unsuccessfully</blockquote>
+<p> </p>
+<div style="border-bottom: 1pt solid; border-left: medium none; border-top: medium none; border-right: medium none; padding: 0in 0in 1pt 0in;"></div>
+<p> </p>
+<p class="MsoNormal"><big><big>3. B0000178  - InteroperabilityLaunchVendorUBE (Interoperability Launch Vendor-Specific UBE)</big></big></p>
+<ul>
+<ul>
+<li><strong>Purpose</strong>:  This function is designed to launch the Interoperability Vendor-Specific UBE specified in the Input Parameter's UBE Name and Version. It will  also pass 6 additional parameters to the Vendor-Specific UBE, namely EDI User ID(EDUS), EDI Batch Number(EDBT), Transaction Number (EDTN), Export Mode Flat File(FFEM), Export Mode Database(EDEM) and Export Mode API(EAEM). After the Vendor-Specific UBE returns, it will copy the UBE Error Code parameter from the Vendor-Specific UBE's report interconnect data structure to the Output Error Code parameter. Vender-Specific UBE is to be called through jde API jdeLaunchUBEEx() synchronously.</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure: D0000178 - Interoperability, Launch Vendor-Specific UBE</li>
+</ul>
+</ul>
+</ul>
+<p> </p>
+<table style="border-collapse: collapse; width: 730px; height: 148px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 152pt;" width="202" /><col style="width: 50pt;" width="67" /><col style="width: 83pt;" width="110" /><col style="width: 20pt;" width="27" /><col style="width: 23pt;" width="31" /><col style="width: 178pt;" width="237" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="background-color: #009900; width: 152pt; height: 15pt; color: white;">Parameter Name</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 50pt; color: white;">Data Item</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 83pt; color: white;">Data Type</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 20pt; color: white;">I/O</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 23pt; color: white;">Req</th>
+<th class="xl64" style="border-left: medium none; background-color: #009900; width: 178pt; color: white;">Purpose</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szVendorSpecificUBEName[11]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">OBNM</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">F0046.OBNM which you have defined through P0047 (=F0047.OBNM)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szVersionToCall[11]        </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">VERS</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">F0046.VERS (=F0047.VERS)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szEdiUserId[11]            </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDUS</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDUS</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szEdiBatchNumber[16]       </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDBT</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDBT</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szEdiTransactionNumber[23] </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDTN</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cExportModeFlatFile        </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">FFEM</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cExportModeDatabase        </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDEM</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cExportModeAPI             </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EAEM</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cUBEErrorCode              </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">ERRC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cErrorCode                 </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">ERRC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> N/A</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="height: 15.75pt; border-top: medium none;" height="21">mnEdiLineNumber</td>
+<td class="xl65" style="border-left: medium none; border-top: medium none;">EDLN</td>
+<td class="xl65" style="border-left: medium none; border-top: medium none;">MATH_NUMERIC</td>
+<td class="xl65" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl65" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl66" style="border-left: medium none; border-top: medium none;"> F0046.EDLN</td>
+</tr>
+</tbody>
+</table>
+<p>     <br /><br /></p>
+<ul>
+<ul>
+<li>Detail Routine: Arguments are determined by V0046B - 'Processing Log - Outbound Subsystem UBE' which is table joins between F0046 and F0047 (respectively Processing Log and Data Export Control).</li>
+<li>Implementation: 2nd section (Processing Log - Outbound Subs) of R00460 - Interoperability Generic Outbound Subsystem UBE</li>
+</ul>
+</ul>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>This function gets called from R00460 only when F0047.LCIM (Launch Immediately) is turned on (value 1). In caes this value is 0 to proceed extraction R00461 has to be run either mannually or through scheduler.</li>
+<li>Special Logic:</li>
+</ul>
+<blockquote>1. All required fields must be passed in.<br />2. The Vendor-Specific UBE called by this business function must have the following Report Interconnect data structure. <br />      The order of the parameters in the UBE data structure must be maintained as follows (though argument may be null):<br />    EDI User ID(EDUS)              (INPUT)<br />    EDI Batch Number (EDBT)        (INPUT)<br />    EDI Transaction Number (EDTN)  (INPUT)<br />    Export Mode Flat File (FFEM)   (INPUT)<br />    Export Mode Database (EDEM)    (INPUT)<br />    Export Mode API (EAEM)         (INPUT)<br />    UBE Error Code (ERRC)          (OUTPUT)</blockquote>
+</div>
+<p><br /><br /><br /><br /><big><big>3'. B0000192  - CallVendorSpecificFunctionOut (Call Vendor-Specific Function - Outbound)</big></big></p>
+<ul>
+<ul>
+<li><strong>Purpose</strong>:  This function is designed to call custom (or vendor-specific) function to extract interoperability data per your business requirement.</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure: D0000192A - Call Vendor-Specific Function - Outbound</li>
+</ul>
+</ul>
+</ul>
+<p> </p>
+<table style="border-collapse: collapse; width: 730px; height: 139px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 152pt;" width="202" /><col style="width: 50pt;" width="67" /><col style="width: 83pt;" width="110" /><col style="width: 20pt;" width="27" /><col style="width: 23pt;" width="31" /><col style="width: 178pt;" width="237" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="background-color: #009900; width: 152pt; height: 15pt; color: white;">Parameter Name</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 50pt; color: white;">Data Item</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 83pt; color: white;">Data Type</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 20pt; color: white;">I/O</th>
+<th class="xl63" style="border-left: medium none; background-color: #009900; width: 23pt; color: white;">Req</th>
+<th class="xl64" style="border-left: medium none; background-color: #009900; width: 178pt; color: white;">Purpose</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szFunctionName[51]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">FCNN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">F0047.FCNN</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szFunctionLibrary[257]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">FCNL</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">F0047.FCNL</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szUserId[11]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDUS</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDUS</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szBatchNumber[16]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDBT</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDBT</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTransactionNumber[23]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDTN</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">mnLineNumber</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">EDLN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">MATH_NUMERIC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.EDLN</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szTransactionType[9]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">TYTN</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.TYTN</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">szDocumentType[3]</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">DCTO</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> F0046.DCTO</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">mnSequenceNumber</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">SEQ</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">MATH_NUMERIC</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> I</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> Y</td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;">F0046.SEQ</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; border-top: medium none;" height="20">cErrorsEncountered</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">ERR1</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;">JCHAR</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> O</td>
+<td class="xl63" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl64" style="border-left: medium none; border-top: medium none;"> </td>
+</tr>
+</tbody>
+</table>
+<p>    <br /><br /></p>
+<ul>
+<ul>
+<li>Detail Routine: </li>
+</ul>
+<ol>
+<li>Load library through API LoadLibrary() else, set error "096G - Cannot open/initialize DLL"</li>
+<li>Retrieve the address of the vendor function through API jdeGetProcAddress() else, set error "096G - Cannot open/initialize DLL"</li>
+<li>Call the vendor function through API VendorFnctIn ()</li>
+</ol>
+</ul>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>We, Oracle, do not provide any custom code and do not bear result you get through this implementation</li>
+<li>&lt;Document 626628.1&gt; - E1: BSFN: Business Function and API DocumentationJD Edwards EnterpriseOne Tools 8.98 Development Tools: APIs and Business Functions Guide</li>
+</ul>
+</div>
+<p> </p>
+<p> </p>
+<div style="border-bottom: 1pt solid; border-left: medium none; border-top: medium none; border-right: medium none; padding: 0in 0in 1pt 0in;"></div>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

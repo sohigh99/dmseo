@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Item Cost and Price Update using XT4111Z1</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Item Cost and Price Update using XT4111Z1</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>In EnterpriseOne, some applications which are related with inventory transaction may update Cost and Price information. Unlike writing Average Cost, this type of transaction may take place. So this document is to explain what are the list of applications which may (or may not) write Cost and Price information.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h3 class="km">Q1&gt; What are the list of application which are applied to this routine and metrics for update of cost and price?</h3>
+<table class="km" style="width: 761px; height: 392px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="background-color: #009900; color: white; width: 29px;">Action</th><th class="km" style="background-color: #009900; color: white; width: 368px;">Application</th><th class="km" style="background-color: #009900; color: white; width: 24px;">Write<br /> Cost</th><th class="km" style="background-color: #009900; color: white; width: 39px;">Write<br /> Price</th><th class="km" style="background-color: #009900; color: white; width: 27px;">Update<br /> Cost</th><th class="km" style="background-color: #009900; color: white; width: 478px;">Others</th></tr>
+<tr>
+<td class="km" style="width: 29px;">1</td>
+<td class="km" style="width: 368px;">P4114 - Inventory Adjustment</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">Y</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">2</td>
+<td class="km" style="width: 368px;">P4112 - Inventory Issue</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">Y</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">3</td>
+<td class="km" style="width: 368px;">P4113 - Inventory Transfer</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">Y</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">12</td>
+<td class="km" style="width: 368px;">P4116 - Item Reclassification</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">Y</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">4</td>
+<td class="km" style="width: 368px;">P4312 - PO Receipts</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Receipt</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">4</td>
+<td class="km" style="width: 368px;">P43214 - PO Receipt Reversal</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Receipt</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">4</td>
+<td class="km" style="width: 368px;">P43253 - Routing Disposition</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Receipt</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">4</td>
+<td class="km" style="width: 368px;">P43250 - Receipt Routing Movement and Disposition</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Receipt</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">15</td>
+<td class="km" style="width: 368px;">P4312 - PO Receipts</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Routing</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">15</td>
+<td class="km" style="width: 368px;">P43214 - PO Receipt Reversal</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Routing</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">15</td>
+<td class="km" style="width: 368px;">P43253 - Routing Disposition</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Routing</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">15</td>
+<td class="km" style="width: 368px;">P43250 - Receipt Routing Movement and Disposition</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">In Routing</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">5</td>
+<td class="km" style="width: 368px;">P4205 - Shipment Confirmation</td>
+<td class="km" style="width: 24px;">&nbsp;</td>
+<td class="km" style="width: 39px;">&nbsp;</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">13</td>
+<td class="km" style="width: 368px;">R42800 - Sales Update</td>
+<td class="km" style="width: 24px;">&nbsp;</td>
+<td class="km" style="width: 39px;">&nbsp;</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">6</td>
+<td class="km" style="width: 368px;">R41413 - Cycle Count Update</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">Y</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">7</td>
+<td class="km" style="width: 368px;">R41610 - Tag Inventory Update</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">Y</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">8</td>
+<td class="km" style="width: 368px;">P4242 - Transfer Order</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">10</td>
+<td class="km" style="width: 368px;">P31113 - Work Order Inventory Issue</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">Issue</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">11</td>
+<td class="km" style="width: 368px;">P31114 - Work Order Completion</td>
+<td class="km" style="width: 24px;">Y</td>
+<td class="km" style="width: 39px;">Y</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">Completion</td>
+</tr>
+<tr>
+<td class="km" style="width: 29px;">14</td>
+<td class="km" style="width: 368px;">P4205 - Shipment Confirmation</td>
+<td class="km" style="width: 24px;">&nbsp;</td>
+<td class="km" style="width: 39px;">&nbsp;</td>
+<td class="km" style="width: 27px;">&nbsp;</td>
+<td class="km" style="width: 478px;">Serial Processing</td>
+</tr>
+<tr>
+<td style="width: 29px;" valign="top">14</td>
+<td style="width: 368px;" valign="top">R42800 - Sales Update</td>
+<td style="width: 24px;" valign="top">&nbsp;</td>
+<td style="width: 39px;" valign="top">&nbsp;</td>
+<td style="width: 27px;" valign="top">&nbsp;</td>
+<td style="width: 478px;" valign="top">Serial Processing</td>
+</tr>
+<tr>
+<td style="width: 29px;" valign="top">17</td>
+<td style="width: 368px;" valign="top">Transportation Compartment Based Load</td>
+<td style="width: 24px;" valign="top">&nbsp;</td>
+<td style="width: 39px;" valign="top">&nbsp;</td>
+<td style="width: 27px;" valign="top">&nbsp;</td>
+<td style="width: 478px;" valign="top">&nbsp;</td>
+</tr>
+<tr>
+<td style="width: 29px;" valign="top">19</td>
+<td style="width: 368px;" valign="top">Manufacturing Accounting Records</td>
+<td style="width: 24px;" valign="top">&nbsp;</td>
+<td style="width: 39px;" valign="top">&nbsp;</td>
+<td style="width: 27px;" valign="top">&nbsp;</td>
+<td style="width: 478px;" valign="top">Update F4111 only</td>
+</tr>
+<tr>
+<td style="width: 29px;" valign="top">20</td>
+<td style="width: 368px;" valign="top">DFM - Completion</td>
+<td style="width: 24px;" valign="top">Y</td>
+<td style="width: 39px;" valign="top">Y</td>
+<td style="width: 27px;" valign="top">&nbsp;</td>
+<td style="width: 478px;" valign="top">Demand Flow Manufacturing</td>
+</tr>
+<tr>
+<td style="width: 29px;" valign="top">21</td>
+<td style="width: 368px;" valign="top">DFM - Issue</td>
+<td style="width: 24px;" valign="top">Y</td>
+<td style="width: 39px;" valign="top">Y</td>
+<td style="width: 27px;" valign="top">&nbsp;</td>
+<td style="width: 478px;" valign="top">Demand Flow Manufacturing</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Integer value at column Action has 1 to 1 relationship with application for easier grouping of applications</li>
+<li>Column for Write Price is not implemented yet</li>
+<li>To write price file in calling XT4111Z1 - F4111EditLine flag F41UI001.ITAPRI (AddBasePriceRecord - Add Base Price Record) has to be set '1 - Add Base Price Record)</li>
+<li>In running above applications, this flag is not be set '1' so based price may not be added let alone some of above transactions do not deal with item price</li>
+</ul>
+</div>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q2&gt; What is the Business Function which handles Cost and Price Add/Update?</h3>
+<p>Above routine is handled by XT4111Z1 - F4111EditLine</p>
+<hr />
+<h3 class="km">Q3&gt; Does it add cost information so long as above listed applications are running?</h3>
+<p>No. It is working conditionally,</p>
+<ul>
+<li>Condition 1: F4105 - <em>Item Cost</em> does not have data meet Item/Branch/(Location/Lot) (F4105 does not have a record for combination of item/branch (and location/lot) depending on cost level defined in item master)</li>
+<li>Condition 2: <em>Costing Method Method</em> (F4105.LEDG) is not 07 - Standard Cost</li>
+</ul>
+<ul>
+<li>Condition 3 - F4101.CLEV (Cost Level is 1 - Item Only or 2 - Item/Branch Only)</li>
+</ul>
+<blockquote>
+<div class="kmnotebox">
+<blockquote>F4101.SRCE - <em>Lot Process Type</em> is 'Space' or 'Blank' or NULL<br /> <strong>OR </strong>(Input Lot Number is Not Blank <strong>AND </strong>Lot Number is Not Blank)<br /> <strong>OR </strong>Lot Process Type is 2 - <em>Lots Assigned with Next Number</em></blockquote>
+</div>
+<br />
+<ul>
+<li>Condition 4 - F4101.CLEV (Cost Level is 3 - Item/Branch/Location/Lo )</li>
+</ul>
+<div class="kmnotebox">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F4101.CLEV (Cost Level) is 3 - <em>Item/Branch/Location/Lot</em><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>AND </strong>(F4101.SRCE is Not Blank <strong>AND </strong>Input Lot Number is Blank)</div>
+</blockquote>
+<blockquote><br /> Only when "Write Cost" is 'Y' and meets above condition(s) then it write a new record into F4105 - <em>Item Cost File</em></blockquote>
+<hr />
+<h3 class="km">Q4&gt; When does it Write Price (F4106 - Item Base Price File)?</h3>
+<p>Only when it meets below condition it write a new record into F4106 - <em>Item Base Price File</em>,</p>
+<ul>
+<li>Condition 1 - In calling F4111EditLine (F4111 Edit Line) Flag F41UI001.ITAPRI has to be '1' but there is no implementation for this yet</li>
+<li>Condition 2 - F4101.PLEV (Sales Price Level) is 2<em> - Item/Branch Only </em><strong>OR 3</strong><em> - Item/Branch/Location/Lot<br /> </em></li>
+<li>Condition 3 - F4106 does not have Price Information for input Item/Branch/(Location/Lot) combination</li>
+<li>Condition 4 - Application ID meets above metrics</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q5&gt; Then when does it update item cost into F4105 - Item Cost File?</h3>
+<p>When it meets below conditions,</p>
+<ul>
+<li>Application ID meets above metrics</li>
+<li>F4105.LEDG (Costing Method) is "06 - <em>Lot</em>"</li>
+<li>cUpdateUnitCost Flag in calling F4111EditLine is '1 - Update Cost'</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q6&gt; In copying existing application P4112 into P554112 will same functionality retained?</h3>
+<p>Yes it will retain same functionality as it determined by how BSFN F4111EditLine gets called</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q7&gt; What are the list of applications which add/update Average Cost?</h3>
+<p>List of applications defined in UDC(40|AV) or UDC (40/AV) - <em>Average Cost Calculation</em>. So long as Description 02 (F0005.DL02) is defined 'y' or 'Y' it shall update Average Cost. On Average Cost refer &lt;Document 625564.1&gt; E1: 41: Weighted Average Cost.<br /> <br /> For easier comparison here repeats list of applications,</p>
+<table class="km" style="width: 545px; height: 426px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="background-color: #009900; color: white; width: 85px;">Codes</th><th class="km" style="background-color: #009900; color: white; width: 254px;">Description 01</th><th class="km" style="background-color: #009900; color: white; width: 188px;">Description 02</th></tr>
+<tr>
+<td class="km" style="width: 85px;">ND3N4113</td>
+<td class="km" style="width: 254px;">DSI Inventory Transfers</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">ND3N4114</td>
+<td class="km" style="width: 254px;">DSI Inventory Issues/Adj.</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">ND3N4205</td>
+<td class="km" style="width: 254px;">DSI Ship Confirmation</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">ND3N4309</td>
+<td class="km" style="width: 254px;">DSI Receipt Routing</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">ND3N4312</td>
+<td class="km" style="width: 254px;">DSI PO Receipts</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P31114</td>
+<td class="km" style="width: 254px;">Completions</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P41014</td>
+<td class="km" style="width: 254px;">Speed Item Setup</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4112</td>
+<td class="km" style="width: 254px;">Inventory Issues</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4113</td>
+<td class="km" style="width: 254px;">Inventory Transfers</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4114</td>
+<td class="km" style="width: 254px;">Inventory Adjustments</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4116</td>
+<td class="km" style="width: 254px;">Item Reclassifications</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P41801</td>
+<td class="km" style="width: 254px;">Future Cost/Price Update</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P41810</td>
+<td class="km" style="width: 254px;">Recompute Average Cost</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4205</td>
+<td class="km" style="width: 254px;">Shipment Confirmation</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P42800</td>
+<td class="km" style="width: 254px;">Sales Update</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4312</td>
+<td class="km" style="width: 254px;">Purchase Order Receipts</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P4314</td>
+<td class="km" style="width: 254px;">Purchase Order Match</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P43214</td>
+<td class="km" style="width: 254px;">Reverse Purchase Order Receipt</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P43250</td>
+<td class="km" style="width: 254px;">Receipt Routing Movement</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P43253</td>
+<td class="km" style="width: 254px;">Receipt Routing Disposition</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">P43291</td>
+<td class="km" style="width: 254px;">Landed Cost Selection</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R30837</td>
+<td class="km" style="width: 254px;">WIP Revaluation</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R31804</td>
+<td class="km" style="width: 254px;">Manufacturing Variances</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R41413</td>
+<td class="km" style="width: 254px;">Cycle Count Update</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R43092Z1I</td>
+<td class="km" style="width: 254px;">Routing Interoperability</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R47071</td>
+<td class="km" style="width: 254px;">EDI-Rec Advise Purchasing</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R47121</td>
+<td class="km" style="width: 254px;">EDI Product Activity Data</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R4981</td>
+<td class="km" style="width: 254px;">Freight Update</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td class="km" style="width: 85px;">R76B804</td>
+<td class="km" style="width: 254px;">Process Taxes in Receipt File</td>
+<td class="km" style="width: 188px;">Y</td>
+</tr>
+<tr>
+<td style="width: 85px;" valign="top">X4617</td>
+<td style="width: 254px;" valign="top">WMS Confirmation Server</td>
+<td style="width: 188px;" valign="top">Y</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: <br />
+<ul>
+<li>Do not add additional application as it may not update average cost a certain application is not calling XT4111Z1 - F4111EditLine. For example, though you add P4210 in the list, which won't update Average&nbsp; Cost</li>
+<li>There is no validation logic for Description 01</li>
+<li>Average Cost will get update only when <em>cUpdateAverageCost </em>paramter is '1' in calling F4111EditLine. So in case there is issue in updating average cost, capture jdedebug.log and look into this flag</li>
+</ul>
+</div>
+<p><br /> <em><span style="text-decoration: underline;">Disclaimer</span>: Oracle will not be responsible for the changes made based on this document and contents may be changed without having prior notice</em></p>
+<hr />
+<div class="kmnotebox">To discuss information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/distribution_-_jde1" target="_blank">JDE1 Distribution Community</a>.<br /> <br /> To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details (Doc ID <a href="&lt;&lt;INLINE_NOTE:548764.1&gt;&gt;" target="_blank">548764.1</a>) if your topic is not currently scheduled please suggest it.</div>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

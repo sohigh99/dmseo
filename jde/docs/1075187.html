@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Item Location and Lot Creation on the Fly</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Item Location and Lot Creation on the Fly</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>In EnterpriseOne, F4102 - <em>Item Branch File</em> and F41021 - <em>Item Location File</em> can be created on the Fly. This document is to explain when it gets created and what are the conditions for this. The document provides answers to frequently asked questions on this functionality.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>&nbsp;</p>
+<h4 class="km"><strong>Question 1:</strong> What are the inventory transactions which affect creation of F4102/F41021?</h4>
+<p><strong>Answer 1:</strong></p>
+<table class="km" style="width: 647px; height: 604px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Trans</th><th class="km">Application</th><th class="km">F/T</th><th class="km">F4102</th><th class="km">F41021</th><th class="km">Conditions</th></tr>
+<tr>
+<td class="km">1</td>
+<td class="km">P4112 - Inventory Issues</td>
+<td class="km">F</td>
+<td class="km">Y</td>
+<td class="km">Y</td>
+<td class="km">cLocationInCache='1'</td>
+</tr>
+<tr>
+<td class="km">2</td>
+<td class="km">P4114 - Inventory Adjustment</td>
+<td class="km">T</td>
+<td class="km">Y</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">8</td>
+<td class="km">P4242 - Transfer Order</td>
+<td class="km">T</td>
+<td class="km">Y</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">16</td>
+<td class="km">P49660 - Load Disposition</td>
+<td class="km">T</td>
+<td class="km">Y</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">3</td>
+<td class="km">P4113 - Inventory Transfer</td>
+<td class="km">F/T</td>
+<td class="km">Y</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">12</td>
+<td class="km">P4116 - Inventory Reclassifiction</td>
+<td class="km">F/T</td>
+<td class="km">Y</td>
+<td class="km">Y</td>
+<td class="km">cFromTo='F'</td>
+</tr>
+<tr>
+<td class="km">4</td>
+<td class="km">P4312 - Purchase Order Receipt</td>
+<td class="km">T</td>
+<td class="km">&nbsp;</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">4</td>
+<td class="km">P4314 - Voucher Match</td>
+<td class="km">T</td>
+<td class="km">&nbsp;</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">4</td>
+<td class="km">P43253 - Routing Disposition</td>
+<td class="km">T</td>
+<td class="km">&nbsp;</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">4</td>
+<td class="km">P43250 - Receipt Routing Movement and Disposition</td>
+<td class="km">T</td>
+<td class="km">&nbsp;</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">5</td>
+<td class="km">P4205 - Shipment Confirmation</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">13</td>
+<td class="km">R42800 - Sales Update</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">19</td>
+<td class="km">P4205 - Shipment Confirmation</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">*Serial</td>
+</tr>
+<tr>
+<td class="km">19</td>
+<td class="km">R42800 - Sales Update</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">*Serial</td>
+</tr>
+<tr>
+<td class="km">6</td>
+<td class="km">R41413 - Cycle Count Update</td>
+<td class="km">T</td>
+<td class="km">&nbsp;</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">7</td>
+<td class="km">R41610 - Tag Count Update</td>
+<td class="km">T</td>
+<td class="km">&nbsp;</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">9</td>
+<td class="km">P31113 - Work Order Inventory Issues</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">*Completion</td>
+</tr>
+<tr>
+<td class="km">10</td>
+<td class="km">P31114 - Work Order Completions</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">*Completion</td>
+</tr>
+<tr>
+<td class="km">11</td>
+<td class="km">P31113 - Work Order Inventory Issues</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">Y</td>
+<td class="km">*Issue</td>
+</tr>
+<tr>
+<td class="km">14</td>
+<td class="km">P4205 - Shipment Confirmation</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">14</td>
+<td class="km">P42800 - Sales Update</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">N/A</td>
+</tr>
+<tr>
+<td class="km">15</td>
+<td class="km">P4312 - Purchase Order Receipt</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">Y</td>
+<td class="km">*In Routing</td>
+</tr>
+<tr>
+<td class="km">15</td>
+<td class="km">P4314 - Voucher Match</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">Y</td>
+<td class="km">*In Routing</td>
+</tr>
+<tr>
+<td class="km">15</td>
+<td class="km">P43253 - Routing Disposition</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">Y</td>
+<td class="km">*In Routing</td>
+</tr>
+<tr>
+<td class="km">15</td>
+<td class="km">P43250 - Receipt Routing Movement and Disposition</td>
+<td class="km">T</td>
+<td class="km">N/A</td>
+<td class="km">Y</td>
+<td class="km">*In Routing</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">17</td>
+<td style="vertical-align: top;">P49660 - Transportation Compartment - Based Load</td>
+<td style="vertical-align: top;">T</td>
+<td style="vertical-align: top;">N/A</td>
+<td style="vertical-align: top;">N/A</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">20</td>
+<td class="km">DFM - Completion</td>
+<td class="km">F</td>
+<td class="km">N/A</td>
+<td class="km">Y</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td valign="top">21</td>
+<td valign="top">DFM - Issue</td>
+<td valign="top">F</td>
+<td valign="top">N/A</td>
+<td valign="top">Y</td>
+<td valign="top">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>1st Column "Trans" is "nTransaction" in XT4111Z1 - F4111EditLine</li>
+<li>3rd Column "F/T" is to indicate the direction of transaction F - From and T - To</li>
+<li>4th Column and 5th Column are <em>cAllowItemBranchAdd </em>and <em>cAllowItemLocationAdd </em>respectively</li>
+<li>Some Transactions are not related with this category thus set as "N/A" - Not Available</li>
+<li>DFM - Demand Flow Manufacturing</li>
+<li>Condition cLocationInCache for P4112 is implemented through Bug 10901470 : BLEND WT ISSUES-LOCATION ERROR - SAR: 7813661. In general, P4112 is from side transaction to it is not allowed to create item location on the fly.</li>
+<li><em>Note: Per <a href="&lt;&lt;INLINE_BUG:11043796&gt;&gt;" target="_blank">Bug 11043796</a>/SAR 8963654: When the item branch record is created on the fly, the item details will be copied from Item Master and not from the From branch of Inventory Transfer. So the category codes populated in Item Master will default to the new branch record. This functionality is same as we add a new item branch record through Item Branch (P41026) application. </em>
+<p><em>Here also all the item details will be defaulted to Item&nbsp; Branch from Item Master. In the SAR scenario, to default the PRP6, PRP7, PRP8, PRP9, PRP0, SRP6, SRP7, SRP8 and SRP9 category codes, user needs to set these values in the Item Master category code. So the category codes will be defaulted to the newly created item branch.</em></p>
+</li>
+<li><em>The Enh &lt;Bug 12516444&gt; - PREVENT CREATE LOC ON THE FLY - SAR: 7449484 &nbsp;is rejected</em></li>
+</ul>
+</div>
+<p><em><br /> </em></p>
+<hr />
+<h4 class="km"><strong>Question 2:</strong> What are the exclusive conditions in creating Item Branch Records (F4102)?</h4>
+<p><strong>Answer 2:</strong></p>
+<ul>
+<li>When Branch/Plant is warehouse Branch. It does not allow the user create a branch on the fly. Since this would only create the F4102 records without creating all the necessary warehouse setup to make use of this newly added branch/plant. This information is coming from F41001.WCTL - <em>Control Code - Warehouse Management</em> is '1' to determine whether B/P is meant for Warehouse management or not</li>
+<li>If a certain item is Non-stock item (e.g., F4101.STKT - <em>Stocking Type</em> = 'N' - <em>Non-Stock Item</em>) then do not allow F4102 gets created. In this case, a certain application will issue error '4080 - <em>Branch / Plant and Item Inconsistent</em>'</li>
+<li>Bulk Transfer</li>
+<li>Addition takes places in P31113/P31114</li>
+</ul>
+<hr />
+<h4 class="km"><strong>Question 3:</strong> Will system issues any warning message before Item Branch Record gets created to have the user to decide to proceed it or not?</h4>
+<p><strong>Answer 3: </strong>Yes, if <a href="&lt;&lt;INLINE_BUG:10980836&gt;&gt;" target="_blank">Bug 10980836</a>/SAR 8721700 is in place, warning "121D - <em>Item Branch Record Not Found - WARNING</em>". This warning message will be issued even when Lot Number is not blank.</p>
+<hr />
+<h4 class="km"><strong>Question 4:</strong> What are other conditions to create Item Branch Records on the Fly?</h4>
+<p><strong>Answer 4:</strong></p>
+<ul>
+<li>It has to meet above metrics</li>
+<li>Stock Item</li>
+<li>Not warehouse Branch/Plant</li>
+<li>Not Bulk Transfer</li>
+<li>Error Code '<strong>0294 - <em>Error: Item Branch Record Does Not Exist</em></strong>' is not issued. Except P31113/P31114, applications listed above will check whether there is existing data from F4102 and the direction are transaction is not 'T' then Item Branch record is not be created on the fly.</li>
+</ul>
+<hr />
+<h4 class="km"><strong>Question 5:</strong> Does system issue a warning message before it creates an Item Location record (F41021)?</h4>
+<p><strong>Answer 5: </strong>Yes it issues warning '<strong>0678 -</strong> <em><strong>Warning: Item Location Record Not Found</strong></em>'</p>
+<hr />
+<h4 class="km"><strong>Question 6:</strong> What are other conditions which may not allow the users to create Item Location records (F41021)?</h4>
+<p><strong>Answer 6:</strong></p>
+<ul>
+<li>Application ID has to meet above metrics</li>
+<li>Error '<strong>3138 - <em>Error: Invalid Location</em></strong>' is not to be issued in validating Location</li>
+<li>Stock Item</li>
+<li>Not warehouse Branch/Plant</li>
+<li>Not Bulk Transfer</li>
+</ul>
+<div class="kmnotebox">Note: when a record is inserted/updated into F41021, Cardex F4111 is to be inserted</div>
+<p>&nbsp;</p>
+<h4 class="km">Question 7: The Item Location (F41021) was set Primary location for a specific location when to-side-transaction holds specific location (and lot) during inventory transaction. Is there way to set blank location and lot as primary location into F41021 (Item Location)?</h4>
+<p><strong>Answer 7: </strong></p>
+<p>To set blank location and lot as primary location,</p>
+<ol>
+<li>Add Blank Location and Lot using P41024</li>
+<li>(Row Exit) Change Primary using same application</li>
+</ol>
+<p>cf., Follow the workaround steps in &lt;Document&nbsp;2146010.1&gt; - E1: 41: Cannot Add Primary Location - Workaround, in case missing location is concern.</p>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Depends on calling BSFN(e.g., XT4114Z1 -&nbsp; <em>F4114EditLine</em> (F4114 Edit Line)) of&nbsp; XT4111Z1 - F4111EditLine input parameter of FTRN - <em>cFromSideOfTransfer</em> = '1' or <em>cFromTo</em>='F' can be specified to hard code whether to allow creation of Item Branch or Item Location File on the fly</li>
+<li>Do not change any code which is given as example, as it may cause discripancy among F4101/F4102/F41021/F4111 and so on</li>
+<li>Oracle is not responsible any mismatching data which are caused by modification of standard code</li>
+</ul>
+</div>
+<hr />
+<p>&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interop and R00460</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Interop and R00460</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note is to answer possible questions on R00460 - Interoperability Generic Outbound Subsystem UBE.<br /><br /><br /></p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>First of all, refer to below documents to understand the usage of R00460 and how it can be implemented as below,<br />&lt;Document 1342897.1&gt; E1: BSFN: Business Functions in R00460<br />&lt;Document 1342363.1&gt; E1: 31: R00460 Implementing Work Order Extraction in P48013 (JDEWO)<br />&lt;Document 1347465.1&gt; E1: SS: Subsystem UBEs in EnterpriseOne<br />&lt;Document 1347858.1&gt; E1: INTEROP: List of application with Interop Tab <br /><br /></p>
+<h3 class="km">What are the possible interface methods through EnterpriseOne tool set?</h3>
+<p>Possible interfaces include,</p>
+<ul>
+<li>Business Services</li>
+<li>XAPI II</li>
+<li>Real-Time Events</li>
+<li>Inbound Response Parsing API</li>
+<li>Outbound XAPI Event Creation API</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">Note: Interoperability may not be the best practice for data outbound</div>
+<p> </p>
+<hr />
+<h3 class="km">What is the purpose of Z1 tables?</h3>
+<p>Z tables can be used for,</p>
+<ul>
+<li>Interoperability</li>
+<li>Auditing: By writing records for a data item labeled as 'UB - Update Before' and 'UA - Update After' the Z-table can be used for auditing.</li>
+<li>Temporary storage for a certain transaction: This can be an actual work file or data structure for cache for a certain transaction</li>
+</ul>
+<p> </p>
+<p> </p>
+<hr />
+<h3 class="km">Can data from F986113 be deleted for the object R00460?</h3>
+<p>Yes you can delete it unless you have any data extraction through R00460. Possibly you may check,</p>
+<ul>
+<li>No running version of R00460 with (Subsystem) Job Status 'R -  Subsystem Job Running' in P986113</li>
+<li>No definition on R00460 process through P0047 (Data Export Controls)</li>
+</ul>
+<p> </p>
+<hr />
+<h3 class="km">What does R00460 do?</h3>
+<p>Conditionally creates data into F0046 and if you set so, when you launch UBE or Function.<br /><br />Reference:<br />E1: 31: R00460 Implementing Work Order Extraction in P48013 (JDEWO) (Doc ID 1342363.1)<br />E1: BSFN: Business Functions in R00460 (Doc ID 1342897.1)</p>
+<p> </p>
+<hr />
+<h3 class="km">When does data from F0046 get populated?</h3>
+<p>When R00460 is lanuched through a subsystem kernel. In other words, if this UBE is not running then it does not create F0046.<a href="#TheContent" alt="Back To Top" title="Back To Top"></a></p>
+<p> </p>
+<hr />
+<h3 class="km">What are the JDE APIs which can activate Subsystem Queue?</h3>
+<p>There are two available JDE APIs,</p>
+<ul>
+<li>jdeAddSubsystemRecord()</li>
+<li>ubeReport_AddSubsystemRecord()</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">Note: <br />
+<ul>
+<li>The jdeAddSubsystemRecord API was enhanced in B731.1 to support "version" by introducing ubeReport_AddSubsystemRecord(). By this change, version information can be flexible.</li>
+<li>Call ubeReport_AddSubsystemRecord with the following parameters:</li>
+<ul>
+<li>User handle = hUser</li>
+<li>Name of subsystem = lpDS-&gt;szUBEName</li>
+<li>Subsystem version = lpDS-&gt;szVersion</li>
+<li>Override environment = NULL</li>
+<li>Server name = NULL</li>
+<li>Subsystem data structure = dsGenericDSTR</li>
+</ul>
+<li>dsGenericDSTR contains which data to handle and it is stored as BLOB in F986113</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<h3 class="km">Which routines make use of R00460?</h3>
+<p>In EnterpriseOne there are two different types of Master Business Functions,</p>
+<ul>
+<li>Master File MBF</li>
+<li>Transaction File MBF</li>
+</ul>
+<p>For Master File MBF call BSFN B0000176 - AddTransactionToSubsytemQueue (for NER code) or call APIs directly. For Transaction File MBF 'End Doc' routine contains the Subsystem Process.</p>
+<table style="width: 718px; border-collapse: collapse;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 81pt;" width="108" /><col style="width: 190pt;" width="253" /><col style="width: 318pt;" width="424" /><col style="width: 34pt;" width="45" /><col style="width: 95pt;" width="126" /></colgroup>
+<tbody>
+<tr style="height: 16.5pt;">
+<th class="xl71" style="background-color: #009900; width: 81pt; height: 16.5pt; color: white;">Source  Module</th>
+<th class="xl71" style="border-left: medium none; background-color: #009900; width: 190pt; color: white;">Function  Name</th>
+<th class="xl71" style="border-left: medium none; background-color: #009900; width: 318pt; color: white;">Description</th>
+<th class="xl76" style="border-left: medium none; background-color: #009900; width: 34pt; color: white;">Call B0000176</th>
+<th class="xl71" style="background-color: #009900; width: 95pt; color: white;">Others</th>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N000700</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F0007ProcessMasterData</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F0007 Process Master Data</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N0100041</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">AddressBookMasterMBF</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">Address Book - MBF</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B03B0190</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">ProcessInvoiceOutbound</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F03B11Z2 Process Invoice Outbound Transaction</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B03B0191</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">ProcessReceiptHeaderOutbound</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F03B13Z2 Process Receipt Header Outbound Transaction</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B03B0191</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">ProcessReceiptDetailOutbound</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F03B14Z2 Process Receipt Detail Outbound Transaction</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B0400048</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F0411Z3WriteOutboundF0411</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F0411Z3 Write Outbound F0411</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B0400297</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">WritetoInteroperabilityTable</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">Write to the F0413/F0414 Interoperability Tables</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B0900160</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F0911Z4WriteOutboundF0911</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F0911Z4 Write Outbound F0911</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl78" style="height: 15.75pt; border-top: medium none;" height="21">N1200010</td>
+<td class="xl82" style="border-left: medium none; border-top: medium none;">F1201ProcessMasterData</td>
+<td class="xl82" style="border-left: medium none; border-top: medium none;">F1201 Process Master Data</td>
+<td class="xl79" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl75" style="border-top: medium none;">Calling R1201Z1O</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N1200090</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F1217ProcessMasterData</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F1217 Process Master Data</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N3001780</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F3003EndDocument</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F3003 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N3001840</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F30006EditLine</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F30006 Work Center MBF</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N3002040</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F3002EndDocument</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F3002 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">B3101420</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">F4801Z1WriteWOHeaderTransactions</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">F4801Z1 Write Work Order Header Transactions Module</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl73" style="border-top: medium none;">Called by</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    B3100770</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">B3100770CompletionsEndDoc</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F4801 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    X4801</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F4801EndDocument</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F4801 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">B3101430</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">F4801Z1WriteWOPLOrRtgTrans</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">F4801Z1 Write WO Parts List Or Routings Transactions</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl73" style="border-top: medium none;">Called by</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    B3100960</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">MfgJE_ResetUnaccountedUnits</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">Mfg JE, Reset Unaccounted Units</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    B3101250</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F3112WorkOrderRoutingsEndDoc</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F3112 Work Order Routings End Doc</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    X3111</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F3111ProcessMasterData</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F3111 Master File MBF</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    X3112</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F3112ProcessMasterData</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F3112 Process Master Data MBF</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">B3102020</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">F31122Z1WriteWOTimeTransactions</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">F31122Z1 Write WO Time Transactions Unedited Transaction</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl73" style="border-top: medium none;">Called by</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    B3100640</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">UpdateProcessedTimeRecord</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F31122 Update Processed Time</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N3401430</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F3460ForecastMBF</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F3460ForecastMBF</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">N4101070</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">UpdateItemProcessData</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">Update Item Process Data</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl72" style="height: 15.75pt; border-top: medium none;" height="21">B4200310</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F4211FSEndDoc</td>
+<td class="xl72" style="border-left: medium none; border-top: medium none;">F4211 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl72" style="border-top: medium none;">Calling Multiple Subsystem</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl75" style="height: 15.75pt; border-top: medium none;" height="21">N4200790</td>
+<td class="xl75" style="border-left: medium none; border-top: medium none;">ShipConfirmEndDoc</td>
+<td class="xl75" style="border-left: medium none; border-top: medium none;">Shipment Confirmation End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl75" style="border-top: medium none;">Calling Multiple Subsystem</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">B4301690</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">ProcessInteropOutboundRecords</td>
+<td class="xl73" style="border-left: medium none; border-top: medium none;">Process Interop Outbound Records</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl73" style="border-top: medium none;">Called by</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    XT4311Z1</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F4311EndDoc</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F4311 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl73" style="height: 15.75pt; border-top: medium none;" height="21">    XT4312Z1</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F4312EndDoc</td>
+<td class="xl74" style="border-left: medium none; border-top: medium none;">F43121 End Document</td>
+<td class="xl77" style="border-left: medium none; border-top: medium none;"> </td>
+<td class="xl73" style="border-top: medium none;"> </td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl80" style="height: 16.5pt; border-top: medium none;" height="22">XT4312Z1</td>
+<td class="xl80" style="border-left: medium none; border-top: medium none;">F4312EndDoc</td>
+<td class="xl80" style="border-left: medium none; border-top: medium none;">F43121 End Document</td>
+<td class="xl81" style="border-left: medium none; border-top: medium none;">Y</td>
+<td class="xl80" style="border-top: medium none;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>In case you need to know what is calling applications (both Interactive and Batch) get information through Cross Reference Facilities</li>
+<li>Refer to &lt;Document 1265902.1&gt; E1: BSFN: Master Business Function in EnterpriseOne</li>
+</ul>
+</div>
+<p> </p>
+<p>This information is retrieved based on EnterpriseOne application release 9.2<br /><br /></p>
+<p> </p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

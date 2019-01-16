@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case Study: ORA-00001 (Unique Constraint Violated) using JDB_UpdateTable</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Case Study: ORA-00001 (Unique Constraint Violated) using JDB_UpdateTable</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>This document explains the possible cause for error ORA-00001 in an Update statement.</p>
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p><strong>Business scenario</strong>: you need to audit sales order change by recording it into F42420 (Audit Log Transaction). When you activate Workflow JDESOCHNG to notify approver to Approve/Reject changes, then the approver will need updating status to indicate order change has approved through P98805 (Generic Workflow Approval Forms).<br /><br /><span style="font-weight: bold;">Contents of table:</span></p>
+<div style="margin-left: 40px;"><a href="#ora_00001" alt="ORA-00001 Error in Oracle DB" title="ORA-00001 Error in Oracle DB">Error ORA-00001 definition from Oracle DB</a><br /><a href="#example" alt="Data Example" title="Data Example">Example:</a><br />  <a href="#data" alt="Data stored in F42420" title="Data stored in F42420">Data recorded based on primary key</a><br />  <a href="#index" alt="Index of F42420" title="Index of F42420">Index information</a><br />  <a href="#foreignkey" alt="Data Stored based on Foreign Key to update" title="Data Stored based on Foreign Key to update">Data pulled based on foreign key</a><br /><a href="#jdedebug" alt="Error in JDEDEBUG.log" title="Error in JDEDEBUG.log">Error in JDEDEBUG.log</a><br /><a href="#resolution" alt="How to overcome error?" title="How to overcome error?">How to debug error ORA-00001?</a><br /><a href="#consideration" alt="Considerations" title="Considerations">Considerations</a></div>
+<p><br /><br /><br /><span style="font-weight: bold;"><a name="ora_00001"></a></span><strong><big>ORA-00001: unique constraint (string.string) violated</big></strong></p>
+<div style="margin-left: 10px;"><span style="font-weight: bold;">Cause</span>: An UPDATE or INSERT statement attempted to insert a duplicate key.  For Trusted Oracle configured in DBMS MAC mode, you may see this message if a duplicate entry exists at a different level.<br /><span style="font-weight: bold;">Action</span>: Either remove the unique restriction or do not insert the key.<br /><br />Example through query tool:</div>
+<div style="margin-left: 10px;"><img src="&lt;&lt;INLINE_ATTACHMENT:1500253.1:ERROR_&gt;&gt;" border="0" alt="Error through query tool" title="Error through query tool" hspace="0" vspace="0"/></div>
+<hr />
+<p><br /><br /><br /><strong><a name="example"></a>Example:</strong><br /><a name="data"></a><big>Table F42420 and Data stored based on Primary Key</big>:</p>
+<table style="border-collapse: collapse; width: 1239px; height: 91px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 83pt;" width="110" /> <col style="width: 105pt;" width="140" /> <col style="width: 65pt;" width="86" /> <col style="width: 92pt;" width="122" /> <col style="width: 79pt;" width="105" /> <col style="width: 101pt;" width="135" /> <col style="width: 93pt;" width="124" /> <col style="width: 74pt;" width="99" /> <col style="width: 115pt;" width="153" /> <col style="width: 111pt;" width="148" /> <col style="width: 80pt;" width="106" /> <col style="width: 101pt;" width="134" /> <col style="width: 102pt;" width="136" /> <col style="width: 38pt;" width="51" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top; width: 64px;"> </td>
+<th style="height: 12.75pt; width: 25px; background-color: #009900; color: white;">KCOO** (Order Co)</th>
+<th style="width: 105pt; background-color: #009900; color: white;">DOCO** (Order Number)</th>
+<th style="width: 65pt; background-color: #009900; color: white;">DCTO** (Or Ty)</th>
+<th class="xl63" style="width: 92pt; background-color: #009900; color: white;">LNID**<br />(Line Number)</th>
+<th style="width: 79pt; background-color: #009900; color: white;">CORD** (Chg Ord)</th>
+<th style="width: 101pt; background-color: #009900; color: white;">UPMJ *<br />(Date Updated)</th>
+<th style="width: 93pt; background-color: #009900; color: white;">TDAY* (Time of Day)</th>
+<th style="width: 74pt; background-color: #009900; color: white;">USER* (User ID)</th>
+<th style="width: 115pt; background-color: #009900; color: white;">RFRV (Revision Reason)</th>
+<th style="width: 111pt; background-color: #009900; color: white;">APSR (Approval Status)</th>
+<th style="width: 80pt; background-color: #009900; color: white;">APPV (Approver)</th>
+<th style="width: 101pt; background-color: #009900; color: white;">APPJ (Approval Date)</th>
+<th style="width: 102pt; background-color: #009900; color: white;">ATIM <br />(Time Approved)</th>
+<th style="width: 38pt; background-color: #009900; color: white;">...</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top; width: 64px;">Row 1</td>
+<td style="height: 12.75pt; background-color: #cccccc; color: red; font-weight: bold; width: 25px;">00001</td>
+<td style="text-align: right; background-color: #cccccc; font-weight: bold; color: red;">1234</td>
+<td style="background-color: #cccccc; color: red; font-weight: bold;">SO</td>
+<td class="xl63" style="text-align: right; background-color: #cccccc; font-weight: bold; color: red;">1.000</td>
+<td style="text-align: right; background-color: #cccccc; font-weight: bold; color: red;">1</td>
+<td style="background-color: #cccccc;">19-10-2012</td>
+<td style="text-align: right; background-color: #cccccc;">84646</td>
+<td style="background-color: #cccccc;">JDE</td>
+<td>CUS</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td align="right">0</td>
+<td align="right">...</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top; width: 64px;">Row 2</td>
+<td style="height: 12.75pt; background-color: #cccccc; color: red; font-weight: bold; width: 25px;">00001</td>
+<td style="text-align: right; background-color: #cccccc; font-weight: bold; color: red;">1234</td>
+<td style="background-color: #cccccc; font-weight: bold; color: red;">SO</td>
+<td class="xl63" style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1.000</td>
+<td style="text-align: right; background-color: #cccccc; font-weight: bold; color: red;">1</td>
+<td style="background-color: #cccccc;">19-10-2012</td>
+<td style="text-align: right; background-color: #cccccc;">84711</td>
+<td style="background-color: #cccccc;">JDE</td>
+<td>CUS</td>
+<td>P</td>
+<td> </td>
+<td> </td>
+<td align="right">0</td>
+<td align="right">...</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Notes:
+<ul>
+<li>Columns which belong to both primary key and foreign key are described as **</li>
+<li>Columns in primary key are in grey box</li>
+</ul>
+</div>
+<p> </p>
+<p><strong><a name="index"></a><big style="font-weight: normal;">Index</big><span style="font-weight: normal;">:</span></strong></p>
+<ul>
+<li>PRIMARY INDEX: <span style="font-weight: bold;">ID_F42420_ORDER_CO__ORDER_NO__A</span> (KCOO ASC, DOCO ASC, DCTO ASC, LNID ASC, CORD ASC, UPMJ ASC, TDAY ASC, USER ASC)</li>
+<li>FOREIGN KEY: <span style="font-weight: bold;">ID_F42420_ORDER_CO__ORDER__B</span> (KCOO ASC, DOCO ASC, DCTO ASC, LNID ASC, <span style="color: red;">CORD DSC</span>)</li>
+</ul>
+<p><br /><a name="foreignkey"></a><strong><big>Data based on Foreign Key</big></strong></p>
+<ul>
+<li>Data Sorted based on Foreign Key by WHERE  ( ALKCOO = '00001' AND ALDOCO = 1234.000000 AND ALDCTO = 'SO' AND ALLNID = 1000.000000 AND ALCORD = 1.000000 )</li>
+</ul>
+<table style="border-collapse: collapse; width: 635px; height: 186px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 83pt;" width="110" /> <col style="width: 105pt;" width="140" /> <col style="width: 65pt;" width="86" /> <col style="width: 79pt;" width="105" /> <col style="width: 101pt;" width="135" /> <col style="width: 93pt;" width="124" /> <col style="width: 74pt;" width="99" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top; margin-left: 30px;"> </td>
+<th style="height: 12.75pt; width: 83pt; background-color: #009900; color: white;">KCOO (Order Co)</th>
+<th style="width: 105pt; background-color: #009900; color: white;">DOCO (Order Number)</th>
+<th style="width: 65pt; background-color: #009900; color: white;">DCTO (Or Ty)</th>
+<th style="vertical-align: top; background-color: #009900; color: white;">LNID (Line Number)</th>
+<th style="width: 79pt; background-color: #009900; color: white;">CORD (Chg Ord)</th>
+<th style="width: 101pt; background-color: #009900; color: white;">UPMJ (Date Updated)</th>
+<th style="width: 93pt; background-color: #009900; color: white;">TDAY (Time of Day)</th>
+<th style="width: 74pt; background-color: #009900; color: white;">...</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top;">Row 2</td>
+<td style="height: 12.75pt; background-color: #cccccc; color: red; font-weight: bold;">00001</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1234</td>
+<td style="background-color: #cccccc; color: red; font-weight: bold;">SO</td>
+<td style="vertical-align: top; text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1.000</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1</td>
+<td>19-10-2012</td>
+<td align="right">84711</td>
+<td>...</td>
+</tr>
+<tr style="height: 12.75pt; margin-left: 30px;">
+<td style="vertical-align: top; margin-left: 30px;">Row 1</td>
+<td style="height: 12.75pt; background-color: #cccccc; color: red; font-weight: bold; margin-left: 30px;">00001</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold; margin-left: 30px;">1234</td>
+<td style="background-color: #cccccc; color: red; font-weight: bold; margin-left: 30px;">SO</td>
+<td style="vertical-align: top; text-align: right; background-color: #cccccc; color: red; font-weight: bold; margin-left: 30px;">1.000</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold; margin-left: 30px;">1</td>
+<td style="margin-left: 30px;">19-10-2012</td>
+<td style="margin-left: 30px;" align="right">84646</td>
+<td style="margin-left: 60px;">...</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><br /><br /><strong><a name="jdedebug"></a><big><span style="font-weight: normal;">Error in Log:</span></big></strong></p>
+<div style="margin-left: 40px; font-style: italic;">Entering JDB_UpdateTable (Table F42420) (hRequest 081611F8) <br />UPDATE PRODDTA.F42420  SET ALKCOO='00001',ALDOCO=1234.000000,ALDCTO='SO',ALLNID=1000.000000,ALCORD=1.000000,ALUPMJ=112293,ALTDAY=70604.000000,ALUSER='JDE', ALRFRV='CUS',ALAPSR='A',ALAPPV='AMISHK',ALAPPJ=112293,<br />, *  <span style="text-decoration: underline;">WHERE  ( ALKCOO = '00001' AND ALDOCO = 1234.000000 AND ALDCTO = 'SO' AND ALLNID = 1000.000000 AND ALCORD = 1.000000 ) </span><br /><br /><strong>OCI0000178</strong> <strong>- Unable to execute - UPDATE</strong> PRODDTA.F42420  SET ALKCOO=:BND1,ALDOCO=:BND2,ALDCTO=:BND3,ALLNID=:BND4,ALCORD=:BND5,ALUPMJ=:BND6,ALTDAY=:BND7,ALUSER=:BND8, ALRFRV=:BND9,ALAPSR=:BND10, ALAPPV=:BND11,ALAPPJ=:BND12,* WHERE  ( ALKCOO = :KEY1 AND ALDOCO = :KEY2 AND ALDCTO = :KEY3 AND ALLNID = :KEY4 AND ALCORD = :KEY5 ) <br />OCI0000179 - Error - <span style="font-weight: bold; color: red;">ORA-00001</span>: unique constraint (PRODDTA.F42420_PK) violated  <br />JDB9900401 - Failed to execute db request <br />JDB3600011 - Failed to perform Update for F42420 <br />Exiting JDB_UpdateTable with Failure (Table F42420)</div>
+<div style="margin-left: 40px; font-style: italic;"></div>
+<div style="margin-left: 40px; font-style: italic;"></div>
+<div class="kmnotebox"><br />Notes:
+<ul>
+<li>The JDEDEBUG traced above is coming from the Workflow Kernel log because the Workflow kernel is calling a Business Function to update table F42420</li>
+<li>Since the eerror is coming from the database level (ODBC, OCI) level, the same information repeats in JDE.LOG.  It is important to review the JDE.LOG when the result is different from what is expected</li>
+<li>For this example, the error is inevitable because WHERE test result two rows which meets this condition so if E1 updates as indicated, the above two rows can have the same primary key</li>
+<li>JDE.LOG contains only query information with bind so it is important to capture the JDEDEBUG.LOG (Workflow kernel is making use of Call Object kernel which records in the Workflow kernel log). For further information on bind variable, refer to<span class="x9s" gt="" 1527551="" 1="" span=""> <a href="&lt;&lt;INLINE_NOTE:1527551.1&gt;&gt;">Document 1527551.1 E1: DB: Troubleshooting Guide for Oracle Database ORA-NNNNN Error Messages and EnterpriseOne.</a><br /></span></li>
+</ul>
+</div>
+<hr />
+<p><br /><br /><br /><a name="resolution"></a><big><strong style="font-weight: normal;">How to Debug the Error?</strong></big><br />One recommendation is to:</p>
+<ol>
+<li>Issue same query through query tool (Ex: Oracle SQL Developer etc.)</li>
+<li>If error ORA-00001 is issued then</li>
+<li>Get Data from table indicated based on WHERE clause (for this example, WHERE  ( ALKCOO = '00001' AND ALDOCO = 1234.000000 AND ALDCTO = 'SO' AND ALLNID = 1000.000000 AND ALCORD = 1.000000 )</li>
+<li>Verify whether the result of update can be unique for primary key (primary index)</li>
+</ol>
+<p>For this example, issue is coming from F42420.CORD column which is copied in copying existing order.  Correct example should be:<br /><br /></p>
+<table style="border-collapse: collapse; width: 638px; height: 84px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 83pt;" width="110" /> <col style="width: 105pt;" width="140" /> <col style="width: 65pt;" width="86" /> <col style="width: 79pt;" width="105" /> <col style="width: 101pt;" width="135" /> <col style="width: 93pt;" width="124" /> <col style="width: 74pt;" width="99" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top;"> </td>
+<th style="height: 12.75pt; width: 83pt; background-color: #009900; color: white;">KCOO (Order Co)</th>
+<th style="width: 105pt; background-color: #009900; color: white;">DOCO (Order Number)</th>
+<th style="width: 65pt; background-color: #009900; color: white;">DCTO (Or Ty)</th>
+<th style="vertical-align: top; background-color: #009900; color: white;">LNID <br />(Line Number)</th>
+<th style="width: 79pt; background-color: #009900; color: white;">CORD (Chg Ord)</th>
+<th style="width: 101pt; background-color: #009900; color: white;">UPMJ (Date Updated)</th>
+<th style="width: 93pt; background-color: #009900; color: white;">TDAY (Time of Day)</th>
+<th style="width: 74pt; background-color: #009900; color: white;">...</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top;">Row 2</td>
+<td style="height: 12.75pt; background-color: #cccccc; color: red; font-weight: bold;">00001</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1234</td>
+<td style="background-color: #cccccc; color: red; font-weight: bold;">SO</td>
+<td style="vertical-align: top; color: red; font-weight: bold; background-color: #cccccc;">1.000</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1</td>
+<td>19-10-2012</td>
+<td align="right">84711</td>
+<td>...</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="vertical-align: top;">Row 1</td>
+<td style="height: 12.75pt; background-color: #cccccc; color: red; font-weight: bold;">00001</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">1234</td>
+<td style="background-color: #cccccc; color: red; font-weight: bold;">SO</td>
+<td style="vertical-align: top; color: red; font-weight: bold; background-color: #cccccc;">1.000</td>
+<td style="text-align: right; background-color: #cccccc; color: red; font-weight: bold;">0</td>
+<td>19-10-2012</td>
+<td align="right">84646</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+<p>From the above data image:</p>
+<ul>
+<li>CORD = 0 indicated before image</li>
+<li>CORD = 1 indicates after image</li>
+</ul>
+<p>To fix this error, apply &lt;Bug 14785958&gt; - P98805 NOT UPDATING F42420 ORDER STATUS. For this example, this error was invoked in copying exiting sales order which in return copied CORD as it is.</p>
+<hr />
+<p> </p>
+<p><a name="consideration"></a><strong><big>Considerations:</big></strong></p>
+<p>Cause and resolution in this document is one example and case study only.</p>
+<p>Some other possible causes of this type of message are:</p>
+<ul>
+<li>Table specification between JDE EnterpriseOne and database (metadata) are different: to synchronize this generate table through OMW (Object Management Workbench) after backing up target data. This action will: drop table, drop index and create table and create index with constraint.</li>
+<li>Constraint information in Database is faulty: do not set any constraint other than Unique Key Constraint because JD Edwards EnterpriseOne does not set constraint explicitly</li>
+<li>Corrupted Index: (this is a common cause) generate index through OMW</li>
+<li>Error is coming during insert: check primary key for target table and verify that unique key is unique (for example, UKID, UPMJ/TDAY and so on). Case study on this example, can be found at &lt;Document 779434.1&gt; E1: 43: Commit Failed Error in PY after copying Business Data from PD to PY.</li>
+</ul>
+<p> </p>
+<hr />
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
