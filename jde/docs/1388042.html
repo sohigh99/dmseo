@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Average Cost Update</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Average Cost Update - Troubleshooting Guide</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note is to explain possible difficulty in getting average cost. Currently Average Cost is to be updated through X4181 -&nbsp;</p>
+<div>&nbsp;* &nbsp;Business Function: &nbsp;AverageCostUpdate</div>
+<div>&nbsp;* &nbsp;Description: &nbsp;Average Cost Update&nbsp;</div>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Prior to this technical document, please refer to &lt;Document 625564.1&gt; - E1: 41: Weighted Average Cost (P4105/R41811/P4205/P4312/P4114/P4112)<br />which explains,</p>
+<ul>
+<li>Definition</li>
+<li>Setup: UDC 40/AV and Branch/Plant Constant</li>
+<li>Online and Batch Update</li>
+<li>Usage of F41051</li>
+</ul>
+<p><br /><br /><big>Weighted Average: </big><br />Average cost is equal to total cost divided by the total quantity (the output quantity, Q). It is important to aware that average costs may be dependent on the time period considered (increasing production/receipt may be expensive or impossible in the short term, for example). <br />Simplified formula is,<br />AC (= Average Cost) = { TC (= Total Cost) / Q (= Quantity) }<br /><br />Or, <br /><em>[(QtyOnHand x CurrWghtAvgCost) + (TransQty x TransUnitCost)] / (QtyOnHand + TransQty)</em><br /><br />There are two commonly used average cost methods:</p>
+<ul>
+<li>Weighted-average cost method</li>
+<li>Moving-average cost method</li>
+</ul>
+<p>: In reality, computation of unit cost for costing method '02 - Weighted Average Cost' behavior more like moving-average cost for on-line update (and weighted average cost method for batch) because whenever there is any transaction which affects on hand quantity (and defined in UDC 40/AV) a new average cost is to be computed. Even when there is no quantity change (or change is total cost) the average unit cost can be computed. In EnterpriseOne, outbound (transaction which relieves on hand quantity) transaction can be added for this computation.<br /><br /><br /></p>
+<div class="kmnotebox"><strong>Weighted Average Cost:</strong><br />Weighted Average Cost is a method of calculating Ending Inventory cost. It takes Cost of Goods Available for Sales/Issue and divides it by the total amount of goods from Beginning Inventory and Purchases. This gives a Weighted Average Cost per Unit. A physical count is then performed on the ending inventory to determine the amount of goods left (Stock Taking or Cycle Count, or when F41021.pqoh is tightly maintained) . Finally, this amount is multiplied by Weighted Average Cost per Unit to give an estimate of ending inventory cost (Stock Valuation).<em><br /><br /></em><strong>Moving-Average Cost: </strong><br />Moving-Average (Unit) Cost is a method of calculating Ending Inventory cost. Assume that both Beginning Inventory and beginning inventory cost are known. From them the Cost per Unit of Beginning Inventory can be calculated. During the year, multiple purchases were made. Each time, purchase costs are added to beginning inventory cost to get Cost of Current Inventory. Similarly, the number of units bought is added to beginning inventory to get Current Goods Available for Sale. After each purchase, Cost of Current Inventory is divided by Current Goods Available for Sales/Issue to get Current Cost per Quantity on Onhand Quantity. Also during the year, multiple sales/issues happened. The Current Goods Available for Sales/Issue is deducted by the amount of goods sold, and the Cost of Current Inventory is deducted by the amount of goods sold times the latest (before this sale) Current Cost per Unit on Goods. This deducted amount is added to Cost of Goods Sold. At the end of the year, the last Cost per Unit on Goods, along with a physical count, is used to determine ending inventory cost.</div>
+<p>&nbsp;</p>
+<hr />
+<p><br /><br /><br />In EnterpriseOne the business function X4181 shall perform this computation and below table show detail routine on this.<br />Available applications based on UDC 40/AV - Average Cost Calculation</p>
+<table style="width: 888px; border-collapse: collapse; height: 637px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 62pt;" width="83" /><col style="width: 164pt;" width="218" /><col style="width: 105pt;" width="140" /><col style="width: 212pt;" width="282" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl66" style="background-color: #009900; width: 31px; height: 15pt; color: white;">Apps ID</th><th class="xl66" style="background-color: #009900; width: 165px; color: white;">Application Description</th><th class="xl66" style="background-color: #009900; width: 310px; color: white;">Calling X4181 via</th><th class="xl66" style="background-color: #009900; width: 315px; color: white;">Reference</th></tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">40G30</td>
+<td class="xl67" style="width: 165px;">Weigh Tag Receipt</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P31113</td>
+<td class="xl67" style="width: 165px;">WO Inventory Issue - Temp</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P31114</td>
+<td class="xl67" style="width: 165px;">Completions</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P31123</td>
+<td class="xl67" style="width: 165px;">superbackflush</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">P4074</td>
+<td style="vertical-align: top;">Check Price and Availability</td>
+<td style="vertical-align: top;">P4074 &gt; B40G1100 &gt; X4181</td>
+<td style="vertical-align: top;">@Not in UDC 40/AV (check again)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P41014</td>
+<td class="xl67" style="width: 165px;">Speed Item Setup</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4112</td>
+<td class="xl67" style="width: 165px;">Inventory Issues</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4113</td>
+<td class="xl67" style="width: 165px;">Inventory Transfers</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4114</td>
+<td class="xl67" style="width: 165px;">Inventory Adjustments</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4116</td>
+<td class="xl67" style="width: 165px;">Item Reclassifications</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P41801</td>
+<td class="xl67" style="width: 165px;">Future Cost/Price Update</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P41810</td>
+<td class="xl67" style="width: 165px;">Recompute Average Cost</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4205</td>
+<td class="xl67" style="width: 165px;">Shipment Confirmation</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P42800</td>
+<td class="xl67" style="width: 165px;">Sales Update</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4312</td>
+<td class="xl67" style="width: 165px;">Purchase Order Receipts</td>
+<td class="xl67" style="width: 310px;">P4312 &gt; XT4312Z1 &gt; X4181</td>
+<td style="width: 315px;">Same routine applies to any PO Receipt routine through Master Business Function</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P4314</td>
+<td class="xl67" style="width: 165px;">Purchase Order Match</td>
+<td class="xl67" style="width: 310px;">P4314 &gt; XT4314ZN &gt; X4181</td>
+<td style="width: 315px;">Same routine applies to any Voucher Match Routine through Master Business Function</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P43214</td>
+<td class="xl67" style="width: 165px;">Reverse Purchase Order Receipt</td>
+<td class="xl67" style="width: 310px;">P4314 &gt; N4301240 &gt; N4002350 &gt; X4181</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P43250</td>
+<td class="xl67" style="width: 165px;">Receipt Routing Movement</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P43253</td>
+<td class="xl67" style="width: 165px;">Receipt Routing Disposition</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">P43291</td>
+<td class="xl67" style="width: 165px;">Landed Cost Selection</td>
+<td class="xl67" style="width: 310px;">P43291 &gt; N4300970 &gt; N4002350 &gt; X4181</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">R30837</td>
+<td style="vertical-align: top;">WIP Revluation</td>
+<td style="vertical-align: top;">R30837 &gt; X4181 (Direct call)</td>
+<td style="vertical-align: top;">@Not included in UDC 40/AV (check again)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">R31804</td>
+<td class="xl67" style="width: 165px;">Variance Accounting</td>
+<td class="xl67" style="width: 310px;">R31804 &gt; X4181 (Direct call)</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">R41811</td>
+<td style="vertical-align: top;">Average Cost Update</td>
+<td style="vertical-align: top;">R41811 &gt; X4181 (Direct call)</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">R43092Z1I</td>
+<td class="xl67" style="width: 165px;">Routing Interoperability</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">R45620</td>
+<td style="vertical-align: top;">Reprice Procurement/Receipts</td>
+<td style="vertical-align: top;">R45620 &gt; B40G1100 &gt; X4181</td>
+<td style="vertical-align: top;">@Not in UDC 40/AV (check again)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">R47121</td>
+<td class="xl67" style="width: 165px;">EDI Product Activity Data</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">R47500</td>
+<td class="xl67" style="width: 165px;">Batch Ship Confirm</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">R4981</td>
+<td class="xl67" style="width: 165px;">Freight Update</td>
+<td class="xl67" style="width: 310px;">R4981 &gt; N4901320 &gt; X4181</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">R76B804</td>
+<td class="xl67" style="width: 165px;">Process Taxes in Receipt File</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="width: 31px; height: 15pt;" height="20">X4617</td>
+<td class="xl67" style="width: 165px;">WMS Confirmation Server</td>
+<td class="xl67" style="width: 310px;">&nbsp;</td>
+<td style="width: 315px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br />Note: If column value "Calling X4181 via" is empty the routine has to be, <br />1. End Doc routine of Master Business Function related with applications which is calling F4111EndDocument<br />2. F4111EndDocument is calling X4181<br /><br /></p>
+<hr />
+<p><br /><br /><br /><br />Currently X4181 is made up of below two functions,</p>
+<ul>
+<li>X4181 - AverageCostUpdate (F4105 Update Average Cost)</li>
+<li>X4181 - DeleteAverageCostRecord (F41051 Delete Average Cost Record)</li>
+</ul>
+<p><br /><big>X4181 - AverageCostUpdate (F4105 Update Average Cost)</big></p>
+<ul>
+<li>Purpose: This function writes transactions to the Average Cost work file.&nbsp; If the system constant is on for average cost, the item is calculated and updated.</li>
+<li>Setup Notes and Prerequisites: The Item Number fields (ITM, LITM, AITM), Branch (MCU), Extended Cost (PAID), Costing Level (CLEV), Update Average Cost flag (AVGC) and Margin Maintenance (MMPC) fields are required input parameters. If you have the Update Average Cost flag from the System Constants table (F4009) prior to calling this function, please pass it in.&nbsp; Also, the Margin Maintenance flag needs to be retrieved from the Item Branch table (F4102).</li>
+<li>Technical Specification: This function retrieves the Distribution Constants if the Average Cost Update flag is blank.&nbsp; If the flag is an 'N', a record is written to the Average Cost table (F41051).&nbsp;&nbsp; If the flag is a 'Y', all location records (F41021) for the Item, Branch, Location and Lot passed in are retrieved.&nbsp; The quantity on hand is accumulated for all records read.&nbsp; The average cost is retrieved from the Item Cost table (F4105) and the new average cost is calculated.&nbsp;</li>
+<li style="font-weight: bold;">Parameters</li>
+<ul>
+<li>Data Structure - DX4181A : Average Cost Update</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 896px; height: 404px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 211pt;" width="281" /><col style="width: 88pt;" width="117" /><col style="width: 48pt;" span="3" width="64" /><col style="width: 201pt;" width="268" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="background-color: #009900; width: 121px; height: 15.75pt; color: white;">Structure Member</th><th class="xl66" style="background-color: #009900; width: 83px; color: white;">Data Type</th><th class="xl66" style="background-color: #009900; width: 5px; color: white;">Req</th><th class="xl66" style="background-color: #009900; width: 22px; color: white;">I/O</th><th class="xl66" style="background-color: #009900; width: 39px; color: white;">Alias</th><th class="xl66" style="background-color: #009900; width: 496px; color: white;">Detail Description</th></tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">mnShortItemNumber</td>
+<td style="width: 83px;">MATH_NUMERIC</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">ITM</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szSecondItemNumber[26]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">LITM</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szThirdItemNumber[26]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">AITM</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szBranchPlant[13]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">MCU</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szLocation[21]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">LOCN</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szLotNumber[31]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">LOTN</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">mnTransactionQuantity</td>
+<td style="width: 83px;">MATH_NUMERIC</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">TRQT</td>
+<td style="width: 496px;">
+<p>when cUseUnitCost is 1 this value has to be zero else actual transaction quantity</p>
+<p>Assign mnTransactionQuantity based on Primary UOM</p>
+</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">mnExtendedCost</td>
+<td style="width: 83px;">MATH_NUMERIC</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">PAID</td>
+<td style="width: 496px;">Depends on value in cUseUnitCost this value can be extended amount or variance amount<br />If (cUnitCost = '1') then Variance (amount difference)<br />Else ExtendedAmount</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">cCostingLevel</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">CLEB</td>
+<td style="width: 496px;">F4101.CLEV</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">cUpdateAverageCost</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">AVGC</td>
+<td style="width: 496px;">
+<p>If input value is blank then read it Based on System Constant File (F4009). If this flag is 'N' then write the Average Cost Table (F41051)</p>
+<p>Y - To update</p>
+</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">mnMarginMaintenance</td>
+<td style="width: 83px;">MATH_NUMERIC</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">MMPC</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">cMarginMaintenanceFlag</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">MGMN</td>
+<td style="width: 496px;">Based on F4102 (Item Branch Plant)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">cSalesBasePriceLevel</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">PLEV</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szPrimaryUOM[3]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">UOM1</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szProgramID[11]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">PID</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">szCurrencyCode[4]</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">CRCD</td>
+<td style="width: 496px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">mnUnitCostInPrimary</td>
+<td style="width: 83px;">MATH_NUMERIC</td>
+<td style="width: 5px;">&nbsp;</td>
+<td style="width: 22px;">&nbsp;</td>
+<td style="width: 39px;">UNCS</td>
+<td style="width: 496px;">Assign Unit Cost in Primary UOM (refer mnTransactionQuantity)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 121px; height: 12.75pt;" height="17">cUseUnitCost</td>
+<td style="width: 83px;">JCHAR</td>
+<td style="width: 5px;">Y</td>
+<td style="width: 22px;">I</td>
+<td style="width: 39px;">EV01</td>
+<td style="width: 496px;">Valid values are,<br />Blank <br />1 - cUseUnitCost<br />Depends on this input value the way it computes Average Cost is different</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detailed Routine:</li>
+</ul>
+<p><img src="../images/ac.png" border="0" alt="Average Cost Update Flow" title="Average Cost Update Flow" hspace="0" vspace="0"/></p>
+
+<br />(A) Handle cUpdateAverageCost this flag can be blank. In case the input value is blank then call Business Function B4000530 - GetDistributionConstants to get F4009.avgc (Default = N)</p>
+<div style="margin-left: 40px;">A code that indicates when the system calculates the new average cost for an item. Valid values are:<br />Y: The system calculates a new average cost immediately after any transaction occurs that affects the average cost of an item.<br />N: All processes that affect average cost create transactions to the Average Cost Work table (F41051). The system calculates a new average cost when running the Average Cost Update program.</div>
+<p>(B) Only when F4009.AVGC is 'N' then write F41051 (Average Cost Work file) which is to be used through R41811 (Average Cost Update) based on input parameters<br />(C) Get Total of F41021.PQOH (On Hand Quantity): Through WHILE loop reads all the data from F41021 (Location Master File) where it meets ITM, MCU, LOCN and LOTN<br />(D) Get current cost from F4105 (Item Cost File) based on ITM, MCU, LOCN, LOTN and CLEV (cCostingLevel) by calling BSFN XF4105 - GetItemCost. <br /><small>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ***Retrieve the CURRENT average cost based on the costing level<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Call GetItemCost(XF4105) with LEDG = '02'<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; If record found<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Move '02' to COLEDG<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Load NEW into COUNCS<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Call UpdateItemCost(XF4105) to update record<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; else<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ***Determine if the Average Cost should be the costing method <br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; CallGetDefaultInventoryPurchasingCost Method(XF4105)<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Move '02' to COLEDG<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Load NEW into COUNCS<br style="font-style: italic;" />&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Call UpdateItemCost(XF4105) to write record </small><br />(E) Compute Average Cost: Now SUM (F41021.PQOH) and F4105.UNCS are determined via above routines so based on this value compute Average Cost (mnAVGC)</p>
+<ol>
+<li>Define temporary value with name mnResult</li>
+<li>Get Display Decimal based on DD Alias 'TRQT'</li>
+<li>Round Up based on Display Decimal returned (e.g., 2 or 4 and so on). For example, round (mnTransactionQuantity, 2). In case cUseUnitCost is '1' mnTransactionQuantity is to be zero and mnExtendedCost is to be Amount Variance</li>
+<li>mnResult = sum (F41021.pqoh) - mnTransactionQuantity (if cUseUnitCost is 1, mnTransactionQuantity is zero, that is, quantity is not changed)</li>
+<li>Get ExtendedCost by multiplying F4105.UNCS: mnResult = mnResult * F4105.UNCS</li>
+<li>If cUseUnitCost is '1', then ExtendedCost = mnUnitCostInPrimary * mnTransactionQuantity</li>
+<li>If cUseUnitCost is not '1' then ExtendedCost = (input) ExtendedCost</li>
+<li>Add ExtendedCost to result: Result = Result + ExtendedCost</li>
+<li>AverageCost (AVGC) = mnResult / F41021.PQOH. This result has to be same with the fomula mentioned above</li>
+</ol>
+<p>(F) Update Average Cost: Based on AverageCost Update through BSFN XF4105 - UpdateItemCost (F4105 Update Item Cost) where szCostMethod = "02"<br />(G) To Update Margin Information: <br /><small>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; IF Margin Maintenance (MGMN) is equal 'Y'<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; If (Margin Percent) MMPC is null<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Fetch the Item Branch (F4102) with ITM and MCU to retrieve it<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; If PLEV and/or UOM1 are null<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Fetch the Item Master (F4101) to retrieve them<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; If MMPC not equal zeros<br style="font-style: italic;" />&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Call MarginMaintPriceUpdate (X4078)</small><br /><br /><br /></p>
+<hr />
+<p><br /><br /><br /><big>Arithmetic computation</big><br />Supposing that:-</p>
+<ul>
+<li>There is on hand quantity 100 with item cost 1.0000 (No record in F41051)</li>
+<li>Perform Receipt with quantity 100 at item cost 2.000 (Recorded in F41051. No Average cost update)</li>
+<li>Perform Issue with quantity 50 at item cost 2.500 (Recorded in F41051. No Average cost update)</li>
+</ul>
+<p>So before compute average cost through R41811 (Average Cost Update)</p>
+<ul>
+<li>lpmnPQOH = SUM (F41021.PQOH)</li>
+<li>lpmnUNCS = F4105.UNCS</li>
+<li>mnTransactionQuantity = SUM (F41051.TRQT)</li>
+<li>mnExtendedCost = SUM (F41051.ECST)</li>
+</ul>
+<p>Detail Computation:</p>
+<table style="width: 723px; border-collapse: collapse; height: 158px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" width="64" /><col style="width: 62pt;" width="83" /><col style="width: 55pt;" width="73" /><col style="width: 128pt;" width="170" /><col style="width: 89pt;" width="118" /><col style="width: 67pt;" width="89" /><col style="width: 79pt;" width="105" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl65" style="background-color: #ffcc00; width: 27px; height: 15.75pt;">&nbsp;</th><th class="xl67" style="background-color: #ffcc00; width: 75px;">lpmnAVGC</th><th class="xl65" style="background-color: #ffcc00; width: 111px;">mnResult</th><th class="xl66" style="background-color: #ffcc00; width: 128pt;">mnTransactionQuantity</th><th class="xl68" style="background-color: #ffcc00; width: 89pt;">mnExtendedCost</th><th class="xl66" style="background-color: #ffcc00; width: 67pt;">lpmnPQOH&nbsp;</th><th class="xl67" style="background-color: #ffcc00; width: 79pt;">lpmnUNCS</th></tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="width: 27px; height: 15.75pt;" height="21">As-Is</td>
+<td class="xl67" style="width: 75px;">&nbsp;</td>
+<td class="xl65" style="width: 111px;">&nbsp;</td>
+<td class="xl66" align="right">150</td>
+<td class="xl68" align="right">275.00</td>
+<td class="xl66" align="right">250</td>
+<td class="xl67" align="right">1.0000</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="width: 27px; height: 15.75pt;" height="21">1st</td>
+<td class="xl67" style="width: 75px;">&nbsp;</td>
+<td class="xl65" style="width: 111px;">100 <small><small>(A)</small></small></td>
+<td class="xl66">&nbsp;</td>
+<td class="xl68">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl67">&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="width: 27px; height: 15.75pt;" height="21">2nd</td>
+<td class="xl67" style="width: 75px;">&nbsp;</td>
+<td class="xl65" style="width: 111px;">100.00 <small><small>(B)</small></small></td>
+<td class="xl66">&nbsp;</td>
+<td class="xl68">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl67">&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="width: 27px; height: 15.75pt;" height="21">3rd</td>
+<td class="xl67" style="width: 75px;">&nbsp;</td>
+<td class="xl65" style="width: 111px;">375.00 <small><small>(C)</small></small></td>
+<td class="xl66">&nbsp;</td>
+<td class="xl68">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl67">&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="width: 27px; height: 15.75pt;" height="21">4th</td>
+<td class="xl67" style="width: 75px;">1.5000 <small><small>(D)</small></small></td>
+<td class="xl65" style="width: 111px;">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl68">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl67">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li>(A) 100 = lpmnPQOH (250) - mnTransactionQuantity (150)</li>
+<li>(B) 100.00 = (A) * lpmnUNCS (1.0000)</li>
+<li>(C) 375.00 = (B) + mnExtendedCost</li>
+<li>(D) 1.5000 = Quotient of (mnResult (c) / lpmnPQOH ) = 375.00/250</li>
+</ul>
+<p><br />Explanation on computation</p>
+<ul>
+<li>1st., Subtract TransactionQuantity from F41021.PQOH and save it &amp;mnResult</li>
+<li>2nd., Multiply &amp;mnResult by F4105.UNCS and save it &amp;mnResult</li>
+<li>3rd., Add &amp;mnResult with mnExtendedCost and save it as &amp;mnResult</li>
+<li>4th., Return Quotient as AverageCost in dividing &amp;mnResult by mnPqoh</li>
+</ul>
+<p>So simplified fomular in R41811 is,<br /><big style="font-style: italic; font-weight: bold;">AverageCost = {(Beginning Total Cost) + SUM (F41051.ECST)}/SUM(F41021.PQOH)</big><br />because F41021.PQOH accumulates each and individual transaction. Technically this is possible because F41021 gets update (and outside transaction processing boundaries) before X4181 (AverageCostUpdate) gets handled.</p>
+<p>Code detail in X4181:-</p>
+<div class="kmcodeblock" style="margin-left: 40px;"><small>*** Break In Code ***<br />&nbsp;&nbsp;&nbsp; MathSubtract ( &amp;mnResult, lpmnPqoh, &amp;lpDS-&gt;mnTransactionQuantity ) ;<br />&nbsp;&nbsp;&nbsp; MathMultiply ( &amp;mnResult, &amp;mnResult, lpmnUNCS ) ;<br />&nbsp;&nbsp;&nbsp; MathAdd( &amp;mnResult, &amp;mnResult, &amp;mnExtendedCost ) ;<br />&nbsp;&nbsp;&nbsp; MathDivide( lpmnAVGC, &amp;mnRemainder, &amp;mnResult, lpmnPqoh, &amp;nDecimals, &amp;nRoundFlag ) ;<br />*** Break In Code ***</small></div>
+<hr />
+<p><br /><br /><br /><big><br style="font-weight: bold;" />X4181 - DeleteAverageCostRecord (F41051 Delete Average Cost Record)</big></p>
+<ul>
+<li>Purpose: This function deletes records from the Aveage Cost table (F41051). This function is to be called via R41811 (Average Cost Update) application.</li>
+<li>Setup Notes and Prerequisites: The Unique Id (UKID) is a required input parameter.</li>
+<li>Technical Specification: This function deletes the record from the F41051 for the key passed in.</li>
+<li style="font-weight: bold;">Parameters</li>
+<ul>
+<li>Data Structure: DX4181B : Delete Average Cost Record</li>
+</ul>
+</ul>
+<table style="width: 859px; border-collapse: collapse; height: 70px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 211pt;" width="281" /><col style="width: 88pt;" width="117" /><col style="width: 48pt;" span="3" width="64" /><col style="width: 201pt;" width="268" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="background-color: #009900; width: 104px; height: 15.75pt; color: white;">Structure Member</th><th class="xl66" style="background-color: #009900; width: 62px; color: white;">Data Type</th><th class="xl66" style="background-color: #009900; width: 19px; color: white;">Req</th><th class="xl66" style="background-color: #009900; width: 24px; color: white;">I/O</th><th class="xl66" style="background-color: #009900; width: 24px; color: white;">Alias</th><th class="xl66" style="background-color: #009900; width: 529px; color: white;">Used For</th></tr>
+<tr style="height: 12.75pt;">
+<td style="width: 104px; height: 12.75pt;" height="17">mnUniqueID</td>
+<td style="width: 62px;">MATH_NUMERIC</td>
+<td style="width: 19px;">O</td>
+<td style="width: 24px;">I</td>
+<td style="width: 24px;">UKID</td>
+<td style="width: 529px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detailed Routine: If input mnUKID is not zero then delete where F41051.ukid =(input) UniqueID</li>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p><br /><br /><br /><br /><br /></p>
+<div class="kmnotebox">To discuss information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/distribution_-_jde1" target="_blank">JDE1 Distribution Community</a>.<br /><br />To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details (Doc ID <a href="&lt;&lt;INLINE_NOTE:548764.1&gt;&gt;" target="_blank">548764.1</a>) if your topic is not currently scheduled please suggest it.</div>
+<p><br /><br /><br /><br /><br /></p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

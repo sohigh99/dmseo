@@ -1,0 +1,1567 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Record Zero Balance Adjustment </title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Record Zero Balance Adjustment</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note is to explain possible way to implement ZBA (Zero Balance Adjustment) through Report Design Aid.</p>
+<p><big style="font-style: italic; font-weight: bold;">DISCLAIMER</big> <br />The following is intended for information purposes only, and may not be incorporated into any contract. It is not a commitment to deliver any material, code, or functionality, and should not be relied upon in making purchasing decisions. The development, release, and timing of any features or functionality described for Oracle's products remains at the sole discretion of Oracle.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Through this note,</p>
+<ul>
+<li>Understand how Inventory Transaction master business function is working</li>
+<li>How to populate F4111 (Item Ledger) and F0911 (General Ledger)</li>
+<li>How to make system update Average Cost</li>
+<li>Currently Zero Balance Adjustment can be input through P4112 (Inventory Issue) and P4114 (Inventory Adjustment)</li>
+</ul>
+<p><big>Business Scenario:</big><br />Possibly, enter purchase order with quantity of 504,000 GM at purchase unit price of $1438.0531, which computes extended price of 724,778.76 (= $1438.0531 x 504000 / 1000) where Transaction  UOM is equal to GM (same as primary) whereas Purchasing UOM is equal to KG<br />Through P4116 (Inventory Reclassification), transfer good received above to another branch plant with quantity 504,000 at $1.4381 (=724,802.40), which cause outstanding amount of $23.64 where quantity is zero.<br />[As - Is Transaction in F4111 - Cardex]</p>
+<table style="width: 667px; border-collapse: collapse;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 88pt;" width="117" /><col style="width: 68pt;" width="90" /><col style="width: 48pt;" width="64" /><col style="width: 144pt;" width="192" /><col style="width: 65pt;" width="87" /><col style="width: 50pt;" width="67" /><col style="width: 47pt;" width="63" /><col style="width: 101pt;" width="135" /><col style="width: 56pt;" width="75" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="background-color: #009900; width: 88pt; height: 15pt; color: white;">2nd Item Number</th>
+<th style="background-color: #009900; width: 68pt; color: white;">Business Unit</th>
+<th style="background-color: #009900; width: 48pt; color: white;">Trans UM</th>
+<th style="background-color: #009900; width: 144pt; color: white;">Transaction Explanation</th>
+<th style="background-color: #009900; width: 65pt; color: white;">Reason Code</th>
+<th style="background-color: #009900; width: 50pt; color: white;">Trans QTY</th>
+<th style="background-color: #009900; width: 47pt; color: white;">Unit Cost</th>
+<th style="background-color: #009900; width: 101pt; color: white;">Extended Cost/Price</th>
+<th style="background-color: #009900; width: 56pt; color: white;">Program ID</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">ZBAITEM</td>
+<td>M30</td>
+<td>GM</td>
+<td>Inventory Receipt</td>
+<td> </td>
+<td align="right">504,000</td>
+<td align="right">1.4381</td>
+<td class="xl63" align="right">724,778.76</td>
+<td>EP4312</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">ZBAITEM</td>
+<td>M30</td>
+<td>GM</td>
+<td>Reclassification</td>
+<td> </td>
+<td align="right">-504,000</td>
+<td align="right">1.4381</td>
+<td class="xl63" align="right">-724,802.40</td>
+<td>EP4116</td>
+</tr>
+</tbody>
+</table>
+<p>    : Outstanding balance 23.64 contribute average cost change<br /><br /><br /><big>Considerations:</big></p>
+<ul>
+<li>Add custom report into UDC 40/AV - Average Cost Calculation (Refer to &lt;Document 625564.1&gt; E1: 41: Weighted Average Cost (P4105/R41811/P4205/P4312/P4114/P4112) to include Zero Balance Adjustment in computing Average Cost</li>
+<li>Item, Branch/Plant, Location, Lot can be have one set of data. In case inventory cost level is different, level break can take place at different level</li>
+<li>ZBA computation has to take place regular basis when you need to have cost analysis for example</li>
+<li>Need to handle only when quantity is zero but amount is not zero</li>
+<li>It is able to deal with both Positive and Negative amounts as it is handled from P4112 for negative and P4114 for positive</li>
+<li>Write F4111/F0911 with descriptive explanation/description</li>
+<li>It is not required to validate/default values since it gets data from valid transaction</li>
+</ul>
+<p><br /><big>Related transaction file master business function:</big><br />X4114Z1 handled transaction as below,</p>
+<table style="width: 713.383px; border-collapse: collapse; height: 260px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 109pt;" width="145" /><col style="width: 116pt;" width="155" /><col style="width: 83pt;" width="110" /><col style="width: 150pt;" width="200" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl65" style="background-color: #ffcc00; width: 74px; height: 15pt;">Function  Name</th>
+<th class="xl65" style="background-color: #ffcc00; width: 139px;">Description</th>
+<th class="xl65" style="background-color: #ffcc00; width: 122px;">Template  Name</th>
+<th class="xl65" style="background-color: #ffcc00; width: 309.383px;">Usage</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="width: 74px; height: 15pt;" height="20">F4114BeginDocument</td>
+<td class="xl66" style="width: 139px;">F4114 Begin Document</td>
+<td class="xl66" style="width: 122px;">DXT4114Z1B</td>
+<td class="xl66" style="width: 309.383px;">This function is used by Inventory Adjustments and Inventory Issues and is used to edit subledger and subledger type fields and the From Branch of an Inventory Transfer.</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="width: 74px; height: 15pt;" height="20">F4114EditLine</td>
+<td class="xl66" style="width: 139px;">F4114 Edit Line</td>
+<td class="xl66" style="width: 122px;">DXT4114Z1C</td>
+<td style="width: 309.383px;">This function is called for an Inventory Adjustment or an Inventory Issue.  Inventory Issues has edits very specific to it, specifically involving the Transaction Reference field (TREF).  F4111EditLine is called to perform the majority of the edits.  This function will edit fields that are specific to a transaction for correct information; all UDC edits are performed.  Records will be written to the detail work file (F41UI001) if no errors are found.  If a record already exists in the work file, the record will be retrieved and updated with the changes.</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="width: 74px; height: 15pt;" height="20">F4114EndDocument</td>
+<td class="xl66" style="width: 139px;">F4114 End Document</td>
+<td class="xl66" style="width: 122px;">DXT4114Z1E</td>
+<td style="width: 309.383px;">This function calls F4111EndDoc to process records to be written to the database for an Inventory Adjustment or an Inventory Issue.  The F0911EndDoc and F0911SummarizeDoc are called from this function.  This function is called from F4111EndDoc(XT4111Z1)  and passes the GENLNG for each stacked record.</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="width: 74px; height: 15pt;" height="20">F4114ClearDetailStack</td>
+<td class="xl66" style="width: 139px;">F4114 Clear Detail Stack</td>
+<td class="xl66" style="width: 122px;">DXT4114Z1I</td>
+<td style="width: 309.383px;">Clean up call stacks. This can be called independantly or through end doc routine</td>
+</tr>
+</tbody>
+</table>
+<p><br />Relationships:<br /><img src="&lt;&lt;INLINE_ATTACHMENT:1417295.1 :zba&gt;&gt;" border="0" alt="XT4114Z1" hspace="0" width="648" align="bottom"/><br /><br /></p>
+<p>    : Review relationship among master business functions</p>
+<p> </p>
+<p><big>After transaction:</big></p>
+<ul>
+<li>F4111 - Cardex</li>
+</ul>
+<table style="width: 594.983px; border-collapse: collapse;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 65pt;" width="87" /><col style="width: 50pt;" width="67" /><col style="width: 47pt;" width="63" /><col style="width: 101pt;" width="135" /><col style="width: 56pt;" width="75" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="background-color: #009900; width: 75px; height: 15pt; color: white;">2nd Item Number</th>
+<th style="background-color: #009900; width: 69px; color: white;">Business Unit</th>
+<th style="background-color: #009900; width: 47px; color: white;">Trans UM</th>
+<th style="background-color: #009900; width: 125px; color: white;">Transaction Explanation</th>
+<th style="background-color: #009900; width: 61px; color: white;">Reason Code</th>
+<th style="background-color: #009900; width: 54px; color: white;">Trans QTY</th>
+<th style="background-color: #009900; width: 47px; color: white;">Unit Cost</th>
+<th style="background-color: #009900; width: 93px; color: white;">Extended Cost/Price</th>
+<th style="background-color: #009900; width: 10px; color: white;">Program ID</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 75px;" height="20">ZBAITEM</td>
+<td style="width: 69px;">M30</td>
+<td style="width: 47px;">GM</td>
+<td style="width: 125px;">Inventory Receipt</td>
+<td style="width: 61px;"> </td>
+<td style="width: 54px;" align="right">504000</td>
+<td style="width: 47px;" align="right">1.4381</td>
+<td class="xl65" style="width: 93px;" align="right">724,778.76</td>
+<td style="width: 10px;">EP4312</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 75px;" height="20">ZBAITEM</td>
+<td style="width: 69px;">M30</td>
+<td style="width: 47px;">GM</td>
+<td style="width: 125px;">Reclassification</td>
+<td style="width: 61px;"> </td>
+<td style="width: 54px;" align="right">-504000</td>
+<td style="width: 47px;" align="right">1.4381</td>
+<td class="xl65" style="width: 93px;" align="right">-724,802.40</td>
+<td style="width: 10px;">EP4116</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 75px;" height="20">ZBAITEM</td>
+<td style="width: 69px;">M30</td>
+<td style="width: 47px;">GM</td>
+<td style="width: 125px;">Zero Balance Adjustment - GL</td>
+<td style="width: 61px;">RND</td>
+<td style="width: 54px;"> </td>
+<td style="width: 47px;" align="right">0</td>
+<td style="width: 93px;" align="right">23.64</td>
+<td style="width: 10px;">R59ZBA</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul>
+<li>F0911 - General Ledger</li>
+</ul>
+<table style="width: 718.133px; border-collapse: collapse;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 37pt;" width="49" /><col style="width: 31pt;" width="41" /><col style="width: 95pt;" width="127" /><col style="width: 45pt;" width="60" /><col style="width: 77pt;" width="103" /><col style="width: 72pt;" width="96" /><col style="width: 34pt;" width="45" /><col style="width: 86pt;" width="115" /><col style="width: 41pt;" width="55" /><col style="width: 45pt;" width="60" /><col style="width: 144pt;" width="192" /><col style="width: 107pt;" width="142" /><col style="width: 56pt;" width="75" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="background-color: #009900; width: 40px; height: 15pt; color: white;">Doc Co</th>
+<th style="background-color: #009900; width: 26px; color: white;">Do Ty</th>
+<th style="background-color: #009900; width: 87px; color: white;">Document Number</th>
+<th style="background-color: #009900; width: 54px; color: white;">G/L Date</th>
+<th style="background-color: #009900; width: 70px; color: white;">JE Line Number</th>
+<th style="background-color: #009900; width: 67px; color: white;">Batch Number</th>
+<th style="background-color: #009900; width: 30px; color: white;">Bth Ty</th>
+<th style="background-color: #009900; width: 77px; color: white;">Account Number </th>
+<th style="background-color: #009900; width: 35px; color: white;">Cur Cod</th>
+<th style="background-color: #009900; width: 56px; color: white;">Amount </th>
+<th style="background-color: #009900; width: 119px; color: white;">Explanation Alpha Name</th>
+<th style="background-color: #009900; width: 101px; color: white;">Explanation -Remark-</th>
+<th style="background-color: #009900; width: 10px; color: white;">Program ID</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 40px;" height="20">00200</td>
+<td style="width: 26px;">IA</td>
+<td style="width: 87px;" align="right">298</td>
+<td class="xl65" style="width: 54px;" align="right">19-02-12</td>
+<td style="width: 70px;" align="right">1</td>
+<td style="width: 67px;" align="right">26561</td>
+<td style="width: 30px;">N</td>
+<td style="width: 77px;" align="right">200.1411</td>
+<td style="width: 35px;">USD</td>
+<td style="width: 56px;" align="right">23.64</td>
+<td style="width: 119px;">Zero Balance Adjustment - GL</td>
+<td style="width: 101px;">ZBAITEM</td>
+<td style="width: 10px;">R59ZBA</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 40px;" height="20">00200</td>
+<td style="width: 26px;">IA</td>
+<td style="width: 87px;" align="right">298</td>
+<td class="xl65" style="width: 54px;" align="right">19-02-12</td>
+<td style="width: 70px;" align="right">2</td>
+<td style="width: 67px;" align="right">26561</td>
+<td style="width: 30px;">N</td>
+<td style="width: 77px;">M10.6310</td>
+<td style="width: 35px;">USD</td>
+<td style="width: 56px;">23.64-</td>
+<td style="width: 119px;">Zero Balance Adjustment - GL</td>
+<td style="width: 101px;">ZBAITEM</td>
+<td style="width: 10px;">R59ZBA</td>
+</tr>
+</tbody>
+</table>
+<p><br /><br /><br /><big>Detail Implementation:</big><br />This is just an example, so try to understand this as how EnterpriseOne handled transactional cache. If possible, capture callobject kernel log (namely jdedebug.log) and analyze it<br />1.  Go to OMW (Object Management Workbench)<br />2. Add a report<br />3. Create section using a business view (for instance, V4111B - Item Ledger Detail)<br />4. Set Sequence by LITM, MCU, LOCN and LOTN and set Level Break for same sequence. This is to summarize quantity (F4111.TRQT) and amount (F4111.PAID) at level break footer<br />5. Create Level Break Footer and Aggregate for columns F4111.TRQT (QuantityTransaction) and F4111.PAID (AmtExtendedCost)<br />6. Define variables to handle among master business functions (for this implemenation below variables are defined) as below,</p>
+<ul>
+<li>     rpt_szComputerID_CTID: This can be used across system so call this only once. In creating transaction file cache szComputerID is one element for that along with Job Number</li>
+<li>     rpt_mnJobnumberA_JOBS: This variable is job number of inventory transaction. For this transaction at least 2 different job number will be used (one for Inventory and the other for GL - General Ledger</li>
+<li>     sec_cBeginDocError_EV01: This is return value from begin doc to determine whether to proceed further or not</li>
+<li>     sec_jdDateBatch_DICJ: Through begin doc in getting batch header information this value is to be used. Either assign it manually or let system assign it using system date</li>
+<li>     sec_mnJELineNo_JELN: For this example, this is optional because only one entry is to be created per ZBA</li>
+<li>     sec_szCompanyKeyOr_KCOO: This is one unit for GL Cache which is to be returned based on Branch/Plant in Begin Doc. Or we can assign F4111.KCO</li>
+<li>     sec_szDocumentType_DCT: Depends on the sign of variance (i.e., Negative or Positive) we set this value either 'II - Inventory Issue' or 'IA - Inventory Adjustment'. Or you can define your own document type supposed that DMAAI is set properly</li>
+<li>     sec_jdDtGLAndVouch1_DGL: Either assign a specific date or let system determine it using today's date</li>
+<li>     sec_jdDateTransa_TRDJ: To recognize actual date transaction is performed</li>
+<li>     sec_szExplanation_DL01: Currently this value is not used because Explanation for G/L shall override this value</li>
+<li>     sec_cEditLineError_EV02: To get validation result in calling Edit Line (XT41114Z1 sets 1 for ERROR)</li>
+<li>     sec_cWriteWorkFile_EV01: For inventory transaction this value is always a space because either Inventory or GL it utilizes cache (not work file)</li>
+<li>     sec_mnOrderLineNumber_LNID: This value can be always 1.000 because we deal with a single line of transaction</li>
+<li>     sec_szExpla_TREX: This is actual transaction explanation which possibly indicate the source of transaction (descriptive one) do not exceed 30 characters</li>
+<li>     sec_mnPrevLine_LNID: This variable is to handle when there is multiple transaction for this example, this value is to be always 1.000</li>
+<li>     sec_mnTransactionLineNr_TRNO: Same with above</li>
+<li>     sec_cFromTo_FRTO: This is to indicate the diretion of transaction. For example, set F - From for Negative amount and T - To for Positive amount</li>
+<li>     sec_mnBatchNumber_ICU: Through begin doc routine let it handle batch header since this transaction is to write Gengeral Ledger</li>
+<li>     sec_cBatchStatus_IST: This is to be used internally so get status from begin doc and assign it to edit line and end doc routine</li>
+<li>     sec_szUnitOfMeTransact_TRUM: this is actual transaction UOM. In this case primary UOM or smallest UOM will be written. This variable is defined because we handled transaction at level break footer level</li>
+<li>     sec_mnJobnumberA_F0911_JOBS: This is job number in creating/consuming GL Cache</li>
+<li>RV 2nd Item Number, RV Business Unit, RV Location and RV Lot/SN: To show PC (Previous columns) because all these routines are written in Level Break Footer Section</li>
+</ul>
+<div style="border-bottom: 1pt solid; border-left: medium none; border-top: medium none; border-right: medium none; padding: 0in 0in 1pt 0in;">
+<p> </p>
+</div>
+<p><br />*** Continued ... ***<br />     SECTION: On Lot/SN [GROUP SECTION] ()<br />     EVENT:  Initialize Section<br /><br />7. Call B9800181 - GetLocalComputerId as below,<br />    Get Local Computer ID<br style="font-style: italic;" />        VA rpt_szComputerID_CTID &lt;- BF szMachineKey *** Now machine ID of client is returned, which is to be used in Edit Line and End Doc routine ***<br style="font-style: italic;" />        : Put this event where it gets called only once<br /><br />     <big>EVENT:  Do Section</big><br /><br />8. Assign Previous Columns to Report Variable to print out (in case you do not need any output this step is not needed)<br />        RV 2nd Item Number = PC 2nd Item Number (F4111)(LITM)<br style="font-style: italic;" />        RV Business Unit = PC Business Unit (F4111)(MCU)<br style="font-style: italic;" />        RV Location = PC Location (F4111)(LOCN)<br style="font-style: italic;" />        RV Lot/SN = PC Lot/Serial Number (F4111)(LOTN)<br style="font-style: italic;" /><br />9. Compute Amount to Adjust by multiplying (-1) to zero Total Amount <br />        RV mnAmtToAdj = [RV Summary_Extended Cost/Price]*-1<br style="font-style: italic;" /><br />10. (Optional) call B4100730 - AccumulateItemQuantities (F41021 Get Item Quantities) per level you want to segregate. Now you can compare on hand quantity from F41021 (Item Location File) with Total F4111.TRQT<br /><br />11. Step 5 has aggregated quantity and amount so now we can use it to determine whether to proceed transaction or not. Handle data only when total quantity is zero BUT total amount is not zero<br /><br />If RV Transaction Quantity is equal to &lt;Zero&gt; And RV Summary_Extended Cost/Price is not equal to &lt;Zero&gt;<br style="font-style: italic;" /><br />12. Assign document depends on variance returned (e.g., Negative then need to write positive amount which is equivalent to Inventory adjustment)<br /><br />            If RV Summary_Extended Cost/Price is greater than &lt;Zero&gt;<br style="font-style: italic;" />                        VA sec_szDocumentType_DCT = "II"<br style="font-style: italic;" />            Else<br style="font-style: italic;" />                        VA sec_szDocumentType_DCT = "IA"<br style="font-style: italic;" />            End If<br style="font-style: italic;" /><br />13. Set Explanation for Inventory Transaction (i.e., how to F4111.TREX gets written). For this example, this value is to be overriden by Explanation Code for GL<br /><br />            VA sec_szExplanation_DL01 = "Zero Blance Adjustment - Custom"<br style="font-style: italic;" /><br />14. Call XT4114Z1 - F4114BeginDocument (F4114 Begin Document)<br />            <big style="font-style: italic;">F4114 Begin Document</big><br style="font-style: italic;" />                   : Below table is to show how the value is assigned/returned based on data structure DXT4114Z1B : F4114 Begin Document - Functional Server</p>
+<table style="width: 734.317px; border-collapse: collapse; height: 353px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 149pt;" width="199" /><col style="width: 83pt;" width="110" /><col style="width: 48pt;" width="64" /><col style="width: 25pt;" width="33" /><col style="width: 115pt;" width="153" /><col style="width: 25pt;" width="33" /><col style="width: 185pt;" width="246" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl65" style="background-color: #ffcc00; width: 156px; height: 15pt;">Structure Member Name</th>
+<th class="xl65" style="background-color: #ffcc00; width: 116px;">Type</th>
+<th class="xl65" style="background-color: #ffcc00; width: 35px;">Alias</th>
+<th class="xl65" style="background-color: #ffcc00; width: 31px;">Req</th>
+<th class="xl65" style="background-color: #ffcc00; width: 209px;">Parameter</th>
+<th class="xl65" style="background-color: #ffcc00; width: 15px;">I/O</th>
+<th class="xl65" style="background-color: #ffcc00; width: 115.317px;">Used for</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">cDocumentAction</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">ACTN</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;"> </td>
+<td style="width: 15px;"> </td>
+<td style="width: 115.317px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">szComputerID[16]</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">CTID</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA rpt_szComputerID_CTID</td>
+<td style="width: 15px;">I</td>
+<td class="xl66" style="width: 115.317px;">Based on returned value in Step 7</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">cErrorConditions</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">EV02</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_cBeginDocError_EV01</td>
+<td style="width: 15px;">O</td>
+<td style="width: 115.317px;">Return value of Begin Doc routine<br />  0 = No Error<br />  1 = Error</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">szBranchPlant[13]</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">MCU</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">RV Business Unit</td>
+<td style="width: 15px;">I</td>
+<td style="width: 115.317px;">Branch/plant information F4111.MCU since this routine is at level break footer PC value is used</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">mnBatchNumber</td>
+<td style="width: 116px;">mn</td>
+<td style="width: 35px;">ICU</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;"> </td>
+<td style="width: 15px;"> </td>
+<td style="width: 115.317px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">jdBatchDate</td>
+<td style="width: 116px;">JDEDATE</td>
+<td style="width: 35px;">DICJ</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_jdDateBatch_DICJ</td>
+<td style="width: 15px;">O</td>
+<td style="width: 115.317px;">To get batch date from this routine</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">mnLastJELineNumber</td>
+<td style="width: 116px;">mn</td>
+<td style="width: 35px;">JELN</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_mnJELineNo_JELN</td>
+<td style="width: 15px;">O</td>
+<td style="width: 115.317px;">This value will be always 0 because a new document gets created</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">szDocumentKeyCompany[6]</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">KCO</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_szCompanyKeyOr_KCOO</td>
+<td style="width: 15px;">O</td>
+<td style="width: 115.317px;">KCO value based on MCU above</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">szDocumentType[3]</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">DCT</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_szDocumentType_DCT</td>
+<td style="width: 15px;">I</td>
+<td style="width: 115.317px;">Document type hard coded in Step 12</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">mnDocumentNumber</td>
+<td style="width: 116px;">mn</td>
+<td style="width: 35px;">DOC</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;"> </td>
+<td style="width: 15px;"> </td>
+<td style="width: 115.317px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">jdGLDate</td>
+<td style="width: 116px;">JDEDATE</td>
+<td style="width: 35px;">DGL</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_jdDtGLAndVouch1_DGL</td>
+<td style="width: 15px;">I/O</td>
+<td style="width: 115.317px;">Either set specific GL date and validate or let this routine returns today's date</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">jdTransactionDate</td>
+<td style="width: 116px;">JDEDATE</td>
+<td style="width: 35px;">TRDJ</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_jdDateTransa_TRDJ</td>
+<td style="width: 15px;">I/O</td>
+<td style="width: 115.317px;">Either set specific date or return system date</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 156px; height: 15pt;" height="20">szGLExplanation[31]</td>
+<td style="width: 116px;">JCHAR</td>
+<td style="width: 35px;">DL01</td>
+<td style="width: 31px;"> </td>
+<td style="width: 209px;">VA sec_szExplanation_DL01</td>
+<td style="width: 15px;">I</td>
+<td style="width: 115.317px;">To set F4111.TREX</td>
+</tr>
+</tbody>
+</table>
+<p><br /><br style="font-style: italic;" /><br />15. Check whether Begin Doc returns error (then exit from routine) else continue to call Edit Line which validates/creates cache for Inventory (F41UI001) and GL (I09UI002, I09UI003)<br /><br />            If VA sec_cBeginDocError_EV01 is not equal to "1"<br style="font-style: italic;" /><br />16. Set flag for cWriteWorkFile, TREX, TRNO, FRTO and TRUM (explanation in detail parameter)<br /><br /><br />                VA sec_cWriteWorkFile_EV01 = " "<br style="font-style: italic;" />                VA sec_szExpla_TREX = "Zero Balance Adjustment - GL"<br style="font-style: italic;" />                VA sec_mnTransactionLineNr_TRNO = "1.000"<br style="font-style: italic;" />                If RV Summary_Extended Cost/Price is greater than &lt;Zero&gt; *** Positive amount then target amount is negative ***<br style="font-style: italic;" />                        VA sec_cFromTo_FRTO = "F"<br style="font-style: italic;" />                Else<br style="font-style: italic;" />                        VA sec_cFromTo_FRTO = "T"<br style="font-style: italic;" />                End If<br style="font-style: italic;" />                VA sec_szUnitOfMeTransact_TRUM = PC Unit of Measure - Transaction (F4111)(TRUM)<br style="font-style: italic;" /><br />17. Call XT4114Z1 - F4114EditLine (F4114 Edit Line). For this example, Edit Line gets called only once. In case you need to create multiple inventory cache you need to check change of company, document type and call Edit Line routine for each rows. Note below are shown only parameters assigned. So reveiw Edit Line routine if needed, you can populate more parameters.<br /><br />                <big style="font-style: italic; text-decoration: underline;">F4114 Edit Line</big> <br style="font-style: italic;" />                      : Below table shows parameters mapped based on Data Structure: DXT4114Z1C : F4114 Edit Line - Functional Server</p>
+<table style="width: 726px; border-collapse: collapse; height: 2696px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 149pt;" width="199" /><col style="width: 83pt;" width="110" /><col style="width: 48pt;" width="64" /><col style="width: 25pt;" width="33" /><col style="width: 115pt;" width="153" /><col style="width: 25pt;" width="33" /><col style="width: 185pt;" width="246" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl65" style="background-color: #ffcc00; width: 188px; height: 15pt;">Structure Member Name</th>
+<th class="xl65" style="background-color: #ffcc00; width: 153px;">Type</th>
+<th class="xl65" style="background-color: #ffcc00; width: 37px;">Alias</th>
+<th class="xl65" style="background-color: #ffcc00; width: 16px;">Req</th>
+<th class="xl65" style="background-color: #ffcc00; width: 241px;">Parameter</th>
+<th class="xl65" style="background-color: #ffcc00; width: 13px;">I/O</th>
+<th class="xl65" style="background-color: #ffcc00; width: 15px;">Used for</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cLineAction</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>ACTN</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szComputerID[16]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">CTID</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA rpt_szComputerID_CTID</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Same machine name returned from Step 7 this is important to have unique cache for both Inventory and GL</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cErrorConditions</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">EV03</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_cEditLineError_EV02</td>
+<td style="width: 13px;">O</td>
+<td style="width: 15px;">To check whether Edit Line routine contains error or not<br />  0 = SUCCESS<br />  1 = FAIL</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cRecordWrittenToWorkFile</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">EV04</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_cWriteWorkFile_EV01</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard code with a space because it does not unitilize Work File in this routine</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnLineNumber</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">LNID</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_mnOrderLineNumber_LNID</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">1.000 because a single row record is to be created into F4111</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">jdGLDate</td>
+<td style="width: 153px;">JDEDATE</td>
+<td style="width: 37px;">DGL</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_jdDtGLAndVouch1_DGL</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">GL Date validated/returned from Begin Doc</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szGLExplanation[31]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">DSC1</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_szExpla_TREX</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Any meaningful description to write TREX column</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cUpdateQuantityOnHand</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">EV01</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">&lt;Zero&gt;</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code: Not to update On Hand Quantity</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cSuppressErrorMessage</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>EV01</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cAllowQtyOverAvailable</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">EV01</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">&lt;Zero&gt;</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code: No quantity is involved</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnParentShortItemNumber</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>KIT</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szAccountNumber[30]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>ANI</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szSubledger[9]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>SBL</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cSubledgerType</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>SBLT</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szPhase[5]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>WR01</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szAssetID[27]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>ASII</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnPreviousLinenumber</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">LNID</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_mnPrevLine_LNI</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">Previous line number for G/L so this is to be 0.0000</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szAgreementNumber[13]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>DMCT</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnAgreementSupplement</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>DMCS</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cContractBalancesUpdate</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>BALU</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnAgreementSequence</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>LDSQ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnTransactionLineNumber</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">TRNO</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_mnTransactionLineNr_TRNO</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code: 1.000 the first row into F4111</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cFromTo</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">FRTO</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_cFromTo_FRTO</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">
+<ul>
+<li>F (From) when you need to write Negative</li>
+<li>T (To) when you need to write Positive</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szParentLotNumber[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>PLOT</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnLastJELine</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">JELN</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_mnJELineNo_JELN</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">For this example, only 1 and 2</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cDefaultFromPrimaryLocation</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>EV01</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cAllowHeldLots</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">EV01</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">1</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code: 1 - to create even for Held Lots</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">jdTransactionDate</td>
+<td style="width: 153px;">JDEDATE</td>
+<td style="width: 37px;">TRDJ</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_jdDateTransa_TRDJ</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">Date returned from Begin Doc</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szDocumentType[3]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">DCT</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_szDocumentType_DCT</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Depends upon sign of value either 'IA' or 'II'</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">jdBatchDate</td>
+<td style="width: 153px;">JDEDATE</td>
+<td style="width: 37px;">DICJ</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_jdDateBatch_DICJ</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Date returned by Begin Doc</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnBatchNumber</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">ICU</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_mnBatchNumber_ICU</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">This routine creates batch header so unique batch number is to be assigned</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cBatchStatus</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">IST</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_cBatchStatus_IST</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">Based on Batch Status in Begin Doc and assign it and let it validated</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szBranchPlant[13]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">MCU</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">RV Business Unit</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">F4111.MCU, for this example, PC column value because this routine is runnning in level break footer section</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szItemNumber[27]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">UITM</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">RV 2nd Item Number</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">F4111.LITM same with above</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnShortItemNumber</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>ITM</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szDisplayedLocation[21]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOCNE1</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szLocation[21]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">LOCN</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">RV Location</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">Same with above</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szLotNumber[31]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">LOTN</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">RV Lot/SN</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">Same with above</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szTransactionUOM[3]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">TRUM</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_szUnitOfMeTransact_TRUM</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">F4111.TRUM same with above</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnTransactionQty</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">TRQT</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">&lt;Zero&gt;</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code: &lt;Zero&gt; because this note is for ZBA - Zero Balance Adjustment</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnTransactionUnitCost</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">UNCS</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">&lt;Zero&gt;</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code: &lt;Zero&gt;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnExtendedAmount</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">PAID</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">RV mnAmtToAdj</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">Actual amount to adjust</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">mnTransactionProcessType</td>
+<td style="width: 153px;">mn</td>
+<td style="width: 37px;">MATH01</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">2.00</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Refer below table Valid value for nTransaction (=mnTransactionProcessType)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnLotPotency</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>LOTP</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szLotGrade[4]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOTG</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cLotStatusCode</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOTS</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdLotExpirationDate</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>MMEJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnDocumentNumber</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>DOC</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szSupplierLotNumber[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>RLOT</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szLotDescription[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LDSC</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szReasonCode[4]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">RCD</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">RND</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Optional to choose proper reason code to write F4111.RCD</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnCycleCountNumber</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>CYNO</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnTagNumber</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>TGG</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cGetNextCountDate</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>EV01</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt; color: red;" height="20">mnF0911JobNumber</td>
+<td style="width: 153px; color: red;">mn</td>
+<td style="width: 37px; color: red;">JOBS</td>
+<td style="width: 16px; color: red;"> </td>
+<td style="width: 241px; color: red;">VA sec_mnJobnumberA_F0911_JOBS</td>
+<td style="width: 13px; color: red;">I/O</td>
+<td style="width: 15px; color: red;">To return Job Number for GL, this is to be used in End Doc</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">szKeyCompany[6]</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">KCO</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">VA sec_szCompanyKeyOr_KCOO</td>
+<td style="width: 13px;">I/O</td>
+<td style="width: 15px;">A specific document company in writting F0911 from Begin Doc based on F4111.MCU</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cStockingType</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">STKT</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;"> </td>
+<td style="width: 13px;"> </td>
+<td style="width: 15px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt; color: red;" height="20">mnInvJobNumber</td>
+<td style="width: 153px; color: red;">mn</td>
+<td style="width: 37px; color: red;">JOBS</td>
+<td style="width: 16px; color: red;"> </td>
+<td style="width: 241px; color: red;">VA rpt_mnJobnumberA_JOBS</td>
+<td style="width: 13px; color: red;">I/O</td>
+<td style="width: 15px; color: red;">To return Job Number for Inventory Transaction (F4111) this is to be used in End Doc</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szMemoLot1[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOT1</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szMemoLot2[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOT2</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szMemoLot3[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOT3</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cCostEntered</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">ENTC</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">&lt;Zero&gt;</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard code &lt;Zero&gt; to indicate there is no cost override</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnWMSLineNumber</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>MATH02</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cAgreementSearchMethod</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>EV01</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cMultipleAgreementFound</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>EV05</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20">cProcessJE</td>
+<td style="width: 153px;">JCHAR</td>
+<td style="width: 37px;">EV01</td>
+<td style="width: 16px;"> </td>
+<td style="width: 241px;">1</td>
+<td style="width: 13px;">I</td>
+<td style="width: 15px;">Hard Code '1' to Process G/L Cache through F4111EditLine routine</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szGLMBFVersion[11]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>TREF</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szTransactionReference[9]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>VER</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>mnSecondaryQty</small></td>
+<td style="width: 153px;"><small>mn</small></td>
+<td style="width: 37px;"><small>SQOR</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szSecondaryUOM[3]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>UOM2</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cDualCycleCountGLOffset</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>EV01</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdBasedOnDate</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>BODJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdOnHandDate</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>OHDJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdLotEffectivityDate</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>DLEJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdSellByDate</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>SBDJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdBestBeforeDate</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>BBDJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdUserLotDate1</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>U1DJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdUserLotDate2</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>U2DJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdUserLotDate3</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>U3DJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdUserLotDate4</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>U4DJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>jdUserLotDate5</small></td>
+<td style="width: 153px;"><small>JDEDATE</small></td>
+<td style="width: 37px;"><small>U5DJ</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szUniqueConfigurationID[33]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>CFGSID</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szLotGroup[31]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LOTGRP</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>szFromLicensePlateNumber[41]</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>LPNU</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 188px; height: 15pt;" height="20"><small>cLocationInCache</small></td>
+<td style="width: 153px;"><small>JCHAR</small></td>
+<td style="width: 37px;"><small>MODE</small></td>
+<td style="width: 16px;"><small> </small></td>
+<td style="width: 241px;"><small> </small></td>
+<td style="width: 13px;"><small> </small></td>
+<td style="width: 15px;"><small> </small></td>
+</tr>
+</tbody>
+</table>
+<p><br style="font-style: italic;" /><br /></p>
+<div style="margin-left: 80px;">Valid value for nTransaction (=mnTransactionProcessType)</div>
+<table style="width: 482px; border-collapse: collapse; height: 58px; margin-left: 80px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 61pt;" width="81" /><col style="width: 53pt;" width="71" /><col style="width: 71pt;" width="94" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="background-color: #ffcc00; width: 47px; height: 12.75pt;">nTransaction</th>
+<th style="background-color: #ffcc00; width: 83px;">Application</th>
+<th style="background-color: #ffcc00; width: 203px;">Description</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 47px; height: 12.75pt;" align="right" height="17">1</td>
+<td style="width: 83px;">P4112</td>
+<td style="width: 203px;">Inventory Issue</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="width: 47px; height: 12.75pt;" align="right" height="17">2</td>
+<td style="width: 83px;">P4114</td>
+<td style="width: 203px;">Inventory Adjustment</td>
+</tr>
+</tbody>
+</table>
+<div style="margin-left: 80px;">To have full list refer to &lt;Document 1276239.1&gt; - E1: 41: Inventory Transaction MBF XT4111Z1 Clarification</div>
+<p><br />18. Continue to commit cache to tables (F4111, F0911 and so on) if Edit Line did not return Error<br /><br />                If VA sec_cEditLineError_EV02 is not equal to "1"<br style="font-style: italic;" /><br />19. Call XT4114Z1 - F4114EndDocument (F4114 End Document) to commit cache created through Edit Line routine <br /><br />                    <big style="font-style: italic;">F4114 End Document</big><br style="font-style: italic;" />                         : Below table is to show actual parameter mapped based on data structure DXT4114Z1E : F4114 End Document - Functional Server</p>
+<table style="width: 734.5px; border-collapse: collapse; height: 546px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 149pt;" width="199" /><col style="width: 83pt;" width="110" /><col style="width: 48pt;" width="64" /><col style="width: 25pt;" width="33" /><col style="width: 115pt;" width="153" /><col style="width: 25pt;" width="33" /><col style="width: 185pt;" width="246" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl65" style="background-color: #ffcc00; width: 108px; height: 15pt;">Structure Member Name</th>
+<th class="xl65" style="background-color: #ffcc00; width: 85px;">Type</th>
+<th class="xl65" style="background-color: #ffcc00; width: 61px;">Alias</th>
+<th class="xl65" style="background-color: #ffcc00; width: 21px;">Req</th>
+<th class="xl65" style="background-color: #ffcc00; width: 237px;">Parameter</th>
+<th class="xl65" style="background-color: #ffcc00; width: 25px;">I/O</th>
+<th class="xl65" style="background-color: #ffcc00; width: 111.5px;">Used for</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">szProgramID[11]</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">PID</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">"R59ZBA"</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">This is important to indicate the record is written through custom routine this value affects F4111.PID and F0911.PID</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">mnDocumentNumber</td>
+<td style="width: 85px;">mn</td>
+<td style="width: 61px;">DOC</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;"> </td>
+<td style="width: 25px;"> </td>
+<td style="width: 111.5px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">szComputerID[16]</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">CTID</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">VA rpt_szComputerID_CTID</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">Same machine ID returned through step 7 in accessing cache this is to be used as handle</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">cWriteCardex</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">EV01</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">1</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">Hard Code: to write F4111 baesd on cache created in Edit Line routine</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">cDeleteCycleOrTag</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">EV01</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;"> </td>
+<td style="width: 25px;"> </td>
+<td style="width: 111.5px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">szDocumentType[3]</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">DCT</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">VA sec_szDocumentType_DCT</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">Document type assigned in Edit Line routine either II - Inventory Issue or IA - Inventory Adjustment</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">mnTransactionProcessType</td>
+<td style="width: 85px;">mn</td>
+<td style="width: 61px;">MATH01</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">2.00</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">1 for Inventory Issue for negative amount and 2 for Inventory Adjustment for positive value population</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt; color: red;" height="20">mnF0911Jobnumber</td>
+<td style="width: 85px; color: red;">mn</td>
+<td style="width: 61px; color: red;">JOBS</td>
+<td style="width: 21px; color: red;"> </td>
+<td style="width: 237px; color: red;">VA sec_mnJobnumberA_F0911_JOBS</td>
+<td style="width: 25px; color: red;">I</td>
+<td style="width: 111.5px; color: red;">GL Job Number from Edit Line routine</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">mnBatchNumber</td>
+<td style="width: 85px;">mn</td>
+<td style="width: 61px;">ICU</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">VA sec_mnBatchNumber_ICU</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">Batch Number created through Edit Line routine to close batch</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">cUpdateSalesHistory</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">EV01</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;"> </td>
+<td style="width: 25px;"> </td>
+<td style="width: 111.5px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">cBatchStatus</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">IST</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">VA sec_cBatchStatus_IST</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">Batch Status returned from Edit Line</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">cProcessCloseBatch</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">EV01</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;">1</td>
+<td style="width: 25px;">I</td>
+<td style="width: 111.5px;">Hard Code: 1 to close batch which update status 'A - Approved</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">cSummarizeF0911</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">EV01</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;"> </td>
+<td style="width: 25px;"> </td>
+<td style="width: 111.5px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt; color: red;" height="20">mnInvJobNumber</td>
+<td style="width: 85px; color: red;">mn</td>
+<td style="width: 61px; color: red;">JOBS</td>
+<td style="width: 21px; color: red;"> </td>
+<td style="width: 237px; color: red;">VA rpt_mnJobnumberA_JOBS</td>
+<td style="width: 25px; color: red;">I</td>
+<td style="width: 111.5px; color: red;">Inventory Cache Job Number returned from Edit Line</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 108px; height: 15pt;" height="20">szEDITransactionType[9]</td>
+<td style="width: 85px;">JCHAR</td>
+<td style="width: 61px;">TYTN</td>
+<td style="width: 21px;"> </td>
+<td style="width: 237px;"> </td>
+<td style="width: 25px;"> </td>
+<td style="width: 111.5px;"> </td>
+</tr>
+</tbody>
+</table>
+<p><br style="font-style: italic;" />                End If <br style="font-style: italic;" />            End If<br style="font-style: italic;" /><br />20. (Optional) call XT4114Z1 - F4114ClearDetailStack (F4114 Clear Detail Stack) based on Job Number returned from Edit Line. In case a certain transation has to be cancelled in a certain routine this function shall delete all caches created<br /><br />            <big style="text-decoration: underline;">F4114 Clear Detail Stack</big><br style="font-style: italic;" />                   : Below table is to show actual parameter mapped through data structure XT4114Z1 Clear Detail Stack - Functional Server</p>
+<table style="width: 739px; border-collapse: collapse; height: 303px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 149pt;" width="199" /><col style="width: 83pt;" width="110" /><col style="width: 48pt;" width="64" /><col style="width: 25pt;" width="33" /><col style="width: 115pt;" width="153" /><col style="width: 25pt;" width="33" /><col style="width: 185pt;" width="246" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl65" style="background-color: #ffcc00; width: 78px; height: 15pt;">Structure Member Name</th>
+<th class="xl65" style="background-color: #ffcc00; width: 43px;">Type</th>
+<th class="xl65" style="background-color: #ffcc00; width: 119px;">Alias</th>
+<th class="xl65" style="background-color: #ffcc00; width: 9px;">Req</th>
+<th class="xl65" style="background-color: #ffcc00; width: 236px;">Parameter</th>
+<th class="xl65" style="background-color: #ffcc00; width: 42.3333px;">I/O</th>
+<th class="xl65" style="background-color: #ffcc00; width: 123.667px;">Used for</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">szComputerID[16]</td>
+<td style="width: 43px;">JCHAR</td>
+<td style="width: 119px;">CTID</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">VA rpt_szComputerID_CTID</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">Same machine ID returned by Step 7</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">mnFromLineNumber</td>
+<td style="width: 43px;">mn</td>
+<td style="width: 119px;">LNID</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;"> </td>
+<td style="width: 42.3333px;"> </td>
+<td style="width: 123.667px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">mnThruLineNumber</td>
+<td style="width: 43px;">mn</td>
+<td style="width: 119px;">LNID</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;"> </td>
+<td style="width: 42.3333px;"> </td>
+<td style="width: 123.667px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">cDeleteHeader</td>
+<td style="width: 43px;">JCHAR</td>
+<td style="width: 119px;">EV01</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">1</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">To delete Inventory cache</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">cDeleteDetail</td>
+<td style="width: 43px;">JCHAR</td>
+<td style="width: 119px;">EV01</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">1</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">To delete GL Cache</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">szDocumentType[3]</td>
+<td style="width: 43px;">JCHAR</td>
+<td style="width: 119px;">DCT</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">VA sec_szDocumentType_DCT</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">Optional: Assigned Document Type</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">cProcessCloseBatch</td>
+<td style="width: 43px;">JCHAR</td>
+<td style="width: 119px;">EV01</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">1</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">Optional: because End Doc routine will close batch</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">mnBatchNumber</td>
+<td style="width: 43px;">mn</td>
+<td style="width: 119px;">ICU</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">VA sec_mnBatchNumber_ICU</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">Batch Number in case you have set cProcessCloseBatch</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">cBatchStatus</td>
+<td style="width: 43px;">JCHAR</td>
+<td style="width: 119px;">IST</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">VA sec_cBatchStatus_IST</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">Batch Status returned from Edit Line</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">mnF0911Jobnumber</td>
+<td style="width: 43px;">mn</td>
+<td style="width: 119px;">JOBS</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">VA sec_mnJobnumberA_F0911_JOBS</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">To indicate which cache to delete/terminate</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="width: 78px; height: 15pt;" height="20">mnInvJobNumber</td>
+<td style="width: 43px;">mn</td>
+<td style="width: 119px;">JOBS</td>
+<td style="width: 9px;"> </td>
+<td style="width: 236px;">VA rpt_mnJobnumberA_JOBS</td>
+<td style="width: 42.3333px;">I</td>
+<td style="width: 123.667px;">To indicate which cache to delete/terminate</td>
+</tr>
+</tbody>
+</table>
+<p><br style="font-style: italic;" />End If</p>
+<div style="border-bottom: 1pt solid; border-left: medium none; border-top: medium none; border-right: medium none; padding: 0in 0in 1pt 0in;">
+<p> </p>
+</div>
+<p><br /><br /><big>Reference</big>:<br />&lt;Document 625466.1&gt; E1: 41: Zero Balance Adjustments<br />&lt;Document 1276239.1&gt; E1: 41: Inventory Transaction MBF XT4111Z1 Clarification<br />&lt;Document 1265902.1&gt; E1: BSFN: Master Business Function in EnterpriseOne<br /><br /><br /></p>
+<div class="kmnotebox">Note: <br />
+<ul>
+<li>This is one way to implement to populate Zero Balance Adjustment but this may not be the best practice.</li>
+<li>This note is created based on EnterpriseOne application release 9.0</li>
+<li>For detail event rule refer <a href="&lt;&lt;INLINE_ATTACHMENT:1417295.1:CaseStudy_R59ZBA&gt;&gt;" alt="Example of Event Rule" title="Example of Event Rule">attachment<img src="https://support.oracle.com/CSP/images/metalink/generic/attach_small.gif" border="0"/></a></li>
+</ul>
+</div>
+<p><br /><br /><br /></p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
