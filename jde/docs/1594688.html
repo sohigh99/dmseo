@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R43900 Technical Troubleshooting Guide (Computation and Considerations)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R43900 Technical Troubleshooting Guide (Computation and Considerations)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document is to guide user how R43900 (<span id="form1:panelPage1">Supplier/Item Relationships Rebuild</span>) handles data from F43121 (Purchase Order Receiver File) and F4311 (Purchase Order Detail File).</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>&nbsp;</p>
+<p>This document is created based on EnterpriseOne application release 9.1.&nbsp;</p>
+<p><big>Table of Contents:</big></p>
+<ul>
+<li><a href="#overview" alt="Overview of R43900" title="Overview of R43900">Overview</a></li>
+<li><a href="#f43090" alt="Column explanation for F43090" title="Column explanation for F43090">Table F43090 (Supplier/Item Relationships)</a></li>
+<li><a href="#tablereference" alt="Table Reference in running R43900" title="Table Reference in running R43900">Table/Column Reference in running R43900</a></li>
+<li><a href="#simplifiedroutine" alt="Simplified routine" title="Simplified routine">Computation</a></li>
+<li><a href="#references" alt="References and Considerations" title="References and Considerations">Considerations/References</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><big><a name="overview"></a>Overview:&nbsp;</big></p>
+<p>R43900 is running based on F43121 to insert/update computed values into F43090.</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p><br /> <big> <a name="f43090"></a>Table F43090 (Supplier/Item Relationships)</big><br /> Below table is to show how Supplier Analysis routine modifies data from F43090</p>
+<table style="border-collapse: collapse; width: 1113px; height: 2358px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 46pt;" width="61" /> <col style="width: 16pt;" width="21" /> <col style="width: 50pt;" width="67" /> <col style="width: 164pt;" width="219" /> <col style="width: 180pt;" width="240" /> <col style="width: 16pt;" width="21" /> <col style="width: 89pt;" width="118" /> <col style="width: 66pt;" width="88" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl63" style="height: 15pt; width: 17px; background-color: #3366ff; color: white;">Table</th><th class="xl63" style="width: 15px; background-color: #3366ff; color: white;">S</th><th class="xl63" style="width: 33px; background-color: #3366ff; color: white;">Alias</th><th class="xl63" style="width: 260px; background-color: #3366ff; color: white;">DD Item (Description)</th><th class="xl63" style="width: 482px; background-color: #3366ff; color: white;">Description</th><th class="xl63" style="width: 16pt; background-color: #3366ff; color: white;">&nbsp;</th><th class="xl63" style="width: 39px; background-color: #3366ff; color: white;">&nbsp;P43090</th><th class="xl63" style="width: 169px; background-color: #3366ff; color: white;">Computation (R43900)</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">1</td>
+<td style="width: 33px; background-color: #ffffcc;">AN8*</td>
+<td style="width: 260px; background-color: #ffffcc;">AddressNumber (Address Number)</td>
+<td style="width: 482px; background-color: #ffffcc;"><span style="font-weight: bold; color: red;">Primary Key</span><br /> &nbsp;<br /> &nbsp;</td>
+<td style="background-color: #ffffcc;" align="right">8</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #ffffcc;">F43090</td>
+<td style="vertical-align: top; text-align: right; background-color: #ffffcc;">2</td>
+<td style="vertical-align: top; background-color: #ffffcc;">ITM*</td>
+<td style="vertical-align: top; background-color: #ffffcc;">IdentifierShortItem (Item Number - Short)</td>
+<td style="vertical-align: top; background-color: #ffffcc;"><span style="font-weight: bold; color: red;">Primay Key</span></td>
+<td style="vertical-align: top; text-align: right; background-color: #ffffcc;">8</td>
+<td style="vertical-align: top; width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="vertical-align: top; width: 169px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">3</td>
+<td style="width: 33px; background-color: #ffffcc;">LITM</td>
+<td style="width: 260px; background-color: #ffffcc;">Identifier2ndItem (2nd Item Number)</td>
+<td style="width: 482px; background-color: #ffffcc;"><br /> <br /> &nbsp;</td>
+<td style="background-color: #ffffcc;" align="right">25</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">4</td>
+<td style="width: 33px; background-color: #ffffcc;">AITM</td>
+<td style="width: 260px; background-color: #ffffcc;">Identifier3rdItem (3rd Item Number)</td>
+<td style="width: 482px; background-color: #ffffcc;"><br /> <br /> &nbsp;</td>
+<td style="background-color: #ffffcc;" align="right">25</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">5</td>
+<td style="width: 33px; background-color: #ffffcc;">MCU*</td>
+<td style="width: 260px; background-color: #ffffcc;">CostCenter (Business Unit)</td>
+<td style="width: 482px; background-color: #ffffcc;"><span style="font-weight: bold; color: red;">Primary Key</span></td>
+<td style="background-color: #ffffcc;" align="right">12</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">This key is not to be mapped for non-stock item</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">6</td>
+<td style="width: 33px; background-color: #ffffcc;">CEFJ</td>
+<td style="width: 260px; background-color: #ffffcc;">DateEffectiveJulian&nbsp; (Date - Effective (Julian))</td>
+<td style="width: 482px; background-color: #ffffcc;">&nbsp;</td>
+<td style="background-color: #ffffcc;" align="right">6</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">Update:<br /> If the value is not specified, the CEFJ and CXPJ is to be set based on CENTCHG value<br /> ** RV CEFJ-Effective Date(wf)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">7</td>
+<td style="width: 33px; background-color: #ffffcc;">CXPJ</td>
+<td style="width: 260px; background-color: #ffffcc;">DateExpirJulian (Date - Expiration (Julian))</td>
+<td style="width: 482px; background-color: #ffffcc;"><br /> &nbsp;<br /> &nbsp;</td>
+<td style="background-color: #ffffcc;" align="right">6</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">Update:<br /> ** RV CXPJ-Expiration Date(wf)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">8</td>
+<td style="width: 33px; background-color: #ffffcc;">CERS</td>
+<td style="width: 260px; background-color: #ffffcc;">CertifiedStatus (Status - Certification)</td>
+<td style="width: 482px; background-color: #ffffcc;">A code that indicates whether the supplier is certified to sell this item. The code that you enter determines how the system manages orders that you enter for the supplier and item.<br /> Valid values are:<br /> Please see UDC 43/CR Special handling codes are:<br /> &nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The system prohibits you from purchasing this item from the supplier.<br /> &nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The system displays a warning message if you enter an order for the item from the supplier.<br /> &nbsp;&nbsp; Blank You can place orders for the item from the supplier.</td>
+<td style="background-color: #ffffcc;" align="right">2</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">No update</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">9</td>
+<td style="width: 33px; background-color: #ffffcc;">NROU</td>
+<td style="width: 260px; background-color: #ffffcc;">NormalRouteCode (Route - Normal Route Code)</td>
+<td style="width: 482px; background-color: #ffffcc;">A user defined code (43/RC) that identifies a receipt route. Each receipt route consists of a series of operations through which the system directs items upon receipt.</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">Update it based on Processing Option<br /> ** RV NROU-NormalRouteCode(wf)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">10</td>
+<td style="width: 33px; background-color: #ffffcc;">TROU</td>
+<td style="width: 260px; background-color: #ffffcc;">TestRouteCode (Route - Alternate Route Code)</td>
+<td style="width: 482px; background-color: #ffffcc;">A user defined code (43/RC) that identifies an alternate receipt route. Each receipt route consists of a series of operations through which the system directs items upon receipt.<br /> An item can have a normal receipt route and an alternate receipt route. The system directs an item through the alternate receipt route intermittently based on the number of days or number of receipts that you specify.</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">No update</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">11</td>
+<td style="width: 33px; background-color: #ffffcc;">TFRQ</td>
+<td style="width: 260px; background-color: #ffffcc;">TestingFrequency (Frequency - Number)</td>
+<td style="width: 482px; background-color: #ffffcc;">A number that determines how often the system directs an item to the alternate receipt route, based on receipts. For example, if you enter 5 in this field, the system directs every fifth receipt of the item to the alternate receipt route.&nbsp;</td>
+<td style="background-color: #ffffcc;" align="right">5</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">No update</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">12</td>
+<td style="width: 33px;">ORDS</td>
+<td style="width: 260px;">NumberOfReceipts (Units - Receipts Since Last Test )</td>
+<td style="width: 482px;">This field determines the number of purchase order receipts that have occurred for a supplier since the last test has been performed.&nbsp; This field is associated with the Testing Frequency field.</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">Mechanical computation for the number of MATC based on primary key mapped</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">13</td>
+<td style="width: 33px; background-color: #ffffcc;">TFRD</td>
+<td style="width: 260px; background-color: #ffffcc;">TestingFrequencyDays (Days - Frequency)</td>
+<td style="width: 482px; background-color: #ffffcc;">A number that determines how often the system directs an item to the alternate receipt route, based on days. For example, you enter 3 in this field. If 01/01/98 was the last date for the alternate receipt route, the system directs the next receipt performed on or after 01/04/98 to the alternate receipt route.</td>
+<td style="background-color: #ffffcc;" align="right">5</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">No update</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">14</td>
+<td style="width: 33px;">LTDJ</td>
+<td style="width: 260px;">DateLastTest (Date - Last Alternate Route (Julian))</td>
+<td style="width: 482px;">Indicates the date that the alternate route was last performed. This field is associated with the Testing Frequency Days field.</td>
+<td align="right">6</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">No Update</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">15</td>
+<td style="width: 33px; background-color: #ffffcc;">DAYE</td>
+<td style="width: 260px; background-color: #ffffcc;">DaysAllowedEarly (Days - Allowed Early)</td>
+<td style="width: 482px; background-color: #ffffcc;">The number of days prior to the promised date for which delivery of the item is acceptable. For example, you enter 2 to indicate that the supplier can deliver the item a maximum of 2 days early to qualify for an on-time delivery.</td>
+<td style="background-color: #ffffcc;" align="right">5</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">No update. <br /> <span style="font-style: italic; color: red;">Input value for computation</span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">16</td>
+<td style="width: 33px; background-color: #ffffcc;">DAYL</td>
+<td style="width: 260px; background-color: #ffffcc;">DaysAllowedLate (Days - Allowed Late)</td>
+<td style="width: 482px; background-color: #ffffcc;">The number of days after the promised date for which delivery of the item is acceptable. For example, you enter 2 to indicate that the supplier can deliver the item a maximum of 2 days later than the promised date to qualify for an on-time delivery.</td>
+<td style="background-color: #ffffcc;" align="right">5</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">No update. <br /> <span style="font-style: italic; color: red;">Input value for computation</span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">17</td>
+<td style="width: 33px; background-color: #ffffcc;">LTQP</td>
+<td style="width: 260px; background-color: #ffffcc;">PercentLeadtimeQuan (Percentage - Leadtime Quantity)</td>
+<td style="width: 482px; background-color: #ffffcc;">The percentage of an order that you must receive for the system to calculate leadtime. Leadtime is the number of days between the date that you enter an order detail line and the date that you receive the order.<br /> For items in a receipt route, the system determines the receipt date based on the date at which the items arrive at the operation flagged for receipt acknowledgement.<br /> <span style="font-weight: bold; color: red;">Default value = 90.00 (%)</span><span style="font-weight: bold; color: red;">&nbsp; </span></td>
+<td style="background-color: #ffffcc;" align="right">5</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;"><span style="font-style: italic; color: red;">Input value for computation. If value leaves blank set default value for DD Alias LTQP<br /> *** RV LTQP-LeadtimePercent(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">18</td>
+<td style="width: 33px;">LTNM</td>
+<td style="width: 260px;">LeadtimeNormalRoute (Leadtime - Normal Routing)</td>
+<td style="width: 482px;">Indicates the leadtime between the first and last routing operations, when no test/inspection operation is performed.</td>
+<td align="right">5</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">19</td>
+<td style="width: 33px;">LTTS</td>
+<td style="width: 260px;">LeadtimeTestRoute (Leadtime - Test Routing )</td>
+<td style="width: 482px;">Indicates the leadtime between the first and last routing operations, when a test/inspection operation is performed.</td>
+<td align="right">5</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">20</td>
+<td style="width: 33px; background-color: #ffffcc;">ALTD</td>
+<td style="width: 260px; background-color: #ffffcc;">LeadtimeAverage (Leadtime - Average)</td>
+<td style="width: 482px; background-color: #ffffcc;">The average number of days from the date of the purchase order to the date that you receive the item. The system calculates leadtime after it meets the leadtime quantity percentage during receipt entry or during receipt routing.<br /> You define the leadtime quantity percentage on the Supplier/Item Relationships form (W43090B).</td>
+<td style="background-color: #ffffcc;" align="right">5</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> ** RV ALTD-Leadtime Average(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">21</td>
+<td style="width: 33px;">LLTD</td>
+<td style="width: 260px;">LeadtimeLast (Leadtime - Last)</td>
+<td style="width: 482px;">The last actual number of days from the date of the purchase order to the date that you received the item.<br /> For example, if you enter an order on 12/01/98 and receive that order on 12/05/98 and it was the last order that you received for that item from that supplier, the last leadtime is 4 (12/05/98 - 12/01/98).<br /> <span style="font-style: italic; color: red;">NOTE: The system does not calculate leadtime until the quantity meets the leadtime quantity percentage that you specified on the Supplier/Item Relationships form.&nbsp;</span></td>
+<td align="right">5</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> ** RV LLTD-Leadtime Last(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">22</td>
+<td style="width: 33px; background-color: #ffffcc;">ACST</td>
+<td style="width: 260px; background-color: #ffffcc;">AverageUnitCost (Amount - Average Unit Cost)</td>
+<td style="width: 482px; background-color: #ffffcc;">Average unit cost paid for the item. When you run Voucher Match in program (P4314) to match the receipt to a voucher, the system calculates this cost by using the weighted average for quantity and cost.</td>
+<td style="background-color: #ffffcc;" align="right">15</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update</span><br /> ** RV APTD-TotalAmtPaid(wf)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">23</td>
+<td style="width: 33px;">LCST</td>
+<td style="width: 260px;">LastUnitCost (Amount - Last Unit Cost )</td>
+<td style="width: 482px;">Indicates the last unit cost paid that you paid for this item from this supplier. The system displays this value in the item's purchasing unit of measure and updates it each time you match a receipt to a voucher.</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV LCST-Amount Last Unit Cost(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">24</td>
+<td style="width: 33px;">NOOD</td>
+<td style="width: 260px;">NumberOfOrders&nbsp; (Number of Orders Received)</td>
+<td style="width: 482px;">The number of orders you have received from this supplier for a specific item.<br /> For this field, one line on a purchase order is equal to one order.<br /> For example:<br /> &nbsp;&nbsp;&nbsp; o The system counts a purchase order with two lines that you receive at one time as one purchase order.<br /> &nbsp;&nbsp;&nbsp; o The system counts a purchase order with one line that you receive as two partial receipts as one purchase order.</td>
+<td align="right">11</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV NOOD-Number of Orders Received(WF)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">25</td>
+<td style="width: 33px;">QTYS</td>
+<td style="width: 260px;">QuantityStocked&nbsp; (Units - Stocked )</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV QTYS-Total Units Stocked(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">26</td>
+<td style="width: 33px;">QTYR</td>
+<td style="width: 260px;">QuantityReturned (Units - Returned)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV QTYR-Total Units Returned(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">27</td>
+<td style="width: 33px;">QTYC</td>
+<td style="width: 260px;">QuantityScrapped (Units - Scrapped)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV QTYC-Total Units Scrapped(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">28</td>
+<td style="width: 33px;">QTYW</td>
+<td style="width: 260px;">QuantityReworked (Units - Reworked)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV QTYW-Total Units Reworked(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">29</td>
+<td style="width: 33px;">QTYJ</td>
+<td style="width: 260px;">QuantityRejected (Units - Rejected)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV QTYJ-Total Units Rejected(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">30</td>
+<td style="width: 33px;">QTYA</td>
+<td style="width: 260px;">QuantityAdjusted (Units - Adjusted)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV QTYA-Total Units Adjusted(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">31</td>
+<td style="width: 33px;">UODR</td>
+<td style="width: 260px;">UnitsOrdered2 (Units - Ordered)</td>
+<td style="width: 482px;"><br /> <br /> &nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV UODR-TotalUnits Ordered(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">32</td>
+<td style="width: 33px;">UREC</td>
+<td style="width: 260px;">UnitsLineItemQtyRe (Units - Received)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV UREC1-TotalUnits(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">33</td>
+<td style="width: 33px;">UPTD</td>
+<td style="width: 260px;">QuantityPaidToDate (Units - Paid to Date)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV UPTD-TOTPAID(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">34</td>
+<td style="width: 33px;">UONT</td>
+<td style="width: 260px;">UnitsOnTime (Units - On-Time)</td>
+<td style="width: 482px;">Indicates the units ordered. The system updates and writes the value in this field at the time of purchase order entry.&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV UONT-Units on time(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">35</td>
+<td style="width: 33px;">UEAR</td>
+<td style="width: 260px;">UnitsEarly (Units - Early)</td>
+<td style="width: 482px;">This field determines the units received early. The system determines this value by comparing the promised date in the purchase order to the receipt date. If a supplier item relationship record (F43090) exists for a supplier and item, the Days Late field is considered in determining if the receipt is late. The system updates this field only once per purchase order line and once when the quantity received meets or exceeds the leadtime quantity percentage from the supplier item relationship record</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV UEAR-Units Early(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">36</td>
+<td style="width: 33px;">ULAT</td>
+<td style="width: 260px;">UnitsLate (Units - Late)</td>
+<td style="width: 482px;">Indicates the units received late.&nbsp; The system determines this value by comparing the promised date in the purchase order to the receipt date. If a supplier item relationship record (F43090) exists for a supplier and item, the Days Late field is considered in determining if the receipt is late. The system updates this field only once per purchase order line and once when the quantity received meets or exceeds the leadtime quantity percentage from the supplier item relationship record</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV ULAT-Units Late(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">37</td>
+<td style="width: 33px;">AODR</td>
+<td style="width: 260px;">AmountOrdered (Amount - Ordered)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV AODR-TotalAmount Ordered(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">38</td>
+<td style="width: 33px;">AREC</td>
+<td style="width: 260px;">AmountReceived (Amount - Received)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV AREC1-TotalAmount(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">39</td>
+<td style="width: 33px;">APTD</td>
+<td style="width: 260px;">AmountPaidToDate (Amount - Paid to Date)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV APTD-TotalAmtPaid(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">40</td>
+<td style="width: 33px;">AONT</td>
+<td style="width: 260px;">AmountOnTime (Amount - On-Time)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV AONT-Amount on time(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">41</td>
+<td style="width: 33px;">AEAR</td>
+<td style="width: 260px;">AmountEarly (Amount - Early)</td>
+<td style="width: 482px;"><br /> &nbsp;<br /> &nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV AEAR-Amount Early(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">42</td>
+<td style="width: 33px;">ALAT</td>
+<td style="width: 260px;">AmountLate (Amount - Late)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV ALAT-Amount Late(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">43</td>
+<td style="width: 33px;">RONT</td>
+<td style="width: 260px;">ReceiptOnTime (Receipt - On-Time)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">&nbsp;<span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV RONT-Receipts on time(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">44</td>
+<td style="width: 33px;">REAR</td>
+<td style="width: 260px;">ReceiptEarly (Receipt - Early)</td>
+<td style="width: 482px;"><br /> <br /> &nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV REAR-Receipts Early(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">45</td>
+<td style="width: 33px;">RLAT</td>
+<td style="width: 260px;">ReceiptLate (Receipt - Late)</td>
+<td style="width: 482px;"><br /> &nbsp;<br /> &nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;"><span style="font-weight: bold; color: #3333ff;">Compute &amp; Update<br /> *** RV RLAT-Receipts Late(wf)<br /> </span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">46</td>
+<td style="width: 33px;">URCD</td>
+<td style="width: 260px;">UserReservedCode (User Reserved Code)</td>
+<td style="width: 482px;"><br /> &nbsp;<br /> &nbsp;</td>
+<td align="right">2</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">47</td>
+<td style="width: 33px;">URDT</td>
+<td style="width: 260px;">UserReservedDate (User Reserved Date)</td>
+<td style="width: 482px;"><br /> &nbsp;<br /> &nbsp;</td>
+<td align="right">6</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">48</td>
+<td style="width: 33px;">URAT</td>
+<td style="width: 260px;">UserReservedAmount (User Reserved Amount)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">49</td>
+<td style="width: 33px;">URAB</td>
+<td style="width: 260px;">UserReservedNumber (User Reserved Number)</td>
+<td style="width: 482px;">&nbsp;</td>
+<td align="right">8</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">50</td>
+<td style="width: 33px;">URRF</td>
+<td style="width: 260px;">UserReservedReference (User Reserved Reference)</td>
+<td style="width: 482px;"><br /> <br /> &nbsp;</td>
+<td align="right">15</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px; background-color: #ffffcc;" height="20">F43090</td>
+<td style="width: 15px; background-color: #ffffcc;" align="right">51</td>
+<td style="width: 33px; background-color: #ffffcc;">ROTP</td>
+<td style="width: 260px; background-color: #ffffcc;">RouteTypeCode (Route Type Code)</td>
+<td style="width: 482px; background-color: #ffffcc;">A code that qualifies the routing for an Item/Supplier combination. Examples would include specific routing types for ASN's (EDI 856 Ship Notice/Manifest transactions) and for Transfers.</td>
+<td style="background-color: #ffffcc;" align="right">1</td>
+<td style="width: 39px; background-color: #ffffcc;">Yes</td>
+<td style="width: 169px; background-color: #ffffcc;">N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 17px;" height="20">F43090</td>
+<td style="width: 15px;" align="right">52</td>
+<td style="width: 33px;">POC</td>
+<td style="width: 260px;">Payonconsumption (Issue and Receipt)</td>
+<td style="width: 482px;">A code that indicates whether an item is received at the time of inventory issues or if the system uses the Move and Disposition program. Valid values are:<br /> &nbsp;&nbsp; 0&nbsp;&nbsp; The system does not perform any actions.<br /> &nbsp;&nbsp; 1&nbsp;&nbsp; The system receives an item when an inventory issue occurs.<br /> &nbsp;&nbsp; 2&nbsp;&nbsp; The system uses the Movement and Disposition program when an inventory issue occurs</td>
+<td align="right">1</td>
+<td style="width: 39px;">&nbsp;</td>
+<td style="width: 169px;">N/A</td>
+</tr>
+</tbody>
+</table>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Only limited columns are available through P43090 (highlighted in yellow background color)</li>
+<li>LTQP - PercentLeadtimeQuan (Percentage - Leadtime Quantity)</li>
+<ul>
+<li>F43090 exist: base value to compute subsequent quantity and amount</li>
+<li>F43090 does not exist: set default value based on DD Alias LTQP</li>
+</ul>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p><br /> <br /> <a name="tablereference"></a><big>Table/Column Reference in running R43900</big></p>
+<table style="border-collapse: collapse; width: 1041px; height: 1119px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 46pt;" width="61" /> <col style="width: 21pt;" width="28" /> <col style="width: 59pt;" width="78" /> <col style="width: 196pt;" width="261" /> <col style="width: 215pt;" width="286" /> <col style="width: 16pt;" width="21" /> <col style="width: 48pt;" width="64" /></colgroup>
+<tbody>
+<tr><th style="vertical-align: top; background-color: #3366ff; color: white; width: 0px;">Table</th><th style="vertical-align: top; background-color: #3366ff; color: white; width: 22px;">&nbsp;</th><th style="vertical-align: top; background-color: #3366ff; color: white; width: 62px;">Alias</th><th style="vertical-align: top; background-color: #3366ff; color: white; width: 238px;">DD Item (Description)</th><th style="vertical-align: top; background-color: #3366ff; color: white; width: 300px;">Explanation</th><th style="vertical-align: top; background-color: #3366ff; color: white; width: 22px;">&nbsp;</th><th style="vertical-align: top; background-color: #3366ff; color: white; width: 327px;">Others</th></tr>
+<tr>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">*** F43121 ***</td>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; background-color: #33ccff; color: red; font-style: italic;">Base Table</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">F43121</td>
+<td style="width: 22px;" align="right">1</td>
+<td style="width: 62px;">MATC</td>
+<td style="width: 238px;">MatchType (Type - Match Record Type)</td>
+<td style="width: 300px;">To determine the last cost based on MATC = '2'</td>
+<td style="width: 22px;" align="right">1</td>
+<td style="width: 327px;">MATC 1 and 2 are to be read</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffff33;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffff33;" align="right">2</td>
+<td style="width: 62px; background-color: #ffff33;">AN8</td>
+<td style="width: 238px; background-color: #ffff33;">AddressNumber (Address Number )</td>
+<td style="width: 300px; background-color: #ffff33;">Primary Key of F43090</td>
+<td style="width: 22px; background-color: #ffff33;" align="right">8</td>
+<td style="width: 327px; background-color: #ffff33;">Supplier number which is primary key for F43090</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">3</td>
+<td style="width: 62px; background-color: #ffffcc;">KCOO</td>
+<td style="width: 238px; background-color: #ffffcc;">CompanyKeyOrderNo (Order Company (Order Number))</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">5</td>
+<td style="width: 327px; background-color: #ffffcc;">Key to pull data from F4311</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">4</td>
+<td style="width: 62px; background-color: #ffffcc;">DOCO</td>
+<td style="width: 238px; background-color: #ffffcc;">DocumentOrderInvoiceE (Document (Order No, Invoice, etc.))</td>
+<td style="width: 300px; background-color: #ffffcc;"><br /> &nbsp;&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">8</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">5</td>
+<td style="width: 62px; background-color: #ffffcc;">DCTO</td>
+<td style="width: 238px; background-color: #ffffcc;">OrderType (Order Type)</td>
+<td style="width: 300px; background-color: #ffffcc;"><br /> &nbsp;&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">2</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">6</td>
+<td style="width: 62px; background-color: #ffffcc;">SFXO</td>
+<td style="width: 238px; background-color: #ffffcc;">OrderSuffix (Order Suffix)</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">3</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">7</td>
+<td style="width: 62px; background-color: #ffffcc;">LNID</td>
+<td style="width: 238px; background-color: #ffffcc;">LineNumber&nbsp; (Line Number )</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">6</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">8</td>
+<td style="width: 62px;">NLIN</td>
+<td style="width: 238px;">NoOfLinesOnOrder (Number of Lines)</td>
+<td style="width: 300px;"><br /> &nbsp;</td>
+<td style="width: 22px;" align="right">5</td>
+<td style="width: 327px;">Receipt Line Number</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffff33;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffff33;" align="right">14</td>
+<td style="width: 62px; background-color: #ffff33;">ITM</td>
+<td style="width: 238px; background-color: #ffff33;">IdentifierShortItem (Item Number - Short )</td>
+<td style="width: 300px; background-color: #ffff33;">Primary Key of F43090</td>
+<td style="width: 22px; background-color: #ffff33;" align="right">8</td>
+<td style="width: 327px; background-color: #ffff33;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 62px;">LITM</td>
+<td style="width: 238px;">Identifier2ndItem (2nd Item Number )</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">25</td>
+<td style="width: 327px;">Information only</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">16</td>
+<td style="width: 62px;">AITM</td>
+<td style="width: 238px;">Identifier3rdItem (3rd Item Number )</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">25</td>
+<td style="width: 327px;">Information only</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #99ff99;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #99ff99;" align="right">18</td>
+<td style="width: 62px; background-color: #99ff99;">LOCN</td>
+<td style="width: 238px; background-color: #99ff99;">Location (Location)</td>
+<td style="width: 300px; background-color: #99ff99;">&nbsp;</td>
+<td style="width: 22px; background-color: #99ff99;" align="right">20</td>
+<td style="width: 327px; background-color: #99ff99;">These columns can be used for UOM conversion</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #99ff99;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #99ff99;" align="right">19</td>
+<td style="width: 62px; background-color: #99ff99;">LOTN</td>
+<td style="width: 238px; background-color: #99ff99;">Lot (Lot/Serial Number)</td>
+<td style="width: 300px; background-color: #99ff99;">&nbsp;</td>
+<td style="width: 22px; background-color: #99ff99;" align="right">30</td>
+<td style="width: 327px; background-color: #99ff99;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #99ff99;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #99ff99;" align="right">21</td>
+<td style="width: 62px; background-color: #99ff99;">LOTP</td>
+<td style="width: 238px; background-color: #99ff99;">Lot Potency (Lot Potency)</td>
+<td style="width: 300px; background-color: #99ff99;">&nbsp;</td>
+<td style="width: 22px; background-color: #99ff99;">&nbsp;</td>
+<td style="width: 327px; background-color: #99ff99;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; text-decoration: line-through;" height="20">&nbsp;</td>
+<td style="width: 22px; text-decoration: line-through;" align="right">26</td>
+<td style="width: 62px; text-decoration: line-through;">TRDJ</td>
+<td style="width: 238px; text-decoration: line-through;">DateTransactionJulian (Date - Order/Transaction)</td>
+<td style="width: 300px; text-decoration: line-through;">&nbsp;</td>
+<td style="width: 22px; text-decoration: line-through;" align="right">6</td>
+<td style="width: 327px; text-decoration: line-through;">Not in use</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">27</td>
+<td style="width: 62px;">RCDJ</td>
+<td style="width: 238px;">DateReceived (Date - Received )</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">6</td>
+<td style="width: 327px;">RV LLTD-DifferenceOfRCDJ&amp;PDDJ) = (F43121.PDDJ) - (F4311.RCDJ</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">29</td>
+<td style="width: 62px;">PDDJ</td>
+<td style="width: 238px;">ScheduledPickDate (Date - Scheduled Pick)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">6</td>
+<td style="width: 327px;">Refe to Bug 12504426 : PDDJ INSTEAD OF OPDJ - SAR: 6153948</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">30</td>
+<td style="width: 62px;">OPDJ</td>
+<td style="width: 238px;">DateOriginalPromisde (Date - Original Promised Delivery)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">6</td>
+<td style="width: 327px;">Not in use because lead time is computed based on PDDJ</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">35</td>
+<td style="width: 62px;">LAND</td>
+<td style="width: 238px;">LandedCostCode&nbsp; (Code - Landed Cost)</td>
+<td style="width: 300px;">Indicates how a PO receiver record relates to landed cost. The following is a list of possible values:<br /> &nbsp;&nbsp; blank The record is not related to landed cost.<br /> &nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The record has associated landed cost records.<br /> &nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The record is a landed cost record that is to be vouchered.<br /> &nbsp;&nbsp; 3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The record is a landed cost record that is not to be vouchered.<br /> &nbsp;</td>
+<td style="width: 22px;" align="right">1</td>
+<td style="width: 327px;">R43900 excludes when F43121.LAND IN ('2', '3')</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffff33;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffff33;" align="right">45</td>
+<td style="width: 62px; background-color: #ffff33;">MCU</td>
+<td style="width: 238px; background-color: #ffff33;">CostCenter&nbsp; (Business Unit)</td>
+<td style="width: 300px; background-color: #ffff33;">Primary Key for F43090<br /> For non stock item do not map this column</td>
+<td style="width: 22px; background-color: #ffff33;" align="right">12</td>
+<td style="width: 327px; background-color: #ffff33;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">65</td>
+<td style="width: 62px;">UOM</td>
+<td style="width: 238px;">UnitOfMeasureAsInput (Unit of Measure as Input)</td>
+<td style="width: 300px;">To recognize based on primary UOM</td>
+<td style="width: 22px;" align="right">2</td>
+<td style="width: 327px;">Target UOM to convert to primary UOM for UORG</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">66</td>
+<td style="width: 62px;">UORG</td>
+<td style="width: 238px;">UnitsTransactionQty (Units - Order/Transaction Quantity )</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">To compute percentage: RV LTQP-PercentReceived(wf) = (sum (F43121.UREC) / (F43121.UORG) * 100</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">67</td>
+<td style="width: 62px;">UPTD</td>
+<td style="width: 238px;">QuantityPaidToDate&nbsp; (Units - Paid to Date)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">Compuate UPTD, APTD and LCST when F43121.MATC = 2</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">69</td>
+<td style="width: 62px;">UREC</td>
+<td style="width: 238px;">UnitsLineItemQtyRe&nbsp; (Units - Received)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">Calculate Percent Received (RV LTQP-PercentReceived(wf))<br /> &nbsp;&nbsp;&nbsp; A = sum(F43121.urec) / sum(F43121.uorg) * 100 (where ITM, MCU and AN8 are unique)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">71</td>
+<td style="width: 62px;">QTYS</td>
+<td style="width: 238px;">QuantityStocked (Units - Stocked )</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">Accumulate QTYS, QTYR, QTYW, QTYC,QTYJ and QTYA in primary UOM<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For example, QTYS = sum (F43121.QTYS)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">72</td>
+<td style="width: 62px;">QTYR</td>
+<td style="width: 238px;">QuantityReturned (Units - Returned)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">73</td>
+<td style="width: 62px;">QTYW</td>
+<td style="width: 238px;">QuantityReworked (Units - Reworked)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">74</td>
+<td style="width: 62px;">QTYC</td>
+<td style="width: 238px;">QuantityScrapped (Units - Scrapped)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">75</td>
+<td style="width: 62px;">QTYJ</td>
+<td style="width: 238px;">QuantityRejected (Units - Rejected)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">76</td>
+<td style="width: 62px;">QTYA</td>
+<td style="width: 238px;">QuantityAdjusted (Units - Adjusted)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">82</td>
+<td style="width: 62px;">AREC</td>
+<td style="width: 238px;">AmountReceived&nbsp; (Amount - Received)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">Accumulate UREC and AREC. UREC = sum (F43121.UREC) in primary UOM and AREC = sum (F43121.AREC) in primary UOM</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">104</td>
+<td style="width: 62px;">UPMJ</td>
+<td style="width: 238px;">DateUpdated (Date - Updated)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">6</td>
+<td style="width: 327px;">This value (along with TDAY) can be used to pick up data which has not handled previously.</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">105</td>
+<td style="width: 62px;">TDAY</td>
+<td style="width: 238px;">TimeOfDay (Time of Day)</td>
+<td style="width: 300px;"><br /> &nbsp;</td>
+<td style="width: 22px;" align="right">6</td>
+<td style="width: 327px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #33ccff; color: red; font-style: italic;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="width: 62px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="width: 238px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="width: 300px; background-color: #33ccff; color: red; font-style: italic;">&nbsp; **** F4311 ****</td>
+<td style="width: 22px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="width: 327px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;Referencing Table</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">F4311&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">1</td>
+<td style="width: 62px; background-color: #ffffcc;">KCOO</td>
+<td style="width: 238px; background-color: #ffffcc;">CompanyKeyOrderNo (Order Company (Order Number))</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">5</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">2</td>
+<td style="width: 62px; background-color: #ffffcc;">DOCO</td>
+<td style="width: 238px; background-color: #ffffcc;">DocumentOrderInvoiceE (Document (Order #, Invoice, etc.))</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">8</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">3</td>
+<td style="width: 62px; background-color: #ffffcc;">DCTO</td>
+<td style="width: 238px; background-color: #ffffcc;">OrderType (Contract Type)</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">2</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">4</td>
+<td style="width: 62px; background-color: #ffffcc;">SFXO</td>
+<td style="width: 238px; background-color: #ffffcc;">OrderSuffix (Order Suffix)</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">3</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px; background-color: #ffffcc;" height="20">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">5</td>
+<td style="width: 62px; background-color: #ffffcc;">LNID</td>
+<td style="width: 238px; background-color: #ffffcc;">LineNumber&nbsp; (Line Number)</td>
+<td style="width: 300px; background-color: #ffffcc;">&nbsp;</td>
+<td style="width: 22px; background-color: #ffffcc;" align="right">6</td>
+<td style="width: 327px; background-color: #ffffcc;">&nbsp;Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">22</td>
+<td style="width: 62px;">TRDJ</td>
+<td style="width: 238px;">DateTransactionJulian (Date - Order/Transaction)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">6</td>
+<td style="width: 327px;">This value is to be used to compute RV LLTD-Last Lead Time(wf)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">60</td>
+<td style="width: 62px;">UOM</td>
+<td style="width: 238px;">UnitOfMeasureAsInput (Unit of Measure as Input)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">2</td>
+<td style="width: 327px;">Transaction UOM. In case this value is different from F4101.UOM1, conversion takes place</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">61</td>
+<td style="width: 62px;">UORG</td>
+<td style="width: 238px;">UnitsTransactionQty (Units - Order/Transaction Quantity)</td>
+<td style="width: 300px;"><br /> &nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">To compute UODR (RV UODR-TotalUnits Ordered(wf))</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 0px;" height="20">&nbsp;</td>
+<td style="width: 22px;" align="right">69</td>
+<td style="width: 62px;">AEXP</td>
+<td style="width: 238px;">AmountExtendedPrice (Amount - Extended Price)</td>
+<td style="width: 300px;">&nbsp;</td>
+<td style="width: 22px;" align="right">15</td>
+<td style="width: 327px;">AODR (RV AODR-TotalAmount Ordered(wf))</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 0px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; width: 22px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; width: 62px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; width: 238px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; width: 300px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;**** F4101 ****</td>
+<td style="vertical-align: top; width: 22px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;</td>
+<td style="vertical-align: top; width: 327px; background-color: #33ccff; color: red; font-style: italic;">&nbsp;Referencing Table</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 0px; background-color: yellow;">F4101</td>
+<td style="vertical-align: top; width: 22px; background-color: yellow;">&nbsp;</td>
+<td style="vertical-align: top; width: 62px; background-color: yellow;">ITM</td>
+<td style="vertical-align: top; width: 238px; background-color: yellow;">&nbsp;</td>
+<td style="vertical-align: top; width: 300px; background-color: yellow;">Input value to get below column values</td>
+<td style="vertical-align: top; width: 22px; background-color: yellow;">&nbsp;</td>
+<td style="vertical-align: top; width: 327px; background-color: yellow;">&nbsp;Primary Key</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 0px;">&nbsp;</td>
+<td style="vertical-align: top; width: 22px;">&nbsp;</td>
+<td style="vertical-align: top; width: 62px;">UOM1</td>
+<td style="vertical-align: top; width: 238px;">UnitOfMeasurePrimary (Unit of Measure - Primary)</td>
+<td style="vertical-align: top; width: 300px;">When Transaction UOM is not in Primary then compute quantity and amount based on primary UOM</td>
+<td style="vertical-align: top; width: 22px;">&nbsp;</td>
+<td style="vertical-align: top; width: 327px;">To realize computation based on primary UOM.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 0px;">&nbsp;</td>
+<td style="vertical-align: top; width: 22px;">&nbsp;</td>
+<td style="vertical-align: top; width: 62px;">STKT</td>
+<td style="vertical-align: top; width: 238px;">StockingType (Stocking Type)</td>
+<td style="vertical-align: top; width: 300px;">To determine whether the input item is Stock or Non-Stock. In case it is non-stock item access F43090 based on Item and Supplier Combination other wise access it through Item, Branch and Supplier Combination</td>
+<td style="vertical-align: top; width: 22px;">&nbsp;</td>
+<td style="vertical-align: top; width: 327px;">This value determined whether the line you handle is stock or non-stock item. In case a certain receipt is non-stock item (which presume no record from F4102), which pulls data from F43090 based on ITM and AN8 combination. For stock item it gets data based on MCU, ITM and AN8 combination. And this value determines level break for data from F43121.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 0px;">&nbsp;</td>
+<td style="vertical-align: top; width: 22px;">&nbsp;</td>
+<td style="vertical-align: top; width: 62px;">TFLA</td>
+<td style="vertical-align: top; width: 238px;">TemporaryItemFlashMessag (Standard Unit of Measure Conversion)</td>
+<td style="vertical-align: top; width: 300px;">To determine UOM Coversion</td>
+<td style="vertical-align: top; width: 22px;">&nbsp;</td>
+<td style="vertical-align: top; width: 327px;">To determine which file to read between F41003 and F41002.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Some columns from F43121 is not referencing for computation</li>
+<li>Currently F43121 contains indices for F43090 (AN8, ITM and MCU) and F4311 (DOCO, DCTO, KCOO, SFXO, LNID) so it is able to pull matching data through these foreign keys</li>
+</ul>
+</div>
+<p>&nbsp;<span class="awizEndDelimiter">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p><br /> <br /> <a name="simplifiedroutine"></a><big>Simplified routine</big></p>
+<p>Below table is to show routine to populate a certain column value from F43090. Some values affecting another value so the computation has to be performed in sequence.</p>
+<table style="border-collapse: collapse; width: 1043px; height: 457px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="3" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 41px; background-color: #3366ff; color: white;">Seq</th><th style="width: 744px; background-color: #3366ff; color: white;">Computation/Assignment</th><th style="width: 250px; background-color: #3366ff; color: white;">F43090.Column mapping</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 41px;" height="20">1</td>
+<td style="width: 744px;">Exclude receipt records when F43121.LAND is equal to '2 - Receipt' or '3 - Vouchered' (but reads both F43121.matc = '1' and '2'</td>
+<td style="width: 250px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">2</td>
+<td style="vertical-align: top;">Get item master records to get UOM1, STKT and TFLA</td>
+<td style="vertical-align: top;">F4101 Get Item Master Information</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">3</td>
+<td style="vertical-align: top;">Read F43090 either on ITM, AN8 combination or MCU, ITM (for none stock item) and AN8 combination (for stock item) to get columns DAYE, DAYL and LTQP (and set flag for whether there is a matching record or not)</td>
+<td style="vertical-align: top;">(through business function GetSupplierItemColumns (B4300400 - F43090 Get Lead Time))</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">4</td>
+<td style="vertical-align: top;">Set level break either for ITM, AN8 (for non-stock item) or ITM, MCU and AN8 (for stock item)</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">5</td>
+<td style="vertical-align: top;">Calculate Percent Received (RV LTQP-PercentReceived(wf))<br /> &nbsp;&nbsp;&nbsp; <span style="color: red;">A = sum(F43121.urec) / sum(F43121.uorg) * 100 (where ITM, MCU and AN8 are unique)</span></td>
+<td style="vertical-align: top;">&nbsp;Temporary value to compute following computation</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">6</td>
+<td style="vertical-align: top;">Determine leadtime quantity percent (LTQP).&nbsp; If a F43090 record existed, use that percent otherwise retrieve from the data dictionary (RV LTQP-LeadtimePercent(wf))<br /> &nbsp;&nbsp;&nbsp; <span style="color: #3333ff;">B = either [F43090.LTQP] or [90.00% from DD Definition (F9210.DVAL where F3210.DTAI = 'LTQP')]</span></td>
+<td style="vertical-align: top;">&nbsp;F43090.LTQP</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">7</td>
+<td style="vertical-align: top;">Get RV LLTD-Last Lead Time(wf) after getting F4311.TRDJ when <span style="color: red;">A</span> &gt;= <span style="color: #3333ff;">B</span> (i.e., Percent Received &gt;= LTQP).<br /> &nbsp;&nbsp;&nbsp; RV LLTD-Last Lead Time(wf) = abs (F43121.RCDJ - F4311.TRDJ)</td>
+<td style="vertical-align: top;">&nbsp;F43090.LLTD</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">8</td>
+<td style="vertical-align: top;">UODR (RV UODR-TotalUnits Ordered(wf)) = sum (F4311.UORG) in primary UOM</td>
+<td style="vertical-align: top;">&nbsp;F43090.UODR</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">9</td>
+<td style="vertical-align: top;">AODR (RV AODR-TotalAmount Ordered(wf)) = sum (F4311.AEXP) in primary UOM</td>
+<td style="vertical-align: top;">&nbsp;F43090.AODR</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">10</td>
+<td style="vertical-align: top;">Determine if the receipt was ontime, early or late.
+<ul>
+<li style="color: #006600;">C (= RV LLTD-DifferenceOfRCDJ&amp;PDDJ) = (F43121.PDDJ) - (F4311.RCDJ)</li>
+<ul>
+<li>(<span style="color: #006600;">C</span> &gt; 0) and&nbsp; (<span style="color: #006600;">C</span> &gt; F43090.DAYE), increase REAR (supplier has delivered too early)</li>
+<li>(<span style="color: #006600;">C</span>&lt;0) and (<span style="color: #006600;">C</span>&gt;F43090.DAYL), increase RLAT (supplier has delivered it too late)</li>
+<li>Increase RONT either (<span style="color: #006600;">C</span> = 0) or (within allowed range: <span style="color: #006600;">C</span> &lt; F43090.DAYE or <span style="color: #006600;">C</span> &gt; F43090.DAYL)</li>
+</ul>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Note: when there F43090 does not contain any data then remove 2nd conditions (DAYE and DAYL)</p>
+</td>
+<td style="vertical-align: top;">&nbsp;F43090.REAR<br /> F43090.RLAT<br /> F43090.RONT</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">Accumulate UREC and AREC. UREC = sum (F43121.UREC) in primary UOM and AREC = sum (F43121.AREC) in primary UOM</td>
+<td style="vertical-align: top;">&nbsp;F43121.UREC<br /> F43121.AREC</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">12</td>
+<td style="vertical-align: top;">Update Lead Time computed in step 7. <br /> RV ALTD-Leadtime Average(wf) = RV LLTD-Last Lead Time(wf)</td>
+<td style="vertical-align: top;">&nbsp;F43090.ALTD</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">13</td>
+<td style="vertical-align: top;">If the percent received is greater than the leadtime quantity percent, and the order has not been included in the total, do so now.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">14</td>
+<td style="vertical-align: top;">Accumulate QTYS, QTYR, QTYW, QTYC,QTYJ and QTYA in primary UOM<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; For example, QTYS = sum (F43121.QTYS)</td>
+<td style="vertical-align: top;">&nbsp;F43090.QTYS<br /> F43090.QTYR<br /> F43090.QTYW<br /> F43090.QTYC<br /> F43090.QTYJ<br /> F43090.QTYA</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">15</td>
+<td style="vertical-align: top;">Compute (UONT, AONT), (UEAR, AEAR) and (ULAT, ALAT). Same as step 10 by comparing PDDJ and RCDJ</td>
+<td style="vertical-align: top;">&nbsp;F43090.UONT<br /> F43090.AONT<br /> F43090.UEAR<br /> F43090.AEAR<br /> F43090.ULAT<br /> F43090.ALAT</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">16</td>
+<td style="vertical-align: top;">Compuate UPTD, APTD and LCST when F43121.MATC = 2<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; UPTD = sum (F43121.UPTD) in primary UOM<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; APTD = sum (F43121.APTD) in primary UOM<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LCST = APTD/UPTD</td>
+<td style="vertical-align: top;">&nbsp;F43090.UPTD<br /> F43090.APTD<br /> F43090.LCST</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;<span class="awizStartDelimiter">&nbsp;</span></p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>A, B and C are used to easier reading of note</li>
+<li>Below diagram is to show on-time computation</li>
+<li>From below diagram, C indicated ontime delivery</li>
+</ul>
+</div>
+<p>&nbsp;<span class="awizEndDelimiter">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p style="text-decoration: underline;">Ontime receipt</p>
+
+<p><img src="../images/pur01.png" border="0" alt="Leadtime Calculation " title="Leadtime Calculation " hspace="0" vspace="0"/></p>
+
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><big><a name="reference"></a>Considerations/References</big></p>
+<p>Though this document has focused on the application R43900, the value updated affects Supplier Analysis. For detail refer to,</p>
+<p>&lt;Document 659278.1&gt; - E1: 43: Supplier Catalog Price Item Updates (P41061 / F41061 / P43090 / F43090)<br /> &lt;Document 625474.1&gt; - E1: 43: Overview of The Purchase Order Generator (P43011)<br /> &lt;Document 662211.1&gt; - E1: 43: Supplier Analysis (P4310 / P4312 / P4314 / P43230 / R04602 / F0401)</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

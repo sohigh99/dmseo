@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Work Order Workflow - Technical Troubleshooting Guide</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1> Work Order Workflow - Technical Troubleshooting Guide</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The purpose of this document is to give easier understanding of Work Flow in Work Order Approval. The implmentation for this module is very much different from others because we, Oracle, provide sample codes which requires some adjustment to meet your business requirement. So this document will be focusing on as-is routine of work order workflow (i.e., Delivered Workflow) which enables you to work on right components to meet your daily business requirement. If possible try to make use of existing process rather than add-on additional process, sub-process and recipient rule.</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Work Order Approval is native workflow (c.f., Workflow in Procurement)</li>
+<li>Only limitted (work) order type can be implemented for this purpose</li>
+<li>Work Order Workflow only updates status of work order (it does not prevent user from modifying work order and/or part list and routings</li>
+<li>To stop user from changing pending approval work order <a href="#eqw2" alt="Lock Flag" title="Lock Flag">Lock Flag (EQW2)</a> in Work Order Activity Rule (P4826) must be set correctly</li>
+<li>Recipient rule is hard coded and given sample codes can be working only for status code M and M*. If you need additional status change you need to implement it</li>
+<li>Sample workflow given has implementation only for work order status of M and M*. So if you need additional approval routine, you need to implement it by your own resource.</li>
+</ul>
+</div>
+<p> </p>
+<p><strong>Pre-requisite:</strong></p>
+<p>Get familiar with Work Order Implementation Guide as below,</p>
+<ul>
+<li>Home / Applications / JD Edwards EnterpriseOne Applications Documentation, Release 9.1.x / SCM and MFG
+<ul>
+<li>JD Edwards EnterpriseOne Applications Work Orders Implementation Guide
+<ul>
+<li><a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15155/delivrd_wrkflw_f_wrk_ordrs.htm#EOAWO00179" alt="Delivered Workflow" title="Delivered Workflow" target="_blank">Section A.1, "Delivered Workflow for JD Edwards EnterpriseOne Work Orders"</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">See Also:<br /><a href="https://docs.oracle.com/cd/E24705_01/doc.91/e24264/preface.htm#EOTWK00035" alt="Workflow Tools Guide" title="Workflow Tools Guide" target="_blank">JD Edwards EnterpriseOne Tools Workflow Tools Guide.</a></p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p> </p>
+<h3 class="km"><span style="font-size: small;">Typical implementation:</span></h3>
+<p>P13714 (CAM - Manage Equipment Work Orders), P17714 (Work Order Revisions)<br />     |--- Start Process(WOACTRULES) after F4801EndDocument gets called<br />         |--- Start Process(WMTYPE)<br />             |--- Start Process(WMTYPE1)<br />                 |--- Start Process(<a href="#wm1app1" alt="Example of WM1APP1" title="Example of WM1APP1">WM1APP1</a>)<br />                     |--- Call WorkflowWOACTRULESRecipientRules (N4800130, Workflow WOACTRULES Recipient Rules) to set recipient rule</p>
+<div class="kmnotebox">
+<p> Note:</p>
+<ul>
+<li>Above sequence can be vary depending on the value you have assigned</li>
+<li>Application to call can be assigned dynamically through processing option of P48201 (Work With Work Orders)</li>
+<li>This functionality is not available for Manufacturing Work Order Processing (P48013)</li>
+</ul>
+</div>
+<p> </p>
+<h3 class="km"><span style="font-size: small;">Workflow shipped upon installation:</span></h3>
+<p>Below work order workflows available,</p>
+<table style="border-collapse: collapse; width: 561px; height: 173px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 71pt;" width="94" /> <col style="width: 41pt;" width="55" /> <col style="width: 137pt;" width="183" /> <col style="width: 30pt;" width="40" /> <col style="width: 62pt;" width="82" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="height: 15pt; width: 71pt; background-color: #999999; color: white;">Process</th>
+<th class="xl63" style="width: 41pt; background-color: #999999; color: white;">Version</th>
+<th class="xl63" style="width: 137pt; background-color: #999999; color: white;">Description</th>
+<th class="xl63" style="width: 30pt; background-color: #999999; color: white;">Level</th>
+<th class="xl63" style="width: 62pt; background-color: #999999; color: white;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl69" style="height: 15pt; color: red;" height="20">WOACTRULES</td>
+<td class="xl63" style="color: red;" align="right">1</td>
+<td class="xl69" style="color: red;">Work Order Activity Rules</td>
+<td class="xl63" style="color: red;" align="right">1</td>
+<td class="xl63" style="color: red;">Process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: white;" height="20">WMTYPE</td>
+<td style="background-color: white;" align="right">1</td>
+<td class="xl64" style="background-color: white;">WM Document Type</td>
+<td style="background-color: white;" align="right">2</td>
+<td style="background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="height: 15pt; color: #006600; background-color: white;" height="20">WMTYPE1</td>
+<td class="xl68" style="color: #006600; background-color: white;" align="right">1</td>
+<td class="xl67" style="color: #006600; background-color: white;">WM Type Code 1</td>
+<td class="xl68" style="color: #006600; background-color: white;" align="right">3</td>
+<td style="color: #006600; background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: white;" height="20">WMTYPE6</td>
+<td style="background-color: white;" align="right">1</td>
+<td class="xl64" style="background-color: white;">WM Type Code 6</td>
+<td style="background-color: white;" align="right">3</td>
+<td style="background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="height: 15pt; color: #006600; background-color: white;" height="20">WM1APP1</td>
+<td class="xl68" style="color: #006600; background-color: white;" align="right">1</td>
+<td class="xl67" style="color: #006600; background-color: white;">WM Type 1 Approval Type 1</td>
+<td class="xl68" style="color: #006600; background-color: white;" align="right">4</td>
+<td style="color: #006600; background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="height: 15pt; color: #006600; background-color: white;" height="20">WM1APP2</td>
+<td class="xl68" style="color: #006600; background-color: white;" align="right">1</td>
+<td class="xl67" style="color: #006600; background-color: white;">WM Type 1 Approval Type 2</td>
+<td class="xl68" style="color: #006600; background-color: white;" align="right">4</td>
+<td style="color: #006600; background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: white;" height="20">WOTYPE</td>
+<td style="background-color: white;" align="right">1</td>
+<td class="xl64" style="background-color: white;">WO Document Type</td>
+<td style="background-color: white;" align="right">2</td>
+<td style="background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt; color: #3333ff; background-color: white;" height="20">WOTYPE1</td>
+<td class="xl66" style="color: #3333ff; background-color: white;" align="right">1</td>
+<td class="xl65" style="color: #3333ff; background-color: white;">WO Type Code 1</td>
+<td class="xl66" style="color: #3333ff; background-color: white;" align="right">3</td>
+<td style="color: #3333ff; background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: white;" height="20">WOTYPE3</td>
+<td style="background-color: white;" align="right">1</td>
+<td class="xl64" style="background-color: white;">WO Type Code 3</td>
+<td style="background-color: white;" align="right">3</td>
+<td style="background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: white;" height="20">WOTYPE6</td>
+<td style="background-color: white;" align="right">1</td>
+<td class="xl64" style="background-color: white;">WO Type Code 6</td>
+<td style="background-color: white;" align="right">3</td>
+<td style="background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt; color: #3333ff; background-color: white;" height="20">WO1APP1</td>
+<td class="xl66" style="color: #3333ff; background-color: white;" align="right">1</td>
+<td class="xl65" style="color: #3333ff; background-color: white;">WO Type 1 Approval Type 1</td>
+<td class="xl66" style="color: #3333ff; background-color: white;" align="right">4</td>
+<td style="color: #3333ff; background-color: white;">Sub-process</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt; color: #3333ff; background-color: white;" height="20">WO1APP2</td>
+<td class="xl66" style="color: #3333ff; background-color: white;" align="right">1</td>
+<td class="xl65" style="color: #3333ff; background-color: white;">WO Type 1 Approval Type 2</td>
+<td class="xl66" style="color: #3333ff; background-color: white;" align="right">4</td>
+<td style="color: #3333ff; background-color: white;">Sub-process</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>To start Level 3 sub-process, level 4 sub-process must be active</li>
+<li>To start Level 2 sub-process, level  3 sub-process has to be activated</li>
+<li>To start Process WOACTRULES, level 2 sub-process must be activated</li>
+<li>Available full cycle workflows are WM1APP1, WM1APP2, WO1APP1 and WO1APP2 so in case you need have other type of combination you have to create your own workflow process to meet your business requirement</li>
+</ul>
+</div>
+<p> </p>
+<h3 class="km"><span style="font-size: small;">Before Start:</span></h3>
+<p>: Before parameters affect the flow of workflow</p>
+<ul style="margin-left: 40px;">
+<li>APRT (ApprovalType) UDC 48/AP with available values 1 and 2</li>
+<li>DCTO (OrderType) Supported order type: EN (Engineering Change Order), WM (Maintenance Work Order), WO (Real(firm) Work Orders)</li>
+<li>TYPS (TypeWo) UDC 00/TY - Work Order/ECO Type with available values 1, 3 and 6</li>
+</ul>
+<p> </p>
+<ul>
+<li>APRT (ApprovalType) UDC 48/AP with available values as below,</li>
+</ul>
+<table style="border-collapse: collapse; width: 273px; height: 115px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 34pt;" width="45" /> <col style="width: 86pt;" width="114" /> <col style="width: 85pt;" width="113" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="height: 15pt; width: 34pt; background-color: #999999; color: white;">Codes</th>
+<th class="xl63" style="width: 86pt; background-color: #999999; color: white;">Description 01</th>
+<th class="xl63" style="width: 85pt; background-color: #999999; color: white;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20"> </td>
+<td class="xl64"> .</td>
+<td class="xl64"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: #ffffcc;" height="20">1</td>
+<td class="xl64" style="background-color: #ffffcc;">Approval Route 1</td>
+<td class="xl64" style="background-color: #ffffcc;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: #ffffcc;" height="20">2</td>
+<td class="xl64" style="background-color: #ffffcc;">Approval Route 2</td>
+<td class="xl64" style="background-color: #ffffcc;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">3</td>
+<td class="xl64">Approval Route 3</td>
+<td class="xl64"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">4</td>
+<td class="xl64">Approval Route 4</td>
+<td class="xl64"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">5</td>
+<td class="xl64">Approval Route 5</td>
+<td class="xl64"> </td>
+</tr>
+</tbody>
+</table>
+<p><br /> Note: This value can be set through associated processing option which can be overridden at form level which you are on.</p>
+<ul>
+<li>DCTO (OrderType) Supported order type: EN (Engineering Change Order), WM (Maintenance Work Order), WO (Real(firm) Work Orders).</li>
+</ul>
+<p> </p>
+<ul>
+<li>TYPS (TypeWo) UDC 00/TY - Work Order/ECO Type</li>
+</ul>
+<table style="border-collapse: collapse; width: 377px; height: 427px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 34pt;" width="45" /> <col style="width: 152pt;" width="202" /> <col style="width: 143pt;" width="191" /> <col style="width: 48pt;" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="height: 15pt; width: 34pt; background-color: #999999; color: white;">Codes</th>
+<th class="xl63" style="width: 152pt; background-color: #999999; color: white;">Description 01</th>
+<th class="xl63" style="width: 143pt; background-color: #999999; color: white;">Description 02</th>
+<th class="xl63" style="width: 48pt; background-color: #999999; color: white;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20"> </td>
+<td class="xl64">                             .</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: #ffffcc;" height="20">1</td>
+<td class="xl64" style="background-color: #ffffcc;">Maintenance Order</td>
+<td class="xl64" style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">2</td>
+<td class="xl64">R &amp; D</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: #ffffcc;" height="20">3</td>
+<td class="xl64" style="background-color: #ffffcc;">Capital Project</td>
+<td class="xl64" style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">5</td>
+<td class="xl64">Emergency Order</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; background-color: #ffffcc;" height="20">6</td>
+<td class="xl64" style="background-color: #ffffcc;">Preventive Maintenance Order</td>
+<td class="xl64" style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">9</td>
+<td class="xl64">Standing W.O. -  Do not Delete</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">B</td>
+<td class="xl64">Marketing</td>
+<td class="xl64">ECO</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">C</td>
+<td class="xl64">Cost Improvement</td>
+<td class="xl64">ECO</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">D</td>
+<td class="xl64">Design Work - ETO</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">E</td>
+<td class="xl64">Plant Work - ETO</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">G</td>
+<td class="xl64">Governmental/Regulatory</td>
+<td class="xl64">ECO</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">M</td>
+<td class="xl64">Model W.O. - Eq Mgmt</td>
+<td class="xl64">X   Maintenance Model Order</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">P</td>
+<td class="xl64">Project</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">R</td>
+<td class="xl64">Rework Order</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">S</td>
+<td class="xl64">Shop Order</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">T</td>
+<td class="xl64">Tool Order</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">U</td>
+<td class="xl64">Preventive Maintenance</td>
+<td class="xl64">S&amp;WM</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">W</td>
+<td class="xl64">Case</td>
+<td class="xl64"> </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">X</td>
+<td class="xl64">Depot Repair</td>
+<td class="xl64">S&amp;WM</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">Y</td>
+<td class="xl64">On-site Repair</td>
+<td class="xl64">S&amp;WM</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;">Z</td>
+<td class="xl64">Advanced Exchange</td>
+<td class="xl64">S&amp;WM</td>
+<td> </td>
+</tr>
+</tbody>
+</table>
+<p><br /> <br /> (WK) Workflow Key: DOCO (Work Order Number)<br /> (WA) Workflow attribute</p>
+<ul>
+<li>W4800010B : Work Order Approval - Attribute Structure</li>
+</ul>
+<table style="border-collapse: collapse; width: 736px; height: 161px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 141pt;" width="188" /><col style="width: 26pt;" width="34" /><col style="width: 128pt;" width="170" /><col style="width: 48pt;" width="64" /><col style="width: 126pt;" width="168" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 141pt; background-color: #999999; color: white;">Values</th>
+<th style="width: 26pt; background-color: #999999; color: white;">Dir</th>
+<th style="width: 128pt; background-color: #999999; color: white;">Parameter</th>
+<th style="width: 48pt; background-color: #999999; color: white;">Alias</th>
+<th style="width: 126pt; background-color: #999999; color: white;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; background-color: #ffffcc;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Order Type_DCTO</span></td>
+<td style="background-color: #ffffcc;"><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN<br /> </span></td>
+<td style="background-color: #ffffcc;"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">szOrderType[3]</span></td>
+<td style="background-color: #ffffcc;">DCTO</td>
+<td style="background-color: #ffffcc;"> (EN, WM or WO)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; background-color: #ffffcc;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Type_TYPS</span></td>
+<td style="background-color: #ffffcc;"><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td style="background-color: #ffffcc;"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">cTypeWo</span></td>
+<td style="background-color: #ffffcc;">TYPS</td>
+<td style="background-color: #ffffcc;">UDC 00/TY  (1, 3 or 6)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; background-color: #ffffcc;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Approval Type_APRT</span></td>
+<td style="background-color: #ffffcc;"><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td style="background-color: #ffffcc;"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">szApprovalType[4]</span></td>
+<td style="background-color: #ffffcc;">APRT</td>
+<td style="background-color: #ffffcc;"> UDC 48/AP (1 or 2)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Status_SRST</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">szStatusCodeWo[3]</span></td>
+<td>SRST</td>
+<td>UDC 00/SS - Work Order Status. Only limited status code (M, M* and C1)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; text-decoration: line-through;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">&lt;NOT Assigned&gt;</span></td>
+<td style="text-decoration: line-through;"><span style="font-size: small; line-height: 115%; font-family: Wingdings;"><br /> </span></td>
+<td style="text-decoration: line-through;"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">cApprovalActionCode</span></td>
+<td style="text-decoration: line-through;">APPRACT</td>
+<td style="text-decoration: line-through;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Branch_MMCU</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">szCostCenterAlt[13]</span></td>
+<td>MMCU</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Est. Amount_AMTO</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">mnAmountOriginalDollars</span></td>
+<td>AMTO</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Originator</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">mnAddNoOriginator</span></td>
+<td>ANO</td>
+<td> </td>
+</tr>
+<tr>
+<td style="height: 15pt;" height="20"><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">FC Originator</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">mnDistributionList</span></td>
+<td>AN8</td>
+<td> Note that Originator is assigned to Distribution List</td>
+</tr>
+<tr>
+<td style="height: 15pt;" height="20"><span style="font-size: small;">WFS</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: Wingdings;">IN</span></td>
+<td><span style="font-size: small; line-height: 115%; font-family: 'Calibri','sans-serif';">szOrgTypeStructure[4]</span></td>
+<td>OSTP</td>
+<td> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul>
+<li>Data Structure D4800130 - Workflow WOACTRULES Recipient Rules</li>
+</ul>
+<table style="text-align: left; width: 740px; height: 172px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 192px; background-color: #999999; color: white;">Parameter Name</th>
+<th style="width: 94px; background-color: #999999; color: white;">Data Item</th>
+<th style="width: 134px; background-color: #999999; color: white;">Date Type</th>
+<th style="width: 33px; background-color: #999999; color: white;">Req</th>
+<th style="width: 26px; background-color: #999999; color: white;">I/O</th>
+<th style="width: 325px; background-color: #999999; color: white;">Others</th>
+</tr>
+<tr>
+<td style="width: 192px;">szApprovalType</td>
+<td style="width: 94px;">APRT</td>
+<td style="width: 134px;">char</td>
+<td style="width: 33px;">O</td>
+<td style="width: 26px;">I</td>
+<td style="width: 325px;"> UDC 48/AP (1 or 2)</td>
+</tr>
+<tr>
+<td style="width: 192px;">szStatusCodeWo</td>
+<td style="width: 94px;">SRST</td>
+<td style="width: 134px;">char</td>
+<td style="width: 33px;">O</td>
+<td style="width: 26px;">I</td>
+<td style="width: 325px;"> UDC 00/SS - Work Order Status</td>
+</tr>
+<tr>
+<td style="width: 192px;">mnDistributionList</td>
+<td style="width: 94px;">AN8</td>
+<td style="width: 134px;">MATH_NUMERIC</td>
+<td style="width: 33px;">O</td>
+<td style="width: 26px;">I/O</td>
+<td style="width: 325px; color: red;"> Hard coded through N4800130</td>
+</tr>
+<tr>
+<td style="width: 192px;">mnWorkOrder</td>
+<td style="width: 94px;">DOCO</td>
+<td style="width: 134px;">MATH_NUMERIC</td>
+<td style="width: 33px;">O</td>
+<td style="width: 26px;">I</td>
+<td style="width: 325px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">szProcessName</td>
+<td style="width: 94px;">PROCNAME</td>
+<td style="width: 134px;">char</td>
+<td style="width: 33px;">O</td>
+<td style="width: 26px;">I</td>
+<td style="width: 325px;"> Currently WM1APP1, WM1APP2, WO1APP1 and WO1APP2</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul>
+<li>Data Structure for D4800190 - F4801 Update WO Status for Workflow</li>
+</ul>
+<table style="text-align: left; width: 739px; height: 256px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 192px; background-color: #999999; color: white;">Parameter Name</th>
+<th style="width: 89px; background-color: #999999; color: white;">Data Item</th>
+<th style="width: 137px; background-color: #999999; color: white;">Data Type</th>
+<th style="width: 32px; background-color: #999999; color: white;">Req</th>
+<th style="width: 31px; background-color: #999999; color: white;">I/O</th>
+<th style="width: 326px; background-color: #999999; color: white;">Others</th>
+</tr>
+<tr>
+<td style="width: 192px;">mnDocumentOrderInvoiceE</td>
+<td style="width: 89px;">DOCO</td>
+<td style="width: 137px;">MATH_NUMERIC</td>
+<td style="width: 32px;">O</td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">szOrderType</td>
+<td style="width: 89px;">DCTO</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">cTypeWo</td>
+<td style="width: 89px;">TYPS</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">szStatusCodeWo</td>
+<td style="width: 89px;">SRST</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">szApprovalType</td>
+<td style="width: 89px;">ARRT</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> UDC 48/AP</td>
+</tr>
+<tr>
+<td style="width: 192px;">cApprovalFlag</td>
+<td style="width: 89px;">EV01</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">cErrorCode</td>
+<td style="width: 89px;">EV02</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+<tr>
+<td style="width: 192px;">szProcessName</td>
+<td style="width: 89px;">PROCNAME</td>
+<td style="width: 137px;">char</td>
+<td style="width: 32px;"> </td>
+<td style="width: 31px;"> </td>
+<td style="width: 326px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<h3 class="km"><span style="font-size: small;">Available Process:</span></h3>
+<p>Below are available process shipped with.</p>
+<p> </p>
+<p>Case 1 (OrderType = EN, TypeWo = N/A, ApprovalType = N/A)</p>
+
+<p><img src="../images/wowf01.png" border="0" alt="EN " title="EN " hspace="0" vspace="0"/></p>
+
+<p>Note</p>
+<hr />
+<p> </p>
+<p><a name="wm1app1"></a>Case 2 (OrderType = WM, TypeWo = 1, ApprovalType = 1)</p>
+
+<p><img src="../images/wowf02.png" border="0" alt="WM1APP1 " title="WM1APP1 " hspace="0" vspace="0"/></p>
+
+<hr />
+<p> </p>
+<p>Case 3 (OrderType = WM, TypeWo = 1, ApprovalType = 2)</p>
+
+<p><img src="../images/wowf03.png" border="0" alt="WM1APP2 " title="WM1APP2 " hspace="0" vspace="0"/></p>
+
+<hr />
+<p> </p>
+<p>Case 4 (OrderType = WM, TypeWo = 6, ApprovalType = N/A)</p>
+
+<p><img src="../images/wowf04.png" border="0" alt="WMTYPE6 " title="WMTYPE6 " hspace="0" vspace="0"/></p>
+
+<p>Note</p>
+<hr />
+<p> </p>
+<p>Case 5 (OrderType = WO, TypeWo = 1, ApprovalType = 1)</p>
+
+<p><img src="../images/wowf05.png" border="0" alt="WO1APP1 " title="WO1APP1 " hspace="0" vspace="0"/></p>
+
+<p>Note</p>
+<hr />
+<p> </p>
+<p>Case 6 (OrderType = WO, TypeWo = 1, ApprovalType = 2)</p>
+
+
+<p><img src="../images/wowf06.png" border="0" alt="WO1APP2 " title="WO1APP2 " hspace="0" vspace="0"/></p>
+
+<p>Note</p>
+<hr />
+<p> </p>
+<p>Case 7 (OrderType = WO, TypeWo = 3, ApprovalType = N/A)</p>
+
+<p><img src="../images/wowf07.png" border="0" alt="WOTYPE3 " title="WOTYPE3 " hspace="0" vspace="0"/></p>
+
+<p>Note</p>
+<hr />
+<p> </p>
+<p>Case 8 (OrderType = WO, TypeWo = 6, ApprovalType = N/A)</p>
+
+
+<p><img src="../images/wowf08.png" border="0" alt="WOTYPE6 " title="WOTYPE6 " hspace="0" vspace="0"/></p>
+<p>Note</p>
+<hr />
+<p> </p>
+<h3 class="km"><span style="font-size: medium;">Questions and answers:</span></h3>
+<p>Question 1&gt; According to &lt;Document 1501744.1&gt; - E1: 13/17: Workflow Process Setup and Execution in 9.0 Forward, the distribution list (7384 and 7405) is hard coded in the Named Event Rules (NER) Workflow WOACTRULES. Is it possible to change the Distribution groups in the NER to the desire group?<br /> Answer 1&gt; In case you have more complex distribution/receipient rule then you may modify NER WOACTRULESRecipientRules (N4800130, Workflow WOACTRULES Recipient Rules) for your own risk.</p>
+<p> </p>
+<p>Question 2&gt; We want to base the workflow to trigger to be same as F43008. Can we include the Branch/Plant field in the distribution group?<br /> Answer 2&gt;<br /> As we can see from E1: 43: Approval Processing FAQ (P4310 / P43008 / P43080 / P43081 /P43280 / P012503 ) (Doc ID 625444.1), the workflow in Procurement is not native workflow. We describe it as workflow because it is making use of SendMessage() API which belongs to workflow kernel through table trigger in F4209. <br /> <br /> The way it triggers workflow in P17714/P13714 is simpler because it will be triggered more dynamically by specifying ApprovalType as a data. For instance, in P17714/W17714A there is column named Approval Type (APRT) which is UDC 48/AP where you can choose from 1 to 5 for predefined workflow.</p>
+<p> </p>
+<p>Question3&gt; Also,would like to know as how can we call the customized NER? Do we need to modify the existing Work Order application -P48201P13700 to call the customized NER?<br /> Answer 3&gt;<br /> No you do not have to change the calling routine of NER WorkflowWOACTRULESRecipientRules (N4800130, Workflow WOACTRULES Recipient Rules). Change will affect the outcome as below,<br /> 1. Change Distribution list through Named Event Rule design<br /> 2. Build update server package and deploy it to server</p>
+<p> </p>
+<p>Question 4&gt;<br /> Please update if we can make it work on the Work Order types as it is based on order type-1 and 6 only.<br /> What needs to be done if we wan to trigger it for other WM and WO work order and work order types-1 and 6?<br /> Answer 4&gt;<br /> 3 factors affecting workflow process and sub-process triggering as below,</p>
+<ul>
+<li>szOrderType: EN, WM and WO</li>
+<li>cTypeWo: 1, 3, 6</li>
+<li>szApprovalType: 1 and 2</li>
+</ul>
+<p> </p>
+<p>Question 5&gt; Do we need to customize the work order application-P48201 to call the customized N4800130? How the standard application-P48201 recognize how to call the modified version of N4800130?  Do we need to customize the work order application-P48201 to call the customized N4800130?<br /> Answer 5&gt; No. You do not have to modify calling routine to get valid distribution list. For this example, P48201 is entry form and actual application can be vary depending on the processing option you have set.</p>
+<p> </p>
+<p>Question 6&gt; How the standard application-P48201 recognize how to call the modified version of N4800130? <br /> Answer 6&gt; You do not have to modify any, so long as it meets combination of szOrderType (EN, WM and WO), cTypeWo(1, 3, 6) and szApprovalType (1 and 2) it will be called.</p>
+<p> </p>
+<p>Question 7&gt;Why work order which is pending approval status allow users to attach part list and to issue material? How to prevent user from attaching part list?</p>
+<p>Answer 7&gt; Not to allow user to modify any of pending work order Lock Flag in Work Order Activity Rule must be set up correctly.</p>
+<p><a name="eqw2"></a>Lock Flag (EQW2 ): A code that determines whether a work order can be changed at a particular status. The lock applies to records in both the Work Order Master table (F4801) and the Work Order Instruction table (F4802). Values are:</p>
+<ul>
+<li>Blank Do not lock the work order.</li>
+<li>1 Lock the work order</li>
+<li>2 Lock the work order with a completion date</li>
+<li>3 Do not lock the work order with a completion date</li>
+<li>4 Lock the work order, the parts list &amp; the routings</li>
+<li>5 Lock the work order, the parts list and the routings with a completion date</li>
+<li>6 Lock the order type &amp; the work order type only</li>
+</ul>
+<p> </p>
+<p>Question 8&gt; <span id="form1:panelPage1">If we remove the hard coding of the 2 distribution lists and add 10 more distribution lists, then how we can link the Branch/Plant to the distribution group? For example if I create a maintenance order from P48201,P13714 then based on the branch/plant, workflow has to be triggered based on the branch/plant (M30) and link to the distribution group (9999), how we can link the branch/plant (M30) with the distribution group (9999)? </span></p>
+<p>Answer 8&gt;</p>
+<p><span id="form1:panelPage1">Currently there is no repository for this information because this is unique requirement (though it may be useful for other customer) and P43008 has different purpose). If you can store MCU by distribution (or with additional information) in your custom table then you can make use of in same NER <span id="form1:panelPage1">N4800130</span> -<span id="form1:panelPage1">Workflow WOACTRULES Recipient Rules</span> as below,</span></p>
+<p><span id="form1:panelPage1"> <br /></span></p>
+<div class="kmcodeblock"><span id="form1:panelPage1">0009 // ---------------------------------------------------------------------------<br />0010 //     Set Distribution List address book number based on WO Status<br />0011 // ---------------------------------------------------------------------------<br />0012 ! If BF szApprovalType is equal to "1,2"<br />0013 !    If BF szStatusCodeWo is equal to "M"<br />0014 !       BF mnDistributionList = "7405"<br />0015 !    Else<br />0016 !       If BF szStatusCodeWo is equal to "M*"<br />0017 !          BF mnDistributionList = "7384"<br />0018 !       End If<br />0019 !    End If<br />0020 ! End If<br />0021 //<br />0022 // To set Distribution List per B/P (say, F4801.MMCU)<br />0023 // 1. Define variable using MMCU<br />0024 // 2. Fetch Single based on BF Order Number<br />0025 F4801.Fetch Single<br />        BF mnWorkOrder =  TK Document (Order No, Invoice, etc.)<br />        VA evt_szCostCenterAlt_test &lt;- TK Branch<br />0026 If BF szApprovalType is equal to "1,2"<br />0027    If VA evt_szCostCenterAlt_test is equal to "          30"<br />0028       BF mnDistributionList = "7405"<br />0029    Else<br />0030       If VA evt_szCostCenterAlt_test is equal to "         M30"<br />0031          BF mnDistributionList = "7405"<br />0032       Else<br />0033          If VA evt_szCostCenterAlt_test is equal to "          40"<br />0034             BF mnDistributionList = "1001"<br />0035          Else<br />0036          End If<br />0037       End If<br />0038    End If<br />0039 End If </span></div>
+<p> </p>
+<p><br /> &lt;Internal_Only&gt;To be updated with more detail later on &lt;/Internal_Only&gt;</p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

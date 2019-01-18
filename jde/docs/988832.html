@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Runtime Messages in jde.log from Interactive Applications </title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Runtime Messages in jde.log from Interactive Applications </h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p><span style="font-size: 10pt;">The purpose of this document is to explain the runtime message in jde.log retrieved by call object kernel in your running the EnterpriseOne Interactive Applications. </span></p>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>&nbsp;<span style="font-size: 10pt;">Certain business functions such as B4200310 (F4211FSBeginDoc), may call a JDE API as below:</span></p>
+<ul>
+<li><span style="font-size: 10pt;">API: AllocatePOVersionData()</span></li>
+<li><span style="font-size: 10pt;">Prototype: void * AllocatePOVersionData(HUSER hUser,NID szApplication,NID szVersion,unsigned int uSizeOf )</span></li>
+<li><span style="font-size: 10pt;">Example: lpdsProcOptions = (LPDST4210)<span style="text-decoration: underline;"><strong> AllocatePOVersionData</strong></span> (hUser,_J("P4210"), lpDS-&gt;szCMVersion,sizeof(DST4210));</span></li>
+</ul>
+<p><span style="font-size: 10pt;">The following tables are related with this validation:</span></p>
+<ul>
+<li><span style="font-size: 10pt;">F983051 - Versions List Table (cf., F98306 for the processing option template text)<br /></span></li>
+<li><span style="font-size: 10pt;">F9860 - Object Librarian Master File</span></li>
+</ul>
+<p><span style="font-size: 10pt;">The API will read the dstmpl specification during runtime of a certain application.&nbsp; In addition, the following columns are related with this API</span></p>
+<ul>
+<li><span style="font-size: 10pt;">F983051.VRPID, VRVERS, VRDSTNM and VRFRMTSTR</span></li>
+<li><span style="font-size: 10pt;">F9860.SIOBNM and SIMID1</span></li>
+</ul>
+<div class="kmnotebox"><span style="font-size: 10pt;">Note: VRFRMTSTR is blob format file which is stored as Unicode format (so the size of a character is to be 2 bytes memory)</span></div>
+<p><br /><span style="font-size: 10pt;"> &nbsp;In running an application that calls this type of business function the following error/warning/information messages can occur:</span></p>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+<table style="border-collapse: collapse; width: 692px; height: 229px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 75pt;" width="100" /> <col style="width: 344pt;" width="459" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 75pt; background-color: #3366ff; color: white;"><span style="font-size: 10pt;">Message in Log</span></th><th style="width: 344pt; background-color: #3366ff; color: white;"><span style="font-size: 10pt;">Description</span></th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"><span style="font-size: 10pt;"><strong>RUN0000038</strong></span></td>
+<td><span style="font-size: 10pt;">hUser passed in has a NULL value</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a41" alt="run0000041" title="run0000041">RUN0000041</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Open Table F983051 fails</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a40" alt="run0000040" title="run0000040">RUN0000040</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Open Table F9860 fails</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a39" alt="run0000039" title="run0000039">RUN0000039</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Requested Application - "szApplication" does not exist in Object Librarian</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a66" alt="run0000066" title="run0000066">RUN0000066</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Warning - ProcOpt Data Size Mismatch: Requested 'size requested' is less than Retrieved 'size retrieved' for App 'szApplication',Version 'szVersion'. Data Structure allocated successfully</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong>RUN0000067</strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">For Batch application. Same with RUN0000066</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a43" alt="run0000043" title="run0000043">RUN0000043</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Out Of Memory: Allocation Fails for 'szApplication' and Version 'szVersion'.</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a44" alt="run0000044" title="run0000044">RUN0000044</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Error - ProcOpt Data Size Mismatch: Requested 'uSizeOf' is greater than Retrieved 'nDsLen' for App 'szApplication',Version 'szVersion'. Data Structure NOT allocated</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a45" alt="run0000045" title="run0000045">RUN0000045</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Unable to retrieve Processing Option Template for Application 'szApplication'.</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a href="#a46" alt="run0000046" title="run0000046">RUN0000046</a></strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">Application 'szApplication' does not have a Processing Option Template Attached</span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+<p><span style="font-size: 10pt;">The possible causes of these message are:</span></p>
+<table style="border-collapse: collapse; width: 1159px; height: 34px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 75pt;" width="100" /> <col style="width: 344pt;" width="459" /> <col style="width: 213pt;" width="284" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 260px; background-color: #3366ff; color: white;"><span style="font-size: 10pt;">Message</span></th><th style="width: 449px; background-color: #3366ff; color: white;"><span style="font-size: 10pt;">Possible cause</span></th><th style="width: 417px; background-color: #3366ff; color: white;"><span style="font-size: 10pt;">Others</span></th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 260px;" height="17"><span style="font-size: 10pt;"><strong><a name=""></a>RUN0000041 - Open Table F983051 fails</strong></span></td>
+<td style="width: 449px;"><span style="font-size: 10pt;">API AllocatePOVersionData() in a certain Business Function fails to open Table F983051 - 'Versions List'</span></td>
+<td style="width: 417px;"><span style="font-size: 10pt;">&nbsp;</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a40"></a>RUN0000040 - Open Table F9860 fails</strong></span></td>
+<td style="vertical-align: top; width: 449px;"><span style="font-size: 10pt;">JDE API AllocatePOVersionData() in a certain Business Function fails to open Table F9860 - 'Object Librarian Master File'</span></td>
+<td style="vertical-align: top; width: 417px;"><span style="font-size: 10pt;">&nbsp;</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a39"></a>RUN0000039 - Requested Application - "szApplication" does not exist in Object Librarian.</strong></span></td>
+<td style="vertical-align: top; width: 449px;"><span style="font-size: 10pt;">F9860.SIOBNM='szApplication' fails to return value</span></td>
+<td style="vertical-align: top; width: 417px;"><span style="font-size: 10pt;">&nbsp;</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a66"></a>RUN0000066 - Warning - ProcOpt Data Size Mismatch</strong></span></td>
+<td style="vertical-align: top; width: 449px;"><span style="font-size: 10pt;">Requested 'size requested' is less than Retrieved 'size retrieved' for App 'szApplication',Version 'szVersion'.Data Structure allocated successfully</span></td>
+<td style="vertical-align: top; width: 417px;"><span style="font-size: 10pt;">This usually means items have been added to the template and existing business function will function correctly.&nbsp; Set a warning when sizeof is greater than data structure size.&nbsp; To debug this warning message, refer to &lt;Document 779449.1&gt; E1: DSTR: How to Debug Message RUN0000066/RUN0000067 - Warning - ProcOpt Data Size Mismatch</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a43"></a>RUN0000043 - Out Of Memory</strong></span></td>
+<td style="vertical-align: top; width: 449px;"><span style="font-size: 10pt;">Allocation Fails for 'szApplication' and Version 'szVersion'. lpProcOptData from COMMON_POOL (global area cache) is NULL</span></td>
+<td style="vertical-align: top; width: 417px;"><span style="font-size: 10pt;">To fix this, </span><br /><span style="font-size: 10pt;"> 1. Go to work with server job</span><br /><span style="font-size: 10pt;"> 2. Highlight 'Logic Server' and (row exit) to Reset Cache</span><br /><span style="font-size: 10pt;"> 3. Tick 'Processing Option' and click OK to refresh it</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a44"></a>RUN0000044 </strong><strong>- Error - ProcOpt Data Size Mismatch</strong></span></td>
+<td style="vertical-align: top; width: 449px;"><span style="font-size: 10pt;">Requested 'uSizeOf' is greater than Retrieved 'nDsLen' for App 'szApplication',Version 'szVersion'.Data Structure NOT allocated. </span><br /> <br /><span style="font-size: 10pt;"> This usually means an item has been REMOVED from the template. This business function needs to be rebuilt against this new template definition.Set on an error when sizeof is less than data structure size. This is hard error as memory overflow may take place</span></td>
+<td style="vertical-align: top; width: 417px;"><span style="font-size: 10pt;">Case study can be found at &lt;Document 1319499.1&gt; - E1: BSFN: RUN0000044 - Error - ProcOpt Data Size Mismatch Message Clarification</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a45"></a>RUN0000045 - Unable to retrieve Processing Option Template for Application</strong></span></td>
+<td style="vertical-align: top;">
+<ul>
+<li><span style="font-size: 10pt;">When DataStructure template spec (dstmpl) is null</span></li>
+<li><span style="font-size: 10pt;">The issue may be occurred across system because the table F9860 -&nbsp;<em>Object Librarian Master Table</em> is sitting in Object Librarian data source</span></li>
+<li><span style="font-size: 10pt;">General cause of this error is that F9860.simid1 is blank or contains wrong template ID</span></li>
+<li><span style="font-size: 10pt;">In jdedebug.log trace how table F98743 - DSTMPL has column F98743.obnm</span></li>
+</ul>
+</td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">So to fix this error, verify F9860.simid1 column value for the interactive application which shows this error. Most of this issue is caused by update of F9860 from outside EnterpriseOne.</span><br /> <br /><span style="font-size: 10pt;"> &lt;Document 626569.1&gt; - E1: DSTR: Frequently Asked Questions on Processing Option Templates and Data Structures</span></td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><span style="font-size: 10pt;"><strong><a name="a46"></a>RUN0000046 - Application 'szApplication' does not have a Processing Option Template Attached</strong></span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">When F9860.simid1 is null/blank.&nbsp; RUN0000046 may come when data in the table F9860 is modified by a custom application so before any column value is updated in F9860, back up the data first.</span></td>
+<td style="vertical-align: top;"><span style="font-size: 10pt;">&nbsp;</span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 10pt;"><strong><br /> </strong></span></p>
+<div class="kmnotebox"><span style="font-size: 10pt;">Note: Oracle is not responsible for any error which results from the customization of standard tables or applications.</span></div>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+<div class="kmnotebox"><span style="font-size: 10pt;">To discuss this information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/design_tools_&amp;_output_technologies_-_jde1">Design Tools &amp; Output Technologies - JDE1 Community</a>.</span><br /> <br /><span style="font-size: 10pt;"> To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details &lt;Document 548764.1&gt;.&nbsp; If your topic is not currently scheduled please suggest it.</span></div>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
