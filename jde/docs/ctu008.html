@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modern Operating System</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Modern Operating System</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+<p>Software Requirements Specification for PT Matahari</p>
+<p>Table of Contents</p>
+<p><a href="#_Toc509340953">Project Outline. 4</a></p>
+<p><a href="#_Toc509340954">Company Overview.. 4</a></p>
+<p><a href="#_Toc509340955">Goals. 4</a></p>
+<p><a href="#_Toc509340956">Requirement Specification. 5</a></p>
+<p><a href="#_Toc509340957">High-level Requirements. 6</a></p>
+<p><a href="#_Toc509340958">Requirements Elicitation. 8</a></p>
+<p><a href="#_Toc509340959">Requirements Elicitation Techniques to Use. 8</a></p>
+<p><a href="#_Toc509340960">Requirements Gathering Organization. 10</a></p>
+<p><a href="#_Toc509340961">Requirement Elicitation for PT Matahari 11</a></p>
+<p><a href="#_Toc509340962">Requirements Analysis and Specification. 13</a></p>
+<p><a href="#_Toc509340963">Business Process Model and Notation. 13</a></p>
+<p><a href="#_Toc509340964">Requirements Analysis. 14</a></p>
+<p><a href="#_Toc509340965">Customer Master Management 14</a></p>
+<p><a href="#_Toc509340966">Real-Time Inventory Management 15</a></p>
+<p><a href="#_Toc509340967">Sales Order Management 16</a></p>
+<p><a href="#_Toc509340968">Requirements and Quality. 18</a></p>
+<p><a href="#_Toc509340969">The Business Value of Software Quality. 18</a></p>
+<p><a href="#_Toc509340970">Software Quality Measure. 19</a></p>
+<p><a href="#_Toc509340971">Functional Suitability. 20</a></p>
+<p><a href="#_Toc509340972">Usability. 21</a></p>
+<p><a href="#_Toc509340973">Maintainability. 22</a></p>
+<p><a href="#_Toc509340974">Requirements Verification and Validation. 24</a></p>
+<p><a href="#_Toc509340975">Validation. 24</a></p>
+<p><a href="#_Toc509340976">Review and Inspection. 25</a></p>
+<p><a href="#_Toc509340977">Prototyping. 26</a></p>
+<p><a href="#_Toc509340978">Traceability. 26</a></p>
+<p><a href="#_Toc509340979">Testing. 26</a></p>
+<p><a href="#_Toc509340980">Verification. 26</a></p>
+<p><a href="#_Toc509340981">Inspection. 27</a></p>
+<p><a href="#_Toc509340982">Testing. 27</a></p>
+<p><a href="#_Toc509340983">Demonstration. 28</a></p>
+<p><a href="#_Toc509340984">Analysis. 28</a></p>
+<p><a href="#_Toc509340985">Verification Requirements for PT Matahari 28</a></p>
+<p><a href="#_Toc509340986">Requirements Traceability Matrix. 30</a></p>
+<p><a href="#_Toc509340987">Summary. 31</a></p>
+<p><a href="#_Toc509340988">References. 32</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc509340953"></a>Project Outline</h1>
+<h2><a name="_Toc509340954"></a><a name="_Toc495337473"></a>Company Overview</h2>
+<p>PT Matahari Paint, a paint product distributer in Indonesia, has more than 20 years of business with over 200 employees in various cities in Indonesia. In recent years, the demand for paint products rise rapidly at once the city councils in various cities mandate to paint commercial buildings every five years and the rising disposable income contribute for residential buildings. Naturally, lots of new competitors come into the market with advent information technology as the network infrastructure evolves quickly in the region.</p>
+<h2><a name="_Toc509340955"></a><a name="_Toc495337475"></a>Goals</h2>
+<p>It is high time for Matahari to build effective and efficient software system to cope with the challenges. Possibly mission statement below is to answer what is the purpose of software, why they need it, and will this software meet their requirements.</p>
+<p><em>To capture better customer satisfaction through fast, real-time, accurate inventory management with sophisticated pricing and tax calculation, and to plan and forecast the demand and supply accurately on the transaction history.</em></p>
+<p>The goal of the Matahari software system is to have a competitive edge against current and future competitors using timely planning and forecasting and to give better customer experience through effective and efficient resource management.</p>
+<p>&nbsp;</p>
+<h1>&nbsp;</h1>
+<p>&nbsp;</p>
+<h1><a name="_Toc509340956"></a>Requirement Specification&nbsp;</h1>
+<p>A requirement determines how to accomplish a goal, where a goal describes a high-level objective of a system to implement (Laplante, 2013). The first activity of software development project is the requirements specification when it follows the waterfall model comprising 1) Requirements specification; 2) Analysis &amp; Design; 3) Implementation; 4) Testing; and 5) Maintenance as depicted in Figure 2 (Letort, 2018).</p>
+
+<p><img src="../images/ctu00801.png" border="0" alt="Waterfall Model" title="Waterfall Model" hspace="0" vspace="0"/></p>
+
+<p>Figure 1. Waterfall Model</p>
+<p>Even prevailing project management process using agile scrum model repeats same iterations as depicted in Figure 3 (RajKumar, 2017).</p>
+
+<p><img src="../images/ctu00802.png" border="0" alt="Agile Scrum Model" title="Agile Scrum Model" hspace="0" vspace="0"/></p>
+
+<p>Figure 2. Agile Scrum Model</p>
+<p>Since a requirement is a system or service needed by a stakeholder to solve a problem or achieve an objective, it is imperative activity in software development process (Semusheva, n.d.).</p>
+<h2><a name="_Toc509340957"></a>High-level Requirements</h2>
+<p>Figure 3 depicts a simplified system overview based on requirements from PT Matahari.</p>
+
+<p><img src="../images/ctu00803.png" border="0" alt="System Overview" title="System Overview" hspace="0" vspace="0"/></p>
+
+<p>Figure 3. System Overview</p>
+<ul>
+<li>Record all business parties including, employee, suppliers, and customers: Currently Matahari maintains the entities using manual card in alphabetical order which is tedious to retrieve, and the name of entity is only way to retrieve it. New system allows user to search and select business parties using query by example (QBE).</li>
+<li>Manage inventory in real-time basis: By recording supply and demand upon transactions, PT Matahari can fulfill the economic order quantity which minimize the cost of inventory.</li>
+<li>Capture all transaction for oversea procurement and domestic sales: These transaction records are basic information for inventory management including supply demand and forecasting, account receivable, and account payable.</li>
+</ul>
+<p>Most of Enterprise Resource Planning (ERP) software have these functionalities and features with following disadvantages,</p>
+<ul>
+<li>Expensive to implement and maintain</li>
+<li>Too heavy to use for small organization</li>
+<li>Unable to compute tax which is specific to PT Matahari</li>
+<li>Hard to custom or it costs high to hire consultants</li>
+</ul>
+<h1>&nbsp;</h1>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc509340958"></a>Requirements Elicitation &nbsp;&nbsp;</h1>
+<h2><a name="_Toc509340959"></a>Requirements Elicitation Techniques to Use</h2>
+<p>The prime goal of this project is to implement a light ERP software for PT Matahari, which enables business process management (BPM) based on well-known ERP software in the market. Through this project, PT Matahari can make organization&rsquo;s workflow more effective, efficient, and more capable of adapting to the ever-changing business environments. To meet this goal, here we review brainstorming and prototyping methods out of various elicitation techniques available. Nonetheless, actual development makes use of an agile methodology using user stories and users acceptance test based on working prototypes described below.</p>
+<p>Table 1. Requirements Elicitation Methods for PT Matahari</p>
+<table width="0">
+<tbody>
+<tr>
+<td width="108">
+<p><strong>Method</strong></p>
+</td>
+<td width="252">
+<p><strong>Description</strong></p>
+</td>
+<td width="276">
+<p><strong>Justification</strong></p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p>Brainstorming</p>
+</td>
+<td width="252">
+<p>This brainstorming method is information discussion to generate free expression of ideas by encouraging creativity of participants.</p>
+<p>This methods starts from problem definition using question to collect information on current business practice. Then each participants express the ideas on the problem.</p>
+<p>&nbsp;</p>
+</td>
+<td width="276">
+<p>Since the optimum goal of a new software is to fulfill business process management (BPM) to have business invovation, this method can generate invovative ideas based on the prototyping to suggest.</p>
+<p>The purpose of this method is to collect innovative ideas from multiple parties during requirements elicitation phase.</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="108">
+<p>Prototyping</p>
+</td>
+<td width="252">
+<p>Since this project follows Agile software development cycle, throw-away prototyping suits the purpose of this project. This methods involves rapid creation of a working version of the software so users can try it out and react to a tangible representation with the graphical user interface. This technique works well using Extreme Programming (XP) for instance (Goldsmith, 2015).</p>
+</td>
+<td width="276">
+<p>It is easy for PT Matahari to bring up more innovative ideas and to analyze business when there is a tangible view of software to be developed and active participation for the testing. So this method meets the purpose of this project.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Figure 4 is simplified process of brainstorming. The focus step for this process is idea generation (12manage, n.d.).</p>
+
+<p><img src="../images/ctu00804.png" border="0" alt="Brainstorming process" title="Brainstorming Process" hspace="0" vspace="0"/></p>
+
+<p>Figure 4. Brainstorming Process</p>
+<p>On the other hand, the speed of implementation is imperative for the success of project. Figure 5 is a simplified representation of the conventional prototyping model (CodeEpsilon, n.d.). However, this project utilizes agile methodologies to start faster and get to integration quicker as depicted in Figure 6 (ContinuousAgile, n.d.).</p>
+
+<p><img src="../images/ctu00805.png" border="0" alt="Prototype Modeling" title="Prototype Modeling" hspace="0" vspace="0"/></p>
+
+<p>Figure 5. Prototype Modeling</p>
+
+<p><img src="../images/ctu00806.png" border="0" alt="Prototyping in Agile" title="Prototyping in Agile" hspace="0" vspace="0"/></p>
+
+<p>Figure 6. Prototyping in Agile</p>
+<p>In this example, PT Matahari elicits requirements where development creates working and testable prototype to fulfill the innovative business model including possible use cases.</p>
+<h2><a name="_Toc509340960"></a>Requirements Gathering Organization</h2>
+<p>Figure 7 depicts the requirements gathering framework (Persaud, 2016).</p>
+
+<p><img src="../images/ctu00807.png" border="0" alt="Requirements Gathering Framework" title="Requirements Gathering Framework" hspace="0" vspace="0"/></p>
+
+<p>Figure 7. Requirements Gathering Framework</p>
+<p>Based on above framework, the table 2 entails the requirements gathering organization to collect information on business requirements, user requirements, and system requirements.</p>
+<p>Table 2. Requirements Gathering Organization</p>
+<table>
+<tbody>
+<tr>
+<td width="150">
+<p><strong>Title/Role</strong></p>
+</td>
+<td width="126">
+<p><strong>Mandatory Reviewer (Y/N)</strong></p>
+</td>
+<td width="348">
+<p><strong>Action Items</strong></p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Project Leader</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Hold meetings, create use cases, oversee the development work, and manage the project</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Business Analyst</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Analyze current business model to transform it to simple and robust standard business model</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Client &ndash; CTO</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Give proper system level requirements including system constraints</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Client &ndash; Sales</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Give proper requirements in sales module area</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Client &ndash; Account Receivable</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Give appropriate requirements in Account Receivable</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Client &ndash; SCM</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Input requirements in inventory management</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Programmer</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Write brief description of system to develop</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Programmer</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Create the user case model</p>
+</td>
+</tr>
+<tr>
+<td width="150">
+<p>Programmer</p>
+</td>
+<td width="126">
+<p>Y</p>
+</td>
+<td width="348">
+<p>Create Prototype of the software</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h2><a name="_Toc509340961"></a>Requirement Elicitation for PT Matahari</h2>
+<p>Based on the requirements described earlier, requirements table can be represented as below,</p>
+<p>Table 3. Requirements Table</p>
+<table>
+<tbody>
+<tr>
+<td width="114">
+<p><strong>Requirements</strong></p>
+</td>
+<td width="144">
+<p><strong>Description</strong></p>
+</td>
+<td width="142">
+<p><strong>Comments</strong></p>
+</td>
+<td width="116">
+<p><strong>Requirements Class</strong></p>
+</td>
+<td width="108">
+<p><strong>Methods</strong></p>
+</td>
+</tr>
+<tr>
+<td width="114">
+<p>Record all business parties</p>
+</td>
+<td width="144">
+<p>Using Address Book Master, record all business parties (employee, supplier, and customer)</p>
+</td>
+<td width="142">
+<p>Draw relational database to store master, address, who&rsquo;s who, customer master, supplier master, employee master and so on</p>
+</td>
+<td width="116">
+<p>Required</p>
+</td>
+<td width="108">
+<p>Prototyping</p>
+</td>
+</tr>
+<tr>
+<td width="114">
+<p>Manage Inventory in real-time basis</p>
+</td>
+<td width="144">
+<p>Based on procurement and sales add and relieve inventory using transaction processing on</p>
+</td>
+<td width="142">
+<p>This inventory management is subset of procurement and sales suites</p>
+</td>
+<td width="116">
+<p>Required</p>
+</td>
+<td width="108">
+<p>Prototyping along with use cases</p>
+</td>
+</tr>
+<tr>
+<td width="114">
+<p>Capture all transactions</p>
+</td>
+<td width="144">
+<p>Create Sales order module and procurement module which works like contract among multiple business parties</p>
+</td>
+<td width="142">
+<p>Extends sales and procurement including ledger and history to make use of analysis of data including planning and forecasting</p>
+</td>
+<td width="116">
+<p>Required</p>
+</td>
+<td width="108">
+<p>Prototyping</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: Above table represents limited requirements.</p>
+<p>The requirements in inventory management system, sales/procurement systems need additional sub-routines to hold all requirements in detail. Since main concern is the flow of data model is tangible approach as depicted in Figure 8 during development phase.</p>
+
+
+<p><img src="../images/ctu00808.png" border="0" alt="Data Model for PT Matahari" title="Data Model for PT Matahari" hspace="0" vspace="0"/></p>
+
+<p>Figure 8. Data Model for PT Matahari</p>
+<p>Based on above data model, each repository comprises one application with same look and feel. Then extend prototypes to individual data entries including the necessary information in it. In this phase, requirements reuse is viable option for this project because the software to develop is generic business innovation approach in Indonesia in benchmarking the advanced business models and processes.</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc509340962"></a>Requirements Analysis and Specification</h1>
+<p>Requirements analysis is sitting between the requirements elicitation and specification as depicted in Figure 9. In other words, the requirements analysis and specification bridge gaps between requirements and software design in software development life cycle. In this figure, the problem domain is as-is system including what a client wants to have, where software system is to-be status of requirements based on specification (Wiegers, 2013).</p>
+
+<p><img src="../images/ctu00809.png" border="0" alt="Requirements Iteration" title="Requirements Iteration" hspace="0" vspace="0"/></p>
+
+<p>Figure 9. Requirements Iteration</p>
+<p>There are numerous requirements analysis techniques available to utilize for a light ERP system for PT Matahari. The candidate methodology is to be flexible, easy to understand from stakeholders, and sophisticated enough for development to start work. This document entails a standard Business Process Model and Notation (BPMN) to meet these expectation.</p>
+<h2><a name="_Toc509340963"></a>Business Process Model and Notation</h2>
+<p>This project deals with a light ERP software which synchronizes the movement of inventory with data and integrates multiple business suites into a single system. The purpose of a standard Business Process Model and Notation (BPMN) is to provide businesses with (BPMN, n.d.),</p>
+<ul>
+<li>The ability to understand the internal business procedures in a graphical notation;</li>
+<li>The capability to communicate these business processes in a standard manner; and,</li>
+<li>Facilitation to understand the performance collaborations between different teams or modules.</li>
+</ul>
+<p>The reason to choose this methodology for requirement analysis is that this model is similar to a flow chart which PT Matahari is familiar. Another reason is that it is easy for the stakeholders to compare as-is business model with to-be business model.</p>
+<h2><a name="_Toc509340964"></a>Requirements Analysis</h2>
+<p>Modeling is essential medium for communication among stakeholders, business analyst, and development group because it gives easier representation of business itself. Based on what PT Matahari wants, below represents three different process using BPMN.</p>
+<h3><a name="_Toc509340965"></a>Customer Master Management</h3>
+<p>All business starts from recoding all business entities accurately till the various financial reports because these information streamlines the movement of inventory, cash, and data. The basic functionality for the software to build deals with procurement and sales, so recording business parties&rsquo; information is crucial for the success of this business.</p>
+
+<p><img src="../images/ctu00810.png" border="0" alt="Customer Master" title="Customer Master" hspace="0" vspace="0"/></p>
+
+<p>Figure 10. Customer Master Creation for PT Matahari</p>
+<p>Above figure 10 requires the manual intervention to verify the data entered by customer. Since PT Matahari deals with business partners, a certain information need securing to meet business requirements and regulation. Possibly there is room for improvement to meet some of non-functional requirements.</p>
+<h3><a name="_Toc509340966"></a>Real-Time Inventory Management</h3>
+<p>Proper inventory managements enable PT Matahari to lower cost by keeping minimum inventory on-hand, to improve collaboration with suppliers, and automated replenish to satisfy both suppliers and customers. And the real-time inventory management and sharing the supply and demand enables PT Matahari to shift to Supply Chain Management (SCM) for paint products. &nbsp;</p>
+
+<p><img src="../images/ctu00811.png" border="0" alt="Inventory Management" title="Inventory Management" hspace="0" vspace="0"/></p>
+
+<p>Figure 11. Inventory Management for PT Matahari</p>
+<p>Inventory management system is subset of sales for demand and procurement for supply. And reasonable parameters for safety stock and the economic order quantity are essential to have successful implementation. Possibly, this functionality has to extend to the cycle count or physical inventory count, and inventory adjustment and issue to have accurate values of on-hand quantities.</p>
+<h3><a name="_Toc509340967"></a>Sales Order Management &nbsp;</h3>
+<p>Figure 11 depicts some transition from current business of PT Matahari by adding quotation before a firm sales order. &nbsp;</p>
+
+<p><img src="../images/ctu00812.png" border="0" alt="Sales Order Management" title="sales order management" hspace="0" vspace="0"/></p>
+
+<p>Figure 12. Sales Order Management</p>
+<p>In the long run, PT Matahari needs to focus on minimum inventory with competitive price by setting sophisticated price hierarchy using the advanced price schedule. In this phase, the integration with Account Receivable, security of applications, mobility, and planning/forecasting features need discussing.</p>
+
+
+<h1><a name="_Toc509340968"></a>Requirements and Quality</h1>
+<p>So far, the focus was made in &lsquo;what&rsquo; to implement based on what PT Matahari wants to have including suggestion made by the project team to conform to the basic design on the functional requirements. On the other hand, quality requirements reflect how to meet the non-functional requirements, to deal with &lsquo;how&rsquo; well the software should be performed. Hence, quality requirements are tightly associated with software structural qualities to define the degree of correctness of the product.</p>
+<p>In figure 13, quality model defines the meaning of quality for a system to implement. The quality requirements are about how to utilize the quality models available (Firesmith, 2005). Through this approach, the quality of quality requirements have characteristics of mandatory, feasible, scalable, unambiguous, verifiable, correct, prioritized, and traced.</p>
+
+<p><img src="../images/ctu00813.png" border="0" alt="Quality Management" title="Quality Management" hspace="0" vspace="0"/></p>
+
+<p>Figure 13. Quality Requirements</p>
+<h2><a name="_Toc509340969"></a>The Business Value of Software Quality</h2>
+<p>Commonly, the benefits of high quality systems enable the business to be responsive, innovative, increase competitive edge, and reduce total cost of development and ownership. In detail (Bessin, 2004),</p>
+<ul>
+<li>Responsiveness and innovation: when the software to develop is flexible or easy to maintain; these systems end in responsive and innovative. Many times one small change makes the system vulnerable to the potential threats;</li>
+<li>Differentiator: the enterprise solutions employed by a successful companies make use of optimal solutions which can be unique with higher quality. As a result, these software stands out in the crowd; and,</li>
+<li>Reduce the total cost of development and ownership: when a software developed meets some quality attributes, which minimizes maintain with the best performance and availability.</li>
+</ul>
+<h2><a name="_Toc509340970"></a>Software Quality Measure</h2>
+<p>As reviewed above, a good quality software gives direct financial benefits to customers with higher customer satisfaction. Figure 14 depicts, the quality model suggested by ISO 25010 which emphasizes on the measurable factors (Open Universiteit, n.d.).</p>
+<p><img src="../images/ctu00814.png" border="0" alt="Parameters of Quality" title="Parameters of Quality" hspace="0" vspace="0"/></p>
+
+<p>Figure 14. Parameters of Quality</p>
+<p>Here we review functional suitability, usability, and maintainability because these quality attributes affect a light ERP system of PT Matahari.</p>
+<h3><a name="_Toc509340971"></a>Functional Suitability</h3>
+<p>According to ISO/IEC 27000:2014, functional suitability is degree to which a system provides functions to meet stated/implied needs which is functional requirements. So these attributes affirm that the software to develop performs what are requested, but also it performs three characteristics which are functional completeness, functional correctness, and functional appropriateness as shown in Figure 15 (Rodriguez et al., 2016).</p>
+
+<p><img src="../images/ctu00815.png" border="0" alt="Subcharacteristics of functional suitability" title="Subcharacteristics of functional suitability" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 15. Subcharacteristics of functional suitability</p>
+<p>ISO/IEC 25010 defines: functional completeness as the degree to which a set of implemented functions covers the specified tasks and meets the users&rsquo; objectives; functional correctness as the degree to which a product or system offers correct results, with required degree of precision; and functional appropriateness as the degree to which the functions facilitate the accomplishment of the tasks and objectives set.</p>
+<p>In any organization, the ERP software is the backbone of information technology system, hence the importance of functional suitability is paramount because the software computes the output accurately and same has to comply with the standard business rules and regulations or legislative requirements if any. &nbsp;</p>
+<h3><a name="_Toc509340972"></a>Usability</h3>
+<p>According to Barbacci, usability is a measure of how well users can take advantage of some of systems&rsquo; functionality (Barbacci, 2004). This attribute defines how usable a software is to learn to operate, prepare inputs for, and interpret outputs of a system. The intersection in figure 16 depicts simplified definition of a good usability.&nbsp;</p>
+
+<p><img src="../images/ctu00816.png" border="0" alt="Software Usability" title="Software Usability" hspace="0" vspace="0"/></p>
+
+<p>Figure 16. Software Usability</p>
+<p>Subcharacteristics of usability includes appropriateness, recognizable, learnability, operability, user error protection, user interface aesthetics, and accessibility. Figure 17 reviews same in detail (Barbacci, 2004).</p>
+
+<p><img src="../images/ctu00817.png" border="0" alt="Concerns in Usability" title="Concerns in Usability" hspace="0" vspace="0"/></p>
+
+<p>Figure 17. Concerns in Usability</p>
+<p>User centered design principle for PT Matahari can contribute some of areas below,</p>
+<ul>
+<li>Reduce the support call because the product to develop will be easy to use;</li>
+<li>Reduce training costs since the user interface is intuitive across modules; and</li>
+<li>Same look-and-feel across software suites.</li>
+</ul>
+<p>All these factors are important to have successful project without spending millions of dollars.</p>
+<h3><a name="_Toc509340973"></a>Maintainability</h3>
+<p>The requirement for maintaining software can be fixing a certain problem (corrective maintenance) in a system or enhance/add new functionality (adaptive maintenance) in the system. And this maintenance can be extended to perfective maintenance (the changes in the features and requirements) and preventive maintenance (to help the software be scalable, stable, understandable, and maintainable) as the system gets matured (t4tutorials, 2018). Most of the software vendors follow the standard support mechanism for maintenance of the system. Some call it the diagnostic methodology which is a common way to support system for maintenance. Figure 18 depicts the standard post-delivery stage process for software system maintenance process.</p>
+
+<p><img src="../images/ctu00818.png" border="0" alt="Maintenance Process" title="maintenance process" hspace="0" vspace="0"/></p>
+
+<p>Figure 18. Maintenance Process</p>
+<p>The benefit which PT Matahari can enjoy by putting money upfront is that,</p>
+<ul>
+<li>Possibly performance improvement of software;</li>
+<li>Proactive bug fixing; and</li>
+<li>Make use of the latest development tools and applications.</li>
+</ul>
+<p>Table 4. Relationship between Criteria and Factors in Maintainability</p>
+<table>
+<tbody>
+<tr>
+<td width="198">
+<p>Criterion\Factors</p>
+</td>
+<td width="132">
+<p>Understandability</p>
+</td>
+<td width="102">
+<p>Modifiability</p>
+</td>
+<td width="96">
+<p>Testability</p>
+</td>
+<td width="96">
+<p>Portability</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Readability</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Traceability</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>x</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Coupling</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>x</p>
+</td>
+<td width="96">
+<p>x</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Cohesion</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>x</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Size</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>x</p>
+</td>
+<td width="96">
+<p>x</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Control Structure</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>x</p>
+</td>
+<td width="96">
+<p>x</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Independence</p>
+</td>
+<td width="132">
+<p>&nbsp;</p>
+</td>
+<td width="102">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>x</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Consistency</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+<tr>
+<td width="198">
+<p>Documentation Accuracy</p>
+</td>
+<td width="132">
+<p>x</p>
+</td>
+<td width="102">
+<p>&nbsp;</p>
+</td>
+<td width="96">
+<p>x</p>
+</td>
+<td width="96">
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>Criterion in table 4 are derived from different documents in software requirements engineering as below (Frappier et al., 1994),</p>
+<ul>
+<li>Contract End Item Specification: Readability</li>
+<li>Requirements Specification: Traceability and Readability</li>
+<li>Software Design Document: Traceability, Coupling, Cohesion, and Size</li>
+<li>Source Code: Traceability, Control Structure, Independence, Readability, Documentation Accuracy, and Consistency.</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc509340974"></a>Requirements Verification and Validation &nbsp;</h1>
+<p>Figure 19 depicts a simple representation of verification and validation which occurs in a different phases of system life cycle. V-model is not a choice for software development process in this project, but this v-model represents clear semantics. All activities below validation requirements are verification activities (Mehle, 2017).&nbsp;</p>
+
+<p><img src="../images/ctu00819.png" border="0" alt="Verification and Validation" title="Verification and Validation" hspace="0" vspace="0"/></p>
+
+<p>Figure 19. Verification and Validation in V-Model</p>
+<p>The software specification review for PT Matahari covers the software requirement specification and interface requirements specification to reflect system level requirements. Commonly, the validation is done using a model or of its demonstration. The task of system verification is to verify/prove the system functionality concurrently as the design transforms into functional components, module, subsystem, and system level objects. So the highest level of verification, testing against the stakeholders&rsquo; requirements can be called validation.</p>
+<h2><a name="_Toc509340975"></a>Validation</h2>
+<p>Requirements validation is to check the right system is built to satisfy the stakeholders by checking stakeholders&rsquo; goals and requirements (Jackson et al., 2008). Figure 20 depicts the validation and verification in the project because Validation and Verification (V + V) activities take place throughout the lifecycle of the project (Boehm, 1979).</p>
+
+<p><img src="../images/ctu00820.png" border="0" alt="Requirements and Design" title="Requirements and Design" hspace="0" vspace="0"/></p>
+
+<p>Figure 20. Requirements and Design V &amp; V Sequence</p>
+<p>The goal of this project is to build a light ERP software tailored for PT Matahari which system is small but sustainable and scalable. Then requirements validation step is to ensure that this software requirements specification (SRS) is complete, consistent, modifiable, and traceable as reviewed in quality attributes. To meet these goals in the project, the techniques to validate requirements for PT Matahari are review and inspect, prototyping, traceability and testing.</p>
+<h3><a name="_Toc509340976"></a>Review and Inspection</h3>
+<p>As depicted in figure 21, the review and inspection is iterative validation steps with the stakeholders, PT Matahari. The review takes place against the analysis made using BPMN tools in the area of address book management, inventory management, and sales order management. This technique go through 3 different steps as depicted in figure 21 (Kotonya et al., 2008).</p>
+
+<p><img src="../images/ctu00821.png" border="0" alt="Review and Inspection" title="Review and Inspection" hspace="0" vspace="0"/></p>
+
+<p>Figure 21. Review and Inspection</p>
+<h3><a name="_Toc509340977"></a>Prototyping</h3>
+<p>Prototyping technique is to have both the developers and the users from PT Matahari are on the same page. This methods enables the users to test the validity of the programs and completeness of the requirements. In following agile software development for PT Matahari, solutions evolve through collaboration cross-functional team. This technique is especially important to meet the quality requirements which are functional suitability, usability, and maintainability.</p>
+<h3><a name="_Toc509340978"></a>Traceability</h3>
+<p>Commonly, using a traceability to make sure that all elicited requirements are to be traced back to justify both business requirements and functional requirements for PT Matahari. Following section elaborates this technique further.</p>
+<h3><a name="_Toc509340979"></a>Testing</h3>
+<p>Along with the prototyping discussed above, this is most crucial part during validation to eliminate possible missing information or any information which is ambiguous. All functional requirements requested by PT Matahari need to go through the test cycle. However, it may not be easy to adopt non-functional requirements using this technique we have discussed during quality factors.</p>
+<h2><a name="_Toc509340980"></a>Verification</h2>
+<p>Requirements verification is to check system is being built right by ensuring each step followed in the process of building the software to yield the right product in checking consistency of the software requirements specification artifacts and other software development products (Jackson et al., 2008). &nbsp;Common methods to verify requirements are inspection, demonstration, test, and analysis (Adams, 2010).</p>
+<h3><a name="_Toc509340981"></a>Inspection</h3>
+<p>The inspection process is a detailed audit and review of the software code and documentation, which is referred as a code review. This technique is very effective to discover error in codes as depicted in figure 22 (Letort, 2018).</p>
+
+<p><img src="../images/ctu00822.png" border="0" alt="Inspecation and Testing" title="Inspecation and Testing" hspace="0" vspace="0"/></p>
+
+<p>Figure 22. Inspection and Testing</p>
+<p>In inspecting the inventory management for PT Matahari, make it sure that there are multiple entries for Item Master, Item Branch, Item Location, Item Cost, Item Price, and Item Ledger with all necessary columns in it including easier search of each controls.</p>
+<h3><a name="_Toc509340982"></a>Testing</h3>
+<p>The testing process is to find defects in the system in development. This process encompasses process definition, testability, and recording of it. Standard quality assurance and quality control processes are in line with this technique in a software system (Letort, 2018). Through this, user expect the system produces a specific and predefined output based on the requirements specified. Throughout software development life cycle for PT Matahari, this technique is crucial because a light ERP software comply with all regulations in Indonesia and need to maintain higher integrity with tables related across system including future extension. And this method conforms all auditing requirements on any change of data across suites.</p>
+<h3><a name="_Toc509340983"></a>Demonstration</h3>
+<p>Demonstration determines conformance to the system requirements using the operation, adjustment, or reconfiguration of a test document to verity system characteristics using observing and recording functional operation (Letort, 2018).</p>
+<p>For address book management for PT Matahari, the demonstrations gives users same look and feel and all interface from the entry point are intuitive. For instance, there is only one address book number which contains a legal entity name, tax ID, addresses, and related addresses. Then each entity allows user to specify the types of account: employee, business partners, suppliers, and customers which has different columns to identify each and individual entities.</p>
+<h3><a name="_Toc509340984"></a>Analysis</h3>
+<p>Commonly, analysis involves the verification of system using models, calculations and testing equipment using generally accepted analytical techniques to determine the program meets specified requirements. This technique takes charge when demonstration or testing is not feasible option. Active testing and demonstration are due course for this project hence this technique may put less emphasis for PT Matahari.</p>
+<h3><a name="_Toc509340985"></a>Verification Requirements for PT Matahari</h3>
+<p>Table 5 represents verification requirements for a light ERP system for PT Matahari.&nbsp;</p>
+<p>Table 5. Verification Requirement</p>
+<table>
+<tbody>
+<tr>
+<td width="66">
+<p><strong>Verif.</strong></p>
+<p><strong>Para.</strong></p>
+</td>
+<td width="474">
+<p><strong>Verification Requirement</strong></p>
+</td>
+<td width="95">
+<p><strong>Level</strong></p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.0</p>
+</td>
+<td width="474">
+<p>Using client machine, the light weight ERP software performs below,</p>
+<p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; All business entity is stored, which stores information on Address, Customer Master, Supplier Master, Employee Master</p>
+<p>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inventory is managed with multiple hierarches including Item Master, Item Branch, Item Location, Item Ledger, Item Cost, and Item Price</p>
+<p>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sales Order is managed using order activity rules to synchronize the movement of inventory, cash encompassing sales order entry, print pick ship, shipment confirmation, print invoice, and sales update to interface with Account Receivable and General Ledger</p>
+</td>
+<td width="95">
+<p>Stakeholder</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.1</p>
+</td>
+<td width="474">
+<p>Entity management, Inventory Management, and Sales Order Management</p>
+</td>
+<td width="95">
+<p>Module</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.1.1</p>
+</td>
+<td width="474">
+<p>Each module above are independent and fully functional.</p>
+<p>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Entity management allows user to add, update, and delete the entity for trading</p>
+<p>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Inventory management enables user to review on-hand quantity including the branch, location, and lot level</p>
+<p>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sales order management includes all activities related with sales or paint goods.</p>
+</td>
+<td width="95">
+<p>System</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.1.2</p>
+</td>
+<td width="474">
+<p>Customer master to store information on customer including credit limit, open order amount, total billed, and total cash receipt</p>
+</td>
+<td width="95">
+<p>Component</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.1.3</p>
+</td>
+<td width="474">
+<p>Suppler master includes the currency to transact, payment terms, and other trading condition</p>
+</td>
+<td width="95">
+<p>Component</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.1.4</p>
+</td>
+<td width="474">
+<p>Employee master stored information on identification number, address, PDBA (Pay, Deduction, Benefit, and Accrual) information</p>
+</td>
+<td width="95">
+<p>Component</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.2.1</p>
+</td>
+<td width="474">
+<p>Item master stores the specification of item including item number, description, unit of measure</p>
+</td>
+<td width="95">
+<p>Component</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.2.2</p>
+</td>
+<td width="474">
+<p>Item branch application specifies the item specification in a certain branch where branch is warehouse, store, depot, cost center</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.2.3</p>
+</td>
+<td width="474">
+<p>Item Location stores moving quantities including on-hand quantity, quantity soft committed, hard committed, in-receipt</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.2.4</p>
+</td>
+<td width="474">
+<p>Item cost application maintains the cost of goods in a specific branch and location</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.2.5</p>
+</td>
+<td width="474">
+<p>Item Price application enables user to enter the price of item per certain unit of measure and currency code combination with price effective date</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.3.1</p>
+</td>
+<td width="474">
+<p>Sales order entry comprises header to store information customer including order date, request date, payment terms. Order detail stores information on item with quantity, unit of measure, cost, and price</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.3.2</p>
+</td>
+<td width="474">
+<p>Print pick slip represents actual relieve of inventory</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.3.3</p>
+</td>
+<td width="474">
+<p>Warehouse performs shipment confirmation based on actual shipping</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.3.4</p>
+</td>
+<td width="474">
+<p>Print Invoice prints the amount billed including tax</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.3.5</p>
+</td>
+<td width="474">
+<p>Sales-update application interfaces sales transaction with account receivable and general accounting as a daily closing</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.4</p>
+</td>
+<td width="474">
+<p>Link customer master, supplier master, and employee master from address book master</p>
+</td>
+<td width="95">
+<p>Sub-system</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.5</p>
+</td>
+<td width="474">
+<p>Maintain relationship among, item, item branch, item location, item cost, and item price</p>
+</td>
+<td width="95">
+<p>Sub-system</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.6</p>
+</td>
+<td width="474">
+<p>A menu for sales order processing sets entry points for each transactions in sales</p>
+</td>
+<td width="95">
+<p>Sub-system</p>
+</td>
+</tr>
+<tr>
+<td width="66">
+<p>V_1.6.1</p>
+</td>
+<td width="474">
+<p>Sales order allows to view customer related information, item related information, item availability, and demand plan</p>
+</td>
+<td width="95">
+<p>Components</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h2><a name="_Toc509340986"></a>Requirements Traceability Matrix</h2>
+<p>Requirements Traceability Matrix is a document that links requirements throughout the validation process. The goal for this document is to make sure that all requirements defined for a system are tested and verified. Usually, the requirements traceability matrix is developed along with the requirements elicited including the user requirements specification and functional requirements specification.</p>
+<p>Table 6 and table 7 shows the relationship between two matrixes to enable forward and backward track and trace (Ludwig Consulting Services, 2010).</p>
+<p>Table 6. User Requirements Matrix</p>
+<table>
+<tbody>
+<tr>
+<td width="48">
+<p><strong>ID</strong></p>
+</td>
+<td width="420">
+<p><strong>User Requirements</strong></p>
+</td>
+<td width="156">
+<p><strong>Forward Traceability</strong></p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U1</p>
+</td>
+<td width="420">
+<p>Users shall enter all business entities</p>
+</td>
+<td width="156">
+<p>S10</p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U2</p>
+</td>
+<td width="420">
+<p>Users shall register customer master, supplier master, and employee master</p>
+</td>
+<td width="156">
+<p>S11</p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U3</p>
+</td>
+<td width="420">
+<p>Users shall create item master</p>
+</td>
+<td width="156">
+<p>S12</p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U3</p>
+</td>
+<td width="420">
+<p>Users shall specifies item master and item branch relationship</p>
+</td>
+<td width="156">
+<p>S12</p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U4</p>
+</td>
+<td width="420">
+<p>Users shall enter item cost</p>
+</td>
+<td width="156">
+<p>S13</p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U5</p>
+</td>
+<td width="420">
+<p>Users shall enter item price</p>
+</td>
+<td width="156">
+<p>S14</p>
+</td>
+</tr>
+<tr>
+<td width="48">
+<p>U6</p>
+</td>
+<td width="420">
+<p>Users shall enter sales order header and detail</p>
+</td>
+<td width="156">
+<p>S15, S16</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note: The numbering is simplified for easier reading</em></p>
+<p>Table 7. Functional Requirements Matrix</p>
+<table>
+<tbody>
+<tr>
+<td width="54">
+<p><strong>ID</strong></p>
+</td>
+<td width="414">
+<p><strong>System Requirements</strong></p>
+</td>
+<td width="156">
+<p><strong>Backward Traceability</strong></p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S10</p>
+</td>
+<td width="414">
+<p>The system shall add, copy, update, delete entity information</p>
+</td>
+<td width="156">
+<p>U1</p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S11</p>
+</td>
+<td width="414">
+<p>The system shall add, copy, update, delete customer master, supplier master, and employee master</p>
+</td>
+<td width="156">
+<p>U2</p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S12</p>
+</td>
+<td width="414">
+<p>The system shall add, copy, update, delete item information with default values</p>
+</td>
+<td width="156">
+<p>U3</p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S13</p>
+</td>
+<td width="414">
+<p>The system shall validate the item cost</p>
+</td>
+<td width="156">
+<p>U4</p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S14</p>
+</td>
+<td width="414">
+<p>The system shall validate the item price</p>
+</td>
+<td width="156">
+<p>U5</p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S15</p>
+</td>
+<td width="414">
+<p>The system shall default and validate customer&rsquo;s information in sales order header</p>
+</td>
+<td width="156">
+<p>U6</p>
+</td>
+</tr>
+<tr>
+<td width="54">
+<p>S16</p>
+</td>
+<td width="414">
+<p>The system shall default and validate item information in sales order detail</p>
+</td>
+<td width="156">
+<p>U6</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h2><a name="_Toc509340987"></a>Summary</h2>
+<p>Requirements verification and validation are to ensure the delivery of what the client wants and verification and validation iterates across software development lifecycle including requirements elicitation, requirements analysis, and requirements specification phases.</p>
+<p>Requirements traceability matrix enables for both stakeholder and auditor to check the completeness of requirements. This document determines whether the current project requirements are being met and it get implemented right. Figure 23 depicts traceability matrix with simplicity to demonstrate how traciability tracks and traces in the software development life cycle.</p>
+
+<p><img src="../images/ctu00823.png" border="0" alt="Simplified Relationship for matrix" title="Simplified Relationship for Matrix" hspace="0" vspace="0"/></p>
+
+<p>Figure 23. Simplified Relationship for Matrix</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a name="_Toc509340988"></a>References</h1>
+<p>12manage, n.d., <em>Generating New Ideas in a Group Activity. Explanation of Brainstorming</em>. Retrieved February 26, 2018, from https://www.12manage.com/methods_brainstorming.html</p>
+<p>Adams, C. (2010). <em>What are the Four Fundamental Methods of Requirement Verification?</em> Retrieved March 20, 2018, from http://www.modernanalyst.com/Careers/InterviewQuestions/tabid/128/ID/1168/What-are-the-four-fundamental-methods-of-requirement-verification.aspx</p>
+<p>Barbacci, M. R., (2004). <em>Software Quality Attributes: Modifiability and Usability</em>. Retrieved March 13, 2018, from http://www.ieee.org.ar/downloads/Barbacci-05-notas1.pdf</p>
+<p>Bessin, G. (2004). <em>The Business Value of Software Quality</em>. Retrieved March 12, 2018, from https://www.ibm.com/developerworks/rational/library/dec04/bessin/bessin-pdf.pdf</p>
+<p>Boehm, B. W. (1979). <em>Guideline for Verifying and Validating Software Requirements and Design Specifications</em>. Retrieved March 19, 2018, from http://csse.usc.edu/TECHRPTS/1979/usccse79-501/usccse79-501.pdf</p>
+<p>BPMN. (n.d.). <em>Business Process Model and Notation</em>. Retrieved March 6, 2018, from http://www.bpmn.org/</p>
+<p>CodeEpsilon. (n.d.). <em>Software Development</em>. Retrieved February 26, 2018, from http://www.codeepsilon.com/software-development.html</p>
+<p>ContinuousAgile. (n.d.). <em>About Agile</em>. Retrieved February 26, 2018, from http://www.continuousagile.com/unblock/whatisagile.html</p>
+<p>Firesmith, D. (2005). <em>Quality Requirements Checklist</em>. Journal of Object Technology. Vol. 4, No. 9. Retrieved March 9, 2018, from http://www.jot.fm/issues/issue_2005_11/column4.pdf</p>
+<p>Frappier, M. Matwin, S., and Mili, A. (1994). <em>Maintainability: Factors and Criteria</em>. Software Metrics Study: Technical Memorandum. Retrieved March 13, 2018, from http://www.dmi.usherb.ca/~frappier/Papers/tm1.pdf</p>
+<p>Goldsmith, R. F. (2015). <em>Use elicitation techniques to discover software requirements</em>. Retrieved February 22, 2018, from http://searchsoftwarequality.techtarget.com/feature/Use-elicitation-techniques-to-discover-software-requirements</p>
+<p>Jackson, M. and Heymans, P. (2008). <em>Requirements Verification and Validation</em>. Retrieved March 19, 2018, from csis.pace.edu/~marchese/CS775/Lectures/775L12.ppt</p>
+<p>Laplante, P. A. (2013).&nbsp; <em>Requirements engineering for software and systems</em> (2<sup>nd</sup> Ed.). Boca Raton: Taylor &amp; Francis, CRC Press.</p>
+<p>Letort, D. B. (2018). <em>CS641-1801B-01: Software Requirements Engineering</em>. Requirements &amp; Quality. Retrieved March 20, 2018, from phase 4 &ndash; Chat material in CTU online learning material resource.</p>
+<p>Letort, D. B. (2018). <em>Overview of Requirements Engineering</em>. Retrieved February 15, 2018, from Phase 1 &ndash; Chat Material in CTU online learning materials resource.</p>
+<p>Ludwig Consulting Service. (2010). <em>Requirements Traceability Matrix.</em> Retrieved March 20, 2018, from http://www.jiludwig.com/Traceability_Matrix_Structure.html</p>
+<p>Mehle, M. E. (2017). <em>Particle Accelerators as Medical Devices</em>. Retrieved March 19, 2018, from https://www.linkedin.com/pulse/particle-accelerators-medical-devices-marcos-e-mehle</p>
+<p>Open Universiteit. (n.d.). <em>Requirements engineering and quality attributes</em>. Retrieved March 9, 2018, from https://www.ou.nl/documents/40554/349790/IM0203_02.pdf</p>
+<p>Persaud, D. (2016). <em>Business Requirements Gathering for Enterprise Software Selection</em>. Retrieved February 26, 2018, from https://selecthub.com/technology-selection/business-requirements-gathering-enterprise-software-selection/</p>
+<p>Rajkumar, J.B. (2017). <em>How to Deliver High Value Software Features in a Short Time Period using Agile Scrum Process</em>. Retrieved February 20, 2018, from online http://www.softwaretestinghelp.com/how-to-deliver-high-value-software-features-in-a-short-time-period-using-agile-scrum-process/</p>
+<p>Rodriguez, M., Oviedo, J. R., and Piattini, M. (2016). <em>Evaluation of Software Product Functional Suitability</em>: A Case Study. Retrieved March 13, 2018, from http://www.aqclab.es/images/AQCLab/Noticias/SQP/software-quality-management-evaluation-of-software-product-functional-suitability-a-case-study.pdf</p>
+<p>Semusheva, O. (n.d.). <em>Requirements. Why is it important?</em> Retrieved February 16, 2018, from https://steelkiwi.com/blog/requirements-why-it-important/</p>
+<p>T4tutorials.com. (2018). <em>What is Software Maintainability?</em> Retrieved March 13, 2018, from https://www.t4tutorials.com/software-maintainability-in-software-engineering/</p>
+<p>Wiegers, K. E. (2013). <em>Software requirements</em>. Retrieved March 5, 2018, from the presentation material found in csis.pace.edu/~marchese/CS775/Lectures/775L4.ppt</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+
+  </body>
+</html>
