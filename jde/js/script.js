@@ -47,7 +47,7 @@ function topFunction() {
   //   },1000);
   // }
 
-  incrementAndShowValue();
+incrementAndShowValue();
 
 function incrementAndShowValue() {
   var value = getCookie("visitcounter") || 0;
