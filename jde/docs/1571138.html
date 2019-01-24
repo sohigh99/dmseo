@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to implement Partial reversal through P43250 (Stock to previous steps)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to implement Partial reversal through P43250 (Stock to previous steps)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document is to guide possible way to implement partial reversal based on workaround suggested for below bugs:</p>
+<ul>
+<li>&lt;Bug 12522871&gt; - P43250 PARTIAL REVERSES ENTIRE - SAR: 8033510</li>
+<li>&lt;Bug 16511617&gt; - P43250- REVERSING QTY UPDATES LCR INCORRECTLY IN F4111 AND ALSO WAC</li>
+<li>&lt;Bug 17187009&gt; - E1 9.0 P43250 FAILS TO REVERSE DISPOSITION QUANTITY/AMOUNT FROM F4111</li>
+</ul>
+<p>Currently P43250 allows user to reverse partial quantity however this action corrupts data from F43121/F4111/F0911 when Landed cost is attached to receipt by reversing full amount for Landed cost lines. And same problem occurs in computing standard cost. So this document is to show example to work around this issue because this cause huge impact on integrity (quantity vs. value) when there is frequent transaction.</p>
+<p>Additionally, this document is to explain basic flow of routing and landed cost which may help you to debug issue.</p>
+<p><br />&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>&nbsp;</p>
+<p>This document is to explain possible way to implement this not to take workaround (Reverse full quantity and move to stock for balance quantity). So the implmentation mentioned here is same with this workaround in terms of logic.</p>
+<p style="font-weight: bold;">Table of Contents:</p>
+<ul>
+<li><a href="#asis" alt="As-Is Analysis" title="As-Is Analysis">As - Is Analysis</a></li>
+<ul>
+<li><a href="#f43121" alt="Data Change in F43121" title="Data Change in F43121">Table F43121 (Purchase Order Receiver File)</a></li>
+<li><a href="#f4111" alt="Data Change in F4111" title="Data Change in F4111">Table F4111 (Item Ledger File)</a></li>
+</ul>
+<li><a href="#simple" alt="Simplified routine" title="Simplified routine">Simplified routine of workaround</a></li>
+<li><a href="#applicationinterface" alt="Application Interface" title="Application Interface">Application interface</a></li>
+<li><a href="#detail" alt="Detail implemenation" title="Detail implemenation">Detail implementation</a></li>
+<li><a href="#considerations" alt="Considerations" title="Considerations">Considerations</a></li>
+</ul>
+<p><big><a name="asis"></a>As - Is Analysis</big></p>
+<p>Business Scenario:</p>
+<ol>
+<li>Receipt full quantity 10 with standard routing on through P4312 (PO Receipts)</li>
+<li>Move full quantity to stock through P43250 (Receipt Routing Movement and Disposition)</li>
+<li>Reverse quantity 2 back to previous routing steps through P43250</li>
+</ol>
+<p><a name="f43121"></a>A. F43121 (Purchase Order Receiver File)<br /> [As - Is]</p>
+<table style="border-collapse: collapse; width: 1228px; height: 74px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 36pt;" width="48" /> <col style="width: 86pt;" width="114" /> <col style="width: 89pt;" width="119" /> <col style="width: 71pt;" width="95" /> <col style="width: 88pt;" width="117" /> <col style="width: 123pt;" width="164" /> <col style="width: 54pt;" width="72" /> <col style="width: 50pt;" width="67" /> <col style="width: 94pt;" width="125" /> <col style="width: 146pt;" width="194" /> <col style="width: 88pt;" width="117" /> <col style="width: 150pt;" width="200" /> <col style="width: 94pt;" width="125" /> <col style="width: 87pt;" width="116" /> <col style="width: 47pt;" width="63" /> <col style="width: 74pt;" width="99" /> <col style="width: 71pt;" width="95" /> <col style="width: 91pt;" width="121" /> <col style="width: 77pt;" width="103" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt; width: 36pt; font-weight: bold;">F4312</td>
+<td class="xl63" style="width: 172px; font-weight: bold;">ActionTaken</td>
+<td class="xl63" style="width: 0px; font-weight: bold;">M<br /> &nbsp;T</td>
+<td class="xl63" style="width: 77px; font-weight: bold;">No of Lines</td>
+<td class="xl63" style="width: 88pt; font-weight: bold;" width="117">2nd Item Number</td>
+<td class="xl63" style="width: 123pt; font-weight: bold;" width="164">Remark&nbsp;</td>
+<td class="xl63" style="width: 54pt; font-weight: bold;" width="72">L C</td>
+<td class="xl63" style="width: 50pt; font-weight: bold;" width="67">Cost Rule</td>
+<td class="xl63" style="width: 94pt; font-weight: bold;" width="125">Level Cost</td>
+<td class="xl63" style="width: 146pt; font-weight: bold;" width="194">Received Not Vouch Account</td>
+<td class="xl63" style="width: 88pt; font-weight: bold;" width="117">Quantity Ordered</td>
+<td class="xl63" style="width: 150pt; font-weight: bold;" width="200">Quantity Open</td>
+<td class="xl63" style="width: 94pt; font-weight: bold;" width="125">Quantity Received</td>
+<td class="xl63" style="width: 87pt; font-weight: bold;" width="116">Quantity Stocked</td>
+<td class="xl63" style="width: 47pt; font-weight: bold;" width="63">Unit Cost</td>
+<td class="xl63" style="width: 74pt; font-weight: bold;" width="99">Extended Cost</td>
+<td class="xl63" style="width: 71pt; font-weight: bold;" width="95">Amount Open</td>
+<td class="xl63" style="width: 91pt; font-weight: bold;" width="121">Amount Received</td>
+<td class="xl63" style="width: 77pt; font-weight: bold;" width="103">Program ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl63" style="width: 172px;">1. Full Receipt</td>
+<td class="xl64" style="width: 0px;">1</td>
+<td class="xl63" style="width: 77px;" align="right">1</td>
+<td class="xl64">KOPI-C</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">DML</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4111</td>
+<td class="xl63" align="right">10</td>
+<td class="xl63" align="right">10</td>
+<td class="xl63" align="right">10</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63" align="right">150</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl65" align="right">1,500.00</td>
+<td class="xl65" align="right">1,500.00</td>
+<td class="xl64">EP4312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; width: 172px;">2. Move to Stock&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc; width: 0px;">1</td>
+<td class="xl63" style="background-color: #ffffcc; width: 77px;" align="right">1</td>
+<td class="xl64" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc;">1</td>
+<td class="xl64" style="background-color: #ffffcc;">DML</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4111</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">150</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1,500.00</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1,500.00</td>
+<td class="xl64" style="background-color: #ffffcc;">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; width: 172px;">&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc; width: 0px;">1</td>
+<td class="xl63" style="background-color: #ffffcc; width: 77px;" align="right">2</td>
+<td class="xl64" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl64" style="background-color: #ffffcc;">Harbor Fee</td>
+<td class="xl64" style="background-color: #ffffcc;">2</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc;">3</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">50</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">500</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">500</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">500</td>
+<td class="xl64" style="background-color: #ffffcc;">EP4312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; width: 172px;">&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc; width: 0px;">1</td>
+<td class="xl63" style="background-color: #ffffcc; width: 77px;" align="right">3</td>
+<td class="xl64" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl64" style="background-color: #ffffcc;">Brokerage Fees</td>
+<td class="xl64" style="background-color: #ffffcc;">2</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl64" style="background-color: #ffffcc;">5</td>
+<td class="xl64" style="background-color: #ffffcc;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">30</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">300</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">300</td>
+<td class="xl63" style="background-color: #ffffcc;" align="right">300</td>
+<td class="xl64" style="background-color: #ffffcc;">EP4312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl64" style="width: 172px;">3. Return to DOCK</td>
+<td class="xl64" style="width: 0px;">1</td>
+<td class="xl63" style="width: 77px;" align="right">1</td>
+<td class="xl64">KOPI-C</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">DML</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4111</td>
+<td class="xl63" align="right">10</td>
+<td class="xl63" align="right">10</td>
+<td class="xl63" align="right">10</td>
+<td class="xl63" align="right">8</td>
+<td class="xl63" align="right">150</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl65" align="right">1,500.00</td>
+<td class="xl65" align="right">1,500.00</td>
+<td class="xl64">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl63" style="width: 172px;">&nbsp;</td>
+<td class="xl64" style="width: 0px;">4</td>
+<td class="xl63" style="width: 77px;" align="right">2</td>
+<td class="xl64">KOPI-C</td>
+<td class="xl64">Harbor Fee</td>
+<td class="xl64">2</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">3</td>
+<td class="xl64">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl63" style="background-color: #99ff99;">&nbsp;</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">50</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">500</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">500</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">500</td>
+<td class="xl64">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl63" style="width: 172px;">&nbsp;</td>
+<td class="xl64" style="width: 0px;">4</td>
+<td class="xl63" style="width: 77px;" align="right">3</td>
+<td class="xl64">KOPI-C</td>
+<td class="xl64">Brokerage Fees</td>
+<td class="xl64">2</td>
+<td class="xl64">&nbsp;</td>
+<td class="xl64">5</td>
+<td class="xl64">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl63" style="background-color: #99ff99;">&nbsp;</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">30</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">300</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">300</td>
+<td class="xl63" style="background-color: #99ff99;" align="right">300</td>
+<td class="xl64">EP43250</td>
+</tr>
+</tbody>
+</table>
+<p><br /> Full Quantity/Amount is reversed though only 80% are reversed through P43250<br /> <br /> [To - Be]</p>
+<table style="border-collapse: collapse; width: 1231px; height: 131px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 36pt;" width="48" /> <col style="width: 86pt;" width="114" /> <col style="width: 89pt;" width="119" /> <col style="width: 71pt;" width="95" /> <col style="width: 88pt;" width="117" /> <col style="width: 123pt;" width="164" /> <col style="width: 54pt;" width="72" /> <col style="width: 50pt;" width="67" /> <col style="width: 94pt;" width="125" /> <col style="width: 146pt;" width="194" /> <col style="width: 88pt;" width="117" /> <col style="width: 150pt;" width="200" /> <col style="width: 94pt;" width="125" /> <col style="width: 87pt;" width="116" /> <col style="width: 47pt;" width="63" /> <col style="width: 74pt;" width="99" /> <col style="width: 71pt;" width="95" /> <col style="width: 91pt;" width="121" /> <col style="width: 77pt;" width="103" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 36pt; font-weight: bold;" width="48" height="17">F4312</td>
+<td class="xl65" style="width: 64px; font-weight: bold;">&nbsp;ActionTaken</td>
+<td class="xl65" style="width: 23px; font-weight: bold;">M T</td>
+<td class="xl65" style="width: 71pt; font-weight: bold;" width="95">No of Lines</td>
+<td class="xl65" style="width: 88pt; font-weight: bold;" width="117">2nd Item Number</td>
+<td class="xl65" style="width: 123pt; font-weight: bold;" width="164">Remark&nbsp;</td>
+<td class="xl65" style="width: 54pt; font-weight: bold;" width="72">L C</td>
+<td class="xl65" style="width: 50pt; font-weight: bold;" width="67">Cost Rule</td>
+<td class="xl65" style="width: 94pt; font-weight: bold;" width="125">Level Cost</td>
+<td class="xl65" style="width: 146pt; font-weight: bold;" width="194">Received Not Vouch Account</td>
+<td class="xl65" style="width: 88pt; font-weight: bold;" width="117">Quantity Ordered</td>
+<td class="xl65" style="width: 150pt; font-weight: bold;" width="200">Quantity Open</td>
+<td class="xl65" style="width: 94pt; font-weight: bold;" width="125">Quantity Received</td>
+<td class="xl65" style="width: 87pt; font-weight: bold;" width="116">Quantity Stocked</td>
+<td class="xl65" style="width: 47pt; font-weight: bold;" width="63">Unit Cost</td>
+<td class="xl65" style="width: 74pt; font-weight: bold;" width="99">Extended Cost</td>
+<td class="xl65" style="width: 71pt; font-weight: bold;" width="95">Amount Open</td>
+<td class="xl65" style="width: 91pt; font-weight: bold;" width="121">Amount Received</td>
+<td class="xl65" style="width: 77pt; font-weight: bold;" width="103">Program ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;">&nbsp;</td>
+<td class="xl65" style="width: 64px;">1. Full Receipt</td>
+<td class="xl66" style="width: 23px;">1</td>
+<td class="xl65" align="right">1</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">DML</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4111</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">150</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl67" align="right">1,500.00</td>
+<td class="xl67" align="right">1,500.00</td>
+<td class="xl66">EP4312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc; width: 64px;">2. Move to Stock&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc; width: 23px;">1</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc;">1</td>
+<td class="xl66" style="background-color: #ffffcc;">DML</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4111</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">150</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl67" style="background-color: #ffffcc;" align="right">1,500.00</td>
+<td class="xl67" style="background-color: #ffffcc;" align="right">1,500.00</td>
+<td class="xl66" style="background-color: #ffffcc;">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc; width: 64px;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc; width: 23px;">1</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">2</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl66" style="background-color: #ffffcc;">Harbor Fee</td>
+<td class="xl66" style="background-color: #ffffcc;">2</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc;">3</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">50</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">500</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">500</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">500</td>
+<td class="xl66" style="background-color: #ffffcc;">EP4312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc; width: 64px;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc; width: 23px;">1</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">3</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl66" style="background-color: #ffffcc;">Brokerage Fees</td>
+<td class="xl66" style="background-color: #ffffcc;">2</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc;">5</td>
+<td class="xl66" style="background-color: #ffffcc;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">30</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">300</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">300</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">300</td>
+<td class="xl66" style="background-color: #ffffcc;">EP4312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 64px;">3. Return to DOCK</td>
+<td class="xl66" style="width: 23px;">1</td>
+<td class="xl65" align="right">1</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">DML</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4111</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">150</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl67" align="right">1,500.00</td>
+<td class="xl67" align="right">1,500.00</td>
+<td class="xl66">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; color: red;" height="17">&nbsp;</td>
+<td class="xl65" style="color: red; width: 64px;">&nbsp;</td>
+<td class="xl66" style="color: red; width: 23px;">1</td>
+<td class="xl65" style="color: red;" align="right">2</td>
+<td class="xl66" style="color: red;">KOPI-C</td>
+<td class="xl66" style="color: red;">Harbor Fee</td>
+<td class="xl66" style="color: red;">2</td>
+<td class="xl66" style="color: red;">&nbsp;</td>
+<td class="xl66" style="color: red;">3</td>
+<td class="xl66" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl65" style="color: red;">&nbsp;</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">8</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">8</td>
+<td class="xl65" style="color: red; background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">50</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">400</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">400</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">400</td>
+<td class="xl65" style="color: red;">ER43092Z1I</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; color: red;" height="17">&nbsp;</td>
+<td class="xl65" style="color: red; width: 64px;">&nbsp;</td>
+<td class="xl66" style="color: red; width: 23px;">1</td>
+<td class="xl65" style="color: red;" align="right">3</td>
+<td class="xl66" style="color: red;">KOPI-C</td>
+<td class="xl66" style="color: red;">Brokerage Fees</td>
+<td class="xl66" style="color: red;">2</td>
+<td class="xl66" style="color: red;">&nbsp;</td>
+<td class="xl66" style="color: red;">5</td>
+<td class="xl66" style="color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl65" style="color: red;">&nbsp;</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">8</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">8</td>
+<td class="xl65" style="color: red; background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">30</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">240</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">240</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">240</td>
+<td class="xl65" style="color: red;">ER43092Z1I</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65" style="width: 64px;">&nbsp;</td>
+<td class="xl66" style="width: 23px;">4</td>
+<td class="xl65" align="right">2</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl66">Harbor Fee</td>
+<td class="xl66">2</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">3</td>
+<td class="xl66">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl65" style="background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">50</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">500</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">500</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">500</td>
+<td class="xl66">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65" style="width: 64px;">&nbsp;</td>
+<td class="xl66" style="width: 23px;">4</td>
+<td class="xl65" align="right">3</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl66">Brokerage Fees</td>
+<td class="xl66">2</td>
+<td class="xl66">&nbsp;</td>
+<td class="xl66">5</td>
+<td class="xl66">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30.4184</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">10</td>
+<td class="xl65" style="background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">30</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">300</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">300</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">300</td>
+<td class="xl66">EP43250</td>
+</tr>
+</tbody>
+</table>
+<p><br /> Reversed full quantity/amount than move to stock balance 80%<br /> <br /> <a name="f4111"></a>B. F4111 (Item Ledger File)<br /> [As - Is]</p>
+<table style="border-collapse: collapse; width: 837px; height: 102px;" border="2" cellspacing="1" cellpadding="1"><colgroup><col style="width: 36pt;" width="48" /> <col style="width: 86pt;" width="114" /> <col style="width: 89pt;" width="119" /> <col style="width: 71pt;" width="95" /> <col style="width: 88pt;" width="117" /> <col style="width: 123pt;" width="164" /> <col style="width: 54pt;" width="72" /> <col style="width: 50pt;" width="67" /> <col style="width: 94pt;" width="125" /> <col style="width: 146pt;" width="194" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 36pt; font-weight: bold;">F4111</td>
+<td class="xl65" style="width: 86pt; font-weight: bold;" width="114">&nbsp;</td>
+<td class="xl65" style="width: 89pt; font-weight: bold;" width="119">2nd Item Number</td>
+<td class="xl65" style="width: 71pt; font-weight: bold;" width="95">Line Number</td>
+<td class="xl65" style="width: 88pt; font-weight: bold;" width="117">JE Line Number</td>
+<td class="xl65" style="width: 123pt; font-weight: bold;" width="164">Transaction Explanation</td>
+<td class="xl65" style="width: 54pt; font-weight: bold;" width="72">Trans QTY</td>
+<td class="xl65" style="width: 50pt; font-weight: bold;" width="67">Unit Cost</td>
+<td class="xl65" style="width: 94pt; font-weight: bold;" width="125">Extended Cost/Price</td>
+<td class="xl65" style="width: 146pt; font-weight: bold;" width="194">Program ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;">2. Move to Stock</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1</td>
+<td class="xl66" style="background-color: #ffffcc;">Inventory Receipt</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">150</td>
+<td class="xl67" style="background-color: #ffffcc;" align="right">1,500.00</td>
+<td class="xl66" style="background-color: #ffffcc;">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">3</td>
+<td class="xl66" style="background-color: #ffffcc;">Landed Cost</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">80</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">800</td>
+<td class="xl66" style="background-color: #ffffcc;">EP43291</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">3. Return to DOCK</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">1</td>
+<td class="xl66">Inventory Receipt</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">150</td>
+<td class="xl67" align="right">1,500.00</td>
+<td class="xl66">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65" align="right">1</td>
+<td class="xl65" align="right">3</td>
+<td class="xl66">Landed Cost</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">80</td>
+<td class="xl65" align="right">800</td>
+<td class="xl66">EP43291</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">1</td>
+<td class="xl66">Inventory Receipt</td>
+<td class="xl65" align="right">-2</td>
+<td class="xl65" align="right">150</td>
+<td class="xl65" align="right">-300</td>
+<td class="xl66">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65" align="right">1</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66" style="background-color: #99ff99;">Landed Cost</td>
+<td class="xl65" style="background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">80</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">-800</td>
+<td class="xl66">EP43291</td>
+</tr>
+</tbody>
+</table>
+<p>Full amount is reversed for Landed Cost<br /> <br /> [To - Be]</p>
+<table style="border-collapse: collapse; width: 837px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 36pt;" width="48" /> <col style="width: 86pt;" width="114" /> <col style="width: 89pt;" width="119" /> <col style="width: 71pt;" width="95" /> <col style="width: 88pt;" width="117" /> <col style="width: 123pt;" width="164" /> <col style="width: 54pt;" width="72" /> <col style="width: 50pt;" width="67" /> <col style="width: 94pt;" width="125" /> <col style="width: 146pt;" width="194" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 36pt; font-weight: bold;" width="48" height="17">F4111</td>
+<td class="xl65" style="width: 86pt; font-weight: bold;" width="114">&nbsp;</td>
+<td class="xl65" style="width: 89pt; font-weight: bold;" width="119">2nd Item Number</td>
+<td class="xl65" style="width: 71pt; font-weight: bold;" width="95">Line Number</td>
+<td class="xl65" style="width: 88pt; font-weight: bold;" width="117">JE Line Number</td>
+<td class="xl65" style="width: 123pt; font-weight: bold;" width="164">Transaction Explanation</td>
+<td class="xl65" style="width: 54pt; font-weight: bold;" width="72">Trans QTY</td>
+<td class="xl65" style="width: 50pt; font-weight: bold;" width="67">Unit Cost</td>
+<td class="xl65" style="width: 94pt; font-weight: bold;" width="125">Extended Cost/Price</td>
+<td class="xl65" style="width: 146pt; font-weight: bold;" width="194">Program ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;">2. Move to Stock</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1</td>
+<td class="xl66" style="background-color: #ffffcc;">Inventory Receipt</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">10</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">150</td>
+<td class="xl67" style="background-color: #ffffcc;" align="right">1,500.00</td>
+<td class="xl66" style="background-color: #ffffcc;">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; background-color: #ffffcc;" height="17">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl66" style="background-color: #ffffcc;">KOPI-C</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">3</td>
+<td class="xl66" style="background-color: #ffffcc;">Landed Cost</td>
+<td class="xl65" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">80</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">800</td>
+<td class="xl66" style="background-color: #ffffcc;">EP43291</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">3. Return to DOCK</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">1</td>
+<td class="xl66">Inventory Receipt</td>
+<td class="xl65" align="right">10</td>
+<td class="xl65" align="right">150</td>
+<td class="xl67" align="right">1,500.00</td>
+<td class="xl66">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65" align="right">1</td>
+<td class="xl65" align="right">3</td>
+<td class="xl66">Landed Cost</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">80</td>
+<td class="xl65" align="right">800</td>
+<td class="xl66">EP43291</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl65" align="right">1</td>
+<td class="xl66">Inventory Receipt</td>
+<td class="xl65" align="right">-10</td>
+<td class="xl65" align="right">150</td>
+<td class="xl67" align="right">-1,500.00</td>
+<td class="xl66">EP43250</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">&nbsp;</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66">KOPI-C</td>
+<td class="xl65" align="right">1</td>
+<td class="xl65">&nbsp;</td>
+<td class="xl66" style="background-color: #99ff99;">Landed Cost</td>
+<td class="xl65" style="background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">80</td>
+<td class="xl65" style="background-color: #99ff99;" align="right">-800</td>
+<td class="xl66">EP43291</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; color: red;" height="17">&nbsp;</td>
+<td class="xl65" style="color: red;">&nbsp;</td>
+<td class="xl66" style="color: red;">KOPI-C</td>
+<td class="xl65" style="color: red;">&nbsp;</td>
+<td class="xl65" style="color: red;" align="right">1</td>
+<td class="xl66" style="color: red;">Inventory Receipt</td>
+<td class="xl65" style="color: red;" align="right">8</td>
+<td class="xl65" style="color: red;" align="right">150</td>
+<td class="xl65" style="color: red;" align="right">1200</td>
+<td class="xl66" style="color: red;">ER43092Z1I</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; color: red;" height="17">&nbsp;</td>
+<td class="xl65" style="color: red;">&nbsp;</td>
+<td class="xl66" style="color: red;">KOPI-C</td>
+<td class="xl65" style="color: red;" align="right">1</td>
+<td class="xl65" style="color: red;">&nbsp;</td>
+<td class="xl66" style="color: red; background-color: #99ff99;">Landed Cost</td>
+<td class="xl65" style="color: red; background-color: #99ff99;">&nbsp;</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">80</td>
+<td class="xl65" style="color: red; background-color: #99ff99;" align="right">640</td>
+<td class="xl66" style="color: red;">ER43092Z1I</td>
+</tr>
+</tbody>
+</table>
+<p>Full Amount is reverted then balance 80% is moved to stock (Harbor Fee: 400 and Brokerage: 240 which are 80% of 500 and 300 respectively)</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><br /> <big><a name="simple"></a>Simplified routine for this work around:</big><br /> 1.&nbsp;&nbsp; &nbsp;when partial reversal is tried, then reverse full quantity (and save off balance quantity)<br /> 2.&nbsp;&nbsp; &nbsp;move balance off quantity to stock</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><big><a name="applicationinterface"></a>Application interface:</big><br /> 1.&nbsp;&nbsp; &nbsp;when partial reversal is tried, reverse full quantity (and save off balance quantity): through P43250<br /> 2.&nbsp;&nbsp; &nbsp;move balance off quantity to stock: through R43092Z1I&nbsp; (Receipt Routing Unedited Transactions Inbound Processor).</p>
+<p>The reason for this implementation is that we can't call Edit Line routine twice because P43250 shall create only one Cache Job Number for Routing, Inventory and G/L. So we need to wait for full reversal through interactive application then we move balance quantity to stock through another routine (for this example R43092Z1I).</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><big><a name="detail"></a>Detail Implementation:</big><br /> <br /> 1.&nbsp;&nbsp; &nbsp;Create hidden GC column:&nbsp; This is to check whether partial reversal is entered or not (DD item used EV01). In case multiple lines are entered for this screen, this can handle row by row basis.</p>
+<p>Example:<br /> <span style="font-style: italic;">GC Partial Rev (Hidden).</span><br /> <br /> 2.&nbsp;&nbsp; &nbsp;Save off EDI Batch Number:&nbsp; This value is to be used in populating F43092Z1. Report Interconnection in calling R43092Z1I at the end of Post OK button clicked. This is possible because P43250 does not have transaction processing in calling End Doc routine. But R43092Z1I must be fired.</p>
+<p>Example:<br /> <span style="font-style: italic; font-weight: bold;">Application : Receipt Routing Movement and Disposition (P43250)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">FORM: Receipt Routing Movement [HEADERLESS DETAIL] (W43250L)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; EVENT:&nbsp; Post Dialog is Initialized</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;// This value is to be used in inserting data into F43082Z1 at Row is Exited/changed - Asynch event &amp;&amp; RI (Report Interconnection)</span><br style="font-style: italic;" /> <span style="font-style: italic; color: #006600;">&nbsp;EDI Batch Number, Get Next Number (EDBTGetNextNumber - N4700060)</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_CUSTOM_EdiBatchNo_EDBT &lt;- BF szEdiBatchNumber</span></p>
+<p><br /> 3.&nbsp;&nbsp; &nbsp;Check whether partial reversal is tried or not:&nbsp; We put this into GC hidden column because this is to be used in writing F43092Z1 <br /> <span style="font-style: italic; font-weight: bold;">Application : Receipt Routing Movement and Disposition (P43250)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">FORM: Receipt Routing Movement [HEADERLESS DETAIL] (W43250L)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; CONTROL:&nbsp; GRIDCOL Move Quantity</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; EVENT:&nbsp; Col Exited &amp; Changed - Inline</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;If GC Move Quantity is greater than GC Quantity at Operation</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp; Set Grid Cell Error(FC Grid, &lt;Currently Selected Row&gt;, GC Move Quantity, "2717")</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp; Disable Grid(FC Grid, &lt;Currently Selected Row&gt;, GC O P)</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;Else</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp; Enable Grid(FC Grid, &lt;Currently Selected Row&gt;, GC O P)</span><br style="font-style: italic;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp; If GC Oper Code is equal to "STK" </span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp; And GC Move Quantity is not equal to GC Quantity at Operation</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Partial Rev (Hidden) = "Y"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp; Else</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Partial Rev (Hidden) = "N"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp; End If</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;End If</span></p>
+<p>&nbsp;</p>
+<p>4.&nbsp;&nbsp; &nbsp;Call F43092 Edit Line conditionally:&nbsp;&nbsp; Edit Line gets called to cancel off full quantity<br /> <span style="font-style: italic; font-weight: bold;">Application : Receipt Routing Movement and Disposition (P43250)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">FORM: Receipt Routing Movement [HEADERLESS DETAIL] (W43250L)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; EVENT:&nbsp; Row Exit &amp; Changed - Asynch</span><br style="font-style: italic;" /> <br style="font-style: italic;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_UserId</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_DateUpdated</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_TimeLastUpdated</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_WorkStationId</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_EdiTransactNumber</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_TypeTrans_TYTN</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_DirIndicator_DRIN</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_TransAction_TNAC</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_QtyBal_QTYO</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_ProgramId_PID</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_EdiLineN_EDLN</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp; evt_CUSTOM_OperSeq_OPRS</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;If VA frm_cRowExitFlag_EV01 is not equal to "Y"</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp; If VA grd_cEditLineHasRunFlag_EV01 is not equal to "O"</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Check partial reversing Scenario</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Through P43250 we are going to reversal full quantity</span><br style="font-style: italic;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If GC Partial Rev (Hidden) is equal to "Y"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Balance quantity will be written to F43092Z1 to handle DOCK --&gt; STK after reversing is performed fully by calling R43092Z1I Set QTYO = Full Quantity</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F43092 Edit Line</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;// below parameters are modified</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Oper Code -&gt; BF szOperationCodeFrom</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Move Oper -&gt; BF szOperationCodeTo</span><br style="font-style: italic; color: #006600;" /> <br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Quantity at Operation -&gt; BF mnQuantityAtOperation</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Quantity at Operation -&gt; BF mnQuantityToMove</span><br style="font-style: italic; color: #006600;" /> <br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Check whether Edit Line contains any error (No error then write F43092Z1) Currently F43092Z1 is written only for Disposition so this option appears to be safe!</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 1. Get Audit Information for insert of data into Interop Inbound table</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Get Audit Information</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_UserId &lt;- BF szUserName</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_DateUpdated &lt;- BF jdDate</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_TimeLastUpdated &lt;- BF mnTime</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_WorkStationId &lt;- BF szWorkstation_UserId</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 2. Get EDI Batch Number (Part of primary key)</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // In case multiple rows are handled, EDI batch has to be called only once from From Level Event (move to Post Dialog is Initialized event) This value will be use for RI variable per transaction</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 3. Convert Order Number to String because EDI Document Number is String Data type</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Convert Math_Numeric To String</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Number -&gt; BF mnMathNumeric01</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_EdiTransactNumber &lt;- BF szString</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 4. Assign basic values to make use of default Interop option JDERR (Receipt Routing)</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_TypeTrans_TYTN = "JDERR"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_DirIndicator_DRIN = "1"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_TransAction_TNAC = "A"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 5. Set Quantity Operation: GC Quantity at Operation - GC Move Quantity</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_QtyBal_QTYO = [GC Quantity at Operation]-[GC Move Quantity]</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 6. Indicate this code is written through custom routine CUSTOM</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_ProgramId_PID = "CUSTOM"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 7. Set OPRS = GC Opers - 1</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_OperSeq_OPRS = [GC Opr Seq]-1</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // 7. Check whether same data does exit on primary key of F43092Z1</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F43092Z1.Fetch Single</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_UserId =&nbsp; TK EDI - User ID</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_CUSTOM_EdiBatchNo_EDBT =&nbsp; TK EDI - Batch Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_EdiTransactNumber =&nbsp; TK EDI - Transaction Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Line Number =&nbsp; TK EDI - Line Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If SV File_IO_Status is equal to CO SUCCESS</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_EdiLineN_EDLN = [GC Line Number]+1</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Else</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_EdiLineN_EDLN = GC Line Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End If</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F43092Z1.Insert</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_UserId -&gt; TK EDI - User ID</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_CUSTOM_EdiBatchNo_EDBT -&gt; TK EDI - Batch Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_EdiTransactNumber -&gt; TK EDI - Transaction Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_EdiLineN_EDLN -&gt; TK EDI - Line Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_TypeTrans_TYTN -&gt; TK Type - Transaction</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_DirIndicator_DRIN -&gt; TK Direction Indicator</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_TransAction_TNAC -&gt; TK Transaction Action</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Co -&gt; TK Order Company (Order Number)</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Number -&gt; TK Document (Order No, Invoice, etc.)</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Or Ty -&gt; TK Order Type</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Ord Suf -&gt; TK Order Suffix</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Line Number -&gt; TK Line Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC No of Lines -&gt; TK Number of Lines</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Branch/ Plant -&gt; TK Business Unit</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_OperSeq_OPRS -&gt; TK Sequence Number - Operations</span><br style="font-style: italic; color: red;" /> <span style="font-style: italic; color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Move Oper -&gt; TK Code - Operation</span><br style="font-style: italic; color: red;" /> <span style="font-style: italic; color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC UM -&gt; TK Unit of Measure as Input</span><br style="font-style: italic; color: red;" /> <span style="font-style: italic; color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Quantity at Operation -&gt; TK Units - At Operation</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Location -&gt; TK Location</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Short Item No -&gt; TK Item Number - Short</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Address Number -&gt; TK Address Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC GL Date -&gt; TK Date - For G/L (and Voucher)</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_QtyBal_QTYO -&gt; TK Units - Moved</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Lot/Serial -&gt; TK Lot/Serial Number</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Receipt Date -&gt; TK Date - Order/Transaction</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Oper Code -&gt; TK Code - To Operation</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_UserId -&gt; TK Transaction Originator</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_UserId -&gt; TK User ID</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_ProgramId_PID -&gt; TK Program ID</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_WorkStationId -&gt; TK Work Station ID</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_DateUpdated -&gt; TK Date - Updated</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_CUSTOM_TimeLastUpdated -&gt; TK Time of Day</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Set Error if it fails to insert F43092Z1 because it won't move balance quantity to stock</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If SV File_IO_Status is not equal to CO SUCCESS</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Set Grid Cell Error(FC Grid, &lt;Currently Selected Row&gt;, GC Move Quantity, "0001")</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Else</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End If</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Else</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // usual routing - in calling F43092EditLine no parameters are modified</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F43092 Edit Line</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End If</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;End If</span><br /> &nbsp;</p>
+<p>Analyze standard routine for this implemenation as below,</p>
+<p>F43092EditLine - NXT43092 (F43092 Edit Line) is handling data based on Grid column value in P43250 as below,</p>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 1090px; height: 245px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 281pt;" span="3" width="374" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl63" style="height: 15.75pt; width: 281pt; background-color: #009900; color: white;">Partial Return</th><th class="xl63" style="width: 281pt; background-color: #009900; color: white;">Full Return</th><th class="xl63" style="width: 281pt; background-color: #009900; color: white;">Partially move to Stock</th></tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;">&hellip;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt; background-color: #ffffcc;" height="21">IN-&gt;[ 10] szOperationCodeFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [STK]&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">IN-&gt;[ 10] szOperationCodeFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [STK]&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">IN-&gt;[ 10] szOperationCodeFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [DOCK]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt; background-color: #ffffcc;" height="21">IN-&gt;[ 11] szOperationCodeTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [DOCK]&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">IN-&gt;[ 11] szOperationCodeTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [DOCK]&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">IN-&gt;[ 11] szOperationCodeTo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [STK]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">IN-&gt;[ 12] szUnitOfMeasureFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [KG]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 12] szUnitOfMeasureFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [KG]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 12] szUnitOfMeasureFrom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [KG]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">IN-&gt;[ 13] szP43250Version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ORCL0001]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 13] szP43250Version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ORCL0001]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 13] szP43250Version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ORCL0001]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">IN-&gt;[ 14] cReverseDispositionFlag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 14] cReverseDispositionFlag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 14] cReverseDispositionFlag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">IN-&gt;[ 15] mnQuantityAtOperation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [10.0000]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 15] mnQuantityAtOperation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [10.0000]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 15] mnQuantityAtOperation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [10.0000]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt; background-color: #ffffcc;" height="21">IN-&gt;[ 16] mnQuantityToMove&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2.0000]&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">IN-&gt;[ 16] mnQuantityToMove&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [10.0000]&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">IN-&gt;[ 16] mnQuantityToMove&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [8.0000]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">&hellip;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">IN-&gt;[ 41] mnF43092Jobnumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 41] mnF43092Jobnumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 41] mnF43092Jobnumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">IN-&gt;[ 42] mnF43121JobNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 42] mnF43121JobNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0]&nbsp;</td>
+<td class="xl63">IN-&gt;[ 42] mnF43121JobNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0]&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl63" style="height: 15.75pt;" height="21">&hellip;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Note:</p>
+<ul>
+<li>As we can see above Move to Stock or Reverse is handled by szOperationCodeFrom and szOperationCodeTo</li>
+<li>mnQuantityAtOperation has to be full receipt quantity</li>
+<li>Do not allocate any Job Numbers which has to be determined in called routine (for example, XT4312Z1/XT4312Z2 - F4312EditLine)</li>
+</ul>
+<p>5.&nbsp;&nbsp; &nbsp;Create a version for report interconnection&nbsp;</p>
+<p><br /> 6.&nbsp;&nbsp; &nbsp;Call R43092Z1I after End Doc gets called. This is possible because we do not have Transaction Processing for P43250:&nbsp;&nbsp; Call this asynchronously because this job shall take a minute to handle all related transaction.</p>
+<p><span style="font-style: italic; font-weight: bold;">Application : Receipt Routing Movement and Disposition (P43250)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">FORM: Receipt Routing Movement [HEADERLESS DETAIL] (W43250L)</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; CONTROL:&nbsp; HYPITEM &amp;OK</span><br style="font-style: italic; font-weight: bold;" /> <span style="font-style: italic; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp; EVENT:&nbsp; Post Button Clicked</span><br style="font-style: italic;" /> <span style="font-style: italic;">&nbsp;Press Button(FC Clear Caches)</span><br style="font-style: italic;" /> <span style="font-style: italic; color: #006600;">&nbsp;If GC Partial Rev (Hidden) is equal to "Y"</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp; Call( UBE:R43092Z1I , Ver: ORCL0005 )</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_CUSTOM_EdiBatchNo_EDBT -&gt; RI szEdiBatchNumber</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;Else</span><br style="font-style: italic; color: #006600;" /> <span style="font-style: italic; color: #006600;">&nbsp;End If</span></p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p><big><a name="considerations"></a>Considerations: </big></p>
+<ul>
+<li>Do not press Find button in P43250 too many times (give time for UBE to finish)</li>
+<li>Refer&nbsp; how&nbsp; to write Z1 table and call UBE through attached event rule.</li>
+</ul>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

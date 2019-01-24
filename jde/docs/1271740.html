@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Write a C Business Function to Return a Special Character</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Write a C Business Function to Return a Special Character</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>To manipulate string or text values you need to make use of special characters available, which can be accomplished only by C programming. This document is a simple example of how a C business function can be written to return a special character.&nbsp;</p>
+<div class="kmnotebox">NOTE:&nbsp; The following example is provided <strong>as is</strong>, Oracle does not provide warranty and is not responsible for any issues with using this example.&nbsp; This information is provided as an example only.&nbsp; <br /> <br /> User must be proficient in C++ programming in order to use the information in this document.&nbsp;</div>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>In C library, the standard "string" library contains many useful functions to manipulate strings (referenced by K &amp; R C Programming Language). Some of the most useful functions are:</p>
+<ul>
+<li>char *strcpy(s,ct) -&gt; copy ct into s, including ``\0''; return s</li>
+<li>char *strncpy(s,ct,n) -&gt; copy ncharcater of ct into s, return s</li>
+<li>char *strncat(s,ct) -&gt; concatenate ct to end of s; return s</li>
+<li>char *strncat(s,ct,n) -&gt; concatenate n character of ct to end of s, terminate with ``\0''; return s</li>
+<li>int strcmp(cs,ct) -&gt; compare cs and ct; return 0 if cs=ct, &lt;0 if cs0 if cs&gt;ct</li>
+<li>char *strchr(cs,c) -&gt; return pointer to first occurrence of c in cs or NULL if not encountered</li>
+<li>size_t strlen(cs) -&gt; return length of cs</li>
+</ul>
+<p>(s and t are char*, cs and ct are const char*, c is an char converted to type int, and n is an int.)<br /> <br /> Refer to the attachment "Unicode Cookbook Documentation.doc" from &lt;Document 626598.1&gt; - <em>E1: BSFN: Unicode and C Business Functions</em> to get a list of JDE APIs which makes use of the standard "string" library functions.<br /> <br /> This document mainly cover concatenation as below:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Function</th><th class="km">Standard<br /> Library</th><th class="km">Used for</th></tr>
+<tr>
+<td class="km">JCHAR *jdeStrcat(JCHAR *d, const JCHAR *s)</td>
+<td class="km">Strcat</td>
+<td class="km">Concatenate one Unicode string with another</td>
+</tr>
+<tr>
+<td class="km">JCHAR *jdeStrncat(JCHAR *d, const JCHAR *s, int n)</td>
+<td class="km">Strncat</td>
+<td class="km">Concatenate one Unicode string with another, stopping after n characters (Note, this is characters not bytes).</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <br /> C representation of special characters,</p>
+<ul>
+<li>Five white space characters:</li>
+<ul>
+<li>Space (' ' )</li>
+<li>Horizontal tab ('\t')</li>
+<li>Form feed ('\f')</li>
+<li>Vertical tab ('\v')</li>
+<li>New-line character ('\n')</li>
+</ul>
+<li>And control characters:</li>
+<ul>
+<li>New-line character (represented by '\n' in the source file),</li>
+<li>Alert (bell) tone ('\a' )</li>
+<li>Backspace ('\b' )</li>
+<li>Carriage return ('\r' )</li>
+<li>Null character ('\0' )</li>
+</ul>
+</ul>
+<div class="kmnotebox">NOTE:&nbsp;
+<ul>
+<li>The null character is a byte or wide character with all bits set to 0. It is used to mark the end of a character string. In C, a string is treated as a Character Array so to indicate end of character array is important.</li>
+<li>The new-line character splits the source character stream into separate lines for greater legibility and for proper operation of the pre-processor.</li>
+<li>In C, a single quotation(' ') is the instruction for a character&nbsp; and double quotation (" ") is the instruction for a string</li>
+</ul>
+</div>
+<p><br /> To implement this, <br /> 1. Create a data structure with a data dictionary item with data type character (e.g., EV01)</p>
+<div class="kmcodeblock" style="width: 95%;">#ifndef DATASTRUCTURE_D55SC001A<br /> #define DATASTRUCTURE_D55SC001A<br /> <br /> typedef struct tagDSD55SC001A<br /> {<br /> &nbsp;&nbsp; JCHAR cReturnType; <br /> &nbsp;&nbsp; JCHAR cCharacter; <br /> } DSD55SC001A, *LPDSD55SC001A;<br /> <br /> #define IDERRcReturnType_1 1L<br /> #define IDERRcCharacter_2 2L<br /> <br /> #endif</div>
+<p><br /> <br /> 2. Create a C function (this is an important step because currently system function concat() only accepts string argument. For example, f(s) concat ("string", "string") so if we assign parameter '\r' for example the output will be 'string\r'. That is, '\r' is recognized as "\r".)</p>
+<div class="kmcodeblock" style="width: 95%;"><br /> switch(lpDS-&gt;cReturnType)<br /> {<br /> &nbsp;&nbsp; case _J('1'): lpDS-&gt;cCharacter = _J('\t'); /* Horizontal tab */<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br /> &nbsp;&nbsp; case _J('2'): lpDS-&gt;cCharacter = _J('\f'); /* form feed */<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br /> &nbsp;&nbsp; case _J('3'): lpDS-&gt;cCharacter = _J('\v'); /* Vertical tab */<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break; <br /> &nbsp;&nbsp; case _J('4'): lpDS-&gt;cCharacter = _J('\n'); /* New-Line Character */<br /> &nbsp;&nbsp;&nbsp;&nbsp; break;<br /> &nbsp;&nbsp; case _J('5'): lpDS-&gt;cCharacter = _J('\a'); /* Alert Tone */<br /> &nbsp;&nbsp;&nbsp;&nbsp; break;<br /> &nbsp;&nbsp; case _J('6'): lpDS-&gt;cCharacter = _J('\b'); /* Backspace */<br /> &nbsp;&nbsp;&nbsp;&nbsp; break;<br /> &nbsp;&nbsp; case _J('7'): lpDS-&gt;cCharacter = _J('\r'); /* Carriage Return */<br /> &nbsp;&nbsp;&nbsp;&nbsp; break;<br /> &nbsp;&nbsp; case _J('8'): lpDS-&gt;cCharacter = _J('\0'); /* NULL Character */<br /> &nbsp;&nbsp;&nbsp;&nbsp; break;<br /> }</div>
+<p><br /> 3. Compile it<br /> 4. If needed call it from Report Design Aid (RDA), Form Design Aid (FDA) or Named Event Rule (NER)</p>
+<div class="kmnotebox">NOTE:&nbsp; <br />
+<ul>
+<li>Do not misuse special character or use it only when your concern is how to display text or string</li>
+<li>To convert character to string make use of existing standard business function B9800460 - ConvertCharacterToString (Convert Character to String)</li>
+<li>Oracle is not responsible for any problems caused by custom code.</li>
+<li>Oracle Global Support does not support creation of or troubleshooting of custom code.</li>
+</ul>
+</div>
+<p><strong><br /> </strong></p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

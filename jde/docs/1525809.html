@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting Duplicate Receipts in P4312</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Duplicate Receipts in P4312</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p> Case study on Duplicate Receipt. Same thing can be applied any other major applications in Distribution module.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h3 class="km">Symptoms</h3>
+<p>Purchase Order Receipts (P4312) can allow a user to commit twice when performance is slow.</p>
+<p>This can cause duplicate information in the tables below:</p>
+<ul>
+<li>F4311 (Purchase Order Detail File) duplicate (field: UREC and AREC)</li>
+<li>F43121 (Purchase Order Receiver File) duplicate receive goods record</li>
+<li>F43126 (Purchase Order Receiver Multiple Account) duplicate receive goods record</li>
+<li>F0911 (Account Ledger) duplicate OV</li>
+</ul>
+<h3 class="km">Changes</h3>
+<p>No Change is made and this note is one case study. Refer to &lt;Bug 10908215&gt;: ERP8 SP23_K1 ROLLBACK ISSUE ON - SAR: 7893180</p>
+<p class="km"><strong>General Routine of P4312 (PO Receipts)</strong></p>
+<p>General routine of P4312 is:<br /> 1. FORM: Work With Purchase Orders to Receive [FIND BROWSE] (W4312F)</p>
+<div style="margin-left: 40px;">   a. Look for order/item to receipt<br />    b. <span style="font-weight: bold;">Click Button (CONTROL) Select</span></div>
+<p><br /> 2. FORM: Purchase Order Receipts [HEADERLESS DETAIL] (W4312A)</p>
+<div style="margin-left: 40px;">   a. <span style="font-weight: bold;">EVENT:  Dialog is Initialized</span><br />
+<ul>
+<li>Call N0000001 - BatchOpenBatchControlProcessing (Batch Open - Batch Control Processing)</li>
+<li>Batch Number assigned here is retained until the user clicks Close button in W4312F form</li>
+</ul>
+   b. (Form Level) <span style="font-weight: bold;">EVENT:  Write Grid Line-After</span><br />
+<ul>
+<li>Call N0000602 - F00095ReserveObject (F00095 Reserve Object)</li>
+<li>Data Recorded in F00095 (Business Object Reservation) has to be retained until <strong>SV TP_Commit_Status</strong> returns <span style="text-decoration: underline;">CO TP_ACTION_SUCCESS</span> or <span style="text-decoration: underline;">CO TP_ACTION_FAIL</span> through ODBC/JDBC middleware</li>
+</ul>
+   c. <span style="font-weight: bold;">EVENT:  Post Button Clicked of (CONTROL) OK</span><br />
+<ul>
+<li>Call BSFN XT4312Z1 - F4312EndDoc (F43121 End Document) with <span style="font-weight: bold; color: red;">Transaction Processing ON</span> without Asynchronous Flag (so calling <span style="font-weight: bold; color: red;">synchronously</span>) when P4312|W4312A gets called by other application(s) or P4312 has to call another application.</li>
+<li>When it meets below condition P4312 comes to this routine:</li>
+</ul>
+</div>
+<table style="border-collapse: collapse; margin-left: 40px; width: 1037px; height: 318px;" border="2" cellspacing="2" cellpadding="2"><colgroup> <col style="width: 51pt;" width="68" /> <col style="width: 136pt;" width="181" /> <col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 218px; background-color: silver;">Condition</th>
+<th style="width: 312px; background-color: silver;">Processing Option</th>
+<th style="width: 195px; background-color: silver;">Call</th>
+<th style="width: 353px; background-color: silver;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 218px;" height="20">PO szPO_DisplaySOBack is equal to "1"</td>
+<td style="width: 312px;"><em>Display</em><br />     1. Sales Order Backorders<br />         1 = Display the release form</td>
+<td style="width: 195px;">P42117|W42117M</td>
+<td style="width: 353px;">refer to &lt;Bug 10744827&gt;: NO BACKORDER RELEASE FORM - SAR: 4847698</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">PO szPO_LandedCostProcessing is equal to "1" And VA frm_cProcessLandedCost is equal to "1"</td>
+<td style="vertical-align: top;">
+<p><em>Process</em><br />     6. Landed Cost<br />         1 = Display Landed Cost Selection Form</p>
+</td>
+<td style="vertical-align: top;">App:P43291 , Form:W43291A , Ver: PO szPO_LandedCostVersion</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">PO szPO_PrintTraveler is equal to "1"</td>
+<td style="vertical-align: top;">
+<p><em>Process</em><br />     7. Receipt Traveler Document<br />         1 = Print</p>
+</td>
+<td style="vertical-align: top;">UBE:R43512 , Ver: PO szPO_P43512Vers (or XJDE0001 which is default version)</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">PO cLicensePlateWindow is equal to "1"</td>
+<td style="vertical-align: top;">
+<p><em>Warehousing</em><br />     4. Assign Items to License Plate Window (P46L30)<br />         1 = Display</p>
+</td>
+<td style="vertical-align: top;">P46L30</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">PO cPostGLBatch is equal to "1"</td>
+<td style="vertical-align: top;">
+<p><em>Process</em><br />     16. Activate Automatic G/L Batch Posting<br />           1 = Automatically post batch</p>
+</td>
+<td style="vertical-align: top;">UBE:R09801 , Ver: VA evt_szR09801Version_VERS (or ZJDE0009 which is default version for batch type 'O')</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">VA frm_cRunF4312EndDocInSync_EV01 is equal to "1"</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">P4312 got called from P49640 (Transportation Load Confirmation)</td>
+<td style="vertical-align: top;">InboundTransportation is Y (SY49 from P99410)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">SL CountryCode is equal to "BR"</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Brazilian localization</td>
+</tr>
+</tbody>
+</table>
+<div style="margin-left: 40px;"><br />     c. <span style="font-weight: bold;">EVENT: Post Button Click - Asynch of (CONTROL) OK</span><br />
+<ul>
+<li>Call BSFN XT4312Z1 - F4312EndDoc (F43121 End Document) with Transaction Processing ON when P4312 does not meet above condition</li>
+</ul>
+<br />    d. (Form Level) <span style="font-weight: bold;">EVENT:  Post Commit</span><br />
+<ul>
+<li>Call BSFN N0000602 - F00095RemoveReservation (F00095 Remove Business Object Reservation)</li>
+</ul>
+</div>
+<p><br /> 3. Return to calling FORM: Work With Purchase Orders to Receive [FIND BROWSE] (W4312F)</p>
+<ul>
+<li>  Retain Batch Number until user click 'Close' button </li>
+</ul>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>For this case, identical records are written into the table with different time flag</li>
+<li>Batch number remains unchanged until the user clicks Close button in W4312F form</li>
+<li>Unless W4312A is calling another application it always goes to Post (OK) button Click - Asynch event </li>
+<li>N0000001 - BatchOpenBatchControlProcessing is client only NER that depends on batch control settings which can call an additional form. For detailed information on this, refer to &lt;Document 1317478.1&gt; E1: BSFN: Frequently Asked Questions on Batch Control Processing and Related Business Functions in EnterpriseOne.</li>
+</ul>
+</div>
+<p> </p>
+<h2>Cause</h2>
+<p>Transaction Processing is OFF from client's environment at Post Button Click - Asynch (of OK button). <br /> Remove record reservation comes before all transactions are committed to the DB (sql&gt; COMMIT TRANSACTION) because database middleware won't return any information on transaction processing (either CO TP_ACTION_SUCCESS or CO TP_ACTION_FAIL)</p>
+<p> </p>
+<h2>Solution</h2>
+<h4 class="km">How To Debug?</h4>
+<p>The following represents the general debug steps (these can vary depending upon the situation):</p>
+<ul>
+<li>Verify the P4312 event rules. Note that Transaction Processing and Asynchronous flag cannot be reviewed through the event rules. This will confirm if any bugs are missing from the environment.</li>
+<li>Capture jasdebug.log to trace the flow of events. This is important because this log traces communication between JAS (request) and logic server (response).</li>
+<li>Capture callobject kernel (jdedebug) log and analyze it. Note that this type of issue can be intermittent when transaction volume is heavy or network is busy. As a result, it may not be easy to capture the actual issue on the first attempt. So for this case, the callobject kernel log here is a clean log which shows all internal routines (e.g., settings, flows and so on).</li>
+</ul>
+<h4 class="km">Possible cause?</h4>
+<p>Transaction Processing for F4312EndDoc got implemented through &lt;Bug 10908215&gt;: ERP8 SP23_K1 ROLLBACK ISSUE ON - SAR: 7893180. <br /> Reference the following two documents:</p>
+<ul>
+<li>Transaction Processing &lt;Document 1320968.1&gt; E1: DB: Listing of Applications with Transaction Processing by EnterpriseOne Release</li>
+<li>Record Reservation &lt;Document 1142464.1&gt; E1: FDA: F00095 Record/Object Reservation in EnterpriseOne Interactive Application</li>
+</ul>
+<p>In distribution/manufacturing Record Reservation,</p>
+<ul>
+<li>Prevent duplicate transaction</li>
+<li>Minimize possible deadlock by isolating transaction</li>
+<li>If there are any locking/blocking issues, the process will timeout because all transactions are critical - so by nature the transaction has to be all or nothing </li>
+</ul>
+<h4 class="km">How to Fix?</h4>
+<p>In case Transaction Processing Flag is not ON:</p>
+<ol>
+<li>Go to OMW (Object Management Workbench)</li>
+<li>Look for object P4312</li>
+<li>Move it to available OMW project</li>
+<li>Check Out</li>
+<li>Tick Transaction Processing whenever F4312EndDoc gets called</li>
+<li>Check In</li>
+<li>Generate Serialized Object for P4312 </li>
+</ol>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Information written here is a case study only</li>
+<li>In facing similar issue, check whether there are any reported issues against the objects P4312, XT4312Z1 and XT4312Z2</li>
+<li>Another possible example is when F4312EditLine was not handled properly</li>
+<ul>
+<li>Specific user interface (non-general routine to perform receipt)</li>
+<li>F4312EditLine creates additional cache to commit (cache name F43121Z)</li>
+</ul>
+<li>It is not allowed to change Transaction Processing settings in Post OK button clicked</li>
+<li>Currently P4312 is the only application which calls End Doc at EVENT: Post Button Click - Asynch of (CONTROL) OK</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<p>&lt;Internal_Only&gt;Please comment if you have any other cases which turn out to be duplicate receipt&lt;/Internal_Only&gt;</p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

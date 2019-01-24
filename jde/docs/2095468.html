@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Debug Error in Running R47071</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How To Debug Error in Running R47071</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>The purpose of this document is to list up possible error you can face in running R47071 (EDI Receiving Advice Edit/Create - Purchasing). This document gives you some case study but this does not encompass all possible errors in performing Purchase Order Receipt routine.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>It is important to understand below, </p>
+<ul>
+<li>EDSP (EDI - Successfully Processed) flag is to be remained blank in case R47071 faces during validation</li>
+<li>Check data created from F47071 (EDI Receiving Advice Header - Inbound) and F47072 (EDI Receiving Advice Detail - Inbound)</li>
+<li>In facing any error, those errors have to written into Work Center Message (F01131M - JDEM Multi Level Message)</li>
+<li>Depending on error, R47071 may continue to validate input data though it faces error</li>
+<li>Error can be coming either through UBE (Universal Batch Engine) logic (by calling system function Set UBE Error) or error can be return through business function(s)</li>
+<li>You know how to turn on UBE log</li>
+<li>In case the successful outcome between P4312 (PO Receipts) and R47071 are different from each other, compare the log traces R47071 against P4312.</li>
+</ul>
+<p> </p>
+<h3 class="km">Possible errors in R47071</h3>
+<p>: There are two different levels of errors one is issued by system function and the other one is issued by business function. </p>
+<h4 class="km">Error issued by event rules:-</h4>
+<table style="width: 1205px; height: 385px; border-collapse: collapse;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 28pt;" width="37" /> <col style="width: 59pt;" width="78" /> <col style="width: 49pt;" width="65" /> <col style="width: 75pt;" width="100" /> <col style="width: 104pt;" width="139" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 56px; background-color: #009900; color: white; font-weight: bold; text-align: center;" height="20">Error</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 458px;">Description</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 103px;">Issued by</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 279px;">Possible Cause</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 263px;">How to Resolve error</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 56px;">0965</td>
+<td style="width: 458px;">Order on Hold<br /> CAUSE . . . . The order/line you are trying to select is on hold.<br /> RESOLUTION. . Retry the command again when not on hold.</td>
+<td style="width: 103px;">Set UBE Error</td>
+<td style="width: 279px;">F4301.HOLD for associated purchase order is not Blank</td>
+<td style="width: 263px;">Release held order and try it again.</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">143J</td>
+<td style="width: 458px;">Item number not on purchase order<br /> CAUSE . . . .  The item number does not exist on the referenced purchase order.<br /> RESOLUTION. .  The item number in the EDI record must match the corresponding field on the purchase order.</td>
+<td style="width: 103px;">Set UBE Error</td>
+<td style="width: 279px;">Both F47072.LNID and F47072.LITM are specified but the F47072.LITM &lt;&gt; F4311.LITM for associated PO</td>
+<td style="width: 263px;">Either do not specify F47072.LITM or set same item number for refrenced line.</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">143Q</td>
+<td style="width: 458px;">LineItemStatusCodeBlank<br /> CAUSE . . . .  LineItemStatusCode is blank.<br /> RESOLUTION. .  Enter a Valid LineItemStatus Code.</td>
+<td style="width: 103px;">Set UBE Error</td>
+<td style="width: 279px;">F47072.LSTS is not specified</td>
+<td style="width: 263px;">Specify L47072.LSTS. This column value functions like MATC in PO receipt through P4312. Refer <a href="#lsts" alt="LSTS" title="LSTS">LSTS </a>below,</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">4723</td>
+<td style="width: 458px;">Quantity Restriction Exceeded for Item<br /> CAUSE . . . .  This item contains a quantity restriction for the Serial Number.<br />                The quantity cannot exceed one (1) primary unit of measure.<br />                This quantity restriction is being enforced due to the LSN<br />                process type (SRCE) in the Item Branch Master.<br /> RESOLUTION. .  If this serial number already exists with a quantity, then you<br />                may not add any more quantity to this serial number.  If this<br />                serial number does not exist or exists with no quantity, then<br />                you may add a quantity of one primary unit of measure.  If this<br />                item should not be serial number processed, then you can<br />                change the LSN process type (SRCE) in the Item Branch Master.<br />                **NOTE:  You will receive this error if you are attempting to do<br />                a transfer (From: Item and Lot matches To: Item and Lot) for a<br />                serial number item in the Reclassifications program.  You must<br />                use the Transfers program (P4113) for serial number transfers.</td>
+<td style="width: 103px;">Set UBE Error</td>
+<td style="width: 279px;">F4101.SRCE is 5, 6, 7 and F47072.UREC is 1 or -1<br /> Or, F4101.SRCE = 4 and F47072.LOTN is not blank and F47072.UREC is 1 or -1.</td>
+<td style="width: 263px;">Refer <a href="#srce" alt="SRCE" title="SRCE">SRCE </a>below,</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">43A10</td>
+<td style="width: 458px;">Action invalid<br /> CAUSE: The line being received has no unit or amount to receive.<br /> RESOLUTION: Receive a line which has units or amount open which can be received.</td>
+<td style="width: 103px;">Set UBE Error</td>
+<td style="width: 279px;">Either F4311.UOPN or AOPN is zero.</td>
+<td style="width: 263px;">This routine is same with P4312 which does not allow you to perform PO receipt. So you do not have anything to receive. <br /> This is generic error in running R47071. Meaning that you will hit this error in work center so long as it fails any validation.</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">861E</td>
+<td style="width: 458px;">Purchase Order Line Closed<br /> CAUSE ....  The purchase order line is closed and can not be received via this Transaction<br /> RESOLUTION..  The transaction must be processed against an open Purchase Order Line</td>
+<td style="width: 103px;">Set UBE Error</td>
+<td style="width: 279px;">When F4311.NXTR = '999'</td>
+<td style="width: 263px;">Same with above. Purchase Order is closed.</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">
+<p>Note that this document shall not cover coding level error because the purpose of this document is to guide how to debug in hitting a certain error. Some of possible error can be found as below,</p>
+<ul>
+<li>&lt;Document 1605452.1&gt; - E1: 47: Error JDB9900600 - Failed to store value, maximum exceeded when running R47071 EDI Receiving Advice Edit/Create in subsystem mode</li>
+<li>&lt;Document 1616262.1&gt; - E1: 47: R47071 Stops Processing - Error JDB9900600 - ... Cause Forgetting To Call JdeRemoveDataPtr()</li>
+</ul>
+<p><a name="lsts"></a>LSTS (Line Item Status Code)</p>
+<div style="margin-left: 40px;">Code specifying the action taken by the seller on a line item requested by the buyer.  Used in EDI PO Acknowledgement, Shipping Notice, Receiving Advice, and PO Change Acknowledgement.  Refer to ANSI X.12 Data Item 668.<br /> The first character of the second description indicates to the program what action to take concerning the processing of the line.<br />    1   Process the line<br />    7   Process the line and close the remaining amount<br />    9   Cancel the line<br />    I    Informational only, print on audit report only <br /> If this field is left blank, a 1 will be defaulted to process the line.<br /> <br /> cf., UDC 43/PR - REceiving Options for PO Line with values below,</div>
+<table style="width: 324px; height: 97px; margin-left: 40px; border-collapse: collapse;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 29pt;" width="39" /> <col style="width: 157pt;" width="209" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 29pt; font-weight: bold; text-align: center;" width="39" height="20">Code</td>
+<td class="xl63" style="width: 157pt; font-weight: bold; text-align: center;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20"> </td>
+<td class="xl64">             .</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">1</td>
+<td class="xl64">Receive Purchase Order Line</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">4</td>
+<td class="xl64">Receive Into Multiple Location</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">5</td>
+<td class="xl64">Continuous Over Receipt</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">7</td>
+<td class="xl64">Receive and Close Purchase Ord</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">9</td>
+<td class="xl64">Cancel Purchase Order Line</td>
+</tr>
+</tbody>
+</table>
+<div style="margin-left: 40px;"></div>
+<p><a name="srce"></a>SRCE (Layer Code - Source)</p>
+<div style="margin-left: 40px;">A code that indicates whether lot or serial number is assigned. Lot and serial number processes use the Lot Master table (F4108).<br /> Valid codes are:<br />    0   Lot assignment is optional. You can manually assign numbers. Quantity can be greater than one. (Default)<br />    1   Lot assignment is required. The system assigns numbers using the system date in YYMMDD format. Quantity can be greater than one.<br />    2   Lot assignment is required. The system assigns numbers in ascending order using Next Numbers. Quantity can be greater than one.<br />    3   Lot assignment is required. You must manually assign numbers. Quantity can be greater than one.<br />    4   Serial number assignment is optional except during shipment confirmation. Quantity must not exceed one.<br />    5   Serial number assignment is required. The system assigns numbers using the system date in YYMMDD format. Quantity must not exceed one.<br />    6   Serial number assignment is required. The system assigns numbers in ascending order using Next Numbers. Quantity must not exceed one.<br />    7   Serial number assignment is required. You must manually assign numbers. Quantity must not exceed one.</div>
+</div>
+<p> </p>
+<h4 class="km">Error issued by business functions called:-</h4>
+<p>Note that most of error and work center message may not give you exact resolution. So it is important for you to analyze UBE log (refer to &lt;Document 1542863.1&gt; - E1: How to Turn on Logging for UBE submitted on Enterprise server from fat/web client In EnterpriseOne ).</p>
+<table style="width: 1205px; height: 128px; border-collapse: collapse;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 28pt;" width="37" /> <col style="width: 59pt;" width="78" /> <col style="width: 49pt;" width="65" /> <col style="width: 75pt;" width="100" /> <col style="width: 104pt;" width="139" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 56px; background-color: #009900; color: white; font-weight: bold; text-align: center;" height="20">Error</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 458px;">Description</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 103px;">Issued by</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 279px;">Possible Cause</td>
+<td style="background-color: #009900; color: white; font-weight: bold; text-align: center; width: 263px;">How to Resolve error</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 56px;">0949</td>
+<td style="width: 458px;">Currency Exchange Rate Not Found<br /> CAUSE . . . . A valid rate for this currency code could not be found in the Currency Exchange Rates file (F0015), and no manual rate was entered.<br /> RESOLUTION. . Add the exchange rate for the currency code in the Currency Exchange Rate file (F0015), or if the screen has an Exchange Rate field, you may enter an Override Exchange Rate manually.</td>
+<td style="width: 103px;">GetExchRate (B0000033, F0015 Get Exchange Rate)</td>
+<td style="width: 279px;">The cause of this error is coming when it gets based currency and transaction currency. Commonly it is caused by missing value from F47072.AN8. </td>
+<td style="width: 263px;">Specify value F47072.AN8 based on F4311.AN8 for matching line. <br /> <br /> Refer case study section below,</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">3143</td>
+<td style="width: 458px;">File can not be accessed.<br /> CAUSE . . . . ERROR: File can not be accessed.<br /> Solution. . . Change IBM security or authority using the IBM EDTOBJAUT command.<br />               This file can not be accessed with the current IBM authority for the User executing this request.</td>
+<td style="width: 103px;">GetReleasePODetailInformation (B4300240, F4311 Get Item, Account, Subledger)</td>
+<td style="width: 279px;">The error is coming when it fails to get Purchase Order detail file owing to missing primary key for the same. Commonly it is related with F47072.SFXO</td>
+<td style="width: 263px;">Set F47072.SFXO = F4311.SFXO</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">4150</td>
+<td style="width: 458px;">Invalid Line Type<br /> CAUSE . . . . The line type entered does not exist in the Line Type Constants File (F40205).<br /> RESOLUTION. . Enter a valid line type or press F1 for Help.</td>
+<td style="width: 103px;">GetLineTypeConstants (B4000260, F40205 Get Line Type Constants)</td>
+<td style="width: 279px;">F40205 does not have Blank Line Type</td>
+<td style="width: 263px;">Specify F47072.LNTY because you shall not have blank line type from F40205.</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;">0003</td>
+<td style="width: 458px;">Blanks Invalid<br /> CAUSE . . . .  The data field being processed does not allow blanks or zeros to be entered.<br /> RESOLUTION. .  Enter a non-blank or non-zero value.</td>
+<td style="width: 103px;">Multiple business functions</td>
+<td style="width: 279px;">Commonly this is caused by other error superceeds this error. This is because some of routine may not stop R47071 from processing though it hits a certain error.</td>
+<td style="width: 263px;">Try to fix/correct error in sequence.</td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;"> </td>
+<td style="width: 458px;"> </td>
+<td style="width: 103px;"> </td>
+<td style="width: 279px;"> </td>
+<td style="width: 263px;"> </td>
+</tr>
+<tr>
+<td style="height: 15pt; width: 56px;"> </td>
+<td style="width: 458px;"> </td>
+<td style="width: 103px;"> </td>
+<td style="width: 279px;"> </td>
+<td style="width: 263px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p> </p>
+<p>Note that this document shall not cover coding level error because the purpose of this document is to guide how to debug in hitting a certain error. Some of possible error can be found as below,</p>
+<h3 class="km">Case Study 1</h3>
+<p>In running R47071 with below data, user are getting work center error message as below,</p>
+<ul>
+<li>Get data for transaction</li>
+<ul>
+<li>F4301 (Purchase Order Header)</li>
+<li>F4311 (Purchase Order Detail) Or F43199 (P.O. Detail Ledger File - Flexible Version)</li>
+<li>F47071 (EDI Receiving Advice Header - Inbound)</li>
+<li>F47072 (EDI Receiving Advice Detail - Inbound)</li>
+</ul>
+<li>Trace UBE log</li>
+<li>Get Event Rule of report R47071 (EDI Receiving Advice Edit/Create - Purchasing)</li>
+<li>Analyze it through Performance Workbench (or other available debugging rule)</li>
+</ul>
+<h4 class="km"><br /> A. Data</h4>
+<ul>
+<li>EDI Receiving Advice Header - Inbound (F47071)</li>
+</ul>
+<table style="width: 451px; border-collapse: collapse;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 84pt;" width="112" /> <col style="width: 113pt;" width="150" /> <col style="width: 65pt;" width="86" /> <col style="width: 74pt;" width="99" /> <col style="width: 115pt;" width="153" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 84pt; font-weight: bold; text-align: center;">Order Co (KCOO)</td>
+<td class="xl63" style="width: 113pt; font-weight: bold; text-align: center;" width="150">Order Number (DOCO)</td>
+<td class="xl63" style="width: 65pt; font-weight: bold; text-align: center;" width="86">Or Ty (DCTO)</td>
+<td class="xl63" style="width: 74pt; font-weight: bold; text-align: center;" width="99">Ord Suf (SFXO)</td>
+<td class="xl63" style="width: 115pt; font-weight: bold; text-align: center;" width="153">Address Number (AN8)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">00001</td>
+<td align="right">9999</td>
+<td>OP</td>
+<td>0</td>
+<td align="right">4242</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul>
+<li>EDI Receiving Advice Detail - Inbound (F47072)</li>
+</ul>
+<table style="width: 628px; border-collapse: collapse;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 84pt;" width="112" /> <col style="width: 113pt;" width="150" /> <col style="width: 65pt;" width="86" /> <col style="width: 74pt;" width="99" /> <col style="width: 115pt;" span="2" width="153" /> <col style="width: 62pt;" width="82" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt; width: 84pt; font-weight: bold; text-align: center;" width="112" height="20">Order Co (KCOO)</td>
+<td class="xl65" style="width: 113pt; font-weight: bold; text-align: center;" width="150">Order Number (DOCO)</td>
+<td class="xl65" style="width: 65pt; font-weight: bold; text-align: center;" width="86">Or Ty (DCTO)</td>
+<td class="xl65" style="width: 74pt; font-weight: bold; text-align: center;" width="99">Ord Suf (SFXO)</td>
+<td class="xl65" style="width: 115pt; font-weight: bold; text-align: center;" width="153">Line Number (LNID)</td>
+<td class="xl65" style="width: 115pt; font-weight: bold; text-align: center;" width="153">Address Number (AN8)</td>
+<td class="xl65" style="width: 62pt; font-weight: bold; text-align: center;" width="82">Ln Ty (LNTY)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;">00001</td>
+<td align="right">9999</td>
+<td>OP</td>
+<td style="background-color: #ffffcc;">0</td>
+<td>1.000</td>
+<td style="background-color: #ffffcc;" align="right">0</td>
+<td style="background-color: #ffffcc;">  </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<h4 class="km">B. Errors in Work Center</h4>
+<p>    Values in table F01131M (JDEM Multi Level Message)</p>
+<table style="width: 1472px; height: 244px; border-collapse: collapse;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 141pt;" width="188" /> <col style="width: 106pt;" width="141" /> <col style="width: 200pt;" width="266" /> <col style="width: 86pt;" width="114" /> <col style="width: 51pt;" width="68" /> <col style="width: 89pt;" width="118" /> <col style="width: 105pt;" width="140" /> <col style="width: 107pt;" width="143" /> <col style="width: 96pt;" width="128" /> <col style="width: 75pt;" width="100" /> <col style="width: 100pt;" width="133" /> <col style="width: 75pt;" width="100" /> <col style="width: 159pt;" width="212" /> <col style="width: 101pt;" width="134" /> <col style="width: 101pt;" width="135" /> <col style="width: 130pt;" width="173" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 141pt;">Parent Serial Number (PSRK)</td>
+<td style="width: 106pt;" width="141">Serial Number (SERK)</td>
+<td style="width: 200pt;" width="266">Brief Message (MSGP)</td>
+<td style="width: 86pt;" width="114">Tickler Date (DTI)</td>
+<td style="width: 51pt;" width="68">Level (LV)</td>
+<td style="width: 89pt;" width="118">Address No (AN8)</td>
+<td style="width: 105pt;" width="140">Parent Address (PA8)</td>
+<td style="width: 107pt;" width="143">Template Value (TSV)</td>
+<td style="width: 96pt;" width="128">Template ID (TMPI)</td>
+<td style="width: 75pt;" width="100">Form ID (FRMI)</td>
+<td style="width: 100pt;" width="133">Application ID (EAP)</td>
+<td style="width: 75pt;" width="100">Version (VERS)</td>
+<td style="width: 159pt;" width="212">Function Name (FCTNM)</td>
+<td style="width: 101pt;" width="134">Line Number (LNBR)</td>
+<td style="width: 101pt;" width="135">Form Name (FMNM)</td>
+<td style="width: 130pt;" width="173">Parent Key Ser No (PPSRK)</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233426</td>
+<td align="right">4233427</td>
+<td> </td>
+<td class="xl65" align="right">1/15/2016</td>
+<td align="right">3</td>
+<td align="right">59723</td>
+<td align="right">59723</td>
+<td align="right">1</td>
+<td>LM0020</td>
+<td align="right">0</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233427</td>
+<td align="right">4233428</td>
+<td style="background-color: #ffffcc;">Error: Currency Exchange Rate Not Found</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1/15/2016</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">0949</td>
+<td style="background-color: #ffffcc;" align="right">0</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">GetExchRate</td>
+<td style="background-color: #ffffcc;" align="right">163</td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233427</td>
+<td align="right">4233429</td>
+<td style="background-color: #ffffcc;">Error: File can not be accessed.</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1/15/2016</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">3143</td>
+<td style="background-color: #ffffcc;" align="right">0</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">GetReleasePODetailInformation</td>
+<td style="background-color: #ffffcc;" align="right">109</td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233427</td>
+<td align="right">4233430</td>
+<td style="background-color: #ffffcc;">Error: Invalid Line Type</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1/15/2016</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">4150</td>
+<td style="background-color: #ffffcc;" align="right">0</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">GetLineTypeConstants</td>
+<td style="background-color: #ffffcc;" align="right">576</td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233427</td>
+<td align="right">4233431</td>
+<td style="background-color: #ffffcc;">Error: Blanks Invalid</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1/15/2016</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">0003</td>
+<td style="background-color: #ffffcc;" align="right">0</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">GetItemUoMConversionFactor</td>
+<td style="background-color: #ffffcc;" align="right">647</td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233427</td>
+<td align="right">4233432</td>
+<td style="background-color: #ffffcc;">Error: Action invalid</td>
+<td class="xl65" style="background-color: #ffffcc;" align="right">1/15/2016</td>
+<td style="background-color: #ffffcc;" align="right">4</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;" align="right">59723</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">43A10</td>
+<td style="background-color: #ffffcc;" align="right">0</td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;"> </td>
+<td style="background-color: #ffffcc;">Set UBE Error</td>
+<td style="background-color: #ffffcc;" align="right">478</td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4233425</td>
+<td align="right">4233426</td>
+<td> </td>
+<td class="xl65" align="right">1/15/2016</td>
+<td align="right">2</td>
+<td align="right">59723</td>
+<td align="right">59723</td>
+<td align="right">1</td>
+<td>LM0019</td>
+<td align="right">0</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td align="right">999999</td>
+</tr>
+</tbody>
+</table>
+<p>  Descriptive message in work center</p>
+<p style="margin-left: 40px;"><span style="font-weight: bold;">Subject : Error: Currency Exchange Rate Not Found </span><br /> CAUSE . . . . A valid rate for this currency code could not be found in the <br /> Currency Exchange Rates file (F0015), and no manual rate was <br /> entered. <br /> RESOLUTION. . Add the exchange rate for the currency code in the Currency <br /> Exchange Rate file (F0015), or if the screen has an Exchange <br /> Rate field, you may enter an Override Exchange Rate manually. <br /> <br /> <span style="font-weight: bold;">Subject : Error: File can not be accessed. </span><br /> CAUSE . . . . ERROR: File can not be accessed. <br /> Solution. . . Change IBM security or authority using the IBM EDTOBJAUT command. <br /> This file can not be accessed with the current IBM authority <br /> for the User executing this request. <br /> <br /> <span style="font-weight: bold;">Subject : Error: Invalid Line Type </span><br /> CAUSE . . . . The line type entered does not exist in the Line Type Constants <br /> File (F40205). <br /> RESOLUTION. . Enter a valid line type or press F1 for Help. <br /> <br /> <span style="font-weight: bold;">Subject : Error: Blanks Invalid </span><br /> CAUSE . . . . The data field being processed does not allow blanks or zeros <br /> to be entered. <br /> RESOLUTION. . Enter a non-blank or non-zero value. <br /> <br /> <span style="font-weight: bold;">Subject : Error: Action invalid </span><br /> CAUSE: The line being received has no unit or amount to receive. <br /> RESOLUTION: Receive a line which has units or amount open which can be received.</p>
+<hr />
+<h4 class="km">How to debug <span style="font-weight: bold;">Error: Currency Exchange Rate Not Found</span> :</h4>
+<p><br /> 1. Run Performance Workbench with key words like (Edit Debug String in PW.exe)<br />     INSERT INTO CRPDTA.F01131M<br />    JDEERR<br />    CRPDTA.F4<br />    : which returns any string contains above key words into &lt;R47071_VersionName_JobNumber_PDF_CALLSTACK5.txt&gt;<br /> <br /> 2. Focus on error, <br />     1. ENTER: GetExchRate <br />             ERROR INFO JDEERR - ID= 8, Error= 0949 - b0000033.c, Line= 163 <br />     1. EXIT: for GetExchRate=2<br /> <br /> 3. Go to jdedebug.log to determine the cause of error,</p>
+<div style="margin-left: 40px;">Calling Business function GetExchRate from Level 1 for UserID. Application Name [R47071], Version [ZJDE0001] (BSFNLevel = 1)  <span style="font-style: italic; color: #009900;">*** BSFNLevel = 1 indicates that this function gets called directly from the application R47071 ***</span><br /> IN-&gt;[  1]<span style="font-style: italic; color: red;"> szCurrencyCodeFrom               [] </span><span style="font-style: italic; color: #009900;">*** Note that input szCurrencyCodeFrom is not specified ***</span><br /> IN-&gt;[  2] szCurrencyCodeTo                 [USD] <br /> IN-&gt;[  3] mnAddressNumber                  [0] <br /> IN-&gt;[  4] jdTransactionDate                [01/15/16] <br /> ...<br /> SELECT  *  FROM CRPDTA.F0015  WHERE  ( <span style="color: red; font-style: italic;">CXCRCD = ' ' </span>AND CXCRDC = 'USD' AND CXAN8 = 0.000000 AND CXRTTYP = '  ' )  AND  ( CXEFT &lt;= 116007 )  ORDER BY CXCRCD ASC,CXCRDC ASC,CXAN8 ASC,CXRTTYP ASC,CXEFT DESC <br /> No More Data found (hRequest 095f5ce8) <br /> ERROR INFO JDEERR - ID= 8, Error= 0949 - b0000033.c, Line= 163 <br /> : So for this example, error is coming because input szCurrencyCode is Blank. So to determine how this value is populated, go to even rule and check it.</div>
+<p><br /> 3. Event rule of R47071</p>
+<div style="margin-left: 40px;">
+<ul>
+<li>SECTION: Read/Edit EDI Detail [GROUP SECTION] (S85)</li>
+<li>EVENT:  Do Section</li>
+</ul>
+...<br /> 0040 If BC Currency Conversion Rate - Spot Rate (F47072)(CRR) is equal to &lt;Blank&gt; Or &lt;Null&gt; Or &lt;Zero&gt;<br /> 0042    F0401.Fetch Single<br />                    BC Address Number (F47072)(AN8) =  TK Address Number<br />                    <span style="font-style: italic; color: red;">VA evt_CurrencyCodeFrom_CRCD</span> &lt;- TK Currency Code - Accounts Payable<br /> ...<br /> 0095       F0015 Get Exchange Rate<br />                       <span style="font-style: italic; color: red;">VA evt_CurrencyCodeFrom_CRCD</span> -&gt; BF szCurrencyCodeFrom  <span style="font-style: italic; color: #009900;">*** Value returned by F0401.CRCD on F0401.AN8 = F47072.AN8 ***</span><br />                       VA evt_CurrencyCodeTo_CRDC -&gt; BF szCurrencyCodeTo<br />                       <span style="color: black;">BC Address Number (F47072)(AN8)</span> -&gt; BF mnAddressNumber  <br />                       VA rpt_GLDate -&gt; BF jdTransactionDate<br /> ...<br /> : So for this example, input parameter szCurrencyCodeFrom is the outcome of F0401.Fetch Single. So verify Table I/O through log</div>
+<p><br /> 4. UBE log</p>
+<div style="margin-left: 40px;">SELECT  *  FROM CRPDTA.F0401  WHERE  ( A6AN8 = 0.000000 ) <br /> <span style="color: red; font-style: italic;">No More Data found</span> (hRequest 095f25f8) <span style="font-style: italic; color: #009900;">*** No More Data found indicates that above query has failed to return value ***</span><br /> : Based on above even rule line number 0042, we can determine that input value of F47072.AN8 is zero</div>
+<p><br /> So this error can be resolved by setting F47072.AN8 = F4311.AN8 or from given data F47072.AN8 = F47071.AN8</p>
+<hr />
+<h4 class="km">How to debug <span style="font-weight: bold;">Error: File can not be accessed.:</span></h4>
+<p>1. Run Performance Workbench with key words like (Edit Debug String in PW.exe)<br />     INSERT INTO CRPDTA.F01131M<br />    JDEERR<br />    CRPDTA.F4<br />    : which returns any string contains above key words into &lt;R47071_VersionName_JobNumber_PDF_CALLSTACK5.txt&gt;<br /> <br /> 2. Focus on error, <br />     1. ENTER: GetReleasePODetailInformation <br />         ERROR INFO JDEERR - ID= 0, Error= <span style="font-weight: bold;">3143</span> - b4300240.c, Line= 109 <br />     1. EXIT: for GetReleasePODetailInformation=2 <span style="font-style: italic; color: #009900;">*** Return value 2 indicates that this function returns ER_ERROR. Refer &lt;Document 1179493.1&gt; - E1: BSFN: Call Object Kernel Errors Clarification - jdeCallObject API and Error message COB0000* ***</span><br />      : You can get error ID as below, <br />        1. Go to P92002|W92002F - Error Messages [Work With Glossary Items]<br />        2. Search for Error ID by entering Error Description as written in Work Center Message. For instance, "File can not be accessed."<br />        3. Press Find button, which shall return GC Data Item '<span style="font-weight: bold;">3143</span>'<br /> <br /> 3. (Optional) Check error routine through business function referened,</p>
+<div style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">   if (lpDS-&gt;idPointerToF4311DS == (ID) NULL )</span><br style="font-style: italic;" /> <span style="font-style: italic;">   {</span><br style="font-style: italic;" /> <span style="font-style: italic;">           jdeSetGBRError (lpBhvrCom, lpVoid, (ID) 0L, _J("<span style="color: red;">3143</span>"));</span><br style="font-style: italic;" /> <span style="font-style: italic;">          return ER_ERROR;</span><br style="font-style: italic;" /> <span style="font-style: italic;">   }</span><br /> *** Break In Code ***<br /> : For this instance, if input parameter idPointerToF4311DS is NULL then the error "3143" is to be issued.</div>
+<p><br /> <br /> 4. Check the event rule to determine how input parameter idPointerToF4311DS is assigned</p>
+<ul style="margin-left: 40px;">
+<li>SECTION: Read/Edit EDI Detail [GROUP SECTION] (S85)</li>
+<li>EVENT:  Initialize Section</li>
+</ul>
+<div style="margin-left: 40px;">0079 F4311 Get Purchase Order Detail Row<br />         BC Document (Order No, Invoice, etc.) (F47072)(DOCO) -&gt; BF mnOrderNumber<br />         BC Order Type (F47072)(DCTO) -&gt; BF szOrderType<br />         BC Order Company (Order Number) (F47072)(KCOO) -&gt; BF szDocumentCompany<br />         BC Order Suffix (F47072)(SFXO) -&gt; BF szOrderSuffix<br />         BC Line Number (F47072)(LNID) -&gt; BF mnOrderLineNumber<br />         <span style="font-style: italic; color: red;">VA rpt_F4311Pointer_GENLNG</span> &lt;- BF idPointerToF4311DataStructure<br />         "1" -&gt; BF cReturnFlag<br />         "1" -&gt; BF cCallType<br />         "1" -&gt; BF cSuppressErrorMessage<br /> ...<br /> 0094    F4311 Get Item, Account, Subledger<br />            <span style="font-style: italic; color: red;">VA rpt_F4311Pointer_GENLNG</span> -&gt; BF idPointerToF4311DS<br /> ...<br /> : So cause of NULL Pointer is returned by F4311 Get Purchase Order Detail Row<br /> To now the function name, commonly, <br /> 1. Go to P98652 (Business Function Search)<br /> 2. Copy/paste (business function) description at QBE column of Description (e.g., F4311 Get Item, Account, Subledger)<br /> 3. Press Find button which returns Function Name "GetReleasePODetailInformation" and Source Module "B4300240"</div>
+<p><br /> <br /> 5. UBE log with parameters,</p>
+<div style="margin-left: 40px;">Calling Business function GetPurchaseOrderDetail from Level 1 for UserID. Application Name [R47071], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[  1] mnOrderNumber                    [16000560] <br /> IN-&gt;[  2] szOrderType                      [OP] <br /> IN-&gt;[  3] szDocumentCompany                [00001] <br /> <span style="color: red;">IN-&gt;[  4] szOrderSuffix                    [0  ]  ***</span><br /> IN-&gt;[  5] mnOrderLineNumber                [1,000] <br /> IN-&gt;[  6] idPointerToF4311DataStructure    [0] <br /> IN-&gt;[  7] cReturnFlag                      [1] <br /> ...<br /> SELECT  *  FROM CRPDTA.F4311  WHERE  ( PDDOCO = 16000560.000000 AND PDDCTO = 'OP' AND PDKCOO = '00001' AND <span style="color: red;">PDSFXO = '0  '</span> AND PDLNID = 1000.000000 ) <br /> No More Data found (hRequest 0963f9c0) <br /> ...<br /> OUT-&gt;[  6] idPointerToF4311DataStructure    [0] <br /> OUT-&gt;[  7] cReturnFlag                      [1] <br /> OUT-&gt;[  8] cErrorCode                       [1] <br /> OUT-&gt;[  9] cCallType                        [1] <br /> OUT-&gt;[ 10] szErrorMessageID                 [0002] <br /> OUT-&gt;[ 11] cSuppressErrorMessage            [1] <br /> Return value is 2 for GetPurchaseOrderDetail. (BSFNLevel = 1) <br /> Calling Business function GetReleasePODetailInformation from Level 1 for DBERRA. Application Name [R47071], Version [DA0001] (BSFNLevel = 1) <br /> IN-&gt;[  1] idPointerToF4311DS               [0] <br /> ...<br /> ERROR INFO JDEERR - ID= 0, Error= 3143 - b4300240.c, Line= 109 <br /> ...<br /> :</div>
+<p><br /> So to fix error, populate F47072.SFXO</p>
+<hr />
+<p> </p>
+<p> </p>
+<p>Note that the actual cause of error can be vary. Rather information below is to guide you how to debug in your hitting error.</p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

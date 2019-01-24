@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Address Invalid Error message upon exiting from ALKY exiting on P4210</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Address Invalid Error message upon exiting from ALKY exiting on P4210</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>The audience for this note is someone with developer level knowledge.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<h3 class="km">Symptoms</h3>
+<p>Upon exiting Form Control "ALKY- Address Number", system issuing Error message "Address Number - Invalid" as below:<br /><br /></p>
+<div class="kmnotebox">Error ID: 0037<br />  Description: Address Number - Invalid<br />Source File:\\DeploymentServer\E1Release\PathCode\Source\n0100061.c<br />Source Line: 1762<br />Event: Control Exited/Changed-Inline(or Asynch)</div>
+<p><br />But this error message does not reflect actual root cause of issue, that is, there is valid address book number from F0101 - <em>Address Book Master</em>. So this document is to explain possible cause of error which may be issued during runtime or newly implemented environment.</p>
+<h3 class="km">Solution</h3>
+<p>This type of error comes:</p>
+<ul>
+<li>Either information from table F0009 - <em>General Constants</em> is not valid</li>
+<li>Or <em>Environment Cache </em>information is to be reset</li>
+</ul>
+<p>So to fix this issue, verify that Address Book Constant information is valid as below:<br /><img src="../images/p421001.png" border="0" hspace="0"/></p>
+<ul>
+<li>F0009.GCSYNM - <em>Symbol to Identify A/B Short Number</em> is Blank</li>
+<li>F0009.GCSYMA - <em>Symbol to Identify Alternate Key</em> is '*'</li>
+<li>F0009.GCSYMT - <em>Symbol to Identify A/B Tax ID</em> is '/'</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">Note: The error message does not reflect actual issue.</div>
+<p><br />To determine whether the issue is caused by corrupted data of F0009 - General Constants, change value "4242", "/4242" or "*4242".</p>
+<ul>
+<li>If one or two above tests do not issue error, then verify whether all the symbols are correct</li>
+<li>If error persists then:</li>
+</ul>
+<blockquote>
+<ol>
+<li>Go to Address Book Constant (Fast Path: 1K)</li>
+<li>Click OK</li>
+<li>Log off/on</li>
+</ol>
+</blockquote>
+<p>For this example, the error has come under below scenario:<br /><br />The flow of NER N0100061 - <em>ScrubAddressNumberNER </em>(Scrub Address Number)</p>
+<div class="kmcodeblock" style="width: 95%;">F0009.Fetch Single<br />VA evt_ProductCode =  TK Product Code /* Assign Blank */<br />VA evt_Symbol_ABAltern_SYMA &lt;- TK Symbol to Identify A/B Alternate Key<br />VA evt_Symbol_ABTaxI_SYMT &lt;- TK Symbol Used to define A/B Tax ID<br />VA evt_Symbol_ABShor_SYMN &lt;- TK Symbol Used to define A/B Short Number<br />If SV File_IO_Status is equal to CO SUCCESS<br />     // Scrub Validate Alternate Address Key<br />     VA evt_syma = rtrim([VA evt_Symbol_ABAltern_SYMA],'0')<br />     VA evt_symt = rtrim([VA evt_Symbol_ABTaxI_SYMT],'0')<br />     VA evt_symn = rtrim([VA evt_Symbol_ABShor_SYMN],'0')<br />     // Get the first character passed in.<br />     VA evt_LeadingCharAltAddress = substr([BF szAlternateAddressKey],0,1)<br />   // If the input selection is 1 or 5 then ALKY is being used for input an<br />   // We need to find the F0101 record based on what was passed in and what<br />   // current default format is in the A/B constants. We will then pass bac<br />   // default format for display in the ALKY parameter<br />     If BF <strong>cInputSelection</strong> is equal to "1,5"<br /><em>       If VA evt_LeadingCharAltAddress is equal to VA evt_syma<br />       Or VA evt_LeadingCharAltAddress is equal to VA evt_symn<br />       Or VA evt_LeadingCharAltAddress is equal to VA evt_symt<br /></em>          If VA evt_LeadingCharAltAddress is equal to VA evt_syma<br />             VA evt_StrippedAltAddKey = ltrim([BF szAlternateAddressKey],[VA<br />              // Fetch From F0101 By ALKY<br />             F0101.Fetch Single<br />             VA evt_AddressNumber &lt;- TK Address Number<br />             VA evt_StrippedAltAddKey =  TK Long Address Number<br />             VA evt_TaxId &lt;- TK Tax ID<br />             VA evt_NameAlpha &lt;- TK Name - Alpha<br />             If SV File_IO_Status is equal to CO SUCCESS<br />                // Return Successful<br />             End If<br />           End If<br />     End If<br />End If<br /><br /></div>
+<p><br />If system fails to validate information on evt_syma, evt_symt and evt_symn, system won't search table F0101.<br /><br /><span style="text-decoration: underline;"><strong>IMPORTANT</strong></span>: Scrubbing Address Number can be done either through system function or NER N0100061 - ScrubAddressNumberNER (Scrub Address Number) so it is important to analyze jasdebug.log (namely rtdebug which traces runtime routine/specification) if the issue is specific to HTML client.</p>
+<ul>
+<li>System Function: This is java code which is running in JAS when input value is scrubbed through DD item.</li>
+<li>NER: This is Client Only NER so it has to be serialized and stored in F989999 (so jasdebug.log willc contain the cause of error). This routine gets called when scrubbing routine is written through event rule</li>
+<li>In HTML client, the component which triggers error message/label can be traced by clicking small yellow-colored triangle. In FAT client, click right mouse button to go to 'Error Detail' which repeat same message.</li>
+</ul>
+<p>Example in HTML client:</p>
+<div class="kmnotebox">Address Number - Invalid                                                                                                                                    <span style="text-decoration: underline;">Go to error.. </span><br /> CAUSE: The address number entered is not found in the Address Book Master file (F0101).<br />RESOLUTION: Enter a valid address number. <br />
+<blockquote><strong><em>ER Details: </em></strong><br /> Form                                   P4210_W4210A <br /> Control Id                          800 <br /> Control Title                     Long Address Number <br /> Event                                Control Exited/Changed-Inline <br /> Line No                            87 <br /> Error ID                            0037</blockquote>
+</div>
+<p><br />Example error is triggered in Windows client through system function:</p>
+<div class="kmnotebox">Error ID: 0037<br />  Description: Address Number - Invalid<br />  Source File:\build\toolsRlease\Rels\client\Jdeuser\jdecgrt\Rt_sysfun.cpp<br />  Source Line: 730<br />Data Item: ALKY - Long Address Number</div>
+<p><br /><br /></p>
+<div class="kmnotebox">To discuss information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/distribution_-_jde1" target="_blank">JDE1 Distribution Community</a>.<br /> <br /> To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details (Doc ID <a href="&lt;&lt;INLINE_NOTE:548764.1&gt;&gt;" target="_blank">548764.1</a>) if your topic is not currently scheduled please suggest it.</div>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

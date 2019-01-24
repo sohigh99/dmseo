@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>change title</title>
+    <title>Case Study - R42520 Puts Order To Back Order with Available Quantity</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Case Study - R42520 Puts Order To Back Order with Available Quantity</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -95,14 +95,26 @@ function topFunction() {
 <!-- ================================= Purpose of Document ================================== -->
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+<p><span style="font-size: 10pt;">Print Pick Slip put order to back order even there's enough inventory (and Summary Availability shows there is available quantities).</span></p>
+<p><img src="../images/r4252001.png" class="kmsmartresize" alt="as-is quantity" title="as-is quantity" width="758"/></p>
+
+<p><span style="font-size: 10pt;">R42520 puts below order,&nbsp;</span></p>
+<p><img src="../images/r4252002.png" class="kmsmartresize" alt="backorder" title="backorder" width="758"/></p>
+
+
+<p><span style="font-size: 10pt;">to back order. As a result, R42520 fails to commit inventory.</span><br /><br /></p>
 
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
+<p><span style="font-size: 10pt;">Lot Process Type (F4102.SRCE) is changed from 3 (Lots must be Assigned Manually) to 0 (Lots are Option). So users are not controlling Lot anymore but Commitment Method (F4102.CMGL) remains 2 (Lowest Lot Number).</span></p>
 
+<p><span style="font-size: 10pt;">&lt;Bug 19511226&gt; - R42520 HARD COMMITS TO PRIMARY LOCATION WITH COMMITMENT METHOD = 2 LOWEST LOT NUMBER has changed the functionality as below,&nbsp;</span></p>
+<p><span id="form1:panelPage1"><span style="font-size: 10pt;"> When using lot controlled items with Commitment Method = 2 Lowest Lot Number,</span>&nbsp; <span style="font-size: 10pt;">if the the blank primary location has availability it will commit to primary</span> <span style="font-size: 10pt;">instead of the secondary location/lot.This is because there was no any check to exclude the blank lot during commitment process. </span><br /><span style="font-size: 10pt;"><br />Above bug, issues query against F4102 (Item Location File) as below, </span><span style="font-size: 10pt;"></span></span><br /><span style="font-size: 10pt;"><span id="form1:panelPage1">SQL&gt; SELECT &nbsp;* &nbsp;FROM PRODDTA.F41021 &nbsp;WHERE &nbsp;( LIITM = 60003.000000 AND LIMCU = ' &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30' ) <strong>&nbsp;AND &nbsp;( LILOTN &lt;&gt; ' ' )</strong> &nbsp;ORDER BY LIITM ASC,LIMCU ASC,LILOTN ASC,LILOCN ASC </span>&nbsp;</span></p>
+<p><span style="font-size: 10pt;">Note that above bug appends <span id="form1:panelPage1"><strong>AND &nbsp;( LILOTN &lt;&gt; ' ' )</strong> </span></span></p>
 
-
+<p><span style="font-size: 10pt;">1. (Optional) check whether available quantity (F41021.PQOH) is in secondary location with blank lot</span><br /><span style="font-size: 10pt;">2. Check whether it is lot controlled item (if so, user must specify Lot Number because lot has to be written into F4108)</span><br /><span style="font-size: 10pt;">3. If not, check (Inventory) Commitment Method and verify that whether commitment method and lot control are set properly</span><br /><span style="font-size: 10pt;">4. Change Commitment Method from 2 (Lowest Lot Number) to 1 (Location with Most Quantity) when you are not using Lot Control for specific Item and Branch combination with Blank Lot with available quantity.</span><br />&nbsp;</p>
 
 <!-- ======================================== End of Body ==================================== -->
 

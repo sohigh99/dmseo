@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>change title</title>
+    <title>How the Blanket Order Release Routine Handles Cancel Date (CNDJ) in Procurement</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How the Blanket Order Release Routine Handles Cancel Date (CNDJ) in Procurement</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -96,11 +96,27 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<p><span style="font-size: small;">How to set end contract date and how not to expire blanket orders</span><br /><span style="font-size: small;"> </span></p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-
+<p><span style="font-size: small;">First of all, refer to &lt;Document 1465245.1&gt; E1: 43: Blanket Orders in Procurement (P4310, P43060), which explains the interface through interactive applications P43060 (Blanket Order Release) and P43216 (Purchase Blanket Release). </span></p>
+<p><span style="font-size: small;">Similarly, Blanket in Sales, Cancel Date in Purchase (Blanket) Order Header/Detail, controls the end date of contract whether release routine is performed through user interface or programs. </span></p>
+<p><span style="font-size: small;">The simplified routine to create purchase can be, </span></p>
+<p><span style="font-size: small;">Calling routine to create purchase order (e.g., MRP Message)</span><br /><span style="font-size: small;">       |--- F4311EditLine (XT4311Z1/XT4311Z2 - F4311 Edit Line)</span><br /><span style="font-size: small;">                     |--- <strong>DetermineIfBlanketPOExists</strong> (N4300410, F4311 Determine If Blanket PO Exists)</span><br /><br /><span style="font-size: small;">Which controls Blanket Order as below,</span></p>
+<ol>
+<li><span style="font-size: small;">Check Blanket order detail where based on Supplier, Item, Currency, Next Status &lt;&gt; 999 and Other Qty = 1 (as you have set the processing option (Tab) Interface, option #4 is set to &ldquo;1&rdquo;)</span></li>
+<li><span style="font-size: small;">Do not handle when</span></li>
+</ol>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li><span style="font-size: small;">  jdRequestedDate is less than or equal to F4311.CNDJ of Blanket Order</span></li>
+<li><span style="font-size: small;">  Status of Blanket order does not meet the value defined in the processing option of P43216 (the version of PO creation has option to specify the version of P43216)</span></li>
+</ul>
+</li>
+</ul>
 
 
 

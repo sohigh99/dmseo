@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>change title</title>
+    <title>Is There Any Business Function to Return PV (Present Value) Like MS Excel Does?</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Is There Any Business Function to Return PV (Present Value) Like MS Excel Does?</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -96,11 +96,36 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<p>Does JDE EnterpriseOne&nbsp;provide any Annuity functions similar to&nbsp;functions&nbsp;provided by Microsoft Excel Spreadsheet?<br /><br />The expectation is, </p>
+<ul>
+<li>PV(): Present Value of an Investment</li>
+<li>FV(): Future Value of an Investment</li>
+<li>PMT(): Periodic Payment for an Annuity</li>
+</ul>
+<p><br /><br /></p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-
+<p>No. EnterpriseOne&nbsp;does not have any function which support this requirement but if it is required from your daily business&nbsp; you may write your own Named Event Rule (NER) based on the Microsoft MSDN library see <a href="http://msdn.microsoft.com/en-us/library/cc722983.aspx" title="Example of Excel Function">http://msdn.microsoft.com/en-us/library/cc722983.aspx</a><br /><br />The following&nbsp;is an example&nbsp;code which can guide you in writing event rules&nbsp;to obtain PV() value.</p>
+<p>Note that this is just example of code and Oracle&nbsp;does not warranty any issue&nbsp;that may arise from this code.<br /><br /><span style="text-decoration: underline;"><strong>Formula:</strong></span><br /><br /><img src="../images/excel01.png" /><br /><br />or pv = pmt/rate * [1 - 1 / (1 + i)^nper]<br />(rate = rate per period. For example, annum rate is 8% then rate = 8 * (0.01) * 12 (month))<br /><br /><br /><br /><span style="text-decoration: underline;"><strong>Result in Excel:</strong></span><br /><img src="../images/excel02.png" /><br /><br /><br /><span style="text-decoration: underline;"><strong>Example of implementation through Form Design Aid, </strong></span><br /><img src="../images/excel03.png" /><br /><br /><br /><span style="text-decoration: underline;"><strong>Possible code:</strong></span><br />For simplicity, code is written based on simple formula <strong>pv = pmt/rate * [1 - 1 / (1 + i)^nper]</strong><br /><br /></p>
+<div class="kmcodeblock" style="width: 95%;">=======================================================================<br />FORM: Get Present Value&nbsp; <br />=======================================================================<br />CONTROL: BUTTON Get PV<br />EVENT: Button Clicked<br />-----------------------------------------------------------------------<br />evt_x<br />OPT: Using Defaults<br />0001 //<br />0002 VA frm_mnRate = ([FC _rate]*0.01)/12 <em>/* monthly rate */</em><br />0003 VA frm_nper = [FC _nper]*12 <em>/* total number of month */</em><br />0004 //<br />0005 VA evt_x = pow((1+[VA frm_mnRate]),[VA frm_nper])<br />0006 //<br />0007 FC _pv = ([FC _pmt]/[VA frm_mnRate])*(1-(1/[VA evt_x]))<br />0008 FC _pv = [FC _pv]*-1<br />0009 //</div>
+<p><br /><br /></p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>For simple code, errors are not handled. In actual implementation, determine exception handling</li>
+<ul>
+<li>Zero Division</li>
+<li>The size of numeric value</li>
+</ul>
+<li>(pow(1 + rate, -nper) will cause memory overflow because the limitation which you can define using existing DD items</li>
+<li>In MS Excel, function can be called PV(rate, per, nper, pmt, fv)</li>
+<li>Common formula is PV = - ( (pow(1 + rate, -nper)) * ( fv * rate - pmt + (power(1 + rate, nper)) * pmt )) / rate; (this code can't be used in JDE as pow(1+rate, nper*(-1)) is too small to hold the value using exiting dd item</li>
+<li>Same manner, FV() and PMT can be implemented</li>
+<li>Same code can be implemented through Named Event Rule (NER) for repeative usage</li>
+</ul>
+</div>
+<p><br /><br /><br /></p>
 
 
 

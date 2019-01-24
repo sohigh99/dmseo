@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>change title</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p><br /> Firstly, the file name is not defined correctly. It has to be "\\server\directory\filename"<br /> <br /> Secondly, the flat files are created incorrectly. Since the relationship between input file to output/target file is 1 to many, two files are to be merged into single file&nbsp;or R47002C has to be run again after defining another Processing type.<br /> <br /> Simplified relationship could be as shown here:</p>
+<p><img src="../images/tc99.png" border="0" alt="Simplified relationship" title="Simplified relationship" hspace="0" vspace="0" /></p>
+<h2>Goal</h2>
+<p>&nbsp;</p>
+<p>This document is to explain a common mistake made when running&nbsp;R47002C to convert Flat File to SQL Format File. Before running R47002C - <strong><em>Inbound Flat File Conversion</em></strong>, please read the below KM Documents:</p>
+<ul>
+<li>&lt;Note 625529.1&gt; - <em>E1: 47: Inbound Flat File Conversion (R47002C)</em></li>
+<li>&lt;Note 625719.1&gt; - <em>E1: 47: Flat File Creation Procedure (Xe/8.0)</em></li>
+</ul>
+<p>The usual steps are:</p>
+<ul>
+<li>What are the business needs?<br />&nbsp;</li>
+<li>Is that functionality available?</li>
+<ul>
+<li>Check the EDI guide for your release.<br />&nbsp;</li>
+</ul>
+<li>What is the available F47002.TYTN - <em>TypeTransaction</em> (Type - Transaction)?</li>
+<ul>
+<li>Interoperability Type Transaction starts with JDE*</li>
+<li>Same information can be reviewed either through P47002 or through P90701/P90701A - <em>Interoperability Event Definition</em>)<br />&nbsp;</li>
+</ul>
+<li>Define P47002 - Flat File Cross Reference:</li>
+<ul>
+<li>For this example, review standard setting which&nbsp; 'JDEINV' is referencing</li>
+<li>This value will be specified in Processing Option of R47002C<br /><em><br /> </em></li>
+</ul>
+<li>(<span style="text-decoration: underline;"><strong>TARGET FILE</strong></span>) What are Z table(s) to be populated? (a single file or more than 2 files)</li>
+<ul>
+<li>Refer &lt;Note 625719.1&gt;: this reads "<em><strong>combine the multiple flat file records together into a single flat file made up of multiple record types</strong></em>"</li>
+<li>For this example, F03B11Z1 - <em>Batch Invoice</em> for Header and F0911Z1 - <em>Journal Entry Transactions - Batch File</em> for Detail<br />&nbsp;</li>
+</ul>
+<li>Convert SQL format file to flat file or Excel file to flat file</li>
+<ul>
+<li>Refer &lt;Note 625719.1&gt; to perform this</li>
+<li>Or when databrowser is available, export data into *.csv file</li>
+<li>Or write Data Conversion UBE using Enterprise Report Design Tool</li>
+<li>Or convert data format through Data Transformation tools which is available for your database<br />&nbsp;</li>
+</ul>
+<li>Add the first column for Record Type which is defined from P47002 - <em>Flat File Cross-Reference</em></li>
+<ul>
+<li>As &lt;Note 625719.1&gt; reads "combine the multiple flat file records together into a single flat file made up of multiple record types"</li>
+<li>Record Type written for the first column talks to F47002.EDTY - <em>EDIType </em>(Type Record)<br />&nbsp;</li>
+</ul>
+<li>(<strong><span style="text-decoration: underline;">SOURCE FILE</span></strong>) Specify location which combined flat file is</li>
+<ul>
+<li>This source of flat file is defined at header in P47002. For this reason if target SQL tables are more than 2 it has to be combined</li>
+<li>For flexible file handling the location of source file can be 'Deployment Server' which is sitting in Intel platform</li>
+<ul>
+<li>It has to be full definition for example, '<em>\\ServerMachineName\FolderName\FileName</em>' in Intel platform</li>
+<li>Refer &lt;Note 884743.1&gt; for AS400 in IFS</li>
+<li>Refer &lt;Note 661013.1&gt; to specify syntax to specify folder and file in Unix and AS400<br />&nbsp;</li>
+</ul>
+</ul>
+<li>&nbsp;Run R47002C and check Work Center to check error(s) may detected</li>
+</ul>
+<p><br /> Below is the common mistake that is observed when running&nbsp;Batch Invoice Processor (R03B11Z1I):</p>
+<ol>
+<li>Create two flat files based on F03B11Z1 - Batch Invoices and F0911Z1 - Journal Entry Transactions - Batch File and name it as 'f03b11z1.txt' and 'f0911z1.txt'<br />&nbsp;</li>
+<li>Store this file at \\Server\EDI\Inbound<br />&nbsp;</li>
+<li>Go to P47002 and look for Inbound process for JDEINV and defined Flat File Name \\Server\EDI\Inbound</li>
+<ul>
+<li>&nbsp;Record Type | Description&nbsp; | File Name</li>
+<li>&nbsp;1 &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Header &nbsp; &nbsp;&nbsp; &nbsp; | F03B11Z1</li>
+<li>&nbsp;2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; | Detail &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; | F0911Z1<br />&nbsp;</li>
+</ul>
+<li>Run R47002C (do not call R03B11Z1I) which issues error &nbsp;"Open file unsuccessful"</li>
+</ol>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

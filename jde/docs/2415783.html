@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>change title</title>
+    <title>Does JP430000 (processPurchaseOrderV2) Reference P43XPI|Version</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Does JP430000 (processPurchaseOrderV2) Reference P43XPI|Version</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -96,12 +96,17 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<p>How JP430000 (processPurchaseOrderV2) sets the next status (F4311.NXTR) when settings the processing options as below?<br /><br /></p>
+<p style="padding-left: 30px;">P43XPI|Version, (Tab) Order Status</p>
+<p style="padding-left: 30px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. Beginning Order Status allowed for External Publish = 220<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. Ending Order Status allowed for External Publish = 230</p>
+<p style="padding-left: 30px;">P4310|Version, (Tab) 1 - Defaults<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. Beginning Status = 220<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Override Next Status = 400<br />&nbsp;</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
 
-
+<p>JP430000 does not reference the processing option of P43XPI|version during interop (in this context, interop encompass pure Z File interface, RTE, and business service).</p>
+<p>P43XPI|Version, (Tab) Order Status<br />1. Beginning Order Status allowed for External Publish = 220<br />2. Ending Order Status allowed for External Publish = 230 --------------- this parameter is related with RSS PO dispatch<br /><br />P4310|Version, (Tab) 1 - Defaults<br />3. Beginning Status = 220<br />4. Override Next Status = 400 ------------- this value is used when you want to override next status so it does not follow order activity rule.<br /><br />both creation/update of Purchase Order is only affected by P4310|Version. So I guess you do not have to set same value because above setting will set F4311.LTTR = 220 and F4311.NXTR = 400.<br /><br /><br /></p>
 
 
 <!-- ======================================== End of Body ==================================== -->

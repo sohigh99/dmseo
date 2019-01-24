@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case Study - How to Interpret Error CAC0001017 in jde.log?</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Case Study - How to Interpret Error CAC0001017 in jde.log?</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>Below information is a guide on how to interpret error message CAC0001017 in jde.log.</p>
+<p>In Xe and ERP8 the way it writes error message in jde.log is different from what it is explained in this note. However same logic can be applied.</p>
+<ul>
+<li>Guide higher level debugging through jde.log</li>
+<li>Indicate max data pointer and max cursor in EnterpriseOne</li>
+</ul>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p><br /> If jde.log reads this error message, try to resolve it because it may cause wrong transaction owing to inappropriate memory handling.<br /> <br /> <em><strong>Example 1:</strong></em></p>
+<div class="kmnotebox">29586/5 WRK:1000393_4099A940_P58C010A&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; Thu May 26 08:59:57.435715 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; jdecache.c1840<br /> <strong>CAC0001017 - (jdeCacheOpenCursor) failed to open cursor due to reach the max #cursors (100) for cache (2F42UI12)</strong></div>
+<ul>
+<li>Component for this message:</li>
+<ul>
+<li>29586/5: Process ID/Thread ID</li>
+<li>1000393: User ID</li>
+<li><strong>P58C010A: Interactive Application ID</strong>. For this example, it refers custom interactive application but unless you have modified standard business function same error will be occurred in it</li>
+<li>jdecache.c1840: Actual C Codes jdecache, 1840 is line number in jdecache.c file so this value can be vary per tools release (this code is encapsulated)</li>
+<li>CAC0001017: Error Code as defined in jdecache.c (this is system level code which is to be encapsulated)</li>
+<li><strong>2F42UI12: Cache Name</strong>. This is important clue to trace offending business function. Note that this information may not be appeared log in EnterpriseOne release Xe and ERP8. So in case you need to debug this error message, capture callobject kernel log which shows what are the business function which creates this cursor. For this example, 2F42UI12 is cache name which is made up of 2(=Job Number) and F42UI12 (=Static Cache Name) which hold additional Sales Order Detail information. Since it writes cache (not work file) it confirms that this action is caused by interactive application and since it holds sales order detail information open cursor is called by B4200311 - Internal function for F4211FSEditLine.</li>
+</ul>
+<li>How to identify and fix it?</li>
+<ul>
+<li>: Look for available fix (ESU) based on object ID you have specified above (for this example, B4200311).</li>
+</ul>
+</ul>
+<p><br /> <br /> <em><strong>Example 2:</strong></em><br /> In Batch Application: Application Id is to be appeared on top of jde.log.</p>
+<div class="kmnotebox">922/49 MAIN_THREAD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Sun May 22 19:06:41.191584&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; runbatch.c447<br /> Generating Joblog for UBE, refer to joblog of job 707064/E1USER /R09410 for additional information.<br /> ...<br /> 922/49 WRK:Starting jdeCallObject&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Sun May 22 19:07:44.779552 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; jdecache.c1749<br /> CAC0001017 - (jdeCacheOpenCursor) failed to open cursor due to reach the max #cursors (100) for cache (0D09000471)<br /> <br /> 922/49 WRK:Starting jdeCallObject &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Sun May 22 19:07:44.779640 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; jdb_utl1.c2623<br /> JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()</div>
+<ul>
+<li>Component for this message which are made up of 2 portion (Main Thread or UBE Kernel and Call Object Kernel):</li>
+<ul>
+<li>922/49: Process ID/Thread ID</li>
+<li>707064/E1USER /R09410: This messge appears on top of UBE log with memory area/User ID/Batch Application ID</li>
+<li>jdecache.c1749: Actual C Codes jdecache, 1749 is line number in jdecache.c file so this value can be vary per tools release</li>
+<li>CAC0001017: Error Code as defined in jdecache.c (this is system level code which is to be encapsulated)</li>
+<li><strong>0D09000471 Cache Name</strong>. This is important clue to trace offending business function. Note that this information may not be appeared log in EnterpriseOne release Xe and ERP8. So in case you need to debug this error message, capture callobject kernel log which shows what are the business function which creates this cursor. For this example, 0D09000471 is made up of Data Structure (=D0900047) of offending business function and job number (=1). So the object you need to check is B0900047. To think of the usage of this batch application R09410 this type of error may cause unexpected result by using up all the resources in your logic server.</li>
+</ul>
+<li>How to identify and fix it?</li>
+<ul>
+<li>: Look for available fix (ESU) based on object ID you have specified above (for this example, B0900047).</li>
+</ul>
+</ul>
+<p><br /> <br /> <em><strong>Example 3:</strong></em></p>
+<div class="kmnotebox">919/50 WRK:MWEBER_80000000_P31113 &nbsp; &nbsp; &nbsp; &nbsp; Tue May 24 06:56:32.653160 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; jdecache.c1749<br /> CAC0001017 - (jdeCacheOpenCursor) failed to open cursor due to reach the max #cursors (100) for cache (4Cache_B3102280_-&gt;)</div>
+<ul>
+<li>Component for this message:</li>
+<ul>
+<li>919/50: Process ID/Thread ID</li>
+<li>MWEBER_80000000_P31113: User ID + Cache Address + Application ID</li>
+<li>jdecache.c1749: Actual C Codes jdecache, 1749 is line number in jdecache.c file so this value can be vary per tools release</li>
+<li>CAC0001017: Error Code as defined in jdecache.c (this is system level code which is to be encapsulated)</li>
+<li><strong>4Cache_B3102280_</strong>-&gt; Cache Name. For this example the last character is corrupted. For this example, this cache name is made up of Job Number + Static Cache Name + idPointer. So for this example, the length for cache name defined is too short to fill in. This type of issue can be specific to server environment because the job number of pointer ID between server (starts with 1001) and client (starts with 1) can be different in size. Since cache name for this object is structured B3102280 is the object name to debug.</li>
+</ul>
+<li>How to identify and fix it?</li>
+<ul>
+<li>: Look for available fix (ESU) based on object ID you have specified above (for this example, B3102280).</li>
+</ul>
+</ul>
+<p><br /> <span style="text-decoration: underline;"><strong>Important Note:</strong></span></p>
+<ul>
+<li>This note explains general routine to debug but it is important to understand this type of issue in the context of a certain application. For example, pointer (the address of memory/cache) can be created by business function A and value which is stored in address can be used by business function B. Then developer may design to have this business function B&nbsp;to remove the&nbsp;pointer instead of using business function A.</li>
+<li>In C programming language, ID or pointer is integer value so this value can have it's own limit.</li>
+<li>In client machine the maximum number of pointer to store is 1000 and if the pointer is not removed properly actual value and address will&nbsp;remained till you restart system or JDE service</li>
+</ul>
+<p><br /> <br /> <span style="text-decoration: underline;"><strong>Additional Note:</strong></span></p>
+<ul>
+<li>Max data pointer which DB can handle is 1000</li>
+<ul>
+<li>#define JDB_MAX_DATAPTR 1000</li>
+<li>Defined at system/common/jdekrnl/jdb/jdbprv.h (encapsulated code)</li>
+</ul>
+<li>Max Cursor (temporary repository of data) is 100 (JDECACHE definition),</li>
+<ul>
+<li>#define JDECACHE_MAX_CURSORS 100</li>
+<li>This file can be accessed system\include\JDEKDFN.h</li>
+</ul>
+<li>JDECM_CacheInit can open maximum cursors up to 100 (defined at system\include\jdekprto.h)</li>
+<li>You MUST NOT change any default value listed here</li>
+<li>So data pointer error will come after 1000 open pointer and open cursor error will come after 100 cursor opened</li>
+</ul>
+<ul>
+<li>&lt;Document 1050172.1&gt; - E1: BSFN: Why is /* FP */ Written in Business Function C Source file ? explains how to minimize this type of issue technically</li>
+<li>If you see 'Memory Violation' message in PDF or jde.log which is reflecting a certain business function called by a certain report has failed to return called routine.</li>
+<li>Memory is utilized through JDE's business function so it is important to capture jdedebug.log (namely callobject kernel log)</li>
+<li>When issue is occurring in a certain report, turn on logging dynamically in submitting a UBE to server because this log will contain runtime (through batch kernel) and business function (through callobject kernel) are to be combined into one file</li>
+<li>Once jdedebug.log is ready, analyze it through Performance Workbench because all the cache information can be traced through 'Log additional APIs?'</li>
+<li>All the UBE is running in a single thread for this reason if a certain ube is calling another ube synchronously you need to check the routines from both UBEs</li>
+<li>In capturing callobject kernel log, set <strong>DataPointerTracing=1</strong> and Output=FILE in the [DEBUG] section of the JDE.INI.</li>
+</ul>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

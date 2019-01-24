@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vertical Features (UDC 40/VF) in Distribution</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Vertical Features (UDC 40/VF) in Distribution</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>This note is to explain how EnterpriseOne control process a certain process within Distribution and Manufacturing. For the first part this document is to explain Vertical Feature</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+<p>This document is to explain Vertical Features in Distribution Module when you need to activate it or debug possible issue caused by setup by indicating related objects and applications. Currently, UDC 40/VF - 'Vertical Features' reads as below,<br /> <br /> <big>UDC 40/VF - Veritcal Feature</big></p>
+<table style="border-collapse: collapse; width: 758px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 55pt;" width="73" /> <col style="width: 73pt;" width="97" /> <col style="width: 68pt;" width="90" /> <col style="width: 103pt;" width="137" /> <col style="width: 260pt;" width="347" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl63" style="height: 12.75pt; width: 55pt; background-color: #009900; color: white;">Codes</th>
+<th class="xl63" style="width: 73pt; background-color: #009900; color: white;">Description 01</th>
+<th class="xl63" style="width: 68pt; background-color: #009900; color: white;">Hard   Coded</th>
+<th class="xl63" style="width: 103pt; background-color: #009900; color: white;">Vertical Feature</th>
+<th class="xl63" style="width: 362px; background-color: #009900; color: white;">Reference</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl63" style="height: 12.75pt;" height="17">01</td>
+<td class="xl63">CPGDL</td>
+<td class="xl63">Y</td>
+<td>Dual UoM</td>
+<td style="width: 362px;">&lt;Document 625673.1&gt; - E1: 41: Dual Unit of Measure (P4101, P4310, R41411, R41610, R41413)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl64" style="height: 12.75pt;" height="17">02</td>
+<td class="xl64">CPGPV</td>
+<td class="xl64">Y</td>
+<td class="xl64">Product Variants</td>
+<td style="width: 362px;">&lt;Document 1413991.1&gt; - E1: 41: Matrix Item/Product Variants</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl64" style="height: 12.75pt;" height="17">03</td>
+<td class="xl64">CPGLC</td>
+<td class="xl64">Y</td>
+<td class="xl64">Lot Control</td>
+<td style="width: 362px;">&lt;Document 642908.1&gt; - E1: 41: Lot and Serial Number Control (P4210/P42101/P4205/P4312/P4108)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl64" style="height: 12.75pt;" height="17">04</td>
+<td class="xl64">Logs</td>
+<td class="xl64">Y</td>
+<td class="xl64">Logs</td>
+<td style="width: 362px;">&lt;Document 639601.1&gt; - E1: 43: Order Log Revisions<br /> Enhancement &lt;Bug 10818070&gt; : NEW INTERFACE PROGRESS PAYMT2A - SAR: 6743163</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">42</td>
+<td class="xl64">CRMCSS</td>
+<td class="xl65">Y</td>
+<td class="xl64">Customer Self-Service</td>
+<td style="width: 362px;">@check again based on input value</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox"> Note:<br />
+<ul>
+<li>Since it affect across system globally we call it as vertical</li>
+<li>Codes written above reflects enhancement in EnterpriseOne</li>
+<li>Some code may repeate in F99410 (OneWorld System Control File)</li>
+<li>You need to reset Database Cache because Table F99410 (OneWorld System Control File) and F0004/F0005 (UDC) are a member of F98613 (Business View Environmental Server) which can be viewed through P98613 (Work With Database Caching)</li>
+<li>CPG stands for Consumer Packaged Goods</li>
+<li>Description 01 does not affect functionality</li>
+<li>DO NOT add if your business does not require it as this may cause performance issue</li>
+</ul>
+</div>
+<p><br /> <br /> <br /> <big><big>Application by vertical features:</big></big></p>
+<table style="border-collapse: collapse; width: 907px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 71pt;" width="94" /> <col style="width: 222pt;" width="296" /> <col style="width: 113pt;" width="150" /> <col style="width: 227pt;" width="302" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl65" style="height: 12.75pt; width: 71pt; background-color: #009900; color: white;">Object  Name</th>
+<th class="xl65" style="width: 222pt; background-color: #009900; color: white;">Object Description</th>
+<th class="xl67" style="width: 113pt; background-color: #009900; color: white;">Vertical Enhancement</th>
+<th style="width: 358px; background-color: #009900; color: white;">Notes</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4100010</td>
+<td class="xl66">CalculateQuantityAvailable (F41021 Calculate Quantity Available)</td>
+<td class="xl67">03 - Lot Control</td>
+<td style="width: 358px;">Inventory Transaction which requires Availability<br /> * Refer below table which calls this function</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4100300</td>
+<td class="xl66">VerityLotDateRanges (Verify Lot Date Ranges)</td>
+<td class="xl67">03</td>
+<td style="width: 358px;">P4108 - Lot Master<br /> P42053 - Select Multiple Locations</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4100540</td>
+<td class="xl66">LoadLotExpirationDateAndDefaults (F4108 Get Lot Expiration Date)</td>
+<td class="xl67">03</td>
+<td style="width: 358px;">N3700150 - F3711 Test Results MBF (by R3711Z1I)<br /> P4205 - Shipment Confirmation<br /> P42053 - Select Multiple Locations<br /> P420551 - Kit Balance Revision<br /> P4605 - Location Detail Selection</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4101140</td>
+<td class="xl66">F4108GetLotExpirationDateDefault (F4106 Get Lot Expiration Date Default)</td>
+<td class="xl67">03</td>
+<td style="width: 358px;">P42053- Select Multiple Locations<br /> P43250SS - Self-Service - Movement in Rou<br /> P46L30 - Assign/Remove Items To License<br /> R34A460 - SCP Inventory Balance Extract<br /> R46473 - Move Tags</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4200311</td>
+<td class="xl66">F4211SOEInternalFunctions (F4211 Sales Order Entry Internal Functions)</td>
+<td class="xl67">42 - Customer Self-Service</td>
+<td style="width: 358px;">P4210 - Sales Order Entry<br /> P42101 - Sales Order Entry</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4210010</td>
+<td class="xl66">CreateSalesOrderFunctions (Create Sales Order Functions)</td>
+<td class="xl67">01 &amp; 02</td>
+<td style="width: 358px;">P42101 - Sales Order Entry</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">B4210450</td>
+<td class="xl66">W42101A_InitOrderInquiryEX (W42101A Initialize Pending Order Inquiry)</td>
+<td class="xl67">01</td>
+<td style="width: 358px;">P42101 - Sales Order Entry</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="height: 12.75pt;" height="17">B4302930</td>
+<td class="xl69">DetermineEnabledProcesses (Deterimine Enabled Processes for Proc Order Process)</td>
+<td class="xl70">02</td>
+<td class="xl69" style="width: 358px;">P40G30 - Grower Harvest and Weigh Tag R<br /> P4310 - Purchase Orders<br /> P4312 - PO Receipts</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">N3002040</td>
+<td class="xl66">F3002 Bill of Material Master</td>
+<td class="xl71">03</td>
+<td style="width: 358px;">P3002 - Bill of Material Revisions<br /> R3002Z1I - Process Inbound Bill of Materi<br /> R30510 - ECO - Bill of Material Update</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">N4101060</td>
+<td class="xl66">F4101 Process Master Data</td>
+<td class="xl71">03</td>
+<td style="width: 358px;">P31B031 - Setup Barrel Profiles<br /> P4101 - Item Master<br /> P4101E - Matrix Items<br /> P41024 - Location Revisions<br /> P41026 - Item Branch<br /> P4130 - Consignment Master (FUTURE)<br /> P415104 - Weighbridge Information<br /> P41903 - Matrix Maintenance<br /> P4216 - Pack Confirm Detail<br /> P43100 - Purchasing Date Revisions<br /> P4312 - PO Receipts<br /> P7611B - Stand Alone Nota Fiscal - BRA<br /> R39120 - Period Build<br /> R4101Z1I - Item Master Unedited Transacti<br /> R41185 - Container Reconciliation Repor<br /> R41826 - Item Branch Duplication - Batc<br /> R47500 - Inbound Transaction Processor<br /> R75C422 - Create GUI flat file from SO i</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">N4600030</td>
+<td class="xl66">Warehouse Management Request T</td>
+<td class="xl71">01</td>
+<td style="width: 358px;">P42040 - Sales Order Speed Status Updat<br /> P46100 - Manual Replenishments<br /> R46150 - Batch Picking Requests<br /> R461601 - Fixed Location Replenishment<br /> R461602 - Replenishment to Random Locati</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3002</td>
+<td class="xl66">Bill of Material Revisions</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3002S</td>
+<td class="xl66">Bill of Material Component Sub</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P30200</td>
+<td class="xl66">Bill of Material Inquiry</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3111</td>
+<td class="xl66">Work Order Parts List</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P31114</td>
+<td class="xl66">Work Order Completions</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3111P</td>
+<td class="xl66">Work Order Process Resource Re</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3111S</td>
+<td class="xl66">Substitute Availability</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3121</td>
+<td class="xl66">Work Order Parts List Inquiry</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P31225</td>
+<td class="xl66">Manufacturing Scheduling Workb</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P40ITM2</td>
+<td class="xl66">Item Search Returns Quantity</td>
+<td class="xl67">02</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P40ITM3</td>
+<td class="xl66">Product Information</td>
+<td class="xl67">42</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4100</td>
+<td class="xl66">Location Master</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41001</td>
+<td class="xl66">Branch/Plant Constants</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P410014</td>
+<td class="xl66">Template Master</td>
+<td class="xl67">02</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4101</td>
+<td class="xl66">Item Master</td>
+<td class="xl67">01, 02 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4101E</td>
+<td class="xl66">Matrix Items</td>
+<td class="xl67">02</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4101H</td>
+<td class="xl66">Item Hierarchy (Web)</td>
+<td class="xl67">42</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41026</td>
+<td class="xl66">Item Branch</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4108</td>
+<td class="xl66">Lot Master</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4111</td>
+<td class="xl66">Item Ledger Inquiry (CARDEX)</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4112</td>
+<td class="xl66">Inventory Issues</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4113</td>
+<td class="xl66">Inventory Transfers</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4114</td>
+<td class="xl66">Inventory Adjustments</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4116</td>
+<td class="xl66">Item Reclassifications</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41202</td>
+<td class="xl66">Item Availability</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41206</td>
+<td class="xl66">Segmented Item Availability</td>
+<td class="xl67">02</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41241</td>
+<td class="xl66">Cycle Count Detail</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4141</td>
+<td class="xl66">Cycle Count Entry</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P415101</td>
+<td class="xl66">General Stock Movements</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41604</td>
+<td class="xl66">Tag Status Review</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41829W</td>
+<td class="xl66">Item Word Search - Web</td>
+<td class="xl67">42</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41903</td>
+<td class="xl66">Matrix Maintenance</td>
+<td class="xl67">02</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41LOCN</td>
+<td class="xl66">Location Search and Select</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P420111</td>
+<td class="xl66">Sales Blanket Order Release</td>
+<td class="xl67">42</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4205</td>
+<td class="xl66">Shipment Confirmation</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P42053</td>
+<td class="xl66">Select Multiple Locations</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4210</td>
+<td class="xl66">Sales Order Entry</td>
+<td class="xl67">01 &amp; 42</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P42117</td>
+<td class="xl66">Backorder Release</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P42232</td>
+<td class="xl66">Display Before Accept</td>
+<td class="xl67">42</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P43060</td>
+<td class="xl66">Blanket Order Release</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4310</td>
+<td class="xl66">Purchase Orders</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P43100</td>
+<td class="xl66">Purchasing Date Revisions</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P43101</td>
+<td class="xl66">Purchase Order Workbench</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4312</td>
+<td class="xl66">PO Receipts</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P43250</td>
+<td class="xl66">Receipt Routing Movement and D</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4602</td>
+<td class="xl66">Location Detail Maintainance</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4605</td>
+<td class="xl66">Location Detail Selection</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P46100</td>
+<td class="xl66">Manual Replenishments</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P46130</td>
+<td class="xl66">Online Putaway Reservations</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4617</td>
+<td class="xl66">Warehouse Movement Confirmatio</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P46321</td>
+<td class="xl66">Location Detail Inquiry</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P46321</td>
+<td class="xl66">Location Detail Inquiry</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P48013</td>
+<td class="xl66">Manufacturing Work Order Proce</td>
+<td class="xl67">01 &amp; 03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P49640</td>
+<td class="xl66">Transportation Load Confirmati</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P49650</td>
+<td class="xl66">Deliver Confirm</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P49655</td>
+<td class="xl66">Unscheduled Deliveries</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P49660</td>
+<td class="xl66">Disposition Loads</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P7470214</td>
+<td class="xl66">Purchase Receipts Inquiry - CO</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P76H611B</td>
+<td class="xl66">Actual Item Ledger Inquiry (CA</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P90CD016</td>
+<td class="xl66">CRM Item Availability</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R31400</td>
+<td class="xl66">Open Work Orders</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R31415</td>
+<td class="xl66">Work Order Print</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41403</td>
+<td class="xl66">Print Variance Detail</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41410A</td>
+<td class="xl66">Print Cycle Count Sheets</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41411</td>
+<td class="xl66">Select Items for Count</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41530</td>
+<td class="xl66">Stock Status</td>
+<td class="xl67">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41540</td>
+<td class="xl66">Item Ledger Detail Print</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41607</td>
+<td class="xl66">Print Inventory Tags</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42118</td>
+<td class="xl66">Backorder Release and Report</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42520</td>
+<td class="xl66">Print Pick Slips</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42521</td>
+<td class="xl66">Packaged Pick Slip</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42522</td>
+<td class="xl66">Control Pick Slips</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R43500</td>
+<td class="xl66">Purchase Order Print</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R47500</td>
+<td class="xl66">Inbound Transaction Processor</td>
+<td class="xl67">01</td>
+<td style="width: 358px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">XT4116Z1</td>
+<td>F4116FSEditDoc (F4116 FS Edit Doc)</td>
+<td class="xl71">03</td>
+<td style="width: 358px;">P4116 - Item Reclassifications</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">XT4311Z1</td>
+<td>F4311FSBeginDoc (F4311 Begin Document)</td>
+<td class="xl71">03</td>
+<td style="width: 358px;">P13730 - CAM - Manage Work Order Parts<br /> P17730 - Work Order Parts Detail<br /> P3111 - Work Order Parts List<br /> P40G30 - Grower Harvest and Weigh Tag R<br /> P40G300 - Final Setllement<br /> P43011 - PO Generator<br /> P43032 - Purchase Order Generator<br /> P43060 - Blanket Order Release<br /> P4310 - Purchase Orders<br /> P43101 - Purchase Order Workbench<br /> P4312 - PO Receipts<br /> P4314 - Voucher Match<br /> P43252 - Routing Ledger Inquiry<br /> P43253 - Routing Disposition<br /> P4371 - Suggested Reorder Stock Items<br /> P43E060 - Requisition Expeditor<br /> P43S01 - SRM - PO Acknowledgement<br /> P90CD015 - CRM - Manage Work Order Parts<br /> PCW10 - Matrix Entry<br /> R34410 - Supplier Schedule Release Gene<br /> R4210IC - Create Intercompany Sales Orde<br /> R42770 - Generate Rebate Claims<br /> R4311Z1I - PO Unedited Transaction Inboun<br /> R437001 - Sales Order Purchase Order Gen<br /> R437002 - Stocked Item Reorder Point Bat<br /> R43E060 - Batch Requisition Consolidatio<br /> R47011 - EDI Inbound Purchase Order Edi</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">XT4312Z1</td>
+<td>F4312EndDoc (F43121 End Document)</td>
+<td class="xl71">03</td>
+<td style="width: 358px;">P3157 - Kanban Processing<br /> P4312 - PO Receipts<br /> P43250 - Receipt Routing Movement and D<br /> P43250SS - Self-Service - Movement in Rou<br /> R43092Z1I - Receipt Routing Unedited Trans<br /> R47071 - EDI Receiving Advice Edit/Crea</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">XT4312Z2</td>
+<td>F4312EditLineInternalFunctions (F4312 Edit Line Internal Functions)</td>
+<td class="xl71">03</td>
+<td style="width: 358px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Based on the existence of definition from UDC 40/VF it may return different user interface in interactive applications</li>
+<li>Above list of application or business functions are full list which calls B4002670 (VerticalFeature - Vertical Features) in EnterpriseOne 9.0 release</li>
+</ul>
+</div>
+<p><br /> <br /> List of application which calls B4100010 - CalculateQuantityAvailable (F41021 Calculate Quantity Available)</p>
+<table style="border-collapse: collapse; width: 580px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 71pt;" width="94" /> <col style="width: 160pt;" span="2" width="213" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl65" style="height: 12.75pt; width: 71pt; background-color: #009900; color: white;">Object  Name</th>
+<th class="xl65" style="width: 237px; background-color: #009900; color: white;">Description</th>
+<th class="xl65" style="width: 243px; background-color: #009900; color: white;">Notes</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">N4300970</td>
+<td class="xl66" style="width: 237px;">Landed Cost Selection</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl66" style="height: 14.25pt;" height="19">N4600490</td>
+<td class="xl66" style="width: 237px;">F4602 Accumulate Used Space</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P30131</td>
+<td class="xl66" style="width: 237px;">ECO Related Items Window</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P30201</td>
+<td class="xl66" style="width: 237px;">Bill of Material Where Used</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P30240</td>
+<td class="xl66" style="width: 237px;">Process Inquiry</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3111I</td>
+<td class="xl66" style="width: 237px;">Intermediate Product Revisions</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P31240</td>
+<td class="xl66" style="width: 237px;">Process Order Inquiry</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3130</td>
+<td class="xl66" style="width: 237px;">Work Order Location Search Win</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P3154W</td>
+<td class="xl66" style="width: 237px;">Split Lines Window</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4100</td>
+<td class="xl66" style="width: 237px;">Location Master</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41200</td>
+<td class="xl66" style="width: 237px;">Item Search</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41201</td>
+<td class="xl66" style="width: 237px;">Supplier Self-Service Inventor</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41202</td>
+<td class="xl66" style="width: 237px;">Item Availability</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41206</td>
+<td class="xl66" style="width: 237px;">Segmented Item Availability</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P41206</td>
+<td class="xl66" style="width: 237px;">Segmented Item Availability</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P42130</td>
+<td class="xl66" style="width: 237px;">Inventory Commitment Window</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4277707</td>
+<td class="xl66" style="width: 237px;">Item Availability</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P43011</td>
+<td class="xl66" style="width: 237px;">PO Generator</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">P4600</td>
+<td class="xl66" style="width: 237px;">Request Inquiry</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R30415</td>
+<td class="xl66" style="width: 237px;">Multi Level Bill of Material R</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R30420</td>
+<td class="xl66" style="width: 237px;">Material Where Used</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R30445A</td>
+<td class="xl66" style="width: 237px;">Multi-Level Costed Bill Report</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R31401</td>
+<td class="xl66" style="width: 237px;">Accounting Summary (Closed Wor</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R34410</td>
+<td class="xl66" style="width: 237px;">Supplier Schedule Release Gene</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R34410</td>
+<td class="xl66" style="width: 237px;">Supplier Schedule Release Gene</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R34410</td>
+<td class="xl66" style="width: 237px;">Supplier Schedule Release Gene</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R34450</td>
+<td class="xl66" style="width: 237px;">Supplier Schedule Print</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R3452</td>
+<td class="xl66" style="width: 237px;">Where Used Pegging Requirement</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R41021ZX</td>
+<td class="xl66" style="width: 237px;">Item Location Extraction</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R4102P</td>
+<td class="xl66" style="width: 237px;">Item Balance Purge (F4102)</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42520</td>
+<td class="xl66" style="width: 237px;">Print Pick Slips</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42800</td>
+<td class="xl66" style="width: 237px;">Sales Update</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt;" height="17">R42810</td>
+<td class="xl66" style="width: 237px;">Print Sales Journal</td>
+<td class="xl66" style="width: 243px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note: applications listed here calls B4100010 directly from application</div>
+<p><br /> <br /> <br /> <big style="text-decoration: underline;"><big>Business Function: B4002670 (VerticalFeature - Vertical Features)</big></big></p>
+<ul>
+<li><strong>Function</strong>: This business function is to determine whether a certain vertical feature is written/enabled by checking UDC 40/VF and/or F99410</li>
+<li><strong>Data Structure</strong>: D4002670 - Vertical Feature</li>
+</ul>
+<p> </p>
+<table style="border-collapse: collapse; width: 480px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 122pt;" width="163" /> <col style="width: 88pt;" width="117" /> <col style="width: 48pt;" width="64" /> <col style="width: 20pt;" width="27" /> <col style="width: 44pt;" width="58" /> <col style="width: 158pt;" width="210" /> </colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 122pt; background-color: #009900; color: white;">Structure Member Name</th>
+<th style="width: 88pt; background-color: #009900; color: white;">Data Item</th>
+<th style="width: 48pt; background-color: #009900; color: white;">Required</th>
+<th style="width: 20pt; background-color: #009900; color: white;">I/O</th>
+<th style="width: 44pt; background-color: #009900; color: white;">DD Alias</th>
+<td style="width: 158pt; background-color: #009900; color: white;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szVerticalEnhancement</td>
+<td>CacheActionCode</td>
+<td>N</td>
+<td>(I)</td>
+<td>CACTN</td>
+<td>Input value <br /> 01, 02, 03 and 42 are always 1</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">cEnhancementExistance</td>
+<td>ModuleExistance</td>
+<td>N</td>
+<td>(O)</td>
+<td>MEOW</td>
+<td>Return <br /> 0 - No Enhancement<br /> 1 - Enhancement Exist</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul>
+<li>Detail routine:</li>
+<ul>
+<li>If input parameter szVerticalEnhancement is IN ("01", "02", "03", "42"), it sets cEnhancementExistance = 1 without checking F99410</li>
+<li>If the input value is not IN ("01", "02", "03", "42") then it looks for data from F99410 based on DD Alias name defined</li>
+<li>Since input parameter is 01, 02, 03 or 42 it never goes to routine to check F99410 as it does not have routine for that</li>
+<li>So it is important to know that Log (voucher) is not handled by B4002670</li>
+</ul>
+</ul>
+<p>Note: CPG Enhancement is available from EnterpriseOne release 8.9 and above. To have better understanding background of these enhancements refer value positioning documents or net change documentation<br /><br /> &lt;Internal_Only&gt; to list up all the control setup in distribution, F40039 and F99410 are to be implemented soon<br /> &lt;/Internal_Only&gt;</p>
+<div id="yui3-css-stamp" style="position: absolute !important; visibility: hidden !important;"></div>
+<div id="s2s">
+<div class="s2s-flyout-row dialog-box bottom" id="s2s-flyout" style="left: 0px; top: -38px;">
+<div id="hover-mask"></div>
+<ul>
+<li id="searchlight-search" class="searchlight-search blr4 brr4" style="transform: translate(0px, 0px);"><a alt="Web Search" title="Web Search" target="_self" class="blr4 brr4"><span id="Web Search"> </span></a></li>
+</ul>
+</div>
+<a href="https://mosemp.us.oracle.com/epmos/faces/secure/awiz/" target="_blank" class="s2s-hide"></a></div>
+<div id="s2s">
+<div class="s2s-flyout-row dialog-box top" id="s2s-flyout">
+<div id="hover-mask"></div>
+<ul>
+<li id="searchlight-search" class="searchlight-search blr4 brr4"><a alt="Web Search" title="Web Search" target="_self" class="blr4 brr4"><span id="Web Search"> </span></a></li>
+</ul>
+</div>
+<a href="https://mosemp.us.oracle.com/epmos/faces/secure/awiz/" target="_blank" class="s2s-hide"></a></div>
+<div id="s2s">
+<div class="s2s-flyout-row dialog-box top" id="s2s-flyout">
+<div id="hover-mask"></div>
+<ul>
+<li id="searchlight-search" class="searchlight-search blr4 brr4"><a alt="Web Search" title="Web Search" target="_self" class="blr4 brr4"><span id="Web Search"> </span></a></li>
+</ul>
+</div>
+<a href="https://mosemp.us.oracle.com/epmos/faces/secure/awiz/" target="_blank" class="s2s-hide"></a></div>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

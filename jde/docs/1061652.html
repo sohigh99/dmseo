@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>change title</title>
+    <title>Understanding the Discount Factor (DSPR) Field Value in Procurement</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Understanding the Discount Factor (DSPR) Field Value in Procurement</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -96,11 +96,28 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<p>In adding/changing a Purchase Order the default value for Discount Factor (F4311.DSPR - Discount Factor) may be set as 1.</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-
+<p>Discount Factor (DSPR) in Procurement is the factor that the system applies to the unit price of an inventory item to determine the net price. The Discount Factor value can be manually populated on the Purchase Order Detail line. Alternately, the system retrieves this value from the inventory pricing rules if you have assigned a rule to this item. The pricing rule setup determines if the system multiplies the unit price by this value or adds to or deducts from the unit price.<br /><br />Discount factor is set to 1 when input discount and rule discount are false<br />1. Input discount is set to true when, if in Add Mode and Input Discount not zero and No Rule or Rule exists and Input Discount not equal to Rule Discount.<br /><br />2. Rule discount is set to true when, in Add mode and the rule exists. In this case, as both input discount and rule discount were set to false thus, the discount factor is getting set to '1'.<br /><br />Input Discount is the input value populated by the user in the detail screen. If the user does not populate Input Discount it is considered as zero.</p>
+<p>Rule discount is nothing but the Price Discount Rules created using the P4271 application. If both are false (not set), the discount factor is being set to '1'.</p>
+<p> </p>
+<p>Purchase Order Entry sets the Discount Factor value to 1 when the following conditions are met:</p>
+<ul>
+<li>In the Pricing Constants, Advanced Sales Pricing = N and</li>
+<li>The user has not manually overridden the Purchase Unit Price and</li>
+<li>In the line type constants the inventory interface is Y, D, B, or C and</li>
+<li>Input Discount Factor is blank</li>
+</ul>
+<p> </p>
+<p>Discount Factor in Sales Order Detail File (F4211). Beginning with release EnterpriseOne 8.9, the following fields were removed from the F4211</p>
+<ul>
+<li>Discount Factor (DSPR)</li>
+<li>Discount Factor Type (DSFT)</li>
+<li>Discount Application (FAPP)</li>
+</ul>
 
 
 

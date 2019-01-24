@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Set a Scheduler Job to Submit a UBE Every 5 Minutes for a Specific Time Range</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Set a Scheduler Job to Submit a UBE Every 5 Minutes for a Specific Time Range</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document discusses a possible way to implement a scheduled job for a specific time range through a custom routine.&nbsp; There may be a need to set up Schedule Job for a specific time range (for example, 07:00 a.m. through 07:00 p.m.) to call a certain UBE every 5 minutes. <br /><br /><br /><br /></p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>This note explains all possible ways to implement a scheduled job for a specific time range for these reasons:</p>
+<ul>
+<li><a href="#Business">Business Requirement</a></li>
+<li><a href="#Technical">Techincal Specification</a></li>
+<li><a href="#Code">Code Example</a></li>
+</ul>
+<p><strong><br /><big><a name="Business"></a>Business Requirement</big>:</strong><br />A certain job has to be running during office hours based on transaction end-user performance. So any type of system level tasks can be performed after office hours without affecting a schedule job set. Through this scheduled job can be set through the batch job.<br /><br /><br /><big><a name="Technical"></a><strong>Technical Specification</strong></big><strong>:</strong><br />Before creating a custom UBE, analyze the exiting routing through standard Scheduler application P91300 (Schedule Jobs). To currently set a scheduled job at least two tables F91300 (Schedule Job Master) and F91320 (Job Schedule) will be populated. So this routine will populate these two tables which can be handled by the Scheduler Kernel and Queue Kernel.</p>
+<ol>
+<li>Create a Schedule Job in P91300 (Work with Scheduled Jobs) to populate F91300.&nbsp; For example, R47041 (EDI_Inbound)</li>
+<li>Determine how many recurrences for the need to be created.&nbsp; Example: in a 12 hour period, the schedule the job would run 144 times, if it needs to run every 5 minutes.</li>
+<li>Call B980009 (GetUTCTime) to get "VA evt_SchedulerStartTime"</li>
+<li>Call N91300A (CommitRecurrencPatternToDB).&nbsp; This BSFN determines and adds records for the job to F91320.</li>
+<li>Set schedule for UBE1 created here before 07:00 a.m. with recurrence of A day</li>
+</ol>
+<p>&nbsp;</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>For this example, 2 UBEs are created. Step 2, 3 and 4 are for the actual UBE which has the routine to write F91320 and step 5 is another UBE that calls the main UBE</li>
+<li>The actual routine to populate Job Schedule is NER N91300A (Step 4)</li>
+<li>Step 1 populates F91300</li>
+<li>Step 1, 2, 3 gets parameters in calling NER N91300A</li>
+<li>The second UBE job (Step 5) can be set to run everyday except Saturday and Sunday through Scheduler</li>
+</ul>
+</div>
+<p><strong><br /><big><a name="Code"></a>Code Example:</big></strong></p>
+<ol>
+<li>Assign (or get is from Processing Options) ScheduleJobName</li>
+<li>Set ScheduledStartTime (format hhmmss) either hard code or processing options</li>
+<li>Get/Assign Max records as computed above (depending on recurrence and time gap, this value can vary)<br /><br /><em>VA rpt_ScheduledJobName = "EDI_Inbound"<br />VA evt_ScheduledStartTime = "070000"<br />VA evt_MaxScheduledRecords = "144"</em><br /><br /></li>
+<li>Get recurrence Type and Timezone<br /><em><br /><strong>F91300.Fetch Single</strong></em><br /><em>VA rpt_ScheduledJobName = TK Scheduled Job Name</em><br /><em>VA evt_RecurrenceType &lt;- TK Recurrenc Type</em><br /><em>VA evt_TimeZoes &lt;- TK Time Zone List </em><br /><br /></li>
+<li>Get UTC time to assign start time<br /><br /><em><strong>Get UTC Time (B9800009 - GetUTCTime)</strong></em><br /><em>VA evt_SchedulerStartTime &lt;- BF mnUTCTime<br />SL DateToday -&gt; BF jdDate<br />VA evt_ScheduledStartTime -&gt; BF mnTime<br />"2" -&gt; BF cUTC_Local<br />VA evt_TimeZoes -&gt; BF szTimeZone<br />"1" -&gt; BF cDaylightSavings</em><br /><br /></li>
+<li>Create F91320 (Job Schedule)<br /><br /><em><strong>Determine and add F91320 Records for Job (N91300A - CommitRecurrencPatternToDB)</strong></em><br /><em>VA rpt_ScheduledJobName -&gt; BF szScheduledJobName<br />VA evt_SchedulerStartTime -&gt; BF mnSchedulerStartTime<br />VA evt_RecurrenceType -&gt; BF szRecurrenceType<br />VA evt_TimeZoes -&gt; BF szTimeZones<br />VA evt_DaylightSavings -&gt; BF cDaylightSavings /* same with processing option value of P91300 */"5" -&gt; BF mnScheduledMinutes<br />VA evt_MaxScheduledRecords -&gt; BF mnMaxScheduledRecords</em><em><br />"2" -&gt; BF cYesOrNoEntry /* Local or UTC */<br /></em></li>
+</ol>
+<div style="margin-left: 40px;"></div>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p><strong>Disclaimers:</strong></p>
+<ul>
+<li>The following is intended for information purposes only, and may not be incorporated into any contract. It is not a commitment to deliver any material, code, or functionality, and should not be relied upon in making purchasing decisions. The development, release, and timing of any features or functionality described for Oracle's products remains at the sole discretion of Oracle.</li>
+<li>This solution is a custom modification that is not supported by Oracle's Global Support. It is provided as an example of how the software could be modified to have this functionality.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

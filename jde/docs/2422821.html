@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>change title</title>
+    <title>P43250 Performs Extremely Slow After Upgrading to 9.2 with Error SQL0913 - Row or object &1 in &2 type *&3 in use - Case Study</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -66,7 +66,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Caching in EnterpriseOne</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P43250 Performs Extremely Slow After Upgrading to 9.2 with Error SQL0913 - Row or object &1 in &2 type *&3 in use - Case Study</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -96,12 +96,31 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<p>Receipt Routing (P43250) is taking an extremely long time to process. This issue is specific to EnterpriseOne (E1) Applications Release 9.2 and above in AS400/DB2 platform.&nbsp;</p>
+<p>&nbsp;</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
 
-
+<p>A. JDE_*.log</p>
+<div class="kmnotebox">
+<p>108/2 WRK:MDSCHAC_80000000_P43250 Thu May 3 10:31:53.150584<br />dbdrv_log.c196 OS400QL016 - ExecuteSQLRequest: QSQLMSG *LIBL - SQL0913 - Row or object &amp;1 in &amp;2 type *&amp;3 in use<br /><br />108/2 WRK:MDSCHAC_80000000_P43250 Thu May 3 10:31:53.150856<br />jdb_exet.c3173 JDB3600011 - Failed to perform Update for F4108&nbsp;</p>
+</div>
+<p>&nbsp; &nbsp;: Above message implies that the F4108 (Lot Master) is in use (or in transaction processing boundaries) and another routine/process tries to access the same table F4108.&nbsp;</p>
+<p><br />B. Call Stack&nbsp;</p>
+<p>The reason for this suggestion is that the error OS400QL016 - ExecuteSQLRequest: QSQLMSG *LIBL - SQL0913 - Row or object &amp;1 in &amp;2 type *&amp;3 in use <br /><br />P43250<br />&nbsp; &nbsp; &nbsp;|--- F43092EndDoc **** this gets called with transaction processing on - so database blocking takes place. This is 9.2 specific ***<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |--- F4312EndDoc<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|--- F4111EndDocument <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; |--- LotMasterUpdate<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; sql&gt; UPDATE CRPDTA/F4108&nbsp;<br /><br />&nbsp; &nbsp; |--- dcLINKLotStatusUpdate<br />&nbsp; &nbsp; sql&gt; UPDATE CRPDTA/F4108&nbsp;&nbsp;</p>
+<p><br />OS400QL016 - ExecuteSQLRequest: QSQLMSG *LIBL - SQL0913 - Row or object &amp;1 in &amp;2 type *&amp;3 in use <br />: the second update ends in error. For the given log, dcLINKLotStatusUpdate does not perform any - it tries to update the same row of data from F4108 (which appears to be releasing the lot status which is not necessary)</p>
+<p>C. Resolution</p>
+<ul>
+<li>Not to have this error, refine or remove your custom call</li>
+<li>Remove all native table trigger, the procedure for the table F4108, if any.&nbsp;</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
 
 
 <!-- ======================================== End of Body ==================================== -->

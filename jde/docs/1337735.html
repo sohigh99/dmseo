@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Get MAX/Aggregate using JDE API</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Get MAX/Aggregate using JDE API</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>How to get max value using EnterpriseOne APIs through a C Business Function?</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>To implement this, SQL, Business Function and C programming knowledge is required.<br /><br />For this example, query to be constructed is,</p>
+<div class="kmcodeblock" style="width: 95%;">SQL&gt; SELECT <span style="text-decoration: underline;">MAX(Col_LineNumber)</span> FROM Schema.TableID<span style="text-decoration: underline;"> WHERE (ColA = 'a' AND ColB = 'b')</span>;</div>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Group By is not used because below example returns a single row</li>
+<li>Routine reads row by row till end of data based on primary key defined against target table</li>
+<li>MAX() is SQL Function (and GROUP BY is Key Word of SQL)</li>
+</ul>
+</div>
+<p><br /><span style="text-decoration: underline;"><strong>Implementation:</strong></span><br />sql&gt; SELECT MAX(ILLNID) FROM PDCURYDTA.F4111 WHERE ( ILDOC = 0.000000 AND ILDCT = 'II' AND ILMCU = ' 1720' AND ILKCO = '01717' )</p>
+<ul>
+<li>All Selected Column are disabled for Aggregate Function Only mode</li>
+<li>All Selected Column enabled (if no Group By exists) or All User Requested Column enabled (if Group By exists).</li>
+</ul>
+<p><span style="text-decoration: underline;"><strong>Example of Codes:</strong></span></p>
+<ul>
+<li>Business Function name: MAXLNID</li>
+<li>Data Structure: MAXDS</li>
+</ul>
+<p><br />To handle this, at least three parameters are needed:</p>
+<ul>
+<li>(IN) mnDocVoucherInvoiceE</li>
+<li>(IN) szDocumentType</li>
+<li>(OUT) mnLineNumber</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmcodeblock" style="width: 95%;">#include &lt;maxlnid.h&gt; <br />#include &lt;f4111.h&gt; <br /><br />JDEBFRTN (ID) JDEBFWINAPI maxlnid(LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSMAXDS lpDS) <br /><br />{ <br />/************************************************************************ <br />* Variable declarations <br />************************************************************************/ <br />ID idJDEDBReturn = JDEDB_PASSED; <br />ID idJDBReturn = JDEDB_PASSED;<br />HUSER hUser = (HUSER)NULL;<br />NID szTableF4111ID = NID_F4111;<br />ID idIndexF4111ID = ID_F4111_UNIQUE_KEY_ID;<br />HREQUEST hRequest = (HREQUEST)NULL;<br /><br />/************************************************************************ <br />* Declare structures <br />************************************************************************/<br />SELECTSTRUCT lpdsSelect[4] = {0} ;<br /><strong>AGGRGFUNCSTRUCT </strong>dsF4111Aggregate[1] = {0};<br />MATH_NUMERIC dsAggregateBuffer[1] = {0};<br /><br />/* Check for NULL pointers */<br />/* Initialize Behavior */<br /><br />/************************************************************************ <br />* Main Processing <br />************************************************************************/<br />memset((void *)dsF4111Aggregate, (int)_J('\0'), sizeof(dsF4111Aggregate));<br />memset((void *)&amp;dsAggregateBuffer, 0x00, sizeof(dsAggregateBuffer));<br /><br />idJDEDBReturn = JDB_OpenTable(hUser, szTableF4111ID, idIndexF4111ID,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (NULL), (ushort)(0), (JCHAR *) NULL, &amp;hRequest);<br /><br />if (idJDEDBReturn != JDEDB_FAILED )<br />{<br />&nbsp;&nbsp;&nbsp;&nbsp; /* <em>1. Define F4111 Aggregate as MAX of LNID</em> */<br />&nbsp;&nbsp;&nbsp;&nbsp; jdeNIDcpy(dsF4111Aggregate[0].Item.szDict, NID_LNID);<br />&nbsp;&nbsp;&nbsp;&nbsp; jdeNIDcpy(dsF4111Aggregate[0].Item.szTable, NID_F4111); <br />&nbsp;&nbsp;&nbsp;&nbsp; dsF4111Aggregate[0].Item.idInstance = 0;<br />&nbsp;&nbsp;&nbsp;&nbsp; dsF4111Aggregate[0].nFunction = <strong>JDB_AGGRGFUNC_MAX</strong>;<br /><br />&nbsp; &nbsp;&nbsp; /* <em>2. Set the F4111 Aggregate</em> */<br />&nbsp;&nbsp;&nbsp;&nbsp; idJDBReturn = JDB_SetAggregate(hRequest, dsF4111Aggregate, <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>1</strong>, <strong>JDB_AGGRGFUNCTION_OPT_FUNC_ONLY</strong>);<br /><br />&nbsp;&nbsp;&nbsp;&nbsp; if (idJDBReturn == JDEDB_PASSED)<br />&nbsp;&nbsp;&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* <em>3. ILDOC = lpDS-&gt;mnDocVoucherInvoiceE</em> */<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeNIDcpy(lpdsSelect[0].Item1.szTable, NID_F4111);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeNIDcpy(lpdsSelect[0].Item1.szDict, NID_DOC);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSelect[0].Item1.idInstance = (ID)0;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeNIDcpy(lpdsSelect[0].Item2.szDict, _J(""));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeNIDcpy(lpdsSelect[0].Item2.szTable, _J(""));<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSelect[0].Item2.idInstance = (ID)0;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSelect[0].lpValue = (void *) &amp;lpDS-&gt;mnDocVoucherInvoiceE;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSelect[0].nValues = 1;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSelect[0].nAndOr = JDEDB_ANDOR_AND; <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSelect[0].nCmp = JDEDB_CMP_EQ;<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* <em>4. And ILDCT = lpDS-&gt;szDocumentType</em> */<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; jdeNIDcpy(lpdsSelect[1].Item1.szTable, NID_F4111);<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; jdeNIDcpy(lpdsSelect[1].Item1.szDict, NID_DCT);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; lpdsSelect[1].Item1.idInstance = (ID)0;<br />&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; jdeNIDcpy(lpdsSelect[1].Item2.szDict, _J(""));<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; jdeNIDcpy(lpdsSelect[1].Item2.szTable, _J(""));<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; lpdsSelect[1].Item2.idInstance = (ID)0;<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; lpdsSelect[1].lpValue = (void *) lpDS-&gt;szDocumentType;<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; lpdsSelect[1].nValues = 1;<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; lpdsSelect[1].nAndOr = JDEDB_ANDOR_AND;<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; lpdsSelect[1].nCmp = JDEDB_CMP_EQ;<br /><br />&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; idJDBReturn = JDB_SetSelection(hRequest, lpdsSelect, 2,<strong>JDEDB_SET_APPEND</strong>);<br />&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; JDB_SelectKeyed( hRequest, (ID) 0, (void *) NULL, (short) 0);<br /><br />&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; if (idJDBReturn == JDEDB_PASSED)<br />&nbsp; &nbsp; &nbsp; &nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; idJDBReturn = <strong>JDB_FetchAggregate</strong>(hRequest, (void *)NULL,<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsAggregateBuffer);<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* <em>5. Return max value to mnLineNumber</em> */<br />&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MathCopy(&amp;lpDS-&gt;mnLineNumber, &amp;dsAggregateBuffer[0]);<br />&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp;&nbsp; }<br />}<br />if (hRequest != (HREQUEST)NULL)<br />{<br />&nbsp;&nbsp;&nbsp; JDB_CloseTable(hRequest);<br />}<br /><br /></div>
+<p><br /><strong>Alternative Methods:</strong><br /><br />An alternative method is to create a Named Event Rule (NER) business function or event rules within a Report which may yield the same result.<br /><br /></p>
+<div class="kmcodeblock" style="width: 95%;"><span style="text-decoration: underline;"><strong>A. WHILE LOOP - The last row</strong></span><br /><br />mnInputDOC<br />szInputDCT<br />mnOutputLNID_Last<br /><br />/* The last row from data which meets select test */<br />VA evt_LineNumber_last = "0"<br />F4111.Select (<span style="text-decoration: underline;"><em>Case (order by Primary Key UKID Ascending)</em></span>)<br />&nbsp;&nbsp;&nbsp;&nbsp; VA mnInputDOC = TK Document (Voucher, Invoice, etc.)<br />&nbsp;&nbsp; &nbsp; VA evt_szInputDCT = TK Document Type<br />F4111.Fetch Next<br />&nbsp;&nbsp; VA mnOutputLNID_Last &lt;- TK Line Number<br /><strong>While </strong>SV File_IO_Status is equal to CO SUCCESS<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F4111.Fetch Next<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mnOutputLNID_Last &lt;- TK Line Number<br />End While<br /><br /><span style="text-decoration: underline;"><strong>B. Select/Fetch Next - to get the 1st row </strong></span><br />/*&nbsp;choose/create index which is descending order of data */<br />VA evt_LineNumber_last = "0"<br />F4111.Select (<span style="text-decoration: underline;"><em>Case (order by Foreign Key UKID Descending)</em></span>)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA mnInputDOC = TK Document (Voucher, Invoice, etc.)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_szInputDCT = TK Document Type<br /><strong>If </strong>SV File_IO_Status is equal to CO SUCCESS<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F4111.Fetch Next (same index with SELECT)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_LineNumber_last &lt;- TK Line Number<br />End If</div>
+<p><br /><br />Or, make use of Aggregation option through Report Design Aid within a Level Break Footer. Refer to &lt;Note 636697.1&gt; - E1: RDA: Aggregate Function in Level Break Footer<br /><br /><br /></p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Above example codes are sample only. Oracle does not provide any warranty on these samples and is not responsible for any bug or any issue resulting from these samples.</li>
+<li>User should search in the source folder for "JDB_SetAggregate" to find all standard EnterpriseOne business functions that uses this API and study how this API is used. (E.g. b4120330 uses this API)</li>
+</ul>
+</div>
+<p><br /><br /><br /><br /></p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

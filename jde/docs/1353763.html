@@ -1,0 +1,2953 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Debug Flex Accounting issue in Sales Update</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Debug Flex Accounting issue in Sales Update</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>This troubleshooting document is provided to assist in debugging a specific issue. When possible, diagnostic tools are included in the document to assist in troubleshooting. This document is to explain how Flex Accounting takes effects (Technical) with detailed routines in it. Though this document is written based on Sales Update (R42800) it can be applied to any other Flex Accounting routine if needed.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<h3 class="km">Prerequisite</h3>
+<p>&lt;Document 625475.1&gt; - E1: 40: Automatic Accounting Instructions for Distribution (AAI / DMAAI)<br /> &lt;Document 756543.1&gt; - E1: 42: P40296: Flexible Accounting for Distribution (R42800/P4112/P4113/P4114/P4312/P4314)<br /> &lt;Document 625421.1&gt; - E1: 42: R42800: Sales Update<br /> <br /> This note presume that you are familiar with what is Automatic Accounting Instruction (AAI) and business functions and it's debugging.</p>
+<hr />
+<h3 class="km">Related objects and Call Stack:</h3>
+<p>To deal with Flex Accounting, a number of objects are related with as below,<br /> <br /> <strong>R42800 - Sales Update</strong>: So long as cGLInterface flag (F40205.GLI) from line type based on Sales Order Detail Line (F4211) or it's summary<br /> <br /> <em>(Initialize/store Flex Sales Accounting Cache - Sales Order Specific)</em><br /> &nbsp;&nbsp;&nbsp; 1. <strong>B4201150 - ProcessFlexSalesAcctngCache</strong> (cAction = 2 - Add cache): If the sales flex accounting processing option is ON, write an empty record to the sales flex accounting cache. The cache will be keyed by sales update job number.<br /> &nbsp;&nbsp;&nbsp; 1. <strong>B4201150 - ProcessFlexSalesAcctngCache</strong> <em>(Ref #1)</em> (cAction = 3 - Update cache): This function is to update empty cache created above to use during Building up Flex Account<br /> <br /> <em>(Get/build account store it into cache)</em><br /> &nbsp;&nbsp;&nbsp; 1. <strong>B4200520 - GetSalesAAIsAndCallF0911EditLine</strong>: This function sets AAI Number and calling RetrieveDistributionAAICacheDB (if no error then) F0911FSEditLine. This function will load F0911 fields, retrieve the AAI for each journal entry required for a sales order, call Tax Calculator, and call the F0911 Edit Line to write the journal entries.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. <strong>B4204190 - RetrieveDistributionAAICacheDB</strong>: <em>(Ref #2)</em> This function is responsible to return Account Information (account number and MCU.OBJ.SUB set)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. <strong>B4000351 - RetrieveDistAAIwF4095Cache</strong>: This function gets Account Information based on setup made in F4095 either by DB or by Cache<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. <strong>B4000352 - RetrieveF4095Cache</strong>: To deal with Flex Accounting this function handled AAI information returned by RetrieveDistAAIwF4095Cache<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. <strong>N4002371 - BuildFlexibleAccountwithCache</strong>: Check whether to override Flex Account information as defined from F4096 and stored it into Cache<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5. <strong>B4000341 - RetrieveF4096Cache</strong>: This function is to validate flex account and if any, it replaces Account&nbsp; Information constructed by RetrieveDistAAIwF4095Cache<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5. <strong>B4201150 - ProcessFlexSalesAcctngCache</strong>: <em>(refer Ref #1)</em> Validate/replace cache with components of Account Information<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5. <strong>B4002420 - GetTableColValue</strong>: (Optional) This function validates setup made in F4096<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. <strong>XX0901 - ValidateAccountNumber</strong>: This function validate Account Information which is returned by RetrieveDistAAIwF4095Cache<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. <strong>B0900049 - F0911FSEditLine</strong>: This Master Business Function defaults/validates account information and makes use of Account Information returned by RetrieveDistributionAAICacheDB<br /> <br /> <em>(Terminate Cache)</em><br /> &nbsp;&nbsp;&nbsp; 1. <strong style="text-decoration: underline;">B4204190 - ProcessDistributionAAICache</strong> <em>(Refer Ref #2)</em> (After all the GL transactions have performed this function is to be called to terminate all the cached used during process with Cache Action 8 to Terminate all the caches)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. B4000352 - RetrieveF4095Cache (To terminate cache with Cache Action Code 8)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. B4000341 - RetrieveF4096Cache (To terminate cache with Cache Action Code 8)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (Same routine will be repeating whenever one GL transaction takes place)</p>
+<hr />
+<h3 class="km">Cache Action in Flex Accounting Routine:</h3>
+<p>Note that below Cache Action Code is used during Flex Account transaction however this action code can be used for different purpose in different business functions. Most commonly cache action takes places as below sequence,</p>
+<ol>
+<li>Cache Get (or Cache Fetch Next): No cache -&gt; Error</li>
+<li>(Read related tables F4095/F4096)</li>
+<li>Cache Add: To store data which is retrieved by 2</li>
+<li>Cache Get (Cache Fetch Next): To verify cache is added properly</li>
+<li>Make use of cache during transaction</li>
+<li>(At the end of transaction) Cache Terminate All: To release memory used during transaction</li>
+</ol>
+<table style="border-collapse: collapse; width: 562px; height: 210px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 57pt;" span="2" width="76" /><col style="width: 299pt;" width="398" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 166px; background-color: #999999;">Cache Action</th><th style="width: 51px; background-color: #999999;">Input</th><th style="width: 378px; background-color: #999999;">Usage and APIs called</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 166px;" height="17">Cache Get</td>
+<td style="width: 51px;">1</td>
+<td style="width: 378px;">To get/verity existing cache <br /><ol>
+<li>jdeCacheInit ()</li>
+<li>jdeCacheOpenCursor ()</li>
+<li>jdeCacheFetchPosition ()</li>
+<li>jdeCacheCloseCursor</li>
+</ol></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 166px;" height="17">Cache Add</td>
+<td style="width: 51px;">2</td>
+<td style="width: 378px;">If no cache found then add it<br /><ol>
+<li>jdeCacheInit ()</li>
+<li>jdeCacheAdd ()</li>
+</ol></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 166px;" height="17">Cache Fetch Next</td>
+<td style="width: 51px;">3</td>
+<td style="width: 378px;">Same with Cache Get <br /> Note: In B4201150 cAction 3 is to be used to update Flex Cache</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 166px;" height="17">Cache Terminate All</td>
+<td style="width: 51px;">8</td>
+<td style="width: 378px;">Terminate cache used<br /><ol>
+<li>jdeCacheInit ()</li>
+<li>jdeCacheTerminateAll ()</li>
+</ol></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 166px;" height="17">Cache Close Cursor</td>
+<td style="width: 51px;">9</td>
+<td style="width: 378px;">No implementation</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<hr />
+<h3 class="km">DMAAI set by GetSalesAAIsAndCallF0911EditLine</h3>
+<p>Below DMAAI is hard coded in B4200520 and each AAI can be called conditionally. For example, in most common transaction 4230, (4270, 4280), 4220 and 4240 will be called.<br /> Sequence of validation/assignment:</p>
+<ol>
+<li><strong>4245 -&nbsp;&nbsp; Account Receivable Trade (SOR)</strong></li>
+<li><strong>4230 -&nbsp;&nbsp; Revenue (SOS)</strong></li>
+<li>4233 - Allocated Revenue</li>
+<li>4270&nbsp; -&nbsp; Price Adjustment</li>
+<li>4280 -&nbsp;&nbsp; Rebate Payable</li>
+<li><strong>4250 -&nbsp;&nbsp; Tax Liability (SOT)</strong></li>
+<li>4231 -&nbsp;&nbsp; Deferred Revenue</li>
+<li>4232 -&nbsp;&nbsp; Unbilled A/R</li>
+<li>4281 -&nbsp;&nbsp; Temperature Gain/Loss Offset</li>
+<li>4282 -&nbsp; Temperature Gain/Loss</li>
+<li><strong>4220 -&nbsp; Cost of Goods Sold (SOC)</strong></li>
+<li>4240/4241 - &nbsp; Inventory/Inventory in Transit (ST Batch)</li>
+<li>4242 - Accommodations</li>
+<li><strong>4240 -&nbsp;&nbsp; Inventory (SOI)</strong></li>
+<li>4221 -&nbsp; Defferred Cost of Goods Sold</li>
+<li>4223 - Deferred COGS - Accomodations</li>
+<li>4260 -&nbsp;&nbsp; Inter Branch Revenue</li>
+<li>4240 -&nbsp;&nbsp; Inventory (interbranch to offset)</li>
+<li>4242 - Accomodations (interbranch order to offset)</li>
+<li>4240 -&nbsp;&nbsp; Inventory (interbranch order to offset)</li>
+<li>4141 -&nbsp;&nbsp; Inventory or Expense/COGS</li>
+<li>4220 -&nbsp;&nbsp; Cost of Goods Sold</li>
+<li>4240 - &nbsp; Inventory</li>
+<li>4250 -&nbsp;&nbsp; Tax Liability</li>
+</ol>
+<p>Note: Description is coming from F4090 (Distribution/Manufacturing - AAI Record Type)<br /> <br /> <br /> To have better understanding in GL transaction during Sales Update, possibly some of business function listed above can be written in detail as below: In EntepriseOne to minimize Global or Static variable, each business function contains complete sets of parameters which are required within a routine.</p>
+<hr />
+<p><br /> <br /> <br /> <small><em><big><big>Information on Business Functions related</big></big></em></small></p>
+<h3 class="km">B4200520 - GetSalesAAIsAndCallF0911EditLine (Sales Update, Get AAIs and Edit F0911 Entries)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function will load F0911 fields, retrieve the AAI (through <big>B4204190 - RetrieveDistributionAAICacheDB</big>) for each journal entry required for a sales order, call Tax Calculator (through <big>B4001090 - TaxCalculator</big>), and call the F0911 Edit Line (through <big>B0900049 - F0911FSEditLine</big>) to write the journal entries based on Account ID retrieved/constructed by B4204190.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4200520 - GetSalesAAIsAndCallF0911EditLine, which contains possible variable in calling B0900049 - F0911FSEditLine (F0911 Edit Line) and B4204190 - RetrieveDistributionAAICacheDB (Retrieve Distribution AAI From Cache or DB)</li>
+</ul>
+<li><strong>Detail Routine</strong>: As purpose of this function reads this function has to be called through R42800 (Sales Update) per lines to handle (or per summarized on when summarize GL option is ON through Processing Option). The primary purpose of this function is to hand over Sales Order information to inner business function to be called.</li>
+</ul>
+<p><br /> Reference: &lt;Document 1307156.1&gt; - E1: 40: How F0911.GLU (Units) Gets Written in Distribution</p>
+<hr />
+<h3 class="km">B4204190 - RetrieveDistributionAAICacheDB (Retrieve Distribution AAI From Cache or DB)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to retrieve account ID or account information which is to be used in calling F0911FSEditLine (B0900049) which create G/L Cache which is to be consumed through F0911FSEndDoc. Regardless Flex account setup and parameter it gets MCU (Business Unit), OBJ (Object Account) and SUB (Subsidiary) based on setting made in DMAAI Table F4095 (Distribution/Manufacturing - AAI Values). In case Flex Accounting is activated MCU and/or SUB can be replaced by Flex Account setup which is recorded in F4096 (Sales Flex Accounting)</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4204190A - Retrieve distribution AAI Cache or DB</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 878px; height: 645px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 221px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 107px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 76px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 31px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 28px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 369px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">mnAAITableNumber</td>
+<td class="xl66" style="width: 107px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 76px;">ANUM</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="text-align: left; width: 369px;">This value is hard coded before this fuction gets called via B4200520. For example, 4220</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szCompanyNumber[6]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">CO</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">00001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szOrderType[3]&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">DCTO</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I/O</td>
+<td class="xl66" style="width: 369px;">(Blank)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szDocumentType[3]&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">DCTO</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">SO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szGLCategory[5]&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">GLPT</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">IN30</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szCostType[4]&nbsp;&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">COST</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">(Blank)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szBranchPlant[13]&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">MCU</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30"</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szObjectAccount[7]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">OBJ</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px; text-align: left;">6020</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szSubsidiary[9]&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">SUB</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">(Optional)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szCostCenter[13]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">MMCU</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cSuppressErrorMessage</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">EV01</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">0 is default value<br /> (1 to suppress error)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szErrorMessageID[11]&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">DTAI</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cVoidAccountValidation</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">EV02</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">(Blank)<br /> 1 = Concatenate but do not validate <br /> 2 = Do not validate and do not cancatenate</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">mnJobNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 76px;">JOBS</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px; text-align: left;">99999999</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; color: red; font-weight: bold; width: 221px;" height="17">cSalesFlexAccountingFlag</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">EV03</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">When Processing Option is ON for flex accouting this value has to be 1 (eles Blank)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szSubledger[9]&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">SBL</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I/O</td>
+<td class="xl66" style="width: 369px;">(Optional) Blank. When Flex is ON this value can be Output</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cSubledgerType&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">SBLT</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I/O</td>
+<td class="xl66" style="width: 369px;">(Optional) Blank. When Flex is ON this value can be output</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; color: red; font-weight: bold; width: 221px;" height="17">szApplicationGroup[11]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">EAP</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I/O</td>
+<td class="xl66" style="width: 369px;">R42800. When Flex is ON this value has to be indicated</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szManagerialAnalysisCode1[13]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABR1</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szManagerialAnalysisCode2[13]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABR2</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szManagerialAnalysisCode3[13]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABR3</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szManagerialAnalysisCode4[13]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABR4</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cManagerialAnalysisType1</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABT1</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cManagerialAnalysisType2</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABT2</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cManagerialAnalysisType3</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABT3</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">cManagerialAnalysisType4</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ABT4</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">Meant for Flex only</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">mnIdentifierShortItem</td>
+<td class="xl66" style="width: 107px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 76px;">ITM</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szPriceAdjustmentType[9]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">AST</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">I</td>
+<td class="xl66" style="width: 369px;">(Blank) only for AAI Table Number 4270 and 4280</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szAccountUnitOfMeasure[3]&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">UM</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">&nbsp;</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szProjectBusinessUnit[13]&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">MCU</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szProjectSubsidiary[9]</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">SUB</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szAccountId[9]&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">ANI</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">000123456</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 221px;" height="17">szAccountNumber[30]&nbsp;&nbsp;</td>
+<td class="xl66" style="width: 107px;">JCHAR</td>
+<td class="xl66" style="width: 76px;">AID</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 28px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R30.6020</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>As the function name implies currently table F4095 (Distribution/Manufacturing - AAI Values) is defined in P98613 (Database Caching) so when database cache contains data DMAAI information is to be coming from Cache otherwise it will read a physical file to get information. Refer Database Caching for Detail</li>
+<li>If cSalesFlexAccountingFlag is not 1 (that is, not flex accounting) this routine calls ProcessDistributionAAICache with szCacheActionCode "1" to create a new cache using Cache Name for this function is D4204190B (not D4204190A).</li>
+<li>Either flex accouting is ON (cSalesFlexAccountingFlag = "1") or DMAAI is not found from cache then business function "RetrieveDistAAIwF4095Cache"</li>
+<li>If no Errors in the AAI retreival, Fetch the Account ID and Account Unit of Measure</li>
+<li>If Cost Center is not defined in AAI, system uses Revenue Branch Plant</li>
+<li>If the Account Id is blank in cache or a physical file, then no such account exists - Set Error because F0901 is a member of P98613</li>
+<li>But still it calls SimpleAccountConcatenation to return szAccountNumberInputMode which is MCU.OBJ.SUB</li>
+<li>If it is not flex account then call bsfn ProcessDistributionAAICache with szCacheActionCode = "2" and mnNumberOfKeys = "7"</li>
+</ul>
+<li><strong>Error Codes</strong>:</li>
+<ul>
+<li>043C - Account Number &amp;1 is Invalid. &amp;1 is szAccountNumberInputMode. This error comes when it fails to find Account ID from Account Mater Cache based on MCU, OBJ and SUB combination</li>
+<li>078L - Initialization of cache &amp;1 failed.&nbsp;</li>
+<ul>
+<li>CAUSE . . . .&nbsp; Cache &amp;1 may not be able to be initialized because of an invalid user handle or not enough memory allocated to hold<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JDECACHE structures.<br /> RESOLUTION. .&nbsp; Verify that a valid user handle is being passed back from JDB_InitBhvr and that you have enough memory allocated.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: Error will come when jdeCacheInit () fails that is Cache Name (D4204190B + JobNumber) is not initialized.</li>
+</ul>
+<li>032E - Error Processing Cache.&nbsp;</li>
+<ul>
+<li>CAUSE . . . An error has occurred while processing cache in this application.<br /> RESOLUTION.&nbsp; See your system administrator.</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<h3 class="km">B4000351 - RetrieveDistAAIwF4095Cache (Retrieve Dis AAI w F4095 Cache)</h3>
+<ul>
+<li><strong>Purpose</strong>: Retrieve the correct account number based on AAI information from AAI Table (F4095). If no record found in AAI Table, Check for "****" in G/L Category and/or "00000" in Company or changed Table Number to "3280" and repeat the search.</li>
+</ul>
+<div style="margin-left: 40px;"><big><big>The hierarchy of object account components</big></big>:</div>
+<table style="border-collapse: collapse; width: 313px; margin-left: 40px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 25pt; background-color: #999999; color: black;">Components</th><th class="xl65" style="width: 288pt; background-color: #999999; color: black;">Value from</th></tr>
+<tr>
+<td style="vertical-align: top;">OBJ</td>
+<td style="vertical-align: top;">Strictly from Table F4095</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">MCU</td>
+<td class="xl65">1. Table<br /> 2. Project MCU (when this value is not blank)<br /> 3. F4095 Flex<br /> 4. Input(passed in) Branch/Plant</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">SUB</td>
+<td class="xl65">1. Input (passed in) parameter <br /> 2. F4095 Table<br /> 3. Project SUB<br /> 4. Flex</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4000351 - Retrieve Distribution AAI w/ F4095 Cache</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 886px; height: 723px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 212px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 149px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 57px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 38px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 45px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 369px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnAAITableNumber</td>
+<td class="xl66" style="width: 149px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 57px;">ANUM</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">4220. Used for Flex Account</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCompanyNumber[6]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">CO</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">00001. Used for Flex Account</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szOrderType[3]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">DCTO</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">&nbsp;</td>
+<td class="xl66" style="width: 369px;">(Blank)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szDocumentType[3]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">DCTO</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">SO. Used for Flex Account after assigning it to szOrderType</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szGLCategory[5]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">GLPT</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">IN30</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCostType[4]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">COST</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">&nbsp;</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szBranchPlant[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">MCU</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30". When Flex is On and BuildFlexiableAccountwithCache returns, which value is to be output value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szObjectAccount[7]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">OBJ</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Used for Flex Account</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szSubsidiary[9]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">SUB</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCostCenter[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">MMCU</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szAccountNumber[30]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ANI</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cSuppressErrorMessage</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">EV01</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">0 - Do not suppress error</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szErrorMessageID[11]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">DTAI</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Refer detail Error</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cVoidAccountValidation</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">EV02</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">(Blank)<br /> 1 = Cancatenate but do not validate <br /> 2 = Do not validate and do not cancatenate</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnJobNumber</td>
+<td class="xl66" style="width: 149px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 57px;">JOBS</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px; text-align: left;">999999999</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cSalesFlexAccountingFlag</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">EV03</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">Based on processing option value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szSubledger[9]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">SBL</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cSubledgerType</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">SBLT</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szApplicationGroup[11]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">EAP</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">R42800. Used for Flex Account</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szManagerialAnalysisCode1[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABR1</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szManagerialAnalysisCode2[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABR2</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szManagerialAnalysisCode3[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABR3</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szManagerialAnalysisCode4[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABR4</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cManagerialAnalysisType1</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABT1</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cManagerialAnalysisType2</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABT2</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cManagerialAnalysisType3</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABT3</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">cManagerialAnalysisType4</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">ABT4</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">Only when Flex is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnIdentifierShortItem</td>
+<td class="xl66" style="width: 149px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 57px;">ITM</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">Flex is ON and when CSMS is ON</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szAccountUnitOfMeasure[3]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">AST</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">O</td>
+<td class="xl66" style="width: 369px;">From F0901 based on szAccountNumber</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szPriceAdjustmentType[9]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">UM</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">This value is to be utilized only for AAI Table 4270 and 4280 (and 4515 and 4520). Otherwise this value has to be set Blank</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szProjectBusinessUnit[13]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">MCU</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">If these values are assigned this has higher precedence</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szProjectSubsidiary[9]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">SUB</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnTransactionID</td>
+<td class="xl66" style="width: 149px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 57px;">TSID</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">I/O</td>
+<td class="xl66" style="width: 369px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szComputerID[16]</td>
+<td class="xl66" style="width: 149px;">JCHAR</td>
+<td class="xl66" style="width: 57px;">CTID</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 45px;">&nbsp;</td>
+<td class="xl66" style="width: 369px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>Through this function AAI Tables 3270, 3260, 3240, 3220, 4122, 4220, 4240, 4310, 4134, 4136, 4122, 4124, 4220, 4240, 4310, 3270, 3260, 3240, 3220, 4122, 4124, 4220, 4240, 4310, 4134, 4136 can be validated. AAI Table 4122, 4124, 4220, 4240, 4310, 4134 and 4136 are meant for Detailed Product Costing</li>
+<li>If Branch/Plant is blank and Cost Center is not blank, then fetch Cost Center Master (F0006).</li>
+<li>If Project Number is not blank, then load into Branch/Plant, otherwise load Cost Center to Branch/Plant. Use Branch/Plant as the key to fetch Cost Center Master (F0006) and retrieve Cost Center, Object and Subsidiary and retrieve Company Number through Validate Account Number Business Function.&nbsp;</li>
+<li>If the AAI is set to do ProjectAccounting and if F4095 Subsidiary is blank and the passed in Subsidiary is blank, assign the passed in ProjectSubsidiary if not blank. Also, stor the value in F4095 Colums.mlsub so that the Subsidiary is not flexed.</li>
+<li>For Cost Management, open the Cost Management Constants File (F1609) and read the CO01 - Activate Cost Objects flag. If it is "On", then set the cCMSFlag "On"</li>
+<li>Flex accouting routine takes place (when any of below 3 conditions meet)</li>
+<ul>
+<li>F4095.MCU is Blank (then) Build Business Unit</li>
+<li>OR F4095.SUB is blank (then) Build Subsidiary</li>
+<li>OR input parameter szSubledger is blank or cSubledgerType is blank (then) Build Subledger</li>
+</ul>
+<li>For Cost Management, pass Item Number and Managerial information back only if flex accounting is ON and Activate cost object flag is ON</li>
+<li>If the Sub account for the record is blank and if the sub account returned from the "Build Flexible Account" function is not blank, use the sub account from the Build flexible account</li>
+<li>Use AAI's or Flexible Account's Subsidiary as default only when passed in Subsidiary is blank</li>
+<li>If the subledger and subledger type parameters returned from the "Build Flexible Account" function are not blank use them</li>
+<li>After 1st trial call same function again through calling routine RetrieveDistAAIwF4095Cache (B4000351) table F4095 is to be accessed (because there is no cache to get/read)</li>
+<li>The sequence of reading F4095 is the most specific to the most generic (which reads cache first if it is not found then read a physical file F4096),</li>
+<ul>
+<li>1. <span style="text-decoration: underline;"><em>A Specific Company and a specific GL Category Code</em></span></li>
+<li>SELECT&nbsp; *&nbsp; FROM PRODDTA.F4095&nbsp; WHERE&nbsp; MLANUM = 4220.000000 AND MLCO = '00001' AND MLDCTO = '&nbsp; ' AND MLDCT = 'SO' AND MLGLPT = 'IN30' AND MLCOST = ' '</li>
+<li>No More Data found</li>
+<li>2. <span style="text-decoration: underline;"><em>(if no record then) A specific Company and any GL Category Code "****"</em></span></li>
+<li>SELECT&nbsp; *&nbsp; FROM PRODDTA.F4095&nbsp; WHERE&nbsp; MLANUM = 4220.000000 AND MLCO = '00001' AND MLDCTO = '&nbsp; ' AND MLDCT = 'SO' AND MLGLPT = '****' AND MLCOST = ' '&nbsp;</li>
+<li>No More Data found</li>
+<li>3. <span style="text-decoration: underline;"><em>(if no record then) A Default Company (00000) and a specific GL Category Code</em></span></li>
+<li>SELECT&nbsp; *&nbsp; FROM PRODDTA.F4095&nbsp; WHERE&nbsp; MLANUM = 4220.000000 AND MLCO = '00000' AND MLDCTO = '&nbsp; ' AND MLDCT = 'SO' AND MLGLPT = 'IN30' AND MLCOST = ' '&nbsp;</li>
+<li>No More Data found</li>
+<li><span style="text-decoration: underline;"><em>4. (if no record then) A Default Company (00000) and any GL Category Code "****"</em></span></li>
+<li>SELECT&nbsp; *&nbsp; FROM PRODDTA.F4095&nbsp; WHERE&nbsp; MLANUM = 4220.000000 AND MLCO = '00000' AND MLDCTO = '&nbsp; ' AND MLDCT = 'SO' AND MLGLPT = '****' AND MLCOST = ' '&nbsp;</li>
+<li>Fetched the record</li>
+<li>5. <span style="text-decoration: underline;"><em>If no record till 4th routine, set error '078D', '029P' or '029Q'</em></span></li>
+</ul>
+</ul>
+<li><strong>Error codes</strong>:</li>
+<ul>
+<li>078D - Open for table &amp;1 failed. &amp;1 is F0006. Review jde.log which shall contain ODBC level error.</li>
+<ul>
+<li>CAUSE . . . .&nbsp; Table &amp;1 could not be opened.&nbsp; The table may not exist in your environment or you may not have authority to open it.<br /> RESOLUTION. .&nbsp; Add the table to your environment and verify that you have proper authority.&nbsp; You may also check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: This error is coming from middle-ware layer so review jde.log for further detail.</li>
+</ul>
+<li>029P -Distribution AAI Number &amp;1 Invalid</li>
+<ul>
+<li>CAUSE : The Automatic Accounting Instruction (AAI) number &amp;1 used by this application is not defined in the Distribution/Manufacturing AAI table.</li>
+<li>RESOLUTION : Review the AAI that is not set up correctly using the Distribution/Manufacturing AAI maintenance application and set up or modify the required data. Check the information for Company &amp;3 , Order Type &amp;4 and GL Class code &amp;5 .</li>
+<li>Technical review: (&amp;1 = mnAAITableNumber, &amp;3 = szCompanyNumber, &amp;4 = szDocumentType, &amp;5 = szGLCategory)</li>
+</ul>
+<li>029Q - Account &amp;1 in AAI Table &amp;2 invalid.</li>
+<ul>
+<li>CAUSE : The Account Number &amp;1 referenced by Distribution AAI Number &amp;2 is invalid.&nbsp; Either this account does not exist or has a posting edit code that does not allow manual journal entries.</li>
+<li>RESOLUTION : Check the Account Number to verify that it exists and has a valid posting endit code for data entry.&nbsp; Change the Distribution AAI to reference a valid account or add the missing account in the General Ledger system.</li>
+<li>Technical review: (&amp;1 = szAccountNum, &amp;2 = mnAAITableNumber)</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<h3 class="km">B4000352 - RetrieveF4095Cache (Retrieve F4095 Cache)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to retrieve cache. When it gets called first time it has to fail because there is no specific transaction cache (B4000352+JobNumber) when it tries to fetch cache. So only when the first call fails it reads F4095 to retrieve and store it into cache</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4000352 - Retrieve F4095 Cache</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 881px; height: 313px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 212px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 132px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 58px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 38px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 38px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 376px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCacheActionCode[9]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">CATN</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I</td>
+<td class="xl66" style="width: 376px;">To indicate what kind of cache action it has to take. Valid values are, <br /> 1 - Cache Get<br /> 2 - Cache Add<br /> 9 - Close Cursor<br /> 8 - Cache Terminate All</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnJobNumber</td>
+<td class="xl66" style="width: 132px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">JOBS</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I</td>
+<td class="xl66" style="width: 376px;">99999999. This is to make transaction specific cache</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szErrorId[11]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">DTAI</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnAaiTableNumber</td>
+<td class="xl66" style="width: 132px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">ANUM</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I</td>
+<td class="xl66" style="width: 376px;">4220</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szOrderType[3]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">DCTO</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szDocumentType[3]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">DCTO</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I</td>
+<td class="xl66" style="width: 376px;">SO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCostType[4]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">COST</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCompany[6]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">COST</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I</td>
+<td class="xl66" style="width: 376px;">00001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szGlCategory[5]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">GLPT</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I</td>
+<td class="xl66" style="width: 376px;">IN30</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szCostCenter[13]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">MCU</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szObjectAccount[7]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">OBJ</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szSubsidiary[9]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">SUB</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">idCacheCursor</td>
+<td class="xl66" style="width: 132px;">ID</td>
+<td class="xl66" style="width: 58px;">GENLNG</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I/O</td>
+<td class="xl66" style="width: 376px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">mnTransactionID</td>
+<td class="xl66" style="width: 132px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">TCID</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">I/O</td>
+<td class="xl66" style="width: 376px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 212px;" height="17">szComputerID[16]</td>
+<td class="xl66" style="width: 132px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">CTID</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 38px;">&nbsp;</td>
+<td class="xl66" style="width: 376px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>Initialize Cache using B4000352 + (Input mnJobNumber)</li>
+<li>Cache is made up of mnAaiTableNumber, szOrderType, szDocumentType, szCompany, szGlCategory and szCostType</li>
+<li>After 1st trial call same function again through calling routine RetrieveDistAAIwF4095Cache (B4000351) table F4095 is to be accessed (because there is no cache to get/read)</li>
+<li>The squence of reading F4095 is the most specific to the most generic (which reads cache first if it is not found then read a physical file F4096. Refer above section to get example of actual query issued),</li>
+<ul>
+<li><span style="text-decoration: underline;"><em>1. A Specific Company and a specific GL Category Code</em></span></li>
+<li><span style="text-decoration: underline;"><em>2. (if no record then) A specific Company and any GL Category Code "****"</em></span></li>
+<li><span style="text-decoration: underline;"><em>3. (if no record then) A Default Company (00000) and a specific GL Category Code</em></span></li>
+<li><span style="text-decoration: underline;"><em>4. (if no record then) A Default Company (00000) and any GL Category Code "****"</em></span></li>
+<li>5.<span style="text-decoration: underline;"><em> If no record till 4th routine, set error '078D', '029P' or '029Q'</em></span></li>
+</ul>
+<li>At once F4095 contains data, RetrieveDistributionAAICacheDB is calling this routine (RetrieveF4095Cache) again with szCacheActionCode = "2" to Add this information into Cache (B4000352+JobNumber) based on above key columns</li>
+</ul>
+<li><strong>Error codes</strong>:</li>
+<ul>
+<li>078L - Initialization of cache &amp;1 failed (jdeCacheInit() is failed)</li>
+<ul>
+<li>CAUSE . . . .&nbsp; Cache &amp;1 may not be able to be initialized because of an invalid user handle or not enough memory allocated to hold JDECACHE structures.</li>
+<li>RESOLUTION. .&nbsp; Verify that a valid user handle is being passed back from JDB_InitBhvr and that you have enough memory allocated.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: (&amp;1 = B4000352 + JobNumber)</li>
+</ul>
+<li>032E - Error Processing Cache. szCacheActionCode is wrong. szCacheActionCode is not IN 1, 2, 9 or 8.</li>
+<li>078N - jdeCacheOpenCursor () is SUCCESS but jdeCacheFetchPosition () did not return any cache</li>
+<ul>
+<li>Fetch from cache &amp;1 failed</li>
+<li>CAUSE . . . .&nbsp; A record does not exist in cache &amp;1 matching the key passed in for the fetch.</li>
+<li>RESOLUTION. .&nbsp; Verify the key being passed into the fetch is correct and that a record exists in the cache matching that key.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+</ul>
+<li>078M - jdeCacheOpenCursor () is FAILED</li>
+<ul>
+<li>Open Cursor for cache &amp;1 failed</li>
+<li>CAUSE . . . .&nbsp; A cursor was not able to be opened because the Cache Init was not successful or cache &amp;1 was empty.</li>
+<li>RESOLUTION. .&nbsp; Verify that the Cache Init was successful and that records exist in your cache prior to the Open Cursor.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<li>Example of logs:</li>
+</ul>
+<blockquote><em>Entering jdeCacheInit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name:[B40003521197940] </em><br /> <em>&nbsp;&nbsp; Found existing cache, total references:[5] </em><br /> <em>&nbsp;&nbsp; hCache:[0A4A1CC0] Nm:[0B40003521197940] Recs:2 Curs:0 Hnds:5 Cchs:14 INIT exist </em><br /> <em>Entering jdeCacheOpenCursor (Called by: b4000352.c line 263) </em><br /> <em>&nbsp;&nbsp; Open Cursor Success&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310268] hCache:[0A4A1CC0] </em><br /> <em>&nbsp; &nbsp; hCache:[0A4A1CC0] Nm:[0B40003521197940] Recs:2 Curs:1 Hnds:5 Cchs:14 CURS open </em><br /> <em>Entering jdeCacheFetchPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310268] </em><br /> <em>Entering jdeCacheCloseCursor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310268] hCache:[0A4A1CC0] </em><br /> <em>&nbsp;&nbsp; hCache:[0A4A1CC0] Nm:[0B40003521197940] Recs:2 Curs:0 Hnds:5 Cchs:14 CURS close </em></blockquote>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">N4002371 - BuildFlexibleAccountwithCache (Build Flexible Account with Cache)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to build and return flex accouting based on setup made. Since this function is subset of RetrieveDistAAIwF4095Cache, which has to be understood in a context. Note that if F1690 (Enables Tables by Application) is empty it exit from routine so it is important to have valid setup.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4002371A - Build Flexible Account with Cache</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 878px; height: 334px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 216px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 125px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 64px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 34px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 31px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 383px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">mnAaiTableNumber</td>
+<td class="xl66" style="width: 125px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 64px;">ANUM</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">4220</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szCompany[6]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">CO</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">00001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szPriceAdjustmentType[9]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">AST</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szAAIFinancials[7]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ITEM</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szObjectAccount[7]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">OBJ</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">6020</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szOrderType[3]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">DCTO</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">SO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szApplicationID[11]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">EAP</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">R42800</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cBuildBusinessUnit</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">EV01</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cBuildSubsidiary</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">EV02</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cBuildSubledger</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">EV03</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">mnJobnumberA</td>
+<td class="xl66" style="width: 125px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 64px;">JOBS</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">99999999</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szCostCenter[13]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">MCU</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szSubsidiary[9]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">SUB</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szSubledger[9]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">SBL</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cSubledgerType</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">SBLT</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">mnIdentifierShortItem</td>
+<td class="xl66" style="width: 125px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 64px;">ITM</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szManagerialAnalysisCode1[13]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABR1</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szManagerialAnalysisCode2[13]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABR2</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szManagerialAnalysisCode3[13]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABR3</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szManagerialAnalysisCode4[13]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABR4</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cManagerialAnalysisType1</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABT1</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cManagerialAnalysisType2</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABT2</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cManagerialAnalysisType3</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABT3</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">cManagerialAnalysisType4</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">ABT4</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szErrorMessage[11]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">DTAI</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">mnTransactionID</td>
+<td class="xl66" style="width: 125px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 64px;">TCID</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">I</td>
+<td class="xl66" style="width: 383px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 216px;" height="17">szComputerID[16]</td>
+<td class="xl66" style="width: 125px;">JCHAR</td>
+<td class="xl66" style="width: 64px;">CTID</td>
+<td class="xl66" style="width: 34px;">&nbsp;</td>
+<td class="xl66" style="width: 31px;">&nbsp;</td>
+<td class="xl66" style="width: 383px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>Get the CMS Cost Object Population Method for the Application Group of the calling program</li>
+<li>For this routine requested data from WHERE (F1690.CKEAP = 'R42800' AND F1690.CKFILE = ' ' AND F1690.CKCMTF = 'SM') to get F1690.CKCO02 which is to be used in calling BSFN B4000341 - RetrieveF4096Cache (Retrieve F4096 Cache)</li>
+<li>UDC (16/TF) - <em>Cost Management Method</em></li>
+</ul>
+</ul>
+<blockquote>
+<ul>
+<li>
+<table style="border-collapse: collapse; width: 309px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 48pt;" width="64" /><col style="width: 213pt;" width="284" /><col style="width: 48pt;" width="64" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 48pt; background-color: #999999;">Codes</th><th style="width: 213pt; background-color: #999999;">Description 01</th><th style="width: 48pt; background-color: #999999;">Hard Coded</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">CF</td>
+<td>Configurator</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">DC</td>
+<td>Driver Calculation</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">FA</td>
+<td>Flex Accouting</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">OT</td>
+<td>Cost Object Type</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">RF</td>
+<td>Related File</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; font-weight: bold;" height="17">SM</td>
+<td style="font-weight: bold;">Rule Setup Method</td>
+<td>Y</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>Table F1690 is a member of F986113 (Database Caching) so reset database cache will reflect the change made</li>
+<li>In case F1690 (Enables Tables by Application) does not have any data this function stop processing without issuing any error. So make it sure that all the setup is done properly before debug any Flex Account related issue (to get F1690.CO2 and application P1691 allows you to access data)</li>
+<li>CO02 has to be a member of UDC 16/SM - <em>Cost Object Rules Setup Method</em></li>
+</ul>
+<ul>
+<li>
+<table style="border-collapse: collapse; width: 309px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 48pt;" width="64" /><col style="width: 213pt;" width="284" /><col style="width: 48pt;" width="64" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 48pt; background-color: #999999;">Codes</th><th style="width: 213pt; background-color: #999999;">Description 01</th><th style="width: 48pt; background-color: #999999;">Hard Coded</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">&nbsp;</td>
+<td>Blank</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">A</td>
+<td style="font-weight: bold;">AAI Number method</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">C</td>
+<td>Combination of methods</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">N</td>
+<td>No Flex Accouting is used</td>
+<td>Y</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">O</td>
+<td>Object Account method</td>
+<td>Y</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>In calling B4000341 iCacheActionCode can be handled as below,</li>
+<ul>
+<li>1 - Cache Get</li>
+<li>2 - Cache Add</li>
+<li>3 - Cache Get Next</li>
+<li>9 - Close Cursor</li>
+<li>8 - Cache Terminate All</li>
+</ul>
+<li>So N4002371 is calling B4000341 for the first time either iCacheActionCode 1 or 3 it has to fail (because cache is not created yet) which returns error code '078N'</li>
+<li>Then reads F4096 to get Flex Accounting Information.</li>
+<li>Do a SELECT on the F4096 file, ensuring that there is at least one match.</li>
+<li>The F4096 file rules can be entered with a combination of specific &amp; generic key values. Therefore, there are a variety of possible combinations (aside from whether the Cost Object Population Method is "AAI", "Object Account" or Combined). The variations are:</li>
+<li>Cost Object Population Method</li>
+<ul>
+<li>Case (Specific Price Adjustment Type where F1690.CO02 (IN 'O - Object Account Method', 'C - Combination of methods')</li>
+<ul>
+<li>1. Specific Document Type &amp; Company</li>
+<li>2. Blank Document Type &amp; Company</li>
+<li>3. Specific Document Type &amp; Company '00000'</li>
+<li>4. Blank Document Type &amp; Company '00000'</li>
+</ul>
+<li>Case (Blank Price Adjustment Type (if one was present originally))</li>
+<ul>
+<li>1. Specific Document Type &amp; Company</li>
+<li>2. Blank Document Type &amp; Company</li>
+<li>3. Specific Document Type &amp; Company '00000'</li>
+<li>4. Blank Document Type &amp; Company '00000'</li>
+</ul>
+</ul>
+<li>The purpose of reading F4096 is to get below columns from F4096, which determines how to Build Flex Account</li>
+<ul>
+<li>@RT (Record Type - CC/SUB/SBL Flex Format)</li>
+<li>SBLT (Subledger Type)</li>
+<li>SFIT (Data Item) * Column Name</li>
+<li>SFDT (Data Type)</li>
+<li>ABT1 (Managerial Analysis Type 1)</li>
+<li>FILE (File Name) * Table Name</li>
+</ul>
+<li>At once there is any records meet condition above call BSFN B4000341 - RetrieveF4096Cache with iCacheActionCode = '2' to add cache based on record fetched from F4096</li>
+<li>If F4096 is successfully cached than call bsfn B4201150 - ProcessFlexSalesAcctngCache (Process Flex Sales Accounting Cache)</li>
+<li>If a match was found, then continue processing; otherwise, program ends execution here. Note that below routine is hard coded per szApplicationID as below,</li>
+</ul>
+<ul>
+<li>
+<table style="border-collapse: collapse; width: 787px; height: 356px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 149pt;" width="199" /><col style="width: 194pt;" width="259" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 395px; background-color: #999999;">szApplicationID</th><th style="width: 384px; background-color: #999999;">Routine to validate/detault</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">B0000062 - AccountsPayablePaymentPrePost<br /> (F0911 Write Cash Account)<br /> <br /> B0400115 - AccountsPayableVoucherPost (Account Payable Voucher Post)</td>
+<td style="width: 384px;">B0400120 - ProcessAPCacheManagementCache (Process AP Cost Management Cache)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">B03B0025 - InvoicePost (F0911 Write Invoice Offset Automatic Entries)<br /> <br /> B03B0067 - ReceiptPost (ReceiptPost)</td>
+<td style="width: 384px;">B03B0170 - ProcessARCMSCache (Process AR Cost Management Cache)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">XT4111Z1 - Inventory Transaction</td>
+<td style="width: 384px;">B4101090 - CacheProcessFlexInventoryAcctng (Cache, Process Flex Inventory Accounting)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">R30835 - Item Cost Component - Frozen Update<br /> R31802A - Manufacturing Accounting Journal Entries<br /> R31804 - Variance Journal Entries</td>
+<td style="width: 384px;">B3101370 - FlexMFGAccountingCache (Flex MFG Accounting Cache)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">P4312 - Purchase Order Receipt<br /> P4314 - Voucher Match</td>
+<td style="width: 384px;">B4301410 - MaintainDistributionParmsCache (Maintain Distribution Parms Cache)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">B4200520 - GetSalesAAIsAndCallF0911EditLine (Sales Update, Get AAIs and Edit F0911 Entries)<br /> <br /> R42800 - Sales Update</td>
+<td style="width: 384px; font-weight: bold;">B4201150 - ProcessFlexSalesAcctngCache (Process Flex Sales Accounting Cache)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">R12104 - Mass Asset Disposal<br /> R12108 - Asset Transfer<br /> R12845 - Asset Revaluation Journal<br /> R12855 - User Defined Depreciation</td>
+<td style="width: 384px;">B1200170 - ProcessFlexFixedAssetCache (Process Flex Fixed Asset Cache)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">R4981 - Freight Update and Report</td>
+<td style="width: 384px;">B4900190 - CacheProcessTransCMS (Cache Process Transportation CMS)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 395px;" height="17">Not met</td>
+<td style="width: 384px;">Set Error '0001'</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>Repeat error message which are returned from above internal routine listed</li>
+<li>Determine which file needs to be accessed to retrieve the field's value from.</li>
+<li>Refer to the BF specification for B4201140 to find the supported files (See parameter FileName). If the file name (from F4096) is blank, then the record is from the World RPG system and we need to get the file name from the 40/DI UDC table.</li>
+<li>Check that the File Name is valid for this Application (the calling program). Else set error 070X</li>
+<li>File and column Definition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+</ul>
+<table style="border-collapse: collapse; width: 806px; height: 62px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 94pt;" width="125" /><col style="width: 243pt;" span="2" width="324" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 173px; background-color: #999999;">F4096.FILE</th><th style="width: 316px; background-color: #999999;">Columns</th><th style="width: 310px; background-color: #999999;">Note</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 173px;" height="17">F0101 (Address Book)</td>
+<td style="width: 316px;">When szApplication ID is B4200520,R42800,R4981<br /> Case (SFDT = 1) Sold To<br /> Case (SFDT = 2) Ship To<br /> Case (SFDT = 3) Parent Address</td>
+<td style="width: 310px;">The Address Book number can be either '1' = Sold To&nbsp; '2' = Ship To or '3' = Parent if SOP was the calling application. For all other applications, there is only one Address Book Number passed in the cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">When szApplicationID is P4312, P4314<br /> SFDT = 2 then get SHAN from F4301<br /> SFDT = 3 get Parent Address Number of AN8 from F0150<br /> Set error 3783</td>
+<td style="vertical-align: top;">Add logic to enable flex datatypes of 2 and 3 when flex accounting is used in conjunction with P4312 and P4314. For datatype of 3, the parent address numbe is the value specified in the supplier master record. This parent address number is stored in F0150 with an organization type equal to blank. If the user has specified a datatype of 3, but there is no corresponding record in the F0150, VA evt_WorkAddressNumber is set to blank and an error is subsequently set. For datatype of 2 the ship-to is fetched from the F4301 record.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4211 (Sales Order Detail)</td>
+<td style="vertical-align: top;">When Application ID is B4200520, R42800<br /> Based on return value of BSFN B4201150 (Process Flex Sales Accounting Cache)<br /> (Case SFIT = SRP1) F4211.SRP1<br /> (Case SFIT = SRP2) F4211.SRP2<br /> (Case SFIT = SRP3) F4211.SRP3<br /> (Case SFIT = SRP4) F4211.SRP4<br /> (Case SFIT = DOCO) F4211.DOCO<br /> (Case SFIT = DOC) F4211.DOC<br /> (Case SFIT = SLSM) F4211.SLSM<br /> (Case SFIT = SLM2) F4211.SLM2<br /> (Case SFIT = AN8) F4211.AN8<br /> (Case SFIT = ITM) F4211.ITM<br /> (Case SFIT = MCU) F4211.MCU<br /> (Case SFIT = EMCU) <br /> &nbsp; If szApplicationID IN ('R4200520', 'R42800')<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F4211.MCU<br /> &nbsp; Else<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F4201.MCU (=F4211.EMCU)<br /> (Case SFIT = KCOO) F4211.KCOO<br /> <br /> If DTAI IN ('CO', 'KCO', 'OKCO', RKCO') then ltrim zero</td>
+<td style="vertical-align: top;">If the field is one of the fields passed in the SOP cache, use that value. Otherwise, we need to retrieve the value from the S/O Detail record.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4071 (Adjustment Master)</td>
+<td style="vertical-align: top;">If returned AST is Blank, then AST = (Input) szPriceAdjustmentType<br /> (Case SFIT = AST), returned AST<br /> (Case Others: call Get Table Column Value) to get szWorkString<br /> <br /> (Case SFIT = PA01 and szWorkString = "1"), returned Parent Address Number and exit from routine.<br /> <br /> (Case SFIT = PA01 and szWorkString = "2"), assign SIFT = AN82<br /> (Case SFIT = PA01 and szWorkString = "3"), assign SIFT = AN83<br /> (Case SFIT = PA01 and szWorkString = "4"), assign SIFT = AN84<br /> (Case SFIT = PA01 and szWorkString = "5"), assign SIFT = AN85<br /> (Case SFIT = PA01 and szWorkString = "6"), assign SIFT = AN86<br /> (Case SFIT = PA01 and szWorkString = "7"), assign SIFT = AN87<br /> (Case SFIT = PA01 and szWorkString = "2"), assign SIFT = AN82<br /> (Case SFIT = PA01 and szWorkString = "2"), assign SIFT = AN82</td>
+<td style="vertical-align: top;">If&nbsp; SFIT is not "AST" then call bsfn B4002420 - GetTableColValue (Get Table Column Value) to get szWorkString from it. Depends on this value it identified which column values to assign into SFIT.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F4111 (Item Ledger)</td>
+<td style="vertical-align: top;">SFIT = ITM, then F4111.ITM<br /> SFIT = LITM, then F4111.LITM<br /> SFIT = AITM, then F4111.AITM<br /> SFIT = KIT, then F4111.KIT<br /> SFIT = MMCU, then F4211.MMCU<br /> SFIT = MCU, then F4211.MCU<br /> SFIT = DMCT, then F4211.DMCT<br /> SFIT = DOCO, then F4211.DOCO<br /> SFIT = TREF, then F4111.TREF<br /> SFIT = RCD, then F4211.RCD</td>
+<td style="vertical-align: top;">All permissable F4111 fields are in the inventory cache</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1201 (Asset Master)</td>
+<td style="vertical-align: top;">SFIT = NUMB, then F1201.NUMB<br /> SFIT = CO, then F4211.CO<br /> SFIT = APID, then F1201.APID<br /> SFIT = ASID, then F1201.ASID<br /> SFIT = ACL1, then F1201.ACL1<br /> SFIT = ACL2, then F1201.ACL2<br /> SFIT = ACL3, then F1201.ACL3<br /> SFIT = ACL4, then F1201.ACL4<br /> SFIT = ACL5, then F1201.ACL5<br /> SFIT = MCU, then F4211.MCU<br /> SFIT = TXJS, then F1201.TXJS<br /> SFIT = INSP, then F1201.INSP<br /> SFIT = INSC, then F1201.INSC<br /> SFIT = LOC, then F1201.LOC<br /> SFIT = AN8, then F4211.AN8<br /> SFIT = LANO, then F1201.LANO<br /> SFIT = ACL6, then F1201.ACL6<br /> SFIT = ACL7, then F1201.ACL7<br /> SFIT = ACL8, then F1201.ACL8<br /> SFIT = ACL9, then F1201.ACL9<br /> SFIT = ACL0, then F1201.ACL0<br /> SFIT = KIT, then F4211.KIT<br /> SFIT = JBCD, then F1201.JBCD<br /> SFIT = JBST, then F1201.JBST<br /> SFIT = FA0, then F1201.FA0<br /> SFIT = FA1, then F1201.FA1<br /> SFIT = FA2, then F1201.FA2<br /> SFIT = FA3, then F1201.FA3<br /> SFIT = FA4, then F1201.FA4<br /> SFIT = FA5, then F1201.FA5<br /> SFIT = FA6, then F1201.FA6<br /> SFIT = FA7, then F1201.FA7<br /> SFIT = FA8, then F1201.FA8<br /> SFIT = FA9, then F1201.FA9<br /> SFIT = FA21, then F1201.FA21<br /> SFIT = FA22, then F1201.FA22<br /> SFIT = FA23, then F1201.FA23<br /> SFIT = TXA1, then F4211.TXA1<br /> SFIT = MMCU, then F4211.MMCU<br /> SFIT = WRFL, then F1201.WRFL<br /> SFIT = NORU, then F1201.NORU</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">F1202 (Asset Balance)</td>
+<td style="vertical-align: top;">SFIT = ADM, then F1202.ADM<br /> SFIT = ADSN, then F1202.ADSN<br /> SFIT = DIR1, then F1202.DIR1<br /> SFIT = CHCD, then F1202.CHCD<br /> SFIT = ITAC, then F1202.ITAC</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">the other supported files (F0006, F03B11, F0411, F30006, F3009, F3111, F3112, F41001, F4101, F4102, F4311, F4801, F4215, F4941, F4942, F03B13, F03B14, F0413, F0414)</td>
+<td style="vertical-align: top;">If (szApplicationID is B4200520 or R42800) and FILE = 'F42160' then KCOO = F4211.KCOO<br /> <br /> If (szApplicationID is B4200520 or R42800) and (FILE = 'F42160' or 'F4102') and Processing Option (#5. G/L Account Business Unit = 1) then MCU = F4211.MCU<br /> <br /> If (szApplicationID is B4200520 or R42800) and (FILE = 'F42160' or 'F4102') and Processing Option (#5. G/L Account Business Unit = 2) then MCU = MCU of F4211.AN8<br /> <br /> If (szApplicationID is B4200520 or R42800) and (FILE = 'F42160' or 'F4102') and Processing Option (#5. G/L Account Business Unit = 3) then MCU = F4201.MCU<br /> <br /> If (szApplicationID is B4200520 or R42800) and (FILE = 'F42160' or 'F4102') and Processing Option (#5. G/L Account Business Unit = I) then MCU = MCU of F4211.EMCU<br /> <br /> If FILE = F4311 AND SFIT = CO, then ltrim company<br /> <br /> If FILE = F4801 AND SFIT = CO, then ltrim company</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<br />
+<ul>
+<li>The next section will build/derive either the Business Unit, Subsidiary or Subledger by concatenating WorkString onto the end (omitting blanks)</li>
+</ul>
+</blockquote>
+<ul>
+<ul>
+<li>
+<table style="border-collapse: collapse; width: 501px; height: 545px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 65pt;" width="86" /><col style="width: 118pt;" width="157" /><col style="width: 157pt;" width="209" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 65pt; background-color: #999999;">@RT Value</th><th style="width: 166px; background-color: #999999;">Condition in P40296</th><th style="width: 189px; background-color: #999999;">Usage</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">1</td>
+<td style="width: 166px;">GC Business Unit is 'X'</td>
+<td style="width: 189px;">Assign MCU based on above value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">2</td>
+<td style="width: 166px;">GC Subsidiary is 'X'</td>
+<td style="width: 189px;">Assign SUB based on above value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">3</td>
+<td style="width: 166px;">GC Subledger is X</td>
+<td style="width: 189px;">Assign SBL based on above value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">4</td>
+<td style="width: 166px;">GC Item is X</td>
+<td style="width: 189px;">Assign ITM</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">5</td>
+<td style="width: 166px;">GC Cost Object is 1</td>
+<td style="width: 189px;">Return cManagerialAnalysisType1 = VA evt_cManagerialAnlysisTyp_ABT1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">6</td>
+<td style="width: 166px;">GC Cost Object is 2</td>
+<td style="width: 189px;">Return cManagerialAnalysisType2 = VA evt_cManagerialAnlysisTyp_ABT1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">7</td>
+<td style="width: 166px;">GC Cost Object is 3</td>
+<td style="width: 189px;">Return cManagerialAnalysisType3 = VA evt_cManagerialAnlysisTyp_ABT1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">8</td>
+<td style="width: 166px;">GC Cost Object is 4</td>
+<td style="width: 189px;">Return cManagerialAnalysisType4 = VA evt_cManagerialAnlysisTyp_ABT1</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>Get the next matching Flexible Sales Accounting (F4096) record and continue processing by calling BSFN Retrieve F4096 Cache with szCacheActionCode 3</li>
+<li>If the Business Unit built is not blank, right justify it and pad it with blanks</li>
+<li>When done reading all matching records in the Sales Flex Accounting table, if there were no errors encountered when processing the rules, return the Business Unit, Subsidiary, Subledger and Subledger Type to the calling program</li>
+</ul>
+<li><strong>Error codes</strong>:</li>
+<ul>
+<li>0001 - Action Invalid. When (Input) szApplicationID is does not meet above list of applications</li>
+<li>070X - Invalid Application/File Combination.</li>
+<ul>
+<li>CAUSE . . . .&nbsp; The combination of the application group and file is invalid.<br /> RESOLUTION. .&nbsp; The F1690 file has the permissible combinations of Application Groups and Files. No rules should be set up where an Application will be calling a rule in the F4096 file using a file that is not available to that application.</li>
+</ul>
+<ul>
+<li>Technical review: Fails to get data from F1690</li>
+</ul>
+<li>3783 - Invalid Parent Number.</li>
+<ul>
+<li>Cause . . . . . . The parent number entered is not an allowable value.<br /> Resolution. . . . If the parent number is the same as the address book number, then you must change the parent number address.&nbsp; Be sure that parent number address is also set up in the Address Book Master file (F0101).</li>
+<li>Technical review: No Parent Address</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4000341 - RetrieveF4096Cache (Retrieve F4096 Cache)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to retrieve add cache based on Flex Accounting table (F4096) and this routine has to be called by BuildFlexibleAccountwithCache in building Flex Accouting</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4000341 - Retrieve F4096 Cache</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 864px; height: 570px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 218px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 118px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 58px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 27px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 32px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 370px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szCacheActionCode[9]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">CATN</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">1st 3 - Cache Fetch Next<br /> 2nd 2 - Cache Add<br /> 3rd 3 - Cache Fetch Next<br /> <br /> szCacheActionCode,<br /> 1 - Cashe Get<br /> 2 - Cache Add<br /> 3 - Cache Get Next<br /> 9 - Close Cursor<br /> 8 - Cache Terminate All</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">mnJobNumber</td>
+<td class="xl66" style="width: 118px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">JOBS</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">99999999</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szErrorMessageId[11]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">DTAI</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">&nbsp;</td>
+<td class="xl66" style="width: 370px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">cCostObjectSetupMethod</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">CO02</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">A - AAI Number method (F1690.CO02)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szPriceAdjustmentType[9]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">AST</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">&nbsp;</td>
+<td class="xl66" style="width: 370px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szCompany[6]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">CO02</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">00001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szOrderType[3]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">DCTO</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">SO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szObjectAccount[7]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">OBJ</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">6020, RetrieveF4095Cache.szObjectAccounts</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">mnAaiTableNumber</td>
+<td class="xl66" style="width: 118px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">ANUM</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">4220</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szItemNumber[7]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">ITEM</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">&nbsp;</td>
+<td class="xl66" style="width: 370px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">cRecordTypeCCSUBSBLFlexFO</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">@RT</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">F4096.@RT</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">cSubledgerType</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">SBLT</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">F4096.SBLT</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szDataItem[11]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">SFIT</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">F4096.SFIT (Data Item) * Column Name</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">cDataType</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">SFDT</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">(Optional)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">cManagerialAnalysisType1</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">ABT1</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">(Optional)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szFileName[11]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">FILE</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">F4096.FILE (File Name) * Table Name</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">idCacheCursor</td>
+<td class="xl66" style="width: 118px;">ID</td>
+<td class="xl66" style="width: 58px;">GENLNG</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I/O</td>
+<td class="xl66" style="width: 370px;">(3rd) returns idCacheCursor</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">mnElementNumber</td>
+<td class="xl66" style="width: 118px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">EL</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I/O</td>
+<td class="xl66" style="width: 370px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">cNoRowsExist</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">EV01</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">&nbsp;</td>
+<td class="xl66" style="width: 370px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">mnTransactionID</td>
+<td class="xl66" style="width: 118px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 58px;">TCID</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">I</td>
+<td class="xl66" style="width: 370px;">0</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 218px;" height="17">szComputerID[16]</td>
+<td class="xl66" style="width: 118px;">JCHAR</td>
+<td class="xl66" style="width: 58px;">CTID</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 32px;">&nbsp;</td>
+<td class="xl66" style="width: 370px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>This BSFN RetrieveF4096Cache is called by BuildFlexibleAccountwithCache as following szCacheActionCode</li>
+<li>1st, Cache Action Code 3 - CacheGetNext to check whether there is existing cache using cache name B4000341 + JobNumber. This returns error code '078N' because this is the first time</li>
+<li>2nd, Since it fails to return cache calling routine BuildFlexibleAccountwithCache reads F4096</li>
+<li>3rd, BuildFlexibleAccountwithCache is calling RetrieveF4096Cache again with szActionCode '2' to add cache this time szDataItem and szFileName can be specified as 2nd routine returned by reading F4096 (either physicla file or cache)</li>
+<li>4th, BuildFlexibleAccountwithCache is calling RetrieveF4096Cache again with szActionCode '3' to check whether there is additional cache to handle and this returns idCacheCursor so this value can be used by another routine if requested</li>
+<li>General Routine when mnJobNumber is 119794 when szCacheActionCode is 3</li>
+</ul>
+</ul>
+<blockquote>
+<blockquote><em>Entering jdeCacheInit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name:[B4000341119794] <br /> &nbsp;&nbsp; Found existing cache, total references:[8] <br /> &nbsp;&nbsp; hCache:[0A4A2038] Nm:[0B4000341119794] Recs:2 Curs:0 Hnds:8 Cchs:14 INIT exist <br /> Entering jdeCacheOpenCursor (Called by: b4000341.c line 495) <br /> &nbsp;&nbsp; Open Cursor Success&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310268] hCache:[0A4A2038] <br /> &nbsp;&nbsp; hCache:[0A4A2038] Nm:[0B4000341119794] Recs:2 Curs:1 Hnds:8 Cchs:14 CURS open <br /> Entering jdeCacheFetchPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310268] <br /> Entering jdeCacheCloseCursor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310268] hCache:[0A4A2038] <br /> &nbsp;&nbsp; hCache:[0A4A2038] Nm:[0B4000341119794] Recs:2 Curs:0 Hnds:8 Cchs:14 CURS close <br /> </em></blockquote>
+</blockquote>
+<p>&nbsp;</p>
+<ul>
+<li><strong>Error codes</strong>:</li>
+<ul>
+<li>078L - Initialization of cache &amp;1 failed.&nbsp;</li>
+<ul>
+<li>CAUSE . . . .&nbsp; Cache &amp;1 may not be able to be initialized because of an invalid user handle or not enough memory allocated to hold JDECACHE structures.<br /> RESOLUTION. .&nbsp; Verify that a valid user handle is being passed back from JDB_InitBhvr and that you have enough memory allocated.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: (&amp;1 = B4000341 + JobNumber) when jdeCacheInit () is failed</li>
+</ul>
+<li>032E - Error Processing Cache.</li>
+<ul>
+<li>CAUSE . . . An error has occurred while processing cache in this application.<br /> RESOLUTION.&nbsp; See your system administrator.</li>
+<li>Technical review: szCacheActionCode is not in '1, 2, 3, 9, 8'</li>
+</ul>
+<li>078N - Fetch from cache &amp;1 failed.</li>
+<ul>
+<li>CAUSE . . . .&nbsp; A record does not exist in cache &amp;1 matching the key passed in for the fetch.<br /> RESOLUTION. .&nbsp; Verify the key being passed into the fetch is correct and that a record exists in the cache matching that key.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: jdeCacheOpenCursor () is SUCCESS but jdeCacheFetchPosition () is FAILED when szCacheActionCode is 1 or 3 or jdeCacheOpenCursor () is Failed when szCacheActionCode is 3. All the cache error for szCacheActionCode is 3 (CacheGetNext) returns error code 078N regardless action taken</li>
+</ul>
+<li>078M - Open Cursor for cache &amp;1 failed.&nbsp;</li>
+<ul>
+<li>CAUSE . . . .&nbsp; A cursor was not able to be opened because the Cache Init was not successful or cache &amp;1 was empty.<br /> RESOLUTION. .&nbsp; Verify that the Cache Init was successful and that records exist in your cache prior to the Open Cursor.&nbsp; Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: jdeCacheOpenCursor () is FAILED when szCacheActionCode is 1</li>
+</ul>
+<li>078O - Add to cache &amp;1 failed.</li>
+<ul>
+<li>CAUSE . . . .&nbsp; The record being added already exists in cache &amp;1 or there may not be enough memory or disk space avaliable to add the record.<br /> RESOLUTION. .&nbsp; Verify that the record being added to the cache is unique. Check the JDE.LOG and JDEDEBUG.LOG for additional information.</li>
+<li>Technical review: jdeCacheAdd () is FAILED when szCacheActionCode is 2</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4201150 - ProcessFlexSalesAcctngCache (Process Flex Sales Accounting Cache)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is used to create and maintain Flex Sales Accounting in CACHE. As we can see from the first part of this note (Call Stack) the cache for Sales Flex Account has been built before AAI routine comes and inside Flex routine it makes use of cache create. This level of function can be different application by application as defined in BuildFlexibleAccountwithCache (that is, depends on the application you are running transactional cache for Flex Account has to be created in advance). For this example, the application ID is R42800 so BuildFlexibleAccountwithCache is calling this function B4201150. So this function is to get (and update cache) defined value for Flex Account based on definition in F4096.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4201150 - Process Flex Sales Acctng Cache</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 866px; height: 745px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 224px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 123px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 65px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 26px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 27px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 378px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">cSuppressErrorMessage</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">SUPPS</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I</td>
+<td class="xl66" style="width: 378px;">1 - Suppress Error Message (Hard Coded). So though this routine ends in error this does not affect calling routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szErrorMessageID[11]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">DTAI</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">&nbsp;</td>
+<td class="xl66" style="width: 378px;">Refer Error Codes below</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 224px;" height="17">cAction</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">EV01</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I</td>
+<td class="xl66" style="width: 378px;">1 - Retrieve Record<br /> <br /> Available cAction,<br /> 1 - Retrieve Record<br /> 2 - Add new record<br /> 3 - Update record<br /> 4 - Delete record<br /> 8 - Terminate Cache<br /> others - Invalid action (Error)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnJobNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">JOBS</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I</td>
+<td class="xl66" style="width: 378px;">99999999, based on JobNumber it creates unique transaction cache 'B4201150 + JobNumber'</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnSoldTo</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">AN8</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.AN8</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnShipTo</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">SHAN</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.SHAN</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnAddressNumberParent</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">PA8</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.PA8</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnItem</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">ITM</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.ITM</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSO_RevenueBranch[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">MCU</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.EMCU</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnSO_Number</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">DOCO</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.DOCO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSO_Type[3]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">DCTO</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.DCTO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szCO_Company[6]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">KCOO</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.KCOO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnSO_LineNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">LNID</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.LNID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSalesCategoryCode1[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">SRP1</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.SRP1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSalesCategoryCode2[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">SRP2</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.SRP2</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSalesCategoryCode3[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">SRP3</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.SRP3</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSalesCategoryCode4[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">SRP4</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.SRP4</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSalesCategoryCode5[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">SRP5</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.SRP5</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnDocumentNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">DOC</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.DOC</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnSO_Saleman1</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">SLSM</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">(No Implementation)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnSO_Saleman2</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">SLM2</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">(No Implemenation)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szBusinessUnitHeader[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">EMCU</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4201.MCU</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szPromotionID[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">PMTN</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.PMTN</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">mnProjectNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 65px;">PRJM</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.PRJM</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szBusinessUnitDetail[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">MCU</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.MCU</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szCompanyDetail[6]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">KCOO</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">F4211.KCOO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">cR42800GLAcctBusUnit</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">EV03</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">cMCUProcOptionToUse_EV04<br /> If this is an interbranch order, use the header branch for the G/L Account in Flex Accounting so pass an I (capital i), otherwise, use the PO GL Account Business Unit value.<br /> If F4211.SO01 is 2 or 4 then cMCUProcOptionToUse_EV04 = 'I', Else cMCUProcOptionToUse_EV04 = PO cGLAcctBusinessUnit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 224px;" height="17">szSoldToBusinessUnit[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 65px;">MCU</td>
+<td class="xl66" style="width: 26px;">&nbsp;</td>
+<td class="xl66" style="width: 27px;">I/O</td>
+<td class="xl66" style="width: 378px;">szSoldToBusUnit_MCU<br /> <br /> If the GL Account Business Unit processing option is equal t o 2, get the Sold To Business Unit and pass to the Flex Sales Accounting Cache.<br /> <br /> If PO cGLAcctBusinessUnit is equal to "2" then F0101.MCU where AN8 = F4211.AN8</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>This function has to be called before B4200520 - GetSalesAAIsAndCallF0911EditLine from R42800 to add Sales Flex Cache as all the values returned above is coming from Sales Order Information</li>
+<li>Example of cache action when cAction is 3 when JobNumber is 119794</li>
+</ul>
+</ul>
+<blockquote>
+<blockquote><em>Entering jdeCacheInit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name:[B4201150119794] <br /> &nbsp;&nbsp; Found existing cache, total references:[2] <br /> &nbsp;&nbsp; hCache:[0A4A14A8] Nm:[0B4201150119794] Recs:1 Curs:0 Hnds:2 Cchs:8 INIT exist <br /> Entering jdeCacheOpenCursor (Called by: b4201150.c line 112) <br /> &nbsp;&nbsp; Open Cursor Success&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310010] hCache:[0A4A14A8] <br /> &nbsp;&nbsp; hCache:[0A4A14A8] Nm:[0B4201150119794] Recs:1 Curs:1 Hnds:2 Cchs:8 CURS open <br /> Entering jdeCacheFetchPosition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310010] <br /> &nbsp;&nbsp; hCache:[0A4A14A8] Nm:[0B4201150119794] Recs:1 Curs:1 Hnds:2 Cchs:8 FTCH pos <br /> Entering jdeCacheUpdate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310010] <br /> &nbsp;&nbsp; hCache:[0A4A14A8] Nm:[0B4201150119794] Recs:1 Curs:1 Hnds:2 Cchs:8 UPD <br /> Entering jdeCacheCloseCursor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hCursor:[09310010] hCache:[0A4A14A8] <br /> &nbsp;&nbsp; hCache:[0A4A14A8] Nm:[0B4201150119794] Recs:1 Curs:0 Hnds:2 Cchs:8 CURS close <br /> Entering jdeCacheTerminate <br /> &nbsp;&nbsp; hCache:[0A4A14A8] Nm:[0B4201150119794] Recs:1 Curs:0 Hnds:2 Cchs:8 TERM one <br /> </em></blockquote>
+</blockquote>
+<ul>
+<li><strong>Error codes</strong>:</li>
+<ul>
+<li>0001 - cAction is 1 (Get element in CACHE) OR cAction is 2 (Add record to CACHE) OR cAction is 3 (Update on existing record in CACHE) or cAction is 5 (Delete record(s) in CACHE) and jdeCacheFetchPosition () is failed</li>
+<li>4377 - Invalid Input Parameter.&nbsp;</li>
+<ul>
+<li>CAUSE . . . . Input parameter passed to a function contains an invalid value.<br /> RESOLUTION. . Check input parameters for valid values.</li>
+<li>Technical review: Invalid Action. When input cAction is not IN (1, 2, 3, 4, 8)</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<h3 class="km">B4002420 - GetTableColValue (Get Table Column Value)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to validate values defined in F4096 (szDataItem (SFIT) and szFileName (FILE)) based on predefined settings. Depends on szFileName the way it validates can be vary</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4002420 - GetTableColValue</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 864px; height: 653px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 220px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 123px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 62px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 25px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 33px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 371px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnAddressBookNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">AN8</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">4245</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnShortItemNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">ITM</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">60011</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szBusinessUnit[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">MCU</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnDocumentNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">DOCO</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">2660</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szOrderType[3]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">DCTO</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">SO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCompany[6]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">KCOO</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">00001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnLineNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">LNID</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">1.000</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szAdjustmentName[9]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">AST</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCostCenterAlt[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">MMCU</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnSequenceNoOperations</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">OPSQ</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szTypeOperationCode[3]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">OPSC</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szOrderSuffix[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">SFXO</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnUniqueKeyIDInternal</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">UKID</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szFileName[11]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">FILE</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">F03012</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szDataItem[11]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">SFIT</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">I</td>
+<td class="xl66" style="width: 371px;">AC10</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szWorkString[31]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">VC30A</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">O</td>
+<td class="xl66" style="width: 371px;">D30</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szSSCCNumberTareLevel[19]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">PLT</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szSSCCNumberPackLevel[19]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">PAK</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szSCCNumber[15]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">SCCN</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szUPCNumber[14]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">UPCN</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnShipmentNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">SHPN</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnRoutingStepNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">RSSN</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnPaymentID</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">PYID</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnFileLineIdentifier50</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">RC5</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnPayrollTransactionNo</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">PRTR</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnUniqueKeyID01</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">UK01</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szPromotionID[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">PMTN</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szPromotionDealID[13]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">DIDP</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCompanyKey[6]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">KCO</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szDocumentType[3]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">DCT</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnDocVoucherInvoiceE</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">DOC</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">jdDateForGLandVoucherJULIA</td>
+<td class="xl66" style="width: 123px;">JDEDATE</td>
+<td class="xl66" style="width: 62px;">DGJ</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnJournalEntryLineNo</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">JELN</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szLineExtensionCode[3]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">EXTL</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szLedgerType[3]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">LT</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szDocumentPayItem[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">SFXE</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnPayItemExtensionNumber</td>
+<td class="xl66" style="width: 123px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 62px;">SFX</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szErrorID[11]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">DTAI</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">cSuppressErrorMessage</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">EV01</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">cParentChildRelationshi</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">PART</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCostType[4]</td>
+<td class="xl66" style="width: 123px;">JCHAR</td>
+<td class="xl66" style="width: 62px;">COST</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 33px;">&nbsp;</td>
+<td class="xl66" style="width: 371px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Define szFiles Array (same with enumerator) F0006 (iFileNumber = 1), F0101 (2), F03B11 (3), F0411 (4), F30006 (5), F3009 (6), F3111 (7), F3112 (8),&nbsp; F4071 (9), F41001 (iFileNumber = 10), F4101 (11), F4102 (12), F4211 (13), F4311 (14), F4801 (15), F4216 (16), F4215 (17), F4941 (18), F4942 (19), F0413 (iFileNumber = 20), F0414 (21), F03B13 (22), F03b14 (23), F42119 (24), F4111 (25), F0401 (26), F03012 (27), F0618 (28), F4981 (29), F4801T (iFileNumber = 30), F31122 (31), F40P01 (32), F40P011 (33), F0911 (34), F43199 (35), F4620 (36), F3102 (37), F42160 (38), FF31011 (39), FF31111 (iFileNumber = 40), FF31112 (41), F49211 (iFileNumber = 42)</li>
+<li>2. Based on iFileNumber (which is same with a specific Table ID) validate definition</li>
+<li>3. Validate it</li>
+</ul>
+</ul>
+<ul>
+<li>
+<table style="border-collapse: collapse; width: 541px; height: 1935px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 57pt;" span="2" width="76" /><col style="width: 299pt;" width="398" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 57pt; background-color: #999999;">iFileNumber</th><th style="width: 57pt; background-color: #999999;">szFileName</th><th style="width: 299pt; background-color: #999999;">Routine</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">1</td>
+<td>F0006</td>
+<td>JDB_FetchKeyed () against F0006 based on input value <br /> F0006.mcmcu = szBusinessUnit<br /> Index: ID_F0006_COST_CENTER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">2</td>
+<td>F0101</td>
+<td>Get Address Book Master (F0101) Data&nbsp; based on input F0101.aban8 = mnAddressBookNumber<br /> Index: ID_F0101_ADDRESS</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">3</td>
+<td>F03B11</td>
+<td>Fetch F03B11 using order number, order type, order company, order suffix.<br /> F03B11.rpdoc = mnDocVoucherInvoiceE<br /> F03B11.rpdct = szDocumentType<br /> F03B11.rpkco = szCompanyKey<br /> F03B11.rpsfx = szDocumentPayItem<br /> Index: ID_F03B11_DOC_NUMBER__DOC_TYPE___A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">4</td>
+<td>F0411</td>
+<td>Fetch F0411 based on <br /> F0411.rpdoc = mnDocVoucherInvoiceE<br /> F0411.rpdct = szDocumentType<br /> F0411.rpkco = szCompanyKey<br /> F0411.rpsfx = szDocumentPayItem<br /> F0411.rpsfxe = mnPayItemExtensionNumber<br /> Index: ID_F0411_DOCUMENT__TYPE____A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">5</td>
+<td>F30006</td>
+<td>Fetch F30006 using cost center<br /> F30006.iwmcu = szBusinessUnit<br /> Index: ID_F30006_BRANCH__BUSINESSUNIT</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">6</td>
+<td>F3009</td>
+<td>Fetch F3009 using branch<br /> F3009K.mmcu = szCostCenterAlt<br /> ID_F3009_BRANCH</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">7</td>
+<td>F3111</td>
+<td>Fetch F3111 using unique id<br /> F3111.wmukid = mnUniqueKeyIDInternal<br /> ID_F3111_UNIQUEKEYID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">8</td>
+<td>F3112</td>
+<td>Fetch F3112 using order number, Sequence No Operations, Type operation code and business unit.<br /> F3112.wldoco = mnDocumentNumber<br /> F3112.wlopsq = mnSequenceNoOperations<br /> F3112.wlopsc = szTypeOperationCode<br /> F3112.wlmcu = szCostCenterAlt<br /> ID_F3112_ORDERNO_OPERATIONSEQNO__A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">9</td>
+<td>F4071</td>
+<td>Fetch F4071 using price adjustment name<br /> F4071.atast = szAdjustmentName<br /> ID_F4071_ADJUSTMENT_NAME</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">10</td>
+<td>F41001</td>
+<td>Fetch F41001 using system code and business unit<br /> F41001.cisy = "&nbsp;&nbsp;&nbsp; "<br /> F41001.cimcu = szBusinessUnit<br /> ID_F41001_SYSTEM_CODE__BUSINESS_UNIT</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">11</td>
+<td>F4101</td>
+<td>Fetch F4101 using short item number<br /> F4101.imitm = mnShortItemNumber<br /> ID_F4101_ITEM_MASTER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">12</td>
+<td>F4102</td>
+<td>Fetch F4102 using short item number and business unit<br /> F4102.ibmcu = szBusinessUnit<br /> F4102.ibitm = mnShortItemNumber<br /> ID_F4102_BRANCH__ITEM</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">13</td>
+<td>&nbsp;</td>
+<td>Fetch F4211 using order number, order type, order company, line number<br /> F4211.sddoco = mnDocumentNumber<br /> F4211.sddcto = szOrderType<br /> F4211.sdkcoo = szCompany<br /> F4211.sdlnid = mnLineNumber<br /> ID_F4211_ORDER_NUMBER__ORDER_TYPE___A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">14</td>
+<td>&nbsp;</td>
+<td>Fetch F4311 using order number, order type, order company, order suffix and line number<br /> F4311.pddoco = mnDocumentNumber<br /> F4311.pddcto = szOrderType<br /> F4311.pdkcoo = szCompany<br /> F4311.pdsfxo = szOrderSuffix<br /> F4311.pdlnid = mnLineNumber<br /> ID_F4311_DOC_NO__ORDER_TYPE____1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">15</td>
+<td>&nbsp;</td>
+<td>Fetch F4801 using document number<br /> F4801.wadoco = mnDocumentNumber<br /> ID_F4801_DOCUMENT_NUMBER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">16</td>
+<td>&nbsp;</td>
+<td>Fetch F4216 using order number, order type, order company, line number, SSCC Number - Tare Level, SSCC Number - PAK Level, SCC Number, UPC Number<br /> F4216.xddoco = mnDocumentNumber<br /> F4216.xddcto = szOrderType<br /> F4216.xdkcoo = szCompany<br /> F4216.xdlnid = mnLineNumber<br /> F4216.xdplt = szSSCCNumberTareLevel<br /> F4216.xdpak = szSSCCNumberPackLevel<br /> F4216.xdsccn = szSCCNumber<br /> F4216.xdupcn = szUPCNumber<br /> ID_F4216_DOC___ORDER_TYPE</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">17</td>
+<td>&nbsp;</td>
+<td>Fetch F4215 using Shipment Number<br /> F4215.xhshpn = mnShipmentNumber<br /> ID_F4215_SHIPMENTNUMBER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">18</td>
+<td>&nbsp;</td>
+<td>Fetch F4941 using Shipment Number and Routing Step Number<br /> F4941.rsshpn = mnShipmentNumber<br /> F4941.rsrssn = mnRoutingStepNumber<br /> ID_F4941_SHIPMENT_NUMBER_ROUTING_STEP</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">19</td>
+<td>&nbsp;</td>
+<td>Fetch F4942 using Shipment Number,Routing Step Number, Document,Document Type,Company, and Line ID<br /> F4942.isshpn = mnShipmentNumber<br /> F4942.isrssn = mnRoutingStepNumber<br /> F4942.isdoco = mnDocumentNumber<br /> F4942.isdcto = szOrderType,<br /> F4942.iskcoo = szCompany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> F4942.islnid = mnLineNumber<br /> ID_F4942_SHIPMENTNUMBER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">20</td>
+<td>F0413</td>
+<td>@No Implementation</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">21</td>
+<td>&nbsp;</td>
+<td>Fetch F0414 using Payment ID<br /> F0414.rnpyid = mnPaymentID<br /> F0414.rnrc5 = mnFileLineIdentifier50<br /> ID_F0414_PAYMENT_ID__LINE</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">22</td>
+<td>&nbsp;</td>
+<td>Fetch F03B13 using Payment ID<br /> F03B13.rypyid = mnPaymentID<br /> ID_F03B13_PAYMENT_ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">23</td>
+<td>&nbsp;</td>
+<td>Fetch F03B14 using Payment ID<br /> F03B14.rzpyid = mnPaymentID<br /> F03B14.rzrc5 = mnFileLineIdentifier50<br /> ID_F03B14_PAYMENT_ID__FILE_LINE_ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">24</td>
+<td>&nbsp;</td>
+<td>Fetch F42119 using order number, order type, order company, line number<br /> &nbsp;&nbsp; F42119.sddoco = mnDocumentNumber<br /> &nbsp;&nbsp; F42119.sddcto = szOrderType<br /> &nbsp;&nbsp; F42119.sdkcoo = szCompany<br /> &nbsp;&nbsp; F42119.sdlnid = mnLineNumber<br /> ID_F42119_ORDER_NUM__ORDER_TYPE</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">25</td>
+<td>&nbsp;</td>
+<td>Fetch F4111 using unique key ID<br /> F4111.ilukid = mnUniqueKeyIDInternal<br /> ID_F4111_UNIQUE_KEY_ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">26</td>
+<td>&nbsp;</td>
+<td>Fetch F0401 using Supplier Number<br /> F0401.a6an8 = mnAddressBookNumber<br /> ID_F0401_ADDRESS</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">27</td>
+<td>&nbsp;</td>
+<td>Fetch F03012 using Address Number and Company<br /> &nbsp;&nbsp; F03012.aian8 = mnAddressBookNumber<br /> &nbsp;&nbsp; F03012.aico = szCompany<br /> ID_F03012_ADDRESS_COMPANY</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">28</td>
+<td>&nbsp;</td>
+<td>Fetch F0618 using Address Number and Payroll Transaction Number<br /> F0618.ytan8 = mnAddressBookNumber<br /> ID_F0618_ADDRESS_NUMBER__DATE_WORKED</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">29</td>
+<td>&nbsp;</td>
+<td>Fetch F4981 using Address Number and Payroll Transaction Number<br /> F4981.fhuk01 = mnUniqueKeyID01<br /> ID_F4981_UNIQUE_KEY</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">30</td>
+<td>&nbsp;</td>
+<td>Fetch F4801T using Address Number and Payroll Transaction Number<br /> F4801T.wadoco = mnDocumentNumber<br /> ID_F4801T_ORDER_NUMBER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">31</td>
+<td>&nbsp;</td>
+<td>Fetch F31122 using unique key ID<br /> F31122.wtukid = mnUniqueKeyIDInternal<br /> ID_F31122_UNIQUE_KEY_ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">32</td>
+<td>&nbsp;</td>
+<td>Fetch F40P01 using Promotion ID<br /> F40P01.phpmtn = szPromotionID<br /> ID_F40P01_PROMOTIONID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">33</td>
+<td>&nbsp;</td>
+<td>Fetch F40P011 using Promotion ID and Promotion Deal ID<br /> &nbsp; F40P011.pdpmtn = szPromotionID<br /> &nbsp; F40P011.pddidp = szPromotionDealID <br /> ID_F40P011__PROMOTID__DEALID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">34</td>
+<td>&nbsp;</td>
+<td>Fetch F0911 using DCT, DOC,KCO, DGJ, JELN, LT, EXTL<br /> &nbsp;&nbsp;&nbsp; F0911.gldct = szDocumentType <br /> &nbsp;&nbsp;&nbsp; F0911.gldoc = mnDocVoucherInvoiceE<br /> &nbsp;&nbsp;&nbsp; F0911.glkco = szCompanyKey<br /> &nbsp;&nbsp;&nbsp; F0911.gldgj = jdDateForGLandVoucherJULIA&nbsp;&nbsp;&nbsp; <br /> &nbsp;&nbsp;&nbsp; F0911.gljeln = mnJournalEntryLineNo<br /> &nbsp;&nbsp;&nbsp; F0911.gllt = szLedgerType<br /> &nbsp;&nbsp;&nbsp; F0911.glextl = szLineExtensionCode<br /> ID_F0911_DOC_TYPE__NUMBER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">35</td>
+<td>&nbsp;</td>
+<td>Fetch F43199 using doco, dcto, kcoo, sfxo, lnid<br /> &nbsp;&nbsp;&nbsp; F43199.oldoco = mnDocumentNumber<br /> &nbsp;&nbsp;&nbsp; F43199.oldcto = szOrderType<br /> &nbsp;&nbsp;&nbsp; F43199.olkcoo = szCompany<br /> &nbsp;&nbsp;&nbsp; F43199.olsfxo = szOrderSuffix&nbsp;&nbsp;&nbsp; <br /> &nbsp;&nbsp;&nbsp; F43199.ollnid = mnLineNumber<br /> ID_F43199_ORDERNUM__ORDERTYPE__A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">36</td>
+<td>&nbsp;</td>
+<td>Fetch F4620 using unique id<br /> F4620.cdukid = mnUniqueKeyIDInternal<br /> ID_F4620_UNIQUEKEY</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">37</td>
+<td>&nbsp;</td>
+<td>Fetch F3102 using doco, itm, cost, part ,mcu<br /> &nbsp;&nbsp;&nbsp; F3102.igdoco = mnDocumentNumber<br /> &nbsp;&nbsp;&nbsp; F3102.igitm&nbsp; = mnShortItemNumber<br /> &nbsp;&nbsp;&nbsp; F3102.igpart = cParentChildRelationshi<br /> &nbsp;&nbsp;&nbsp; F3102.igcost = szCostType<br /> &nbsp;&nbsp;&nbsp; F3102.igmcu = szCostCenterAlt<br /> ID_F3102_ORDERNUMBER__WORKCENTER</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">38</td>
+<td>&nbsp;</td>
+<td>Fetch F42160 using order number, order type, order company, line number <br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F42160.sddoco = mnDocumentNumber<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F42160.sddcto = szOrderType<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F42160.sdkcoo = szCompany<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; F42160.sdlnid = mnLineNumber<br /> ID_F42160_ORDER_NUMBER__ORDER_TYPE__A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">39</td>
+<td>&nbsp;</td>
+<td>Fetch FF31011 using unique id<br /> FF31011.ehukid = mnUniqueKeyIDInternal<br /> ID_FF31011_UNIQUEKEYID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">40</td>
+<td>&nbsp;</td>
+<td>Fetch FF31111 using unique id<br /> FF31111.plukid = mnUniqueKeyIDInternal<br /> ID_FF31111_UKID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">41</td>
+<td>&nbsp;</td>
+<td>Fetch FF31112 using unique id <br /> FF31112.ehukid = mnUniqueKeyIDInternal<br /> ID_FF31112_PRIMARY</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">42</td>
+<td>&nbsp;</td>
+<td>Fetch F49211 using order number, order type, order company, line number<br /> F49211.uddoco = mnDocumentNumber<br /> F49211.uddcto = szOrderType<br /> F49211.udkcoo = szCompany<br /> F49211.udlnid = mnLineNumber<br /> ID_F49211_ORDER_NO__ORDER_TYPE___A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">default</td>
+<td>other table</td>
+<td>Set Error 070X</td>
+</tr>
+</tbody>
+</table>
+</li>
+<ul>
+<li>Supported Data Type</li>
+</ul>
+</ul>
+<ul>
+<li>
+<table style="border-collapse: collapse; width: 856px; height: 120px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 57pt;" span="2" width="76" /><col style="width: 299pt;" width="398" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 57pt; background-color: #999999;">iDataType</th><th style="width: 156px; background-color: #999999;">Description</th><th style="width: 482px; background-color: #999999;">API to copy</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">1</td>
+<td style="width: 156px;">Character Value</td>
+<td style="width: 482px;">jdeStrncpy((JCHAR *)szValue, (const JCHAR *)szTempCharValue,&nbsp; iValueSize - 1);</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">2, 20</td>
+<td style="width: 156px;">String Value</td>
+<td style="width: 482px;">jdeStrncpy((JCHAR *)szValue, (const JCHAR *)szTemporaryValue, iValueSize - 1);</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">9</td>
+<td style="width: 156px;">Math Numeric Value</td>
+<td style="width: 482px;">FormatMathNumeric((PJSTR)szValue, (LPMATH_NUMERIC)&amp;mnValue) to convert math numeric value to string</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">11</td>
+<td style="width: 156px;">JDEDATE</td>
+<td style="width: 482px;">FormatDate(szValue, &amp;jdValue, szFormatMask); to convert JDEDATE to string</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">15</td>
+<td style="width: 156px;">Integer Value</td>
+<td style="width: 482px;">1. Convert integer to math numeric IntToMathNumeric(iValue, &amp;mnTempValue);<br /> 2. and math numeric to string FormatMathNumeric(szValue, &amp;mnTempValue);</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">7</td>
+<td style="width: 156px;">ID</td>
+<td style="width: 482px;">1. Convert ID (a long integer) to math numeric LongToMathNumeric(idValue, &amp;mnTempValue);<br /> 2. and math numeric to string FormatMathNumeric(szValue, &amp;mnTempValue);</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><strong>Error codes</strong>:</li>
+<ul>
+<li>3143 - File can not be accessed.</li>
+<ul>
+<li>CAUSE . . . . ERROR: File can not be accessed.<br /> Solution. . . Change IBM security or authority using the IBM EDTOBJAUT command. This file can not be accessed with the current IBM authority for the User executing this request.</li>
+<li>Technical review: this message can come from any routine when JDB_OpenTable () failed</li>
+</ul>
+<li>017F - Fetch Unsuccessful.</li>
+<ul>
+<li>CAUSE:&nbsp; An error occured while fetching a record.<br /> RESOLUTION:&nbsp; Verify that the record being fetched is valid.</li>
+<li>Technical review: FetchKeyed () failed to get data from the specified table based on primary key</li>
+</ul>
+<li>070X - Invalid Application/File Combination.&nbsp;</li>
+<ul>
+<li>CAUSE . . . .&nbsp; The combination of the application group and file is invalid.<br /> RESOLUTION. .&nbsp; The F1690 file has the permissible combinations of Application Groups and Files. No rules should be set up where an Application will be calling a rule in the F4096 file using a file that is not available to that application.</li>
+<li>Technical review: An unsupported file name was passed</li>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4204190 - ProcessDistributionAAICache (Process Distribution AAI Cache)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to delete cache created during Sales Update process based on Job Number as inpout value. This function is to call RetrieveF4095Cache and RetrieveF4096Cache with same szCacheActionCode 8 to terminate cache for DMAAI and Flex Account</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4204190B - Process Distribution AAI Cache</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 867px; height: 485px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 218pt;" width="290" /><col style="width: 89pt;" width="118" /><col style="width: 50pt;" width="66" /><col style="width: 23pt;" width="30" /><col style="width: 25pt;" width="33" /><col style="width: 288pt;" width="384" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl65" style="height: 12.75pt; width: 220px; background-color: #009900; color: white;">Parameter Name</th><th class="xl65" style="width: 127px; background-color: #009900; color: white;">Data Type</th><th class="xl65" style="width: 60px; background-color: #009900; color: white;">Data Alias&nbsp;</th><th class="xl65" style="width: 29px; background-color: #009900; color: white;">Req</th><th class="xl65" style="width: 25px; background-color: #009900; color: white;">I/O</th><th class="xl65" style="width: 380px; background-color: #009900; color: white;">Example/Notes</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCacheActionCode[9]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">CATN</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">I</td>
+<td class="xl66" style="width: 380px;">This input parameter determines how to handle cache. Possible values are, <br />
+<ul>
+<li>Cache Get 1</li>
+<li>Cache Add 2</li>
+<li>Cache End 8</li>
+<li>Cache Close Cursor 9</li>
+</ul>
+In R42800 szCacheActionCode is always 8 which is to terminate all the caches created during process by calling API jdeCacheTerminateAll()</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnNumberOfKeys</td>
+<td class="xl66" style="width: 127px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 60px;">NKEYS</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">cSuppressErrorMessage</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">EV01</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szErrorMessageID[11]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">DTAI</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">cRecordNotFoundFlag</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">EV01</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">idCacheCursor</td>
+<td class="xl66" style="width: 127px;">ID</td>
+<td class="xl66" style="width: 60px;">GENLNG</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnJobNumber</td>
+<td class="xl66" style="width: 127px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 60px;">JOBS</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">I</td>
+<td class="xl66" style="width: 380px;">Since all the caches are created based on Job Number this is key to delete cache</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">mnAAITableNumber</td>
+<td class="xl66" style="width: 127px;">MATH_NUMERIC</td>
+<td class="xl66" style="width: 60px;">ANUM</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCompany[6]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">CO</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szDocumentType[3]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">DCT</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szGLCategory[5]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">GLPT</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCostType[4]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">COST</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szBranchPlant[13]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">MCU</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szOrderType[3]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">DCTO</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szObjectAccount[7]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">OBJ</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szSubsidiary[9]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">SUB</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szCostCenterAlt[13]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">MMCU</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szAccountNumber[30]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">ANI</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szAccountUnitOfMeasure[3]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">UM</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szProjectBusinessUnit[13]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">MCU</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szProjectSubsidiary[9]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">SUB</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szAccountId[9]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">AID</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 220px;" height="17">szAAIErrorMessage[11]</td>
+<td class="xl66" style="width: 127px;">JCHAR</td>
+<td class="xl66" style="width: 60px;">DTAI</td>
+<td class="xl66" style="width: 29px;">&nbsp;</td>
+<td class="xl66" style="width: 25px;">&nbsp;</td>
+<td class="xl66" style="width: 380px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>"B4204190B + JobNumber" is cache in getting Account Information whereas F4095 cache is defined as DSD4000352 and F4096 Cache is defined as DSD4000341</li>
+<li>Cache key is made up of mnJobNumber, mnAAITableNumber, szCompanyNumber, szDocumentType, szGLCategory, szCostType and szBranchPlant</li>
+<li>Note: Refer the second data structure from this note B4204190 - RetrieveDistributionAAICacheDB (Retrieve Distribution AAI From Cache or DB) with D4204190A</li>
+</ul>
+<li><strong>Error Codes</strong>:</li>
+<ul>
+<li>078L - This error will come when jdeCacheInit() API fails which intialize cache using "B4204190B + JobNumber"</li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

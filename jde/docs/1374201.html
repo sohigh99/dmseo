@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>B4504590 - Pricing Datamap Function and Cache and Workfile</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>B4504590 - Pricing Datamap Function and Cache and Workfile</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The purpose of this document is to explain internal API SetPricingHistoryCacheFlag  during Sales Order Entry or Sales Order Processing. However modifying any standard code is discouraged at any cost.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p><span class="x9s">History:<br /> </span>This routine is implemented through enhancement &lt;Bug 10875622&gt;: PRICEHISTORY DATAMAP - SAR: 7500235, which was SOE performance project needs to modify the exisitng data decimal datamap and create new pricing history data map and other related functions in B4504590<br /> <br /> Changes:</p>
+<h3 class="km">BSFN B4504590 is comprised of,</h3>
+<table style="border-collapse: collapse; width: 988px; height: 975px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 81pt;" width="108" /> <col style="width: 149pt;" width="198" /> <col style="width: 161pt;" width="215" /> <col style="width: 85pt;" width="113" /> <col style="width: 167pt;" width="222" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl66" style="height: 12.75pt; width: 57px; background-color: #009900; color: white;">Source  Module</th>
+<th class="xl66" style="width: 183px; background-color: #009900; color: white;">Function  Name</th>
+<th class="xl66" style="width: 230px; background-color: #009900; color: white;">Description</th>
+<th class="xl66" style="width: 78px; background-color: #009900; color: white;">Template  Name</th>
+<th class="xl66" style="width: 384px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">CreatePricingCatCodesDatamap</td>
+<td class="xl67" style="width: 230px;">Create Pricing Cat Codes Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590J</td>
+<td class="xl67" style="width: 384px;">This function is to create Pricing Category Codes datamap PRICING_CATCODES_DATA_MAP in shared memory DATAMAPCDIST</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">PricingCatCodesDatamapExist</td>
+<td class="xl67" style="width: 230px;">Pricing Cat Codes Datamap Exist</td>
+<td class="xl67" style="width: 78px;">D4504590I</td>
+<td class="xl68" style="width: 384px;">to check whether there is existing datamap for Pricing Category Codes</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">CreatePricingDatamapWrapper</td>
+<td class="xl67" style="width: 230px;">Create Pricing Datamap Wrapper</td>
+<td class="xl67" style="width: 78px;">D4504590F</td>
+<td class="xl68" style="width: 384px;">to check the existence of PricingDecimal, PricingHistory and Pricing Category Codes Datamaps. If these datamaps exist, do not create them again but if datamap does not exist then create it again</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">DestroyPricingDatamapWrapper</td>
+<td class="xl67" style="width: 230px;">Destroy Pricing Datamap Wrapper</td>
+<td class="xl67" style="width: 78px;">D4504590F</td>
+<td class="xl68" style="width: 384px;">to destroy all the datamap created by CreatePricingDatamapWrapper by calling DestroyPricingDecimalDatamap, DestroyPricingHistoryDatamap and DestroyPricingCatCodesDatamap</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">CreatePricingDecimalDatamap</td>
+<td class="xl67" style="width: 230px;">Create Pricing Decimal Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590E</td>
+<td class="xl68" style="width: 384px;">validates input mnJobNumber and create Pricing Decimal at shared memory (or data map) PRICING_DECIMAL_DATA_MAP</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">DestroyPricingDecimalDatamap</td>
+<td class="xl67" style="width: 230px;">Destroy Pricing Decimal Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590E</td>
+<td class="xl68" style="width: 384px;">to destory any data map created through CreatePricingDecimalDatamap above</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">SetPricingHistoryCacheFlag</td>
+<td class="xl67" style="width: 230px;">Set Pricing History Cache Flag</td>
+<td class="xl67" style="width: 78px;">D4504590B</td>
+<td class="xl68" style="width: 384px;">to indicate whether to write cache or workfile. For this example, Cache stands for data structure of F40UI74 whereas workfile stands for a physical table F40UI74. Through this function cache PRICING_HISTORY_DATA_MAP is to be written at shared memory area DATAMAPCDIST</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">PricingHistoryDatamapExist</td>
+<td class="xl67" style="width: 230px;">Pricing History Datamap Exist</td>
+<td class="xl67" style="width: 78px;">D4504590G</td>
+<td class="xl68" style="width: 384px;">to check whether Pricing History Datamap does exit from DATAMAPCDIST for the name PRICING_HISTORY_DATA_MAP however this function does not return whether cPriceHistoryCacheFlag '1' or '2'</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">CreatePricingHistoryDatamap</td>
+<td class="xl67" style="width: 230px;">Create Pricing History Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590D</td>
+<td class="xl68" style="width: 384px;">to create Datamap for Pricing History LPDSF40UI74DAO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px;">DestroyPricingHistoryDatamap</td>
+<td class="xl67" style="width: 230px;">Destroy Pricing History Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590D</td>
+<td class="xl68" style="width: 384px;">to destroy datamap PRICING_HISTORY_DATA_MAP created by CreatePricingHistoryDatamap above</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px; font-style: italic;">CreatePricingSharedDatamap</td>
+<td class="xl67" style="width: 230px;">Create Pricing Shared Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590A</td>
+<td class="xl68" style="width: 384px;">Obsolete: replaced by CreatePricingDatamapWrapper</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="height: 12.75pt; width: 57px;" height="17">B4504590</td>
+<td class="xl67" style="width: 183px; font-style: italic;">DestroyPricingSharedDatamap</td>
+<td class="xl67" style="width: 230px;">Destroy Pricing Shared Datamap</td>
+<td class="xl67" style="width: 78px;">D4504590A</td>
+<td class="xl68" style="width: 384px;">Obsolete: replaced by DestroyPricingDatamapWrapper</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 57px;"> </td>
+<td style="vertical-align: top; width: 183px;">GetPricingDecimalDataMapHandle</td>
+<td style="vertical-align: top; width: 230px;"> </td>
+<td style="vertical-align: top; width: 78px;"> </td>
+<td style="vertical-align: top; width: 384px;">This API has to be called in CreatePricingDatamapWrapper. In order to call this function correctly, calling function needs to call this function first to get handle of the datamap (DATAMAPCDIST). If the handle exists, then call get decimal to get the decimals for data dictionary item or currency</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 57px;"> </td>
+<td style="vertical-align: top; width: 183px;">GetDecimalFromDataMapDirect</td>
+<td style="vertical-align: top; width: 230px;"> </td>
+<td style="vertical-align: top; width: 78px;"> </td>
+<td style="vertical-align: top; width: 384px;">to call this functoin correctly, calling function needs to call GetSharedDataMapHandleDirect first to get handle of the datamap if users like to use datamap logic to improve performance. If the handle is null, this function will call the external function to retrieve decimal as before</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 57px;"> </td>
+<td style="vertical-align: top; width: 183px;">GetPricingHistoryCacheFlag</td>
+<td style="vertical-align: top; width: 230px;"> </td>
+<td style="vertical-align: top; width: 78px;"> </td>
+<td style="vertical-align: top; width: 384px;">to get Datamap for PRICE_HISTORY_CACHE_FLAG in DATAMAPCDIST which is written through API PutDataMapValueCDIST in SetPricingHistoryCacheFlag</td>
+</tr>
+</tbody>
+</table>
+<p>Note: To understand relationship eash the sequence has changed<br /> <br />  </p>
+<div class="kmnotebox"> *        <strong>Important Note</strong>:<br style="font-style: italic;" />  *                For users to use this performance functionality, the calling function must call <br style="font-style: italic;" />  *                either CreatePricingDatamapWrapper to create the Decimal, Price History and Category Codes datamap <br style="font-style: italic;" />  *                or call  CreatePricingDecimalDatamap, CreatePricingHistoryDatamap or CreatePricingCatCodesDatamap individually.  <br style="font-style: italic;" />  *<br style="font-style: italic;" />  *                After the transaction is done, it is the calling function's  responsibility <br style="font-style: italic;" />  *                to call DestroyPricingDatamapWrapper to terminate the data decimal, price history and category codes datamaps <br style="font-style: italic;" />  *                or call the DestoryPricingDecimaldatamap, DestroyPricingHistoryDatamap and DestroyPricingCatCodesDatamap individually.</div>
+<p> </p>
+<hr />
+<p><br /> <br /> Note that API-level functions below is not covered by this document,</p>
+<ul>
+<li>B4205110 - SourceForSOESharedDataCacheAPIs (Source File, SOESharedData Cache APIs)</li>
+<li>B4504500 - DataMapImplementationForCDIST (Data Map Implemenation for CDIST)</li>
+<li>B4504580 - CacheAddressSpecificPrice (Cache Address Specific Price)</li>
+</ul>
+<p>handles how to maintain datamap however this note does not cover routine for this. Above routines write shared memory DATAMAPCDIST directly where basic information for Pricing Category Code, Pricing History and Pricing Decimals and more.<br /> <br /> And this function has be understood in the context of Master Business Function and Sales Order Workfiles, refer to</p>
+<ul>
+<li>Document 1265902.1 - E1: BSFN: Master Business Function in EnterpriseOne</li>
+<li>&lt;Internal_Only&gt;Document <a href="&lt;&lt;INLINE_NOTE:1051653.1&gt;&gt;" target="_blank">1051653.1</a> - E1: 42: Work Files (F42UI*) in Sales Order Entry (P4210/P42101)&lt;/Internal_Only&gt;</li>
+</ul>
+<p> </p>
+<hr />
+<p><br /> <br /> <br /> Before starts global cache and datamap can be understood as below,</p>
+<ul>
+<li>DATAMAPCDIST: Shared memory name</li>
+<li>PRICING_DECIMAL_DATA_MAP "PricingDecimals": Datamap name for Pricing Display Decimal (DD and/or Currency)</li>
+<li>PRICING_HISTORY_DATA_MAP "PricingHistory": Datamap name for Pricing History</li>
+<li>PRICE_HISTORY_CACHE_FLAG "PH": Datamap name whether to write Cache or Workfile</li>
+<li>PRICING_CATCODES_DATA_MAP "PricingCatCodes": Datamap name for Pricing Category Codes</li>
+<li>F40UI74DAO: Datamap for F40UI74</li>
+</ul>
+<hr />
+<p><br /> <br /> <br /> Business Functions which affects Sales Order Entry validation/defaulting through F4211FSBeginDoc and F4211FSEditLine routine:</p>
+<h3 class="km">1. B4504590 - CreatePricingCatCodesDatamap (Create Pricing Cat Codes Datamap)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to create Pricing Category Codes datamap PRICING_CATCODES_DATA_MAP in shared memory DATAMAPCDIST</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590J : Category Codes Datamap</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 686px; height: 84px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 89px; background-color: #009900; color: white;">Structure Member</th>
+<th class="xl66" style="border-left: medium none; width: 85px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 18px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 21px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 35px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 359px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 89px;">mnJobnumber</td>
+<td style="vertical-align: top; width: 85px;">MATH_NUMERIC</td>
+<td style="vertical-align: top; width: 18px;">Y</td>
+<td style="vertical-align: top; width: 21px;">I</td>
+<td style="vertical-align: top; width: 35px;">JOBS</td>
+<td style="vertical-align: top; width: 359px;">This parameter has to be determined by calling routine to store job specific data map and cache</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Write log "<em>Entering I4504590_CreatePricingCatCodesDatamap</em>"</li>
+<li>2. Check input mnJobnumber. If the value is zero, then set ER_ERROR with message "<em>I4504590_CreatePricingCatCodesDatamap:Job Number missing.</em>"</li>
+<li>3. mnJobnumber is not zero then create datamap with name PRICING_CATCODES_DATA_MAP through API CreateDataMapCDIST</li>
+<li>4. If CreateDataMapCDIST failed set ER_ERROR with log message "<em>I4504590_CreatePricingCatCodesDatamap Failed</em>"</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">2. B4504590 - PricingCatCodesDatamapExist (Pricing Cat Codes Datamap Exist)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to check whether there is existing datamap for Pricing Category Codes</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590I : Get Pricing Cat Codes Datamap Handle</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 689px; height: 137px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 165px; background-color: #009900; color: white;">Structure Member</th>
+<th class="xl66" style="border-left: medium none; width: 110px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 17px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 81px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 43px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 247px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 165px;">mnJobNumber</td>
+<td style="vertical-align: top; width: 110px;">MATH_NUMERIC</td>
+<td style="vertical-align: top; width: 17px;">Y</td>
+<td style="vertical-align: top; width: 81px;">I</td>
+<td style="vertical-align: top; width: 43px;">JOBS</td>
+<td style="vertical-align: top; width: 247px;">mnJobnumber assigned by calling routine this is unique key value to determine existence of datamap for Pricing Category Codes</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 165px;" height="17">cPricingCatCodesDatamapExist</td>
+<td style="width: 110px;">JCHAR</td>
+<td style="width: 17px;"> </td>
+<td style="width: 81px;">O</td>
+<td style="width: 43px;">EV01</td>
+<td style="width: 247px;">0 - Does not exist<br /> 1 - Pricing Category Code Datamap Exist</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Record start of routine with "<em>Entering PricingCatCodesDatamapExist</em>"</li>
+<li>2. Call API GetPricingCatCodesDataMapHandle to determine whether datamap does exist</li>
+<li>3. If GetPricingCatCodesDataMapHandle succeed then set 1 for cPricingCatCodesDatamapExist</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">3. B4504590 - CreatePricingDatamapWrapper (Create Pricing Datamap Wrapper)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to check the existence of PricingDecimal, PricingHistory  and Pricing Category Codes Datamaps. If these datamaps exist, do not create them again but if datamap does not exist then create it again.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590F : Create Pricing Decimal Datamap Wrapper</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 692px; height: 38px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 106px; background-color: #009900; color: white;">Structure Member</th>
+<th class="xl66" style="border-left: medium none; width: 86px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 24px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 23px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 34px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 348px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 106px;">mnJobnumber</td>
+<td style="vertical-align: top; width: 86px;">MATH_NUMERIC</td>
+<td style="vertical-align: top; width: 24px;">Y</td>
+<td style="vertical-align: top; width: 23px;">I</td>
+<td style="vertical-align: top; width: 34px;">JOBS</td>
+<td style="vertical-align: top; width: 348px;">The mnJobnumber has to be specified from calling routine.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Check for the existence of PricingDecimal through API GetPricingDecimalDataMapHandle.</li>
+<ul>
+<li>2.  If these datamaps exist, do not create them again by calling BSFN CreatePricingDecimalDatamap</li>
+</ul>
+<li>3. If Pricing Decimal Datamap is created then continue to create Pricing History Datamap by calling BSFN PricingHistoryDatamapExist (note: this gets called by CALLBFRET - Call Object Lite)</li>
+<ul>
+<li>4. If PricingHistoryDatamapExist did not return success, then create Pricing History Datamap by calling CreatePricingHistoryDatamap</li>
+<li>5. If PricingHistoryDatamapExist fails then set ER_WARNING to indicate the price history data map exists and SetPricingHistoryCacheFlag can be called to enable cache or workfile</li>
+</ul>
+<li>6. Call PricingCatCodesDatamapExist to check whether there is existing Pricing Category Codes</li>
+<ul>
+<li>7. If datamap exists, then set ER_WARNING to indicate the category codes data map exists</li>
+<li>8. If datamap does not exist, then call CreatePricingCatCodesDatamap to create Pricing Category Codes Datamap</li>
+</ul>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+<li><strong>Others</strong>: This routine repeats CreatePricingDecimalDatamap, CreatePricingHistoryDatamap and CreatePricingCatCodesDatamap</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">4. B4504590 - DestroyPricingDatamapWrapper (Destroy Pricing Datamap Wrapper)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to destroy all the datamap created by CreatePricingDatamapWrapper by calling DestroyPricingDecimalDatamap, DestroyPricingHistoryDatamap and DestroyPricingCatCodesDatamap</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li>Data Structure: D4504590F : Create Pricing Decimal Datamap Wrapper (Same with Data Structure for B4504590 - CreatePricingDatamapWrapper)</li>
+</ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Call DestroyPricingDecimalDatamap</li>
+<li>2. Call DestroyPricingHistoryDatamap</li>
+<li>3. Call DestroyPricingCatCodesDatamap</li>
+<li>4. If any of above 3 functions fails then set ER_ERROR</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+<li><strong>Others</strong>: Refer DestroyPricingDecimalDatamap, DestroyPricingHistoryDatamap and DestroyPricingCatCodesDatamap</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">5. B4504590 - CreatePricingDecimalDatamap (Create Pricing Decimal Datamap)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function validates input mnJobNumber and create Pricing Decimal at shared memory (or data map) PRICING_DECIMAL_DATA_MAP</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590E : Data Decimal Datamap</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 682px; height: 90px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 102px; background-color: #009900; color: white;">Structure Member</th>
+<th class="xl66" style="border-left: medium none; width: 72px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 31px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 6px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 42px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 425px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 102px;">mnJobNumber</td>
+<td style="vertical-align: top; width: 72px;">MATH_NUMERIC</td>
+<td style="vertical-align: top; width: 31px;">Y</td>
+<td style="vertical-align: top; width: 6px;">I</td>
+<td style="vertical-align: top; width: 42px;">JOBS</td>
+<td style="vertical-align: top; width: 425px;">To store/retrieve Pricing Decimal Datamp (one for Data Dictionary and the other for Currency Decimal)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Check input mnJobnumber. If the value is zero set ERROR with message "<em>I4504590_CreatePricingDecimalDatamap:Job Number missing.</em>"</li>
+<li>2. If mnJobnumber is not zero then call API CreateDataMapCDIST to create Data Map</li>
+<li>3. If 2 fails then set ERROR with message "<em>I4504590_CreatePricingDecimalDatamap Failed</em>"</li>
+</ul>
+<li><strong>Error Code</strong>: N/A. Direct writing to jdedebug.log</li>
+<li><strong>Others</strong>: This routine has to be understood in the context of whole sales order entry and capture jdedebug (callobject kernel) log for further debugging</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">6. B4504590 - DestroyPricingDecimalDatamap (Destroy Pricing Decimal Datamap)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to destory any data map created through CreatePricingDecimalDatamap above.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li>Data Structure: D4504590E : Data Decimal Datamap (Same with Data Structure for B4504590 - CreatePricingDecimalDatamap)</li>
+</ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Write log "<em>Entering I4504590_DestroyPricingDecimalDatamap</em>"</li>
+<li>2. Check whether input mnJobnumber is zero, then set ER_ERROR with message "<em>I4504590_DestroyPricingDecimalDatamap:Job Number missing.</em>"</li>
+<li>3. If mnJobNumber is not zero, get Datamap from PRICING_DECIMAL_DATA_MAP through API GetDataMapHandleCDIST</li>
+<li>4. If it fails to get data map the set ER_ERROR with message "<em>I4504590_DestroyPricingDecimalDatamap Get handle Failed</em>"</li>
+<li>5. If GetDataMapHandleCDIST succeed,</li>
+<ul>
+<li>6. then Removes all key/value pairs from the DataMap via API ClearDataMapCDIST</li>
+<li>7. Destroy the input DataMap.  All key/value pairs are removed from the DataMap via the ClearDataMapCDIST before the DataMap is destroyed via API DestroyDataMapCDIST</li>
+<li>8. Call external bsfn B4504580 - CacheAddressSpecificPrice which terminated Address Specific Price cache</li>
+</ul>
+</ul>
+<li><strong>Error Code</strong>: N/A. Either set ER_ERROR and return or write direct message in log</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">7. B4504590 - SetPricingHistoryCacheFlag (Set Pricing History Cache Flag)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to indicate whether to write cache or workfile. For this example, Cache stands for data structure of F40UI74 whereas workfile stands for a physical table F40UI74. Through this function cache PRICING_HISTORY_DATA_MAP is to be written at shared memory area DATAMAPCDIST</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590B : Set Pricing History Cache Flag</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 777px; height: 116px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 152px; background-color: #009900; color: white;">Structure Member Name</th>
+<th class="xl66" style="border-left: medium none; width: 54px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 40px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 37px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 45px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 393px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top;">mnJobNumber</td>
+<td style="vertical-align: top;">MATH_NUMERIC</td>
+<td style="vertical-align: top;">Y</td>
+<td style="vertical-align: top;">I</td>
+<td style="vertical-align: top;">JOBS</td>
+<td style="vertical-align: top;">mnJobnumber is determined by calling routine or return value from existence checking</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 152px;" height="17">cPriceHistoryCacheFlag</td>
+<td style="width: 54px;">JCHAR</td>
+<td style="width: 40px;"> </td>
+<td style="width: 37px;"> </td>
+<td style="width: 45px;">EV01</td>
+<td style="width: 393px;">This flag is to determine whether to write cache of F40UI74 or work file<br /> 1 - Write Workfile F40UI74<br /> 2 - Cache</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Record the start of routine "<em>Entering SetPricingHistoryCacheFlag</em>"</li>
+<li>2. Check input mnJobnumber. If the value is zero set ER_ERROR and write log "<em>SetPricingHistoryCacheFlag:Job Number missing.</em>"</li>
+<li>3. If mnJobnumber is not zero get datamap from DATAMAPCDIST through API GetDataMapHandleCDIST with name PRICING_HISTORY_DATA_MAP</li>
+<li>4. If GetDataMapHandleCDIST fails then record it "<em>SetPricingHistoryCacheFlag: Get handle Failed</em>" and set ER_ERROR</li>
+<li>5. If GetDataMapHandleCDIST succeed then call API PutDataMapValueCDIST to instruct whether to write workfile or cache with parameter cPriceHistoryCacheFlag</li>
+<li>6. If it fails to update then set ER_ERROR with message "<em>B4504590: Put value to PricingHistoryDatamap failed.</em>"</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+<li><strong>Others</strong>: This flag is inherited by Sales Order Master Business function B4200310/B4200311 (parameter name cCMWriteToWFFlag). In general, when sales order master business function is called by Interactive application (e.g., P4210/P42101 - Sales Order Entry) the flag is to be '2 - Write Cache' whereas same function gets called by batch job (e.g., R47011 - Inbound Purchase Order Processing) then the value is to be '1'. This can affect the performance of application significantly so do not modify it and Oracle does not bear any responsibility on result you may get owing to change you are to make.</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">8. B4504590 - PricingHistoryDatamapExist (Pricing History Datamap Exist)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to check whether Pricing History Datamap does exit from DATAMAPCDIST for the name PRICING_HISTORY_DATA_MAP however this function does not return whether cPriceHistoryCacheFlag '1' or '2'.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590G : Get Pricing History Datamap Handle</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 761px; height: 76px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 151px; background-color: #009900; color: white;">Structure Member Name</th>
+<th class="xl66" style="border-left: medium none; width: 90px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 20px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 23px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 41px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 350px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 151px;">mnJobNumber</td>
+<td style="vertical-align: top; width: 90px;">MATH_NUMERIC</td>
+<td style="vertical-align: top; width: 20px;">Y</td>
+<td style="vertical-align: top; width: 23px;">I</td>
+<td style="vertical-align: top; width: 41px;">JOBS</td>
+<td style="vertical-align: top; width: 350px;">This parameter is determined by calling routine in a transaction</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 151px;" height="17">cPriceHistoryDatamapExist</td>
+<td style="width: 90px;">JCHAR</td>
+<td style="width: 20px;"> </td>
+<td style="width: 23px;"> </td>
+<td style="width: 41px;">EV01</td>
+<td style="width: 350px;">0 - Not exist<br /> 1 - Datamap exists</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Record the start of routine "<em>Entering PricingHistoryDatamapExist</em>"</li>
+<li>2. If input mnJobnumber is zero set ER_ERROR and record it "<em>PricingHistoryDataMapExist:Job Number missing.</em>"</li>
+<li>3. If mnJobnumber is not zero then get PRICING_HISTORY_DATA_MAP from DATAMAPCDIST through API GetDataMapHandleCDIST</li>
+<li>4. GetDataMapHandleCDIST success then set '1' for parameter cPriceHistoryDatamapExist (else, '0')</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">9. B4504590 - CreatePricingHistoryDatamap (Create Pricing History Datamap)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to create Datamap for Pricing History LPDSF40UI74DAO</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: D4504590D : Price History Datamap</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 658px; height: 66px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 147pt;" width="196" /> <col style="width: 48pt;" width="64" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 48pt;" width="64" /> <col style="width: 242pt;" width="322" /> </colgroup>
+<tbody>
+<tr style="height: 30.75pt;">
+<th class="xl66" style="height: 30.75pt; width: 85px; background-color: #009900; color: white;">Structure Member</th>
+<th class="xl66" style="border-left: medium none; width: 123px; background-color: #009900; color: white;">Data Type</th>
+<th class="xl66" style="border-left: medium none; width: 28px; background-color: #009900; color: white;">Req</th>
+<th class="xl66" style="border-left: medium none; width: 28px; background-color: #009900; color: white;">I/O</th>
+<th class="xl66" style="border-left: medium none; width: 41px; background-color: #009900; color: white;">Alias</th>
+<th class="xl66" style="border-left: medium none; width: 323px; background-color: #009900; color: white;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 85px;">mnJobnumber</td>
+<td style="vertical-align: top; width: 123px;">MATH_NUMERIC</td>
+<td style="vertical-align: top; width: 28px;">Y</td>
+<td style="vertical-align: top; width: 28px;">I</td>
+<td style="vertical-align: top; width: 41px;">JOBS</td>
+<td style="vertical-align: top; width: 323px;">Based on Job Number from calling routine to create Price History datamap</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Write Trace log "<em>I4504590_CreatePricingHistoryDatamap</em>"</li>
+<li>2. Check input mnJobnumber. If this vlaue is zero then set ER_ERROR with message "<em>I4504590_CreatePricingHistoryDatamap:Job Number missing.</em>"</li>
+<li>3. If mnJobnumber is not zero then create datamap PRICING_HISTORY_DATA_MAP through API CreateDataMapCDIST</li>
+<li>4. If CreateDataMapCDIST fails to create datamap then set ER_ERROR with message "<em>I4504590_CreatePricingHistoryDatamap Failed</em>"</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">10. B4504590 - DestroyPricingHistoryDatamap (Destroy Pricing History Datamap)</h3>
+<ul>
+<li><strong>Purpose</strong>: This function is to destroy datamap PRICING_HISTORY_DATA_MAP created by CreatePricingHistoryDatamap above</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li>Data Structure: D4504590D : Price History Datamap (Same with data structure for BSFN B4504590 - CreatePricingHistoryDatamap)</li>
+</ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Write message "<em>Entering I4504590_DestroyPricingHistoryDatamap</em>"</li>
+<li>2. Check input mnJobnumber. If the value is zero set ER_ERROR with message "<em>I4504590_DestroyPricingHistoryDatamap:Job Number missing.</em>"</li>
+<li>3. mnJobnumber is valid then Terminate / Close the Price Hitory Cache / Work-file prior to destroying the related datamap</li>
+<li>4. Call F40UI74_Init against &amp;lpdsF40UI74DAO</li>
+<li>5. Call F40UI74_Terminate to terminate it</li>
+<li>6. Call API GetDataMapHandleCDIST to check datamap PRICING_HISTORY_DATA_MAP</li>
+<ul>
+<li>7. If GetDataMapHandleCDIST fails then set ER_ERROR with message "<em>I4504590_DestroyPricingHistoryDatamap: Get handle Failed</em>"</li>
+<li>8. If GetDataMapHandleCDIST succeed then call ClearDataMapCDIST to Removes all key/value pairs from the DataMap</li>
+<li>9. If GetDataMapHandleCDIST succeed then call DestroyDataMapCDIST to Destroy the input DataMap.  All key/value pairs are removed from the DataMap via the ClearDataMapCDIST before the DataMap is destroyed.</li>
+</ul>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p><br /> <br /> <br /> Below is to describe 3 important internal functions (or APIs) which is to be called in B4504590,</p>
+<h3 class="km">11. GetPricingDecimalDataMapHandle</h3>
+<ul>
+<li><strong>Purpose</strong>: This API has to be called in CreatePricingDatamapWrapper. In order to call this function correctly, calling function needs to call this function first to get handle of the datamap (DATAMAPCDIST). If the handle exists, then call get decimal to get the decimals for data dictionary item or currency.</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li>Data Structure: N/A</li>
+</ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Record starts of API "<em>Entering GetPricingDecimalDataMapHandle</em>"</li>
+<li>2. If the mnJobnumber from pointer *lphPricingDecimalDataMap is zero then set ER_ERROR with message "<em>GetSharedDataMapHandleDirect:Job Number missing.</em>"</li>
+<li>3. If mnJobnumber is not zero from DATAMAPCDIST, then call API GetDataMapHandleCDIST using cache name PRICING_DECIMAL_DATA_MAP</li>
+<li>4. If GetDataMapHandleCDIST fails then record "<em>B4504590: GetPricingDecimalDataMapHandle failed.</em>"</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+<li><strong>Others</strong>: In order to call this function correctly, calling function needs to call this function first to get handle of the datamap. If it exists. Then, it can call the get decimal to get the decimals for data dictionary item or currency</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">12. GetDecimalFromDataMapDirect</h3>
+<ul>
+<li><strong>Purpose</strong>: In order to call this function correctly, calling function needs to call GetSharedDataMapHandleDirect first to get handle of the datamap if users like to use datamap logic to improve performance. If the handle is null, this function will call the external function to retrieve decimal as before</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li><strong>Data Structure</strong>: N/A</li>
+</ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Record the start point of this API "<em>Entering GetDecimalFromDataMapDirect</em>"</li>
+<li>2. Check hPricingDataMap from shared memory DATAMAPCDIST and if the value is not NULL then call API GetDataMapValueCDIST to have DisplayDecimals. If there is existing records then which skips to call external business function to get Display Decimal Point from Data Dictionary Item and Currency specific display decimal. So this routine is to improve performance to minimize external BSFN calling</li>
+<li>3. If GetDataMapValueCDIST fails to get cache then call B9800420 - GetDataDictionaryDefinition to get display decimal (GET_DD_ITEM_DECIMAL)</li>
+<li>4. In case the request is on Currency then call B0000129 - RetrieveCurrencyDecimals to get Currency Decimal (GET_CURRENCY_DECIMAL)</li>
+<li>5. If the value is returned either through 3 or 4 then call API PutDataMapValueCDIST to record DD_ITEM_DECIMAL and/or CURRENCY_DECIMAL</li>
+<li>6. If PutDataMapValueCDIST fails then set ER_ERROR and record "B4504590: Put value to PricingSharedDatamap failed."</li>
+<li>7. If 3 or 4 fails then set ER_ERROR and record it "CallObject to get DD or currency decimal failed."</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p> </p>
+<h3 class="km">13. GetPricingHistoryCacheFlag</h3>
+<ul>
+<li><strong>Purpose</strong>: This API is to get Datamap for PRICE_HISTORY_CACHE_FLAG in DATAMAPCDIST which is written through API PutDataMapValueCDIST in SetPricingHistoryCacheFlag</li>
+<li><strong>Parameters</strong>:</li>
+<ul>
+<li>Data Structure: N/A</li>
+</ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>1. Record calling of this API  "<em>Entering GetPricingHistoryCacheFlag</em>"</li>
+<li>2.  Check mnJobnumber in  datamap and the value is zero then set ER_ERROR "<em>GetPricingHistoryCacheFlag:Job Number missing.</em>"</li>
+<li>3. If mnJobnumber is not zero then read PRICING_HISTORY_DATA_MAP through API GetDataMapHandleCDIST</li>
+<li>4. If GetDataMapHandleCDIST fails then set ER_ERROR with message "<em>GetPricingHistoryCacheFlag Get handle Failed</em>"</li>
+<li>5. If GetDataMapHandleCDIST succeeds then get datamap for PRICE_HISTORY_CACHE_FLAG through API GetDataMapValueCDIST, which returns cPriceHistoryCacheFlag (1- write workfile F40UI74, 2 - write cache)</li>
+</ul>
+<li><strong>Error Code</strong>: N/A</li>
+</ul>
+<hr />
+<p><br /> <br /> Note: this document is created based on EnterpriseOne 9.0 release.</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

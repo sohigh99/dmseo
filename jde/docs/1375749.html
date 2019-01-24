@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note is to explain possible issue you come across in Sales Order processing. Through this note we may understand inquiries,</p>
+<ul>
+<li>The argument of F4211FSEditLine.szSOEMBFInternalFlags</li>
+<li>F42UI12.SOEL string (either work file or cache)</li>
+<li>B4205101, B4205102, B4205103 and B4205104</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Information describes here is different from Sales Order flag described at&nbsp; &lt;Note 1268884.1&gt; - E1: 42: Sales Order Flags in F4211 (P4210/P42101/R42565/F4211/F49211)</li>
+<li>Business function B4205101 which is heavily used during sales order processing, which may call before Edit Line or inside Edit Line routine which validates/defaults/creates cache/workfile for sales order detail information.</li>
+<li>Global variables and static variables should not be used in BSFN code. These constructs are not threadsafe because they can be modified and accessed by multiple threads simultaneously. Instead, state information should be made temporary (stored in local variables and passed via function parameters), stored in JDECACHE, or simply removed. Here are a few ways that globals and statics are often used as well as some suggestions on how to remove the need for them.</li>
+<li>And this method is economical because we do not have to define multiple variables or multiple parameters in calling master business functions</li>
+<li>&lt;Internal_Only&gt;Similar implementation can be found at &lt;Note 983617.1&gt; - E1: 42: How to Debug the Value Returned by B4205100 (Sales Order ALPH String Functions)&lt;/Internal_Only&gt;</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<ul>
+<li>B4205100 - Sales Order ALPH String Functions (refer to &lt;Document 983617.1&gt; - <em>E1: 42: How to Debug the Value Returned by B4205100 (Sales Order ALPH String Functions)</em></li>
+<ul>
+<li>B4205101 - Sales Order Edit Line SOEF String Functions &lt;Document 1375749.1&gt; - <em>E1: 42: Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags</em></li>
+<li>B4205102 - Sales Order End Doc SOEF String Functions</li>
+<li>B4205103 - Sales Order Begin Doc SOEF String Functions</li>
+<li>B4205104 - Sales Order PreProcessor SOEF String Functions</li>
+</ul>
+</ul>
+<p><br /><br /></p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>1375749.1_salesflags and b4205101<span class="docInternalContent"><big><span style="text-decoration: underline;">CAUTION</span>: <small>As description reads this functions are to control internal routine of sales order edit line (SOEL) along with cache/workfiles (F42UI11 and F42UI12). Do not try to modify any of existing routines. Rather this note is to guide how to analyze logs you may have and relationship among tables.</small></big><br /> <br /> </span>This note is the first part of internal flag in Sales Order Processing:-</p>
+<ul>
+<li>B4205100 - Sales Order ALPH String Functions</li>
+<ul>
+<li>B4205101 - Sales Order Edit Line SOEF String Functions</li>
+<li>B4205102 - Sales Order End Doc SOEF String Functions</li>
+<li>B4205103 - Sales Order Begin Doc SOEF String Functions</li>
+<li>B4205104 - Sales Order PreProcessor SOEF String Functions</li>
+</ul>
+</ul>
+<p>Internal Flags and Sales Order Master Fusiness Functions:</p>
+<table style="border-collapse: collapse; width: 894px; height: 203px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 89pt;" width="118" /> <col style="width: 178pt;" width="237" /> <col style="width: 144pt;" width="192" /> <col style="width: 158pt;" width="210" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 145px; background-color: #009900; color: white;">Routine</th><th style="width: 231px; background-color: #009900; color: white;">Hook-up by</th><th style="width: 256px; background-color: #009900; color: white;">Internal Flags</th><th style="width: 211px; background-color: #009900; color: white;">Remarks</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 145px;">F4211FSBeginDoc</td>
+<td style="width: 231px;">(form) Set Focus on Grid in W4210A - Order Detail<br /> Or, <br /> OK Button clicked in W4210G - Order Header<br /> Or, when routine requires validate/default header information</td>
+<td style="width: 256px;">B4205103 - Sales Order Begin Doc SOEF String Functions</td>
+<td style="width: 211px;">Cache F42UI01, F42UI02 (not a work file)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 145px;" height="17">F4211FSEditLinePreProcess</td>
+<td style="width: 231px;">(grid) Write Grid Line-Before in W4210A<br /> Or routine requires to get new value before Edit Line gets called</td>
+<td style="width: 256px;">B4205104 - Sales Order PreProcessor SOEF String Functions</td>
+<td style="width: 211px;">This process is unique in Sales Order Entry routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 145px;" height="17">F4211FSEditLine</td>
+<td style="width: 231px;">(grid) Row Exit &amp; Changed - Asynch in W4210A<br /> or when it needs to validate/defaults order detail information</td>
+<td style="width: 256px;">B4205101 - Sales Order Edit Line SOEF String Functions</td>
+<td style="width: 211px;">Cache F42UI11 and F42UI12<br /> * B4200311 (internal function called by B4200310)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 145px;" height="17">F4211EditDoc</td>
+<td style="width: 231px;">(form) OK Button clicked</td>
+<td style="width: 256px;">&nbsp;</td>
+<td style="width: 211px;">* B4200312</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 145px;" height="17">F4211FSEndDoc</td>
+<td style="width: 231px;">(form) Post OK button clicked</td>
+<td style="width: 256px;">B4205102 - Sales Order End Doc SOEF String Functions</td>
+<td style="width: 211px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 145px;" height="17">&nbsp;&nbsp; F4211ClearWorkFile</td>
+<td style="width: 231px;">Cancel button clicked<br /> or through F4211FSEndDoc</td>
+<td style="width: 256px;">&nbsp;</td>
+<td style="width: 211px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Refer to &lt;Document 1265902.1&gt; - E1: BSFN: Master Business Function in EnterpriseOne</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4205101</h3>
+<p><span class="docInternalContent">This note is to describe <strong>B4205101 </strong>- </span>Sales Order Edit Line SOEF String Functions, which is made up of multiple routine to store controlling flag internally<br /> <br /> <span style="text-decoration: underline;">SOEF - Sales Order Entry MBF Internal Flags</span><br /> This field is broken down into 30 different flags which are passed in and out of the sales order entry MBF - F4211 Begin Doc, F4211 Pre Processor, F4211 Edit Line, and F4211 End Doc.<br /> <br /> For example,</p>
+<ul>
+<li>JDEDEBUG log F4211FSEditLine (B4200310/B4200311 may contain parameter)</li>
+<ul>
+<li>IN-&gt;[154] &lt;Item&gt;: szSOEMBFInternalFlags&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;type&gt;: STRING&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;Value&gt;: [000000000000000000000000000000]</li>
+</ul>
+<li>Or F42UI12 (Sales Order Detail Cache 2 (MBF)).zdsoel may contain data as below example</li>
+</ul>
+<table style="border-collapse: collapse; width: 633px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 123pt;" width="164" /> <col style="width: 17pt;" span="30" width="23" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 123pt;">Index/nIndexPosition</td>
+<td style="width: 17pt;" align="right" width="23">0</td>
+<td style="width: 17pt;" align="right" width="23">1</td>
+<td style="width: 17pt;" align="right" width="23">2</td>
+<td style="width: 17pt;" align="right" width="23">3</td>
+<td style="width: 17pt;" align="right" width="23">4</td>
+<td style="width: 17pt;" align="right" width="23">5</td>
+<td style="width: 17pt;" align="right" width="23">6</td>
+<td style="width: 17pt;" align="right" width="23">7</td>
+<td style="width: 17pt;" align="right" width="23">8</td>
+<td style="width: 17pt;" align="right" width="23">9</td>
+<td style="width: 17pt;" align="right" width="23">10</td>
+<td style="width: 17pt;" align="right" width="23">11</td>
+<td style="width: 17pt;" align="right" width="23">12</td>
+<td style="width: 17pt;" align="right" width="23">13</td>
+<td style="width: 17pt;" align="right" width="23">14</td>
+<td style="width: 17pt;" align="right" width="23">15</td>
+<td style="width: 17pt;" align="right" width="23">16</td>
+<td style="width: 17pt;" align="right" width="23">17</td>
+<td style="width: 17pt;" align="right" width="23">18</td>
+<td style="width: 17pt;" align="right" width="23">19</td>
+<td style="width: 17pt;" align="right" width="23">20</td>
+<td style="width: 17pt;" align="right" width="23">21</td>
+<td style="width: 17pt;" align="right" width="23">22</td>
+<td style="width: 17pt;" align="right" width="23">23</td>
+<td style="width: 17pt;" align="right" width="23">24</td>
+<td style="width: 17pt;" align="right" width="23">25</td>
+<td style="width: 17pt;" align="right" width="23">26</td>
+<td style="width: 17pt;" align="right" width="23">27</td>
+<td style="width: 17pt;" align="right" width="23">28</td>
+<td style="width: 17pt;" align="right" width="23">29</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">SOEL</td>
+<td style="vertical-align: top;">1</td>
+<td style="vertical-align: top;">2</td>
+<td style="vertical-align: top;">3</td>
+<td style="vertical-align: top;">4</td>
+<td style="vertical-align: top;">5</td>
+<td style="vertical-align: top;">6</td>
+<td style="vertical-align: top;">7</td>
+<td style="vertical-align: top;">8</td>
+<td style="vertical-align: top;">9</td>
+<td style="vertical-align: top;">10</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">12</td>
+<td style="vertical-align: top;">13</td>
+<td style="vertical-align: top;">14</td>
+<td style="vertical-align: top;">15</td>
+<td style="vertical-align: top;">16</td>
+<td style="vertical-align: top;">17</td>
+<td style="vertical-align: top;">18</td>
+<td style="vertical-align: top;">19</td>
+<td style="vertical-align: top;">20</td>
+<td style="vertical-align: top;">21</td>
+<td style="vertical-align: top;">22</td>
+<td style="vertical-align: top;">23</td>
+<td style="vertical-align: top;">24</td>
+<td style="vertical-align: top;">25</td>
+<td style="vertical-align: top;">26</td>
+<td style="vertical-align: top;">27</td>
+<td style="vertical-align: top;">28</td>
+<td style="vertical-align: top;">29</td>
+<td style="vertical-align: top;">30</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">szSOEMBFInternalFlags</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Example</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">1</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">2</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">R</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">2</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+<td style="vertical-align: top;">0</td>
+</tr>
+</tbody>
+</table>
+<p>How to interpret above example?</p>
+<ul>
+<li>szSOEMBFInternalFlags[1] = 1 (SUPPRESS_FREE_GOOD_SOEL01, 1 - TRUE_1_SOEL)</li>
+<li>szSOEMBFInternalFlags[10] = 2 (PRICING_EDITS_ON_OFF_SOEL10, 2 - EDITS_OFF_2_SOEL10)</li>
+<li>szSOEMBFInternalFlags[16] = R (EL_CALLED_FROM_SOEL16, R - R42750_R_SOEL16)</li>
+<li>szSOEMBFInternalFlags[23] = 2 (PRICING_ON_OVERRIDE, 2 - NEW_OVERRIDE_2_SOEL23)</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>This is to show how to interpret message in szSOEMBFInternalFlag so it may not reflect actual data (eigher a physical table or in the log)</li>
+<li>Based on string definition: szEditLineSOEMBFFlags[31],</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; szEditLineSOEMBFFlags[0] is SOEL01 (and 0 is position or index)</li>
+<li>&nbsp;&nbsp;&nbsp; szEditLineSOEMBFFlags[31] is NULL Character '\' to indicate the termination of character array (or String)</li>
+</ul>
+<li>This has to be initialized as INITIALIZED_SOEF&nbsp;&nbsp; _J("000000000000000000000000000000")</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p><br /> <br /> <br /> Below table shows what is usage of internal edit line flag:<br /> Note: If it does not have defined macros, which has to be understood as below,</p>
+<ul>
+<li>0 - FALSE_0_SOEL</li>
+<li>1 - TRUE_1_SOEL</li>
+</ul>
+<p>(These macros should be used for a flag if and only if the only valid values for the flag are '0' and '1'. If the flag has any other values besides these then create a set of macros specifically for it, including '0' and '1' if&nbsp; they are valid.)</p>
+<table style="border-collapse: collapse; height: 2619px; width: 994px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 81pt;" width="108" /> <col style="width: 161pt;" width="214" /> <col style="width: 171pt;" width="228" /> <col style="width: 65pt;" width="87" /> <col style="width: 48pt;" width="64" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl64" style="height: 12.75pt; width: 46px; background-color: #cccccc;">Source&nbsp; Module</th><th class="xl64" style="width: 149px; background-color: #cccccc;">Function&nbsp; Name</th><th class="xl64" style="width: 208px; background-color: #cccccc;">Others</th><th class="xl64" style="width: 322px; background-color: #cccccc;">Values/Macro</th><th class="xl64" style="width: 177px; background-color: #cccccc;">Enhancement/Change</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 149px;">I4205101_GetController</td>
+<td class="xl66" style="width: 208px;">Internal function</td>
+<td style="width: 322px;">This internal fuction performs all the "Get" logic. Each "Get" function should consist of nothing more than a call to this internal function, passing in its unique index position.</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 149px;">I4205101_SetController</td>
+<td class="xl66" style="width: 208px;">Internal function</td>
+<td style="width: 322px;">This internal fuction performs most of the "Set" logic. Each "Set" function should consist of logic to check that the cValue passed in is a valid value, and then a call to this internal function, passing in its unique index&nbsp; position.</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 149px;">I4205101_SOELStringValidLength</td>
+<td class="xl66" style="width: 208px;">Internal function</td>
+<td style="width: 322px;">This internal fuction validates that the SOEL string passed in is 30 characters long.</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">InitializeSalesOrderSOEFString</td>
+<td class="xl65" style="width: 208px;">INITIALIZED_SOEF</td>
+<td style="width: 322px;">_J("000000000000000000000000000000")</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetSuppressFreeGoodSOEL01</td>
+<td class="xl65" style="width: 208px;">SUPPRESS_FREE_GOOD_SOEL01</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetSuppressFreeGoodSOEL01</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetSuppressBasePriceSOEL02</td>
+<td class="xl65" style="width: 208px;">SUPPRESS_BASE_PRICE_SOEL02</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetSuppressBasePriceSOEL02</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetSubstItemWriteHistSOEL03</td>
+<td class="xl65" style="width: 208px;">SUBST_ITEM_WRITE_HIST_SOEL03</td>
+<td style="width: 322px;">0 - DO_NOT_WRITE_0_SOEL03<br /> 1 - WRITE_F40UI74_1_SOEL03</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetSubstItemWriteHistSOEL03</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetSuppressVIDAccumSOEL04</td>
+<td class="xl65" style="width: 208px;">SUPPRESS_VID_ACCUM_SOEL04</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetSuppressVIDAccumSOEL04</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetPriceListModeSOEL05</td>
+<td class="xl65" style="width: 208px;">PRICE_LIST_MODE_SOEL05</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetPriceListModeSOEL05</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetPEFJSourceSOEL06</td>
+<td class="xl65" style="width: 208px;">PEFJ_SOURCE_SOEL06</td>
+<td style="width: 322px;">' ' - TRANSACTION_BL_SOEL06<br /> 0 - DEFAULT_0_SOEL06<br /> 1 - REQUESTED_1_SOEL06<br /> 2 - PROMISED_SHIP_2_SOEL06<br /> 3 - ORIGINAL_SHIP_3_SOEL06<br /> 4 - ACTUAL_SHIP_4_SOEL06<br /> 5 - SYSTEM_5_SOEL06<br /> 6 - INVOICE_6_SOEL06<br /> O - OVERRIDE_O_SOEL06<br /> B - RECALCULATE_B_SOEL06</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetPEFJSourceSOEL06</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetActivateAuditLogSOEL08</td>
+<td class="xl65" style="width: 208px;">ACTIVATE_AUDIT_LOG_SOEL08</td>
+<td style="width: 322px;">0 - OFF_0_SOEL08<br /> 1 - AUDIT_LOG_ONLY_1_SOEL08<br /> 2 - LOG_AND_APPROVAL_2_SOEL08</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetActivateAuditLogSOEL08</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetUpsellCacheExistsSOEL09</td>
+<td class="xl65" style="width: 208px;">UPSELL_CACHE_EXISTS_SOEL09</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetUpsellCacheExistsSOEL09</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetPricingEditsOnOffSOEL10</td>
+<td class="xl65" style="width: 208px;">PRICING_EDITS_ON_OFF_SOEL10</td>
+<td style="width: 322px;">0 - MBF_DECIDES_0_SOEL10<br /> 1 - EDITS_ON_1_SOEL10<br /> 2 - EDITS_OFF_2_SOEL10<br /> 3 - EDITS_OFF_3_ADD_SOEL10<br /> 4 - COST_EDITS_OFF_4_SOEL10<br /> 5 - COSTPRICE_EDITS_OFF_5_SOEL10</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetPricingEditsOnOffSOEL10</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetBypassCommissionsSOEL11</td>
+<td class="xl65" style="width: 208px;">BYPASS_COMMISSIONS_SOEL11</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetBypassCommissionsSOEL11</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl65" style="width: 149px;">&nbsp;</td>
+<td class="xl67" style="width: 208px;">FROM_R41310_SOEL12</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetPendingFlagSOEL15</td>
+<td class="xl65" style="width: 208px;">GET_PENDING_FLAG_SOEL15</td>
+<td style="width: 322px;">1 - PENDING_ADD_SOEL15<br /> 2 - PENDING_CHANGE_SOEL15</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetPendingFlagSOEL15</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetELCalledFromSOEL16</td>
+<td class="xl65" style="width: 208px;">EL_CALLED_FROM_SOEL16</td>
+<td style="width: 322px;">Note: if adding a new valid value for position 16 of any of the SOEL, SOED, SOBD or SOPP strings, then that same value should be added to the header and source file of all other the three strings (B4205101 through B4205104) in order to prevent future confusion arising from the same value having different meanings for different flags.<br /> 0 - UNKNOWN_0_SOEL16<br /> 1 - EPM_COGS_1_SOEL16<br /> 2 - EPM_PROJ_WKBENCH_2_SOEL16<br /> 3 - SO_ENTRY_3_SOEL16<br /> 4 - RECUR_ORD_ENTRY_4_SOEL16<br /> 5 - EDI_SO_INQUIRY_5_SOEL16<br /> 6 - EDI_QUOTE_INQ_6_SOEL16<br /> 7 - EDI_CHANGE_ORDER_7_SOEL16<br /> 8 - R42950_8_SOEL16<br /> 9 - CSS_BLANKET_RLS_9_SOEL16<br /> R - R42750_R_SOEL16<br /> T - R45650_APPROVALS_T_SOEL16<br /> X - P42260_X_SOEL16<br /> Z - R4210Z_Z_SOBD16</td>
+<td style="width: 177px;">9 - &lt;Bug 10805884&gt;: RLS BLANKET ORDER ENHANCEMENT - SAR: 6519751<br /> <br /> R - &lt;Bug 10950448&gt;: AUTOMATIC BASKET RE-PRICING CL - SAR: 8379625<br /> <br /> T - &lt;Bug 11036133&gt;: ITERATION 9-PRICING REPRICE - SAR: 8955609<br /> <br /> X - &lt;Bug 11052630&gt;: ITERATION 17-MISCELLANEOUS ITE - SAR: 8972753<br /> <br /> Z - &lt;Bug 11036178&gt;: ITERATION 12-RECURRING ORDER E - SAR: 8955612</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetELCalledFromSOEL16</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl65" style="width: 149px;">&nbsp;</td>
+<td class="xl67" style="width: 208px;">GET_TRANS_ACTION_SOEL19</td>
+<td style="width: 322px;">1 - TRANSACTN_UPDATE_CFG_SOEL19</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetManualPriceAdjsSOEL20</td>
+<td class="xl65" style="width: 208px;">MANUAL_PRICE_ADJS_SOEL20</td>
+<td style="width: 322px;">0 - PRESERVE_F40UI74_0_SOEL20<br /> 1 - DO_NOT_PRESERVE_1_SOEL20<br /> 2 - PRESERVE_F4074_2_SOEL20</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetManualPriceAdjsSOEL20</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetCSSItemErrorSOEL21</td>
+<td class="xl65" style="width: 208px;">CSS_ITEM_ERROR_SOEL21</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&lt;Bug 12510062&gt;: CRM 3.0 CSS - SO ADD AUTO DEV - SAR: 6545212</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetCSSItemErrorSOEL21</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetPickDateEnteredSOEL22</td>
+<td class="xl65" style="width: 208px;">PICK_DATE_ENTERED_SOEL22</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&lt;Bug 10917216&gt;: NEW FG LINE ON DIFF SHIPMENT - SAR: 7999777</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetPricingOnOverrideFlagSOEL23</td>
+<td class="xl65" style="width: 208px; font-weight: bold;">PRICING_ON_OVERRIDE</td>
+<td style="width: 322px;">0 - DEFAULT_0_SOEL23<br /> 1 - EXISTING_OVERRIDE_1_SOEL23 <br /> 2 - NEW_OVERRIDE_2_SOEL23<br /> <br /> Note: This flag will be repeating in F4211.SO18 and PROV (0 or 1)<br /> SOEL23:<br /> 1 - overridden by routine<br /> 2 - overridden by user mannually</td>
+<td style="width: 177px;">&lt;Bug 10897452&gt;: WINE PRICING-PRICE OVERRIDE - SAR: 7765006</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetPricingOnOverrideFlagSOEL23</td>
+<td class="xl65" style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl65" style="width: 149px;">&nbsp;</td>
+<td class="xl65" style="width: 208px;">COST_OVERRIDE</td>
+<td style="width: 322px;">0 - DEFAULT_0_SOEL24<br /> 1 - EXISTING_OVERRIDE_1_SOEL24<br /> 2 - NEW_OVERRIDE_2_SOEL24</td>
+<td style="width: 177px;">&lt;Bug 10897452&gt;: WINE PRICING-PRICE OVERRIDE - SAR: 7765006</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetTaxFieldEnteredSOEL25</td>
+<td class="xl65" style="width: 208px;">TAX_FIELD_ENTERED_SOEL25</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&lt;Bug 10948028&gt;: SOE QUANTITY/DATE PROPAGATION - SAR: 8350785</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetTaxFieldEnteredSOEL25</td>
+<td style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">GetItemGroupOverrideFlagSOEL26</td>
+<td style="width: 208px;">ITEM_GROUP_OVERRIDE_SOEL26</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&lt;Bug 11008011&gt;: BLANK ITEM PRICE GROUP P42101 - SAR: 8925996</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205101</td>
+<td class="xl65" style="width: 149px;">SetItemGroupOverrideFlagSOEL26</td>
+<td style="width: 208px;">&nbsp;</td>
+<td style="width: 322px;">&nbsp;</td>
+<td style="width: 177px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Important Note:<br /><ol>
+<li>Create the function templates using OMW Function Design Follow naming standards. Use datastructure D4205101A.</li>
+<li>Add the #define constant for the index postion to the header file. (The name of this constant should match the function names.)</li>
+<li>Add #define constants for the valid flag values to the header file if there are valid values besides '0' and '1'. Follow name standards.</li>
+<li>For the Get function, copy and paste the body of an existing Get function, and just change the index passed into I4205101_GetController.</li>
+<li>For the Set function, copy and paste the body of an existing Set function. Change the index passed into I4205101_SetController, and the switch construct that checks the valid values.</li>
+</ol></div>
+<p>&nbsp;</p>
+<hr />
+<p><br /> <br /><br />B4205101 - InitializeSalesOrderSOEFString (Initialize Sales Order SOEF String)</p>
+<ul>
+<li>Function: This function is to initialize szSOEMBFInternalFlags INITIALIZED_SOEF&nbsp;&nbsp; _J("000000000000000000000000000000")</li>
+<li>Parameters:</li>
+<ul>
+<li>Data Structure: D4205101B - SOEF String Initialization Datastructure</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 710px; height: 65px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 162pt;" width="216" /> <col style="width: 48pt;" width="64" /> <col style="width: 33pt;" width="44" /> <col style="width: 26pt;" width="34" /> <col style="width: 48pt;" width="64" /> <col style="width: 197pt;" width="262" /> </colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="height: 15.75pt; width: 154px; background-color: #cccccc;">Structure Member Name</th><th class="xl66" style="width: 20px; background-color: #cccccc;">Data Type</th><th class="xl66" style="width: 21px; background-color: #cccccc;">Req</th><th class="xl66" style="width: 24px; background-color: #cccccc;">I/O</th><th class="xl66" style="width: 44px; background-color: #cccccc;">Alias</th><th class="xl66" style="width: 358px; background-color: #cccccc;">Usage</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 154px;" height="17">szSOEMBFInternalFlags[31]</td>
+<td style="width: 20px;">JCHAR</td>
+<td style="width: 21px;">&nbsp;</td>
+<td style="width: 24px;">I</td>
+<td style="width: 44px;">SOEF</td>
+<td style="width: 358px;">Initialized value '0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''0''/' and the last character is to be NULL Character</td>
+</tr>
+</tbody>
+</table>
+<p>Detail Routine: This is to initialize flags in the beginning of each transactions<br /> <br /> <br /> B4205101 - Others (refer BSFN listed above)</p>
+<ul>
+<li>Functions: Get a specific flag and if it does not exist set flag by calling API I4205101_GetController and I4205101_SetController respectively</li>
+<li>Parameters:</li>
+<ul>
+<li>Data Structure: D4205101A - Edit Line SOEF String Get and Set Datastructure</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 709px; height: 87px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 162pt;" width="216" /> <col style="width: 48pt;" width="64" /> <col style="width: 33pt;" width="44" /> <col style="width: 26pt;" width="34" /> <col style="width: 48pt;" width="64" /> <col style="width: 197pt;" width="262" /> </colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="height: 15.75pt; width: 137px; background-color: #cccccc;">Structure Member Name</th><th class="xl66" style="width: 39px; background-color: #cccccc;">Data Type</th><th class="xl66" style="width: 33px; background-color: #cccccc;">Req</th><th class="xl66" style="width: 0px; background-color: #cccccc;">I/O</th><th class="xl66" style="width: 52px; background-color: #cccccc;">Alias</th><th class="xl66" style="width: 334px; background-color: #cccccc;">Usage</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">szEditLineSOEMBFFlags[31]</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">SOEF</td>
+<td style="width: 334px;">String value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cValue</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">EV01</td>
+<td style="width: 334px;">A specific character for a certain index</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cErrorCode</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">O</td>
+<td style="width: 52px;">ERRC</td>
+<td style="width: 334px;">Return error if any</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detail Routine: Get or Set a flag after defining position of characters. Detail definition is written above table</li>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p><br /> <br /> <br /> cf., b4205110 - Maintain SOE Line Working Data Cache Source File<br /> This business function source file serves to contain the API-level C functions for the SOE MBF Shared Data Caches for BeginDoc, EditLine and EndDoc.&nbsp; The "public" business function SourceForSOESharedDataCacheAPIs shall not be used by any program because it will not perform any processing, and will not in the foreseeable future.<br /> <br /> The Following C Functions are public functions designed to be called from the SOE MBF source files (B4200310/311) and the SOE Get/Set Business Functions.&nbsp; This source file must be built into the same DLL as the SOE MBF and the SOE Get/Set Business Functions.</p>
+<ul>
+<li>BeginDoc Shared Data Cache APIs (API Name/API Usage)</li>
+<ul>
+<li>CreateSOEBeginDocSharedDataCache/To create the SOE BeginDoc Shared Data Cache</li>
+<li>SetSOEBeginDocSharedDataCache/To set the pointer values in the SOE BeginDoc Shared</li>
+<li>FetchSOEBeginDocSharedDataCache/To fetch a record from the SOE BeginDoc Shared Data Cache</li>
+<li>DestroySOEBeginDocSharedDataCache/To destroy the SOE BeginDoc Shared Data Cache</li>
+</ul>
+<li>EditLine Shared Data Cache APIs (API Name/Usage)</li>
+<ul>
+<li>CreateSOEEditLineSharedDataCache/To create the SOE EditLine Shared Data Cache</li>
+<li>&nbsp;AddSOEEditLineSharedDataCache/To Add the SOE EditLine Shared Data Cache line rcd</li>
+<li>FetchSOEEditLineSharedDataCache/To fetch a SOE EditLine Shared Data Cache record using the Full Key</li>
+<li>DeleteSOEEditLineSharedDataCache/To delete a SOE EditLine Shared Data Cache record using the Full Key</li>
+<li>DestroySOEEditLineSharedDataCache/To destroy the SOE EditLine Shared Data Cache</li>
+</ul>
+<li>&nbsp;EndDoc Shared Data Cache APIs (API Name/API Usage)</li>
+<ul>
+<li>CreateSOEEndDocSharedDataCache/To create the SOE EndDoc Shared Data Cache</li>
+<li>SetSOEEndDocSharedDataCache/To set the pointer values in the SOE EndDoc Shared&nbsp; Data Cache Record</li>
+<li>&nbsp;FetchSOEEndDocSharedDataCache/To fetch a record from the SOE EndDoc Shared Data Cache</li>
+<li>DestroySOEEndDocSharedDataCache/To destroy the SOE EndDoc Shared Data Cache</li>
+</ul>
+</ul>
+<hr />
+<p><br /> <br /> <br /> Below 3 business functions are to describe other internal flags to control the process of Sales Order.<br /> <br /> <span class="docInternalContent"><big></big></span>The way it stores chacter in Character Array (String) are same with different parameter name <span class="docInternalContent">(</span>szEndDocSOEMBFFlags, szBeginDocSOEMBFFlags and szPreProcSOEMBFFlags respectively) as below,<span class="docInternalContent"></span></p>
+<table style="border-collapse: collapse; width: 633px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 123pt;" width="164" /> <col style="width: 17pt;" span="30" width="23" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 123pt;">Index/nIndexPosition</td>
+<td style="width: 17pt;" align="right" width="23">0</td>
+<td style="width: 17pt;" align="right" width="23">1</td>
+<td style="width: 17pt;" align="right" width="23">2</td>
+<td style="width: 17pt;" align="right" width="23">3</td>
+<td style="width: 17pt;" align="right" width="23">4</td>
+<td style="width: 17pt;" align="right" width="23">5</td>
+<td style="width: 17pt;" align="right" width="23">6</td>
+<td style="width: 17pt;" align="right" width="23">7</td>
+<td style="width: 17pt;" align="right" width="23">8</td>
+<td style="width: 17pt;" align="right" width="23">9</td>
+<td style="width: 17pt;" align="right" width="23">10</td>
+<td style="width: 17pt;" align="right" width="23">11</td>
+<td style="width: 17pt;" align="right" width="23">12</td>
+<td style="width: 17pt;" align="right" width="23">13</td>
+<td style="width: 17pt;" align="right" width="23">14</td>
+<td style="width: 17pt;" align="right" width="23">15</td>
+<td style="width: 17pt;" align="right" width="23">16</td>
+<td style="width: 17pt;" align="right" width="23">17</td>
+<td style="width: 17pt;" align="right" width="23">18</td>
+<td style="width: 17pt;" align="right" width="23">19</td>
+<td style="width: 17pt;" align="right" width="23">20</td>
+<td style="width: 17pt;" align="right" width="23">21</td>
+<td style="width: 17pt;" align="right" width="23">22</td>
+<td style="width: 17pt;" align="right" width="23">23</td>
+<td style="width: 17pt;" align="right" width="23">24</td>
+<td style="width: 17pt;" align="right" width="23">25</td>
+<td style="width: 17pt;" align="right" width="23">26</td>
+<td style="width: 17pt;" align="right" width="23">27</td>
+<td style="width: 17pt;" align="right" width="23">28</td>
+<td style="width: 17pt;" align="right" width="23">29</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">szEndDocSOEMBFFlags</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">x</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+<td style="text-align: left;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szBeginDocSOEMBFFlags</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">x</td>
+<td style="vertical-align: top;">x</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">x</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">x</td>
+<td style="vertical-align: top;">x</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szPreProcSOEMBFFlags</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">x</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>This is to show how to interpret message in szEndDocSOEMBFFlags, szBeginDocSOEMBFFlags and szPreProcSOEMBFFlags so it may not reflect actual data (eigher a physical table or in the log)</li>
+<li>Based on string definition: szEndDocSOEMBFFlags[31],</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; szEndDocSOEMBFFlags[0] is SOEL01 (and 0 is position or index)</li>
+<li>&nbsp;&nbsp;&nbsp; szEndDocSOEMBFFlags[31] is NULL Character '\' to indicate the termination of character array (or String)</li>
+</ul>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4205102</h3>
+<p><span class="docInternalContent"><big><big>B4205102 - F4211FSEndDoc</big></big><br /> </span><br /> Below table shows what is usage of internal edit line flag:<br /> Note: If it does not have defined macros, which has to be understood as below,</p>
+<ul>
+<li>0 - FALSE_0_SOED</li>
+<li>1 - TRUE_1_SOED</li>
+</ul>
+<p>(These macros should be used for a flag if and only if the only valid values for the flag are '0' and '1'. If the flag has any other values besides these then create a set of macros specifically for it, including '0' and '1' if&nbsp; they are valid.)</p>
+<table style="border-collapse: collapse; height: 840px; width: 1072px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 81pt;" width="108" /> <col style="width: 161pt;" width="214" /> <col style="width: 171pt;" width="228" /> <col style="width: 65pt;" width="87" /> <col style="width: 48pt;" width="64" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl64" style="height: 12.75pt; width: 46px; background-color: #cccccc;">Source&nbsp; Module</th><th class="xl64" style="width: 181px; background-color: #cccccc;">Function&nbsp; Name</th><th class="xl64" style="width: 165px; background-color: #cccccc;">Others</th><th class="xl64" style="width: 443px; background-color: #cccccc;">Values/Macro</th><th class="xl64" style="width: 146px; background-color: #cccccc;">Enhancement/Change</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205102_GetController</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction performs all the "Get" logic. Each "Get" function should consist of nothing more than a call to this internal function, passing in its unique index position.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205102_SetController</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction performs most of the "Set" logic. Each "Set" function should consist of logic to check that the cValue passed in is a valid value, and then a call to this internal function, passing in its unique index&nbsp; position.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205102_SOEDStringValidLength</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction validates that the szEndDocSOEMBFFlags string passed in is 30 characters long.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">GetSuppressVIDAccumSOED01</td>
+<td class="xl65" style="width: 165px;">SUPPRESS_VID_ACCUM_SOED01</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">SetSuppressVIDAccumSOED01</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">GetFormModeSOED02</td>
+<td class="xl65" style="width: 165px;">FORM_MODE_SOED02</td>
+<td style="width: 443px;">0 - UNKNOWN_0_SOED02<br /> A - ADD_MODE_A_SOED02<br /> C - CHANGE_MODE_C_SOED02</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">SetFormModeSOED02</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">GetActivateAuditLogSOED08</td>
+<td class="xl65" style="width: 165px;">ACTIVATE_AUDIT_LOG_SOED08</td>
+<td style="width: 443px;">0 - OFF_0_SOED08<br /> 1 - AUDIT_LOG_ONLY_1_SOED08<br /> 2 - LOG_AND_APPROVAL_2_SOED08</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">SetActivateAuditLogSOED08</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">GetOrderTypeFlagSOED11</td>
+<td class="xl65" style="width: 165px;">ORDER_TYPE_ALPH11</td>
+<td style="width: 443px;">2 - DIRECT_SHIP_2_ED11</td>
+<td style="width: 146px;">&lt;Bug 10891889&gt;: ADD'L LINE FOR OD ORDERS - SAR: 7696637</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">SetOrderTypeFlagSOED11</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">GetPendingFlagSOED15</td>
+<td class="xl65" style="width: 165px;">GET_PENDING_FLAG_SOED15</td>
+<td style="width: 443px;">1 - PENDING_ADD_SOED15<br /> 2 - PENDING_CHANGE_SOED15</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">SetPendingFlagSOED15</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">GetEDCalledFromSOED16</td>
+<td class="xl65" style="width: 165px;">ED_CALLED_FROM_SOED16</td>
+<td style="width: 443px;">0 - UNKNOWN_0_SOED16<br /> 1 - EPM_COGS_1_SOED16<br /> 2 - EPM_PROJ_WKBENCH_2_SOED16<br /> 3 - SO_ENTRY_3_SOED16<br /> 4 - RECUR_ORD_ENTRY_4_SOED16<br /> 5 - EDI_SO_INQUIRY_5_SOED16<br /> 6 - EDI_QUOTE_INQ_6_SOED16<br /> 7 - EDI_CHANGE_ORDER_7_SOED16<br /> 8 - R42950_8_SOED16<br /> 9 - CSS_BLANKET_RLS_9_SOED16<br /> R - R42750_R_SOED16<br /> T - R45650_T_SOED16<br /> X - P42260_X_SOED16<br /> Z - R4210Z_Z_SOBD16</td>
+<td style="width: 146px;">9 - &lt;Bug 10805884&gt;: RLS BLANKET ORDER ENHANCEMENT - SAR: 6519751<br /> <br /> T - &lt;Bug 11036133&gt;: ITERATION 9-PRICING REPRICE - SAR: 8955609<br /> &nbsp;<br /> X - &lt;Bug 11052630&gt;: ITERATION 17-MISCELLANEOUS ITE - SAR: 8972753<br /> <br /> Z - &lt;Bug 11036178&gt;: ITERATION 12-RECURRING ORDER E - SAR: 8955612</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205102</td>
+<td class="xl65" style="width: 181px;">SetEDCalledFromSOED16</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Function</big></p>
+<ul>
+<li>Functions: Get a specific flag and if it does not exist set flag by calling API I4205101_GetController and I4205101_SetController respectively</li>
+<li>Parameters:</li>
+<ul>
+<li>Data Structure: D4205102A - End Doc SOEF String Get and Set Datastructure</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 709px; height: 87px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 162pt;" width="216" /> <col style="width: 48pt;" width="64" /> <col style="width: 33pt;" width="44" /> <col style="width: 26pt;" width="34" /> <col style="width: 48pt;" width="64" /> <col style="width: 197pt;" width="262" /> </colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="height: 15.75pt; width: 137px; background-color: #cccccc;">Structure Member Name</th><th class="xl66" style="width: 39px; background-color: #cccccc;">Data Type</th><th class="xl66" style="width: 33px; background-color: #cccccc;">Req</th><th class="xl66" style="width: 0px; background-color: #cccccc;">I/O</th><th class="xl66" style="width: 52px; background-color: #cccccc;">Alias</th><th class="xl66" style="width: 334px; background-color: #cccccc;">Usage</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">szEndDocSOEMBFFlags[31]</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">SOEF</td>
+<td style="width: 334px;">String value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cValue</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">EV01</td>
+<td style="width: 334px;">A specific character for a certain index</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cErrorCode</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">O</td>
+<td style="width: 52px;">ERRC</td>
+<td style="width: 334px;">Return error if any</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detail Routine: Get or Set a flag after defining position of characters. Detail definition is written above table</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4205103</h3>
+<p><span class="docInternalContent"><big><big></big></big></span><big><big>B4205103 - F4211FSBeginDoc</big></big><span class="docInternalContent"><br /> </span><br /> Below table shows what is usage of internal edit line flag:<br /> Note: If it does not have defined macros, which has to be understood as below,</p>
+<ul>
+<li>0 - FALSE_0_SOED</li>
+<li>1 - TRUE_1_SOED</li>
+</ul>
+<p>(These macros should be used for a flag if and only if the only valid values for the flag are '0' and '1'. If the flag has any other values besides these then create a set of macros specifically for it, including '0' and '1' if&nbsp; they are valid.)</p>
+<table style="border-collapse: collapse; height: 660px; width: 1072px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 81pt;" width="108" /> <col style="width: 161pt;" width="214" /> <col style="width: 171pt;" width="228" /> <col style="width: 65pt;" width="87" /> <col style="width: 48pt;" width="64" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl64" style="height: 12.75pt; width: 46px; background-color: #cccccc;">Source&nbsp; Module</th><th class="xl64" style="width: 181px; background-color: #cccccc;">Function&nbsp; Name</th><th class="xl64" style="width: 165px; background-color: #cccccc;">Others</th><th class="xl64" style="width: 443px; background-color: #cccccc;">Values/Macro</th><th class="xl64" style="width: 146px; background-color: #cccccc;">Enhancement/Change</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205103_GetController</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction performs all the "Get" logic. Each "Get" function should consist of nothing more than a call to this internal function, passing in its unique index position.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205103_SetController</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction performs most of the "Set" logic. Each "Set" function should consist of logic to check that the cValue passed in is a valid value, and then a call to this internal function, passing in its unique index&nbsp; position.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205103_SOBDStringValidLength</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction validates that the szBeginDocSOEMBFFlags string passed in is 30 characters long.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">GetUseCustomerSetSOBD01</td>
+<td class="xl65" style="width: 165px;">USE_CUSTOMER_SET_SOBD01</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">SetUseCustomerSetSOBD01</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">GetSprsPOValidationSOBD02</td>
+<td class="xl65" style="width: 165px;">SPRS_PO_VALIDATION_SOBD02</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">SetSprsPOValidationSOBD02</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">GetBypassCommissionsSOBD11</td>
+<td class="xl65" style="width: 165px;">BYPASS_COMMISSIONS_SOBD11</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">SetBypassCommissionsSOBD11</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">GetPendingFlagSOBD15</td>
+<td class="xl65" style="width: 165px;">GET_PENDING_FLAG_SOBD15</td>
+<td style="width: 443px;">1 - PENDING_ADD_SOBD15<br /> 2 - PENDING_CHANGE_SOBD15</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">SetPendingFlagSOBD15</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">GetBDCalledFromSOBD16</td>
+<td class="xl65" style="width: 165px;">BD_CALLED_FROM_SOBD16</td>
+<td style="width: 443px;">0 - UNKNOWN_0_SOBD16<br /> 1 - EPM_COGS_1_SOBD16<br /> 2 - EPM_PROJ_WKBENCH_2_SOBD16<br /> 3 - SO_ENTRY_3_SOBD16<br /> 4 - RECUR_ORD_ENTRY_4_SOBD16<br /> 5 - EDI_SO_INQUIRY_5_SOBD16<br /> 6 - EDI_QUOTE_INQ_6_SOBD16<br /> 7 - EDI_CHANGE_ORDER_7_SOBD16<br /> 8 - R42950_8_SOBD16<br /> 9 - CSS_BLANKET_RLS_9_SOBD16<br /> R - R42750_R_SOBD16<br /> T - R45650_T_SOBD16<br /> X - P42260_X_SOBD16<br /> Z - R4210Z_Z_SOBD16</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">SetBDCalledFromSOBD16</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">SetSuppressTaxedPricesSOBD17</td>
+<td class="xl65" style="width: 165px;">SUPPRESS_TAXED_PRICES_SOBD17</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&lt;Bug 11052612&gt;: ITERATION 14-BSSV AND REAL T E - SAR: 8972748</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205103</td>
+<td class="xl65" style="width: 181px;">GetSuppressTaxedPricesSOBD17</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Function</big></p>
+<ul>
+<li>Functions: Get a specific flag and if it does not exist set flag by calling API I4205103_GetController and I4205103_SetController respectively</li>
+<li>Parameters:</li>
+<ul>
+<li>Data Structure: D4205103A - End Doc SOEF String Get and Set Datastructure</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 709px; height: 87px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 162pt;" width="216" /> <col style="width: 48pt;" width="64" /> <col style="width: 33pt;" width="44" /> <col style="width: 26pt;" width="34" /> <col style="width: 48pt;" width="64" /> <col style="width: 197pt;" width="262" /> </colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="height: 15.75pt; width: 137px; background-color: #cccccc;">Structure Member Name</th><th class="xl66" style="width: 39px; background-color: #cccccc;">Data Type</th><th class="xl66" style="width: 33px; background-color: #cccccc;">Req</th><th class="xl66" style="width: 0px; background-color: #cccccc;">I/O</th><th class="xl66" style="width: 52px; background-color: #cccccc;">Alias</th><th class="xl66" style="width: 334px; background-color: #cccccc;">Usage</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">szBeginDocSOEMBFFlags[31]</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">SOEF</td>
+<td style="width: 334px;">String value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cValue</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">EV01</td>
+<td style="width: 334px;">A specific character for a certain index</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cErrorCode</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">O</td>
+<td style="width: 52px;">ERRC</td>
+<td style="width: 334px;">Return error if any</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detail Routine: Get or Set a flag after defining position of characters. Detail definition is written above table</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">B4205104</h3>
+<p><span class="docInternalContent"><big><big></big></big></span><big><big>B4205104 - F4211FSEditLinePreProcess</big></big><span class="docInternalContent"><br /> </span><br /> Below table shows what is usage of internal edit line flag:<br /> Note: If it does not have defined macros, which has to be understood as below,</p>
+<ul>
+<li>0 - FALSE_0_SOED</li>
+<li>1 - TRUE_1_SOED</li>
+</ul>
+<p>(These macros should be used for a flag if and only if the only valid values for the flag are '0' and '1'. If the flag has any other values besides these then create a set of macros specifically for it, including '0' and '1' if&nbsp; they are valid.)</p>
+<table style="border-collapse: collapse; height: 463px; width: 1072px;" border="1" cellspacing="2" cellpadding="2"><colgroup><col style="width: 81pt;" width="108" /> <col style="width: 161pt;" width="214" /> <col style="width: 171pt;" width="228" /> <col style="width: 65pt;" width="87" /> <col style="width: 48pt;" width="64" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th class="xl64" style="height: 12.75pt; width: 46px; background-color: #cccccc;">Source&nbsp; Module</th><th class="xl64" style="width: 181px; background-color: #cccccc;">Function&nbsp; Name</th><th class="xl64" style="width: 165px; background-color: #cccccc;">Others</th><th class="xl64" style="width: 443px; background-color: #cccccc;">Values/Macro</th><th class="xl64" style="width: 146px; background-color: #cccccc;">Enhancement/Change</th></tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205104_GetController</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction performs all the "Get" logic. Each "Get" function should consist of nothing more than a call to this internal function, passing in its unique index position.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205104_SetController</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction performs most of the "Set" logic. Each "Set" function should consist of logic to check that the cValue passed in is a valid value, and then a call to this internal function, passing in its unique index&nbsp; position.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="height: 12.75pt; width: 46px;" height="17">&nbsp;</td>
+<td class="xl66" style="width: 181px;">I4205104_SOPPStringValidLength</td>
+<td class="xl66" style="width: 165px;">Internal function</td>
+<td style="width: 443px;">This internal fuction validates that the szPreProcSOEMBFFlags string passed in is 30 characters long.</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205104</td>
+<td class="xl65" style="width: 181px;">GetPPCalledFromSOPP16</td>
+<td class="xl65" style="width: 165px;">PP_CALLED_FROM_SOPP16</td>
+<td style="width: 443px;">0 - UNKNOWN_0_SOPP16<br /> 1 - EPM_COGS_1_SOPP16<br /> 2 - EPM_PROJ_WKBENCH_2_SOPP16<br /> 3 - SO_ENTRY_3_SOPP16<br /> 4 - RECUR_ORD_ENTRY_4_SOPP16<br /> 5 - EDI_SO_INQUIRY_5_SOPP16<br /> 6 - EDI_QUOTE_INQ_6_SOPP16<br /> 7 - EDI_CHANGE_ORDER_7_SOPP16<br /> 8 - R42950_8_SOPP16<br /> 9 - CSS_BLANKET_RLS_9_SOPP16<br /> R - R42750_R_SOPP16<br /> T - R45650_T_SOPP16<br /> X - P42260_X_SOPP16<br /> Z - R4210Z_Z_SOPP16</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt; width: 46px;" height="17">B4205104</td>
+<td class="xl65" style="width: 181px;">SetPPCalledFromSOPP16</td>
+<td class="xl65" style="width: 165px;">&nbsp;</td>
+<td style="width: 443px;">&nbsp;</td>
+<td style="width: 146px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Function</big></p>
+<ul>
+<li>Functions: Get a specific flag and if it does not exist set flag by calling API I4205103_GetController and I4205103_SetController respectively</li>
+<li>Parameters:</li>
+<ul>
+<li>Data Structure: D4205104A - PreProcessor SOEF String Get and Set Datastructure</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 709px; height: 87px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 162pt;" width="216" /> <col style="width: 48pt;" width="64" /> <col style="width: 33pt;" width="44" /> <col style="width: 26pt;" width="34" /> <col style="width: 48pt;" width="64" /> <col style="width: 197pt;" width="262" /> </colgroup>
+<tbody>
+<tr style="height: 15.75pt;"><th class="xl66" style="height: 15.75pt; width: 137px; background-color: #cccccc;">Structure Member Name</th><th class="xl66" style="width: 39px; background-color: #cccccc;">Data Type</th><th class="xl66" style="width: 33px; background-color: #cccccc;">Req</th><th class="xl66" style="width: 0px; background-color: #cccccc;">I/O</th><th class="xl66" style="width: 52px; background-color: #cccccc;">Alias</th><th class="xl66" style="width: 334px; background-color: #cccccc;">Usage</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">szPreProcSOEMBFFlags[31]</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">SOEF</td>
+<td style="width: 334px;">String value</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cValue</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">I/O</td>
+<td style="width: 52px;">EV01</td>
+<td style="width: 334px;">A specific character for a certain index</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 137px;" height="17">cErrorCode</td>
+<td style="width: 39px;">JCHAR</td>
+<td style="width: 33px;">&nbsp;</td>
+<td style="width: 0px;">O</td>
+<td style="width: 52px;">ERRC</td>
+<td style="width: 334px;">Return error if any</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detail Routine: Get or Set a flag after defining position of characters. Detail definition is written above table</li>
+</ul>
+<hr />
+<p><br /> <br /> <br /> <br /> Note: This document is created based on EnterpriseOne application release 9.0 so some flags may be missing from your own system. Last update on 11 Nov 2011</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
