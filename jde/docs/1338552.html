@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Implement Error with Text Substitution</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Implement Error with Text Substitution</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document is to explain how to implement below business functions in interactive application or in other business function to describe meaningful error/warning/information for users additionally this document explains example of callmap.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+<p><strong>Table of Contents:</strong></p>
+<ul>
+<li><a href="#b0800366" alt="TextSubstitutionError" title="TextSubstitutionError">B0800366 - TextSubstitutionError</a></li>
+<li><a href="#b4207010" alt="TextSubstitutionErrorForMultiLine" title="TextSubstitutionErrorForMultiLine">B4207010 - TextSubstitutionErrorForMultLine</a></li>
+<li><a href="#callmap" alt="Example of CallMap" title="Example of CallMap">Example of callmap</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><big><big><a name="b0800366"></a>B0800366 - TextSubstitutionError (Text Substitution Error)</big></big></p>
+<div class="kmnotebox"><span style="color: blue;">This function sets error on the form (form level error) and error remains until the form is closed. Therefore this function cannot be used if error needs to be cleared on the form after error has been corrected on the form.<br />Instead design custom business function described in :<br />&lt;Document 626614.1&gt; E1: DD: Creating a Text Substitution Error Message<br />&lt;Document 1342870.1&gt; E1: FDA: How to Use a Text Substitution Error Message in Form Design Aid?<br /><span style="color: black;"></span></span></div>
+<ul>
+<li><strong>Purpose</strong>: This business function is to enable you to set meaningful error message&nbsp;to appear on screen. You may choose any error code (DD alias) which has one variable (appear as&nbsp;&amp;1 in Item Glossary) or error code up to five variables. Note that this function can be called in application or in other business functions.</li>
+<li><strong>Example Error Code (DD alias</strong>): TEXTSUB with description "&amp;1 &amp;2 &amp;3 &amp;4"</li>
+<li><strong>Parameter</strong></li>
+<ul>
+<li><strong>Data Structure</strong>: D0800366 - Text Substitution Error</li>
+</ul>
+</ul>
+<table style="width: 747px; border-collapse: collapse; height: 208px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 143pt;" width="190" /><col style="width: 48pt;" span="5" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl63" style="width: 149px; color: white; height: 15pt; background-color: #009900;">Parameter Name</th><th class="xl63" style="border-left: medium none; width: 89px; color: white; background-color: #009900;">Data Item</th><th class="xl63" style="border-left: medium none; width: 132px; color: white; background-color: #009900;">Data Type</th><th class="xl63" style="border-left: medium none; width: 50px; color: white; background-color: #009900;">I/O</th><th class="xl63" style="border-left: medium none; width: 54px; color: white; background-color: #009900;">Req</th><th class="xl64" style="border-left: medium none; width: 257px; color: white; background-color: #009900;">Purpose</th></tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szErrorMesssageID[11]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DTAI</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I/O</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">Y</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;Choose Error Code with &amp;1</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">mnErrorCode</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">MATH06</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">O</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSustituionText1[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;Any value which is shorter than 40 characters</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSustituionText2[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSustituionText3[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSustituionText4[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="border-top: medium none; width: 149px; height: 15.75pt;" height="21">szSustituionText5[41]</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>Look for Error ID which has variable&nbsp;&amp;1</li>
+<li>SubstitutionText1 to 5 is optional so depends on your business requirement you may populate it</li>
+</ul>
+</ul>
+<ul>
+<li><strong>Implementation</strong>&nbsp;</li>
+</ul>
+<p>Example (Interactive Application - P4824 Burden Information)</p>
+<div style="margin-left: 40px;"><small></small>&nbsp;<span class="awizStartDelimiter">&nbsp;</span>
+<div class="kmcodeblock" style="margin-left: 40px;"><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">F00095 Reserve Object</span></small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szRcdResObjectID_PID -&gt; BF szNameObject</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SL UserID -&gt; BF szUserId</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cSuppressErrorMessage</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szRecordReserveErrMsg_DTAI &lt;- BF szErrorMessageID</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szReserversNameAlpha_ALPH &lt;- BF szReserversNameAlpha</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szRecordResKey_GENKEY -&gt; BF szGenericKey</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szUniqueIDRRString_GENKEY -&gt; BF szApplication</small><br style="font-style: italic;" /> <br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-weight: bold;"> Text Substitution Error</span></small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "189E" -&gt; BF szErrorMessageID</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szReserversNameAlpha_ALPH -&gt; BF szSubstitutionText1</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szRecordResKey_GENKEY -&gt; BF szSubstitutionText2</small></div>
+&nbsp;</div>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Error ID (DD Alias) TEXTSUB is good example to implement this business function</li>
+<li>This function enable you to populate up to 5 parameters</li>
+<li>Each parameter returns value to &amp;1, &amp;2, &amp;3, &amp;4 and &amp;5</li>
+<li>So depends on the error code you have chosen the number of parameter can be vary</li>
+<li><strong>IMPORTANT</strong>: This function is to stop users from processing a certain transaction. So the error will be remained till you close the opened form. For this reason, this function can not be used to indicate correction of certain information in opened form.</li>
+</ul>
+</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a><br /> <br /> <br /> <br /> <big><big><a name="b4207010"></a>B4207010 - TextSubstitutionErrorForMultLine (Text Substitution Error with Error Mapping)</big></big></p>
+<ul>
+<li><strong>Purpose</strong>: This business function is to describe how &amp;1 and &amp;2 can be utilized which is defined in Generic Text message for DD alias 42B6. Though this business function can be used in different purpose, actual implementation is limitted at this moment.</li>
+<li><strong>Error Code (DD Alias)</strong>: 42B6 with description&nbsp;"Promotional Item Assigned"</li>
+<li><strong>Parameter</strong></li>
+<ul>
+<li><strong>Data Structure</strong>: D4207010 - Text Substitution Error with Error Mapping</li>
+</ul>
+</ul>
+<table style="width: 747px; border-collapse: collapse; height: 208px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 143pt;" width="190" /><col style="width: 48pt;" span="5" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl63" style="width: 149px; color: white; height: 15pt; background-color: #009900;">Parameter Name</th><th class="xl63" style="border-left: medium none; width: 89px; color: white; background-color: #009900;">Data Item</th><th class="xl63" style="border-left: medium none; width: 132px; color: white; background-color: #009900;">Data Type</th><th class="xl63" style="border-left: medium none; width: 50px; color: white; background-color: #009900;">I/O</th><th class="xl63" style="border-left: medium none; width: 54px; color: white; background-color: #009900;">Req</th><th class="xl64" style="border-left: medium none; width: 257px; color: white; background-color: #009900;">Purpose</th></tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szErrorMessageID[11]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DTAI</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">Y</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;42B6</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">mnErrorCode</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">MATH06</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">O</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;N/A</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSubstitutionText1[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;&amp;1</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSubstitutionText2[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;&amp;2</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSubstitutionText3[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;&amp;3</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="border-top: medium none; width: 149px; height: 15pt;" height="20">szSubstitutionText4[41]</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 89px;">DSCA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 132px;">JCHAR</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 50px;">I</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 54px;">&nbsp;</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 257px;">&nbsp;&amp;4</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szSubstitutionText5[41]</td>
+<td style="vertical-align: top;">DSCA</td>
+<td style="vertical-align: top;">JCHAR</td>
+<td style="vertical-align: top;">I</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;&amp;5</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szItemNumber</td>
+<td style="vertical-align: top;">UITM</td>
+<td style="vertical-align: top;">JCHAR</td>
+<td style="vertical-align: top;">I</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">To indicate specific cell value for error</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szGenericText1[31]</td>
+<td style="vertical-align: top;">DESC</td>
+<td style="vertical-align: top;">JCHAR</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">N/A</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szGenericText2[31]</td>
+<td style="vertical-align: top;">DESC</td>
+<td style="vertical-align: top;">JCHAR</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">N/A</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szGenericCharacter1</td>
+<td style="vertical-align: top;">EV01</td>
+<td style="vertical-align: top;">JCHAR</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">N/A</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szGenericCharacter2</td>
+<td style="vertical-align: top;">EV01</td>
+<td style="vertical-align: top;">JCHAR</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">N/A</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szGenericMath1</td>
+<td style="vertical-align: top;">MATH01</td>
+<td style="vertical-align: top;">MATH_NUMERIC</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">N/A</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szGenericMath2</td>
+<td style="vertical-align: top;">MATH01</td>
+<td style="vertical-align: top;">MATH_NUMERIC</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">N/A</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<ul>
+<li><strong>Detail Routine</strong>:</li>
+<ul>
+<li>Look for Error Code which have variable &amp;1, &amp;2 and so on in Generic Text Message</li>
+<li>This function is currently limitted usage for P4210 to handle promotional item</li>
+<li>This warning messsage will be issued when substitute item is promotional item for orders which is not direct ship or transfer order<br /> Promotional Item Assigned</li>
+<li>Generic Text for Error Code 42B6 (Content of the error message):-</li>
+</ul>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Item &amp;1 has been replaced by item &amp;2.<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Item &amp;2 is a promotional item for item &amp;1.</p>
+<ul>
+<li><strong>Implementation</strong></li>
+</ul>
+<p>Example 1 (Interactive Application - P4210 - Sales Order Entry)</p>
+<div style="margin-left: 40px;"><small></small>&nbsp;<span class="awizStartDelimiter">&nbsp;</span>
+<div class="kmcodeblock" style="margin-left: 40px;"><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">Text Substitution Error For Multiple Lines</span></small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "42B6" -&gt; BF szErrorMessageID</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Item Number -&gt; BF szSubstitutionText1</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GB Item Number -&gt; BF szSubstitutionText2</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Item Number -&gt; BF szItemNo</small></div>
+&nbsp;</div>
+<p><br /> Example 2 (Business Function - b4210030):</p>
+<div style="margin-left: 40px;"><small></small>&nbsp;<span class="awizStartDelimiter">&nbsp;</span>
+<div class="kmcodeblock" style="margin-left: 40px;"><small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsSalesOrderLine-&gt;dsMetadata.szSalesOrderFlags[36] = _J('1');</small><br style="font-style: italic;" /> <br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeStrcpy(dsTextSubsError.szErrorMessageID, _J("42B6"));</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeStrcpy(dsTextSubsError.szSubstitutionText1, lpdsSalesOrderLine-&gt;dsBusinessData.szItemNo);</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeStrcpy(dsTextSubsError.szSubstitutionText2, lpdsSalesOrderLine-&gt;dsMetadata.lpdsPromotionalMetaData-&gt;szItemNumber);</small><br style="font-style: italic;" /> <br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idReturn = jdeCallObject(_J("TextSubstitutionErrorForMultLine"),</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NULL,lpBhvrCom,lpVoid,(LPVOID)&amp;dsTextSubsError,</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (CALLMAP *)lpCallMap,(int)nNumCallMap,(JCHAR *)NULL,</small><br style="font-style: italic;" /> <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (JCHAR *)NULL,(int)0);</small></div>
+&nbsp;</div>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Based on this example, you can implement any type of substitute error message in your custom application to meet your business requirement</li>
+<li>This implementation can be useful when you need to utilize variable/cache in your error</li>
+<li>If there is no relevant error message, you can create your own DD item</li>
+<li>To set AAI error&nbsp;code 433B</li>
+</ul>
+</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a><br /> <br /> <br /> Below section is to describe possible way to implement callmap based on existing routines in EnterpriseOne. Note that proficient programming knowledge may be required to implement this properly.<br /> <br /> <br /> <big><big><a name="callmap"></a>Example of CALLMAP:</big></big><br /> Business Scenario: When the flag F03012.porq (Customer PO Required (Y/N)) flag is on in Billing Information Customer PO (F4201.vr01) has to be populated and Customer's PO Number has to be unique otherwise error code '2597 - WARNING: Duplicate Customer Order Number) to show warning message is to be issued on screen of P4210. <br /> <br /> For this scenario, <br /> P4210 - Sales Order Entry<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; | ---- F4211FSBeginDoc (B4200310 - F4211 Begin Document) <br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; | --- VerifyCustomerPONumberIsUnique (B4200130 - Customer PO Number, Verify for Uniqueness)<br /> For this example, error determined by 2nd Level Business Function (B4200130) has to return value to the 1st level calling business function B4200310 which in return error code '2597' on the screen. This is a typical needs for ErrorMap (or CallMap).<br /> <br /> <big>Definition:</big><br /> A. B4200310.h</p>
+<div style="margin-left: 40px;">typedef struct tagDSD4200310H<br style="font-style: italic;" /> {<br style="font-style: italic;" /> ...<br style="font-style: italic;" /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szReference[26];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br style="font-style: italic;" /> ...<br style="font-style: italic;" /> } DSD4200310H, *LPDSD4200310H;<br style="font-style: italic;" /> &nbsp;<br style="font-style: italic;" /> ...<br style="font-style: italic;" /> #define IDERRszReference_23&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 23L <small style="text-decoration: underline; font-weight: bold; font-style: italic;"><small>(Ref #1)</small></small><br style="font-style: italic;" /> ...</div>
+<p><br /> B. B4200130.h</p>
+<div style="margin-left: 40px;">typedef struct tagDSD4200130<br style="font-style: italic;" /> {<br style="font-style: italic;" /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szCustomerPONumber[26];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Reference */<br style="font-style: italic;" /> ...<br style="font-style: italic;" /> } DSD4200130, FAR *LPDSD4200130;<br style="font-style: italic;" /> <br style="font-style: italic;" /> #define&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IDERRszCustomerPONumber_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1L <small style="text-decoration: underline; font-weight: bold;"><small>(Ref #2)</small></small><br style="font-style: italic;" /> ...</div>
+<p><br /> C. Implemenation:<br /> *** Break In Code in B4200310 - F4211FSBeginDoc ***</p>
+<div style="margin-left: 40px;">ID I4200310_ValidateCustPO(LPBHVRCOM lpBhvrCom, LPVOID lpVoid,LPDSD4200310H lpDS, LPDS4200310A lpds4200310A) <small style="text-decoration: underline; font-weight: bold;"><small>(#Ref 3)</small></small><br style="font-style: italic;" /> {<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp; CALLMAP&nbsp;&nbsp;&nbsp;&nbsp; clmp[1]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = {{IDERRszReference_23, IDERRszCustomerPONumber_1}}; <small style="text-decoration: underline; font-weight: bold;"><small>(Ref #4)</small></small><br style="font-style: italic;" /> &nbsp; &nbsp; DSD4200130&nbsp; dsD4200130;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* VerifyCustomerPONumberIsUnique */ <small style="text-decoration: underline; font-weight: bold;"><small>(Ref #5)</small></small><br style="font-style: italic;" /> <br style="font-style: italic;" /> &nbsp;&nbsp; if (!IsStringBlank(lpDS-&gt;szReference)) <small style="font-weight: bold; text-decoration: underline;"><small>(Ref #6)</small></small><br style="font-style: italic;" /> &nbsp;&nbsp; {<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; memset((void *)(&amp;dsD4200130),(int)(_J('\0')),sizeof(dsD4200130));<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeStrcpy((JCHAR *)(dsD4200130.szCustomerPONumber),(const JCHAR *)(lpDS-&gt;szReference));<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MathCopy(&amp;dsD4200130.mnCustomerNumber,&amp;lpDS-&gt;mnAddressNumber); <br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idReturnValue = jdeCallObject(_J("VerifyCustomerPONumberIsUnique"), NULL, lpBhvrCom, lpVoid,<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (LPVOID)&amp;dsD4200130, <small style="text-decoration: underline; font-weight: bold;"><small>(Ref #7)</small></small><br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (LPCALLMAP)&amp;clmp, <small style="text-decoration: underline; font-weight: bold;"><small>(Ref #8)</small></small><br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (int)1, <small style="font-weight: bold; text-decoration: underline;"><small>(Ref #9)</small></small><br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (JCHAR *)NULL, (JCHAR *)NULL, (int)0);<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ((idReturnValue != ER_SUCCESS)|| (dsD4200130.cErrorCode == _J('1')))<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idErrorFlag = 1;&nbsp; <small style="font-weight: bold; text-decoration: underline;"><small>(Ref #10)</small></small><br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br style="font-style: italic;" /> &nbsp;&nbsp; }<br style="font-style: italic;" /> &nbsp;&nbsp; return idErrorFlag;<br style="font-style: italic;" /> }</div>
+<p>*** Break In Code in B4200310 - F4211FSBeginDoc ***<br /> <br /> D. Explanation</p>
+<ol>
+<li>The 23rd parameter of B4200310.h is IDERRszReference_23 is a pointer to szReference[26] in B4200310 - F4211FSBeginDoc routine</li>
+<li>The 1st parameter of B4200130.h is IDERRszCustomerPONumber_1 a pointer to szCustomerPONumber [26]</li>
+<li>Data Structure of F4211FSBeginDoc is DSD4200310H</li>
+<li>For CALLMAP array, the 1st parameter of called BSFN B4200130 is assigned to the 23rd parameter of B4200310</li>
+<li>Data Structure of B4200130 is defined as DSD4200130</li>
+<li>If input from application P4210 szReference (as FC Reference value is assigned to F4211FSBeginDoc)</li>
+<li>In calling jdeCallObject() API data structure pointer &amp;dsD4200130 is used</li>
+<li>(LPCALLMAP) is used as defined at 4 (&amp;clmp)</li>
+<li>Since Error Map is defined in 7, the integer value for nNumMap (or nErrorMap) is defined as 1</li>
+<li>Based on cErrorCode in called routine B4200130 which repeats in calling routine B4200130. idErrorFlag value 1 is to indicate the error level is warning not error (which is value 2)</li>
+</ol>
+<p>Note: This routine is simplified routine to explain Error Map or Call Map so actual code can be different from this example<br /> <br /> <a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Interoperability JDEIL and Inventory Transaction</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Interoperability JDEIL and Inventory Transaction</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note is to explain Interoperability Transaction Type '<strong>JDEIL </strong>- <em>Item Location</em>' which can be found in Inventory Transaction Application.<br /><br /></p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>&nbsp;</p>
+<p>Through this note, we may identify concerns in dealing with item location file and provide answers on this type of inquiry.</p>
+<h3 class="km">Q1&gt; What are the applications which have JDEIL - 'Item Location' as processing Option?</h3>
+<p>Below objects have option to interface:</p>
+<ul>
+<li>P4112 - Inventory Issue (T4112)</li>
+<li>P4113 - Inventory Transfer (T4113)</li>
+<li>P4114 - Inventory Adjustments (T4114X)</li>
+<li>P4116 - Item Reclassification (T4116)</li>
+<li>R41413 - Cycle Count Update (T41413)</li>
+<li>R41610 - Tag Inventory Update (T41610)</li>
+<li>R47121 - EDI Product Activity Data Edit/Create (T47121)</li>
+<li>R47122 - EDI Product Activity Data Extraction (T47122)</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q2&gt; Does JDEIL write to the Z (F41021Z1) table?</h3>
+<p style="color: red;"><span style="text-decoration: underline;">No, JDEIL does not populate F41021Z1</span>. It populates the following tables:</p>
+<ul style="color: red;">
+<li>F47126 - EDI Product Activity Data Header - Outbound</li>
+<li>F47127 - EDI Product Activity Data Detail - Outbound</li>
+</ul>
+<p><br /> <br /> <span style="color: #3333ff; font-weight: bold;">Cf., TYTN (TypeTransaction) 852 - Product Activity Data which may populate below,</span></p>
+<ul style="color: #3333ff;">
+<li>Inbound</li>
+<ul>
+<li>F47121 - EDI Product Activity Data Header - Inbound</li>
+<li>F47122 - EDI Product Activity Data Detail - Inbound</li>
+</ul>
+<li>Outbound</li>
+<ul>
+<li>F47126 - EDI Product Activity Data Header - Outbound</li>
+<li>F47127- EDI Product Activity Data Detail - Outbound</li>
+</ul>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q3&gt; Then how does table F41021Z1 get populated?</h3>
+<p>Currently Item Location Extraction has standalone settings so it<span style="font-weight: bold; color: red;"> is not meant to be called by/from other interactive applications</span>. So though it populates the&nbsp; Z Table (F41021Z1) the mechanism for interfacing with this table is different from other interoperability functions in EnterpriseOne. Data from F41021Z1 can be populated either by entering data P41021Z1 or by running R41021ZX. <br /> <br /> Table F41021Z1 (Item Location Unedited Transaction File) can be populated as below:</p>
+<ul>
+<li>G41313 - Inventory Interoperability</li>
+<li>Via Inventory Management &gt; Inventory/Advanced - Technical Ops &gt; Inventory Interoperability</li>
+<ul>
+<li>Item Location Extraction (R41021ZX)</li>
+<li>Item Location Unedited Transaction (P41021Z1)</li>
+<li>Purge Item Location Transaction Record (R41021ZP)</li>
+</ul>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q4&gt; Is there any way to send through subsystem?</h3>
+<p>By setting processing options for tab Interop with value JDEIL, which write a record into F986113 as below through XT4111Z1 - F4111 End Document,</p>
+<div class="kmcodeblock" style="width: 95%;">ubeReport_AddSubsystemRecord(hUser, _J("R47127O"), _J("XJDE0002"), <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (JCHAR *) _J('\0'), (JCHAR *) _J('\0'), <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (LPVOID) lpdsR47127O);</div>
+<hr />
+<p>&nbsp;</p>
+<h3 class="km">Q5&gt; How can EDI Product Activity Outbound be implemented?</h3>
+<p><img src="../images/jdeil01.png" /></p>
+<ul>
+<li>Basic Set Up:</li>
+<ul>
+<li>1. Verify UDC 00/TT - Transaction Type has definition for the transaction you want to perform (e.g., JDEIL)</li>
+<li>2. Verify Transaction Type defined above has definition on Interoperability file for outbound</li>
+<li>3. Verify UDC 00/TA - Transaction Action</li>
+<li>4. Add Data Export Control record through P0047 - Data Export Controls which writes F0047</li>
+</ul>
+<li>Execution:</li>
+<li>Business Scenario: whenever a certain inventory transaction takes place create a&nbsp; flat file based on 'EDI Product Activity Data Header - Outbound (F47126)' and 'EDI Product Activity Data Detail - Outbound (F47127)'</li>
+<ul>
+<li>1. Set/verify Processing Option item #1. Transaction Type in Interop tab "JDEIL"</li>
+<li>2. (For example) create inventory transaction through P4114 - Inventory Adjustment</li>
+<li>3. Verify that F47126/F47127 get populated and a single row of data is inserted into SVM900.F986113</li>
+<li>4. Run R47127O - Outbound Product Activity Data Subsystem UBE (or through continuously running process of subsystem job R47127O ), F0046 gets populated based on definition in F0047</li>
+<li>R47127O&nbsp; can be continuously running process or you may submit it manually</li>
+<li>5. Verify jobs (triggered by subsystem kernel and processed by queue kernel, UBE kernel and callobject kernel). R47122C (or your custom report or BSFN) gets called SYNCHRONOUSLY through R47127O</li>
+<li>6. Purge F47126/F47127 through EDI Product Activity Outbound Data Purge R47129A</li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>This routine is more or less same with R00460 routine</li>
+<li>F0046 is written/updated through R47127O because this report is made up of two section</li>
+<ul>
+<li>Read EDI files (F47126 and F47127)</li>
+<li>Create F0046 based on F0047</li>
+</ul>
+<li>Output of flat file can be created as you define in the processing option of R47122C</li>
+<li>Demo data may point data for JDEIL into F41021Z1 which you may modify accordingly</li>
+<li>Unless you have to send flat file to your business parties do not implement this (or do not set Processing Option 'JDEIL' in the application listed above</li>
+<li>F986113 belongs to SVM900 data source regardless OCM mapping you may override</li>
+<li>F986113.BLOB contains data structure for calling UBE which is R47127O to make individual job unique</li>
+<li>Currently there is implementation for transaction type 852/INVRPT by default. If needed override it into JDEIL</li>
+<li>To refer how data are read/populated refer &lt;Document 1342363.1&gt; E1: 31: R00460 Implementing Work Order Extraction in P48013 (JDEWO)</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

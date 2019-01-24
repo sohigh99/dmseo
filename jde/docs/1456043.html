@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Resolve Error Message "CLI0111E", "SQL0406", "OS400QL016" in Enterprise Server JDE.LOG</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Resolve Error Message "CLI0111E", "SQL0406", "OS400QL016" in Enterprise Server JDE.LOG</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The error message: <span id="form1:panelPage1"><strong> CLI0111E  <span id="form1:panelPage1">Numeric value out of range</span></strong></span> is specific to DB2 database. However a <em>similar</em> error can also come from a SQL Server or Oracle database:</p>
+<ul>
+<li>MicroSoft SQL database: <a href="http://support.microsoft.com/kb/313352" alt="Microsoft" title="Microsoft" target="_blank">http://support.microsoft.com/kb/313352</a><br /> Microsoft confirms that this is a bug in Microsoft products that are listed at the beginning of their article. This problem was first corrected in Microsoft SQL Server 2000 Service Pack 3.</li>
+<li>Oracle database: &lt;Document 1137237.1&gt; Master Note for Diagnosing ORA-06502 Error or <span style="color: red;">ORA-01438</span> error</li>
+<li>E1 and Oracle database: &lt;Document 1527551.1&gt; E1: DB: Troubleshooting Guide for Oracle Database ORA-NNNNN Error Messages and EnterpriseOne</li>
+<li>If this type of error comes from non-DB2 database, contact the specific database vendor for further assistance.</li>
+</ul>
+<p> </p>
+<p>Example of the Enterprise Server JDE.LOG:</p>
+<div class="kmcodeblock">6256/5544 WRK:Starting jdeCallObject         Mon Apr 09 18:11:46.540001 Jdbodbc.c6840<br /> ODB0000163 - wSQLExecute failure. rc=-1<br /> <br /> 6256/5544 WRK:Starting jdeCallObject         Mon Apr 09 18:11:46.555001 Jdbodbc.c6840<br /> <strong>ODB0000164 - STMT:00 [22003][-99999] [IBM][CLI Driver] CLI0111E  <span id="form1:panelPage1">Numeric value out of range.</span>  SQLSTATE=22003</strong><br /> <br /> 6256/5544 WRK:Starting jdeCallObject         Mon Apr 09 18:11:46.587001 Odbc_p2.c1613<br /> ODB0000123 - Execute buffered insert, record 1 of 1 failed. ODBC:<br /> <br /> 6256/5544 WRK:Starting jdeCallObject         Mon Apr 09 18:11:46.618000 Jdb_drvm.c1854<br /> JDB9900197 - Failed to flush/clear JDB insert buffer</div>
+<p> </p>
+<div class="kmnotebox">
+<p><strong>Note:<br /></strong></p>
+<p>The same issue can show up from an iSeries: </p>
+<p>718/99 WRK:Starting jdeCallObject            Tue Jan 15 18:00:12.853784    dbdrv_log.c196<br />     <strong>OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - SQL0406 - Conversion error on assignment to column &amp;2</strong><br /> <br /> 718/99 WRK:Starting jdeCallObject            Tue Jan 15 18:00:12.859848    jdb_drvm.c1143<br />     JDB9900401 - Failed to execute db request</p>
+</div>
+<p> </p>
+<p>Depending on your RDBMS the error can show up in Call Ojbect Kernel logs as below:</p>
+<p style="margin-left: 30px;"><em>ODBC[Jdbodbc.c,3981] STMT:00 [22003][30160] [IBM][iSeries Access ODBC Driver]Numeric value 1917846520 out of range.</em><br /><em>ODB0000163 - wSQLExecute failure. rc=-1</em><br /><em>ODB0000164 - STMT:00 [22003][30160] [IBM][iSeries Access ODBC Driver]<strong>Numeric value 1917846520 out of range. </strong></em><br /><br /><em>OCI0000179 - Error - <strong>ORA-31495</strong>: error in synchronous change table on "PRODDTA"."F4105"</em><br /><em>ORA-01438: value larger than specified precision allowed for this column      </em><br /><br /><em>OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - <strong>SQL0302</strong> - Conversion error on variable or parameter &amp;2</em><br /><br /><em>OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - <strong>SQL0406</strong> - Conversion error on assignment to column &amp;2</em></p>
+<p> </p>
+<p>What causes this message and how can it be resolved?<br />  </p>
+<p> </p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p> </p>
+<p> <big><big>Message Explanation:</big></big></p>
+<p style="margin-left: 30px;">Definition of the <strong>CLI0111E</strong> error: <br /> <span id="form1:panelPage1"><span id="3-2JTZVID1336378874205"><a href="http://publib.boulder.ibm.com/infocenter/db2luw/v9r5/index.jsp?topic=/com.ibm.db2.luw.messages.cli.doc/doc/mcli00111e.html" alt="DB2" title="DB2" target="_blank">http://publib.boulder.ibm.com/infocenter/db2luw/v9r5/index.jsp?topic=/com.ibm.db2.luw.messages.cli.doc/doc/mcli00111e.html</a></span><br /> <br /> <strong>Excerpt:</strong></span></p>
+<p style="margin-left: 30px;"><span id="form1:panelPage1"><strong>CLI0111E </strong><strong>Numeric value out of range</strong></span></p>
+<p><span id="form1:panelPage1"><span style="text-decoration: underline;">Explanation</span><br /> Returning the numeric data would have caused the whole part of the number to be truncated.  SQLPutData is called more than once for a parameter and the input data is not of type character or binary.<br /> <br /> <span style="text-decoration: underline;">User response</span><br /> Re-specify the output bindings either through SQLBindCol or SQLGetData to avoid creating a numeric data truncation.  Do not call SQLPutData for a parameter if the application data type specified for that parameter through SQLSetParam or SQLBindParameter is not SQL_C_CHAR or SQL_C_BINARY.  <span style="text-decoration: underline;">Additional information:</span>  From DB2 documentation: SQLBindCol (and others) belong to standard C Library for any database (in this case, SQL, Oracle, DB2 etc.) which binds columns and ODBC always binds columns (this can be found in any UBE log for Oracle or DB2 which indicates BND1, BND2, etc. without indicating an actual value to assign).</span></p>
+<ul>
+<li><span id="form1:panelPage1"> DB2 in non-iSeries: error may appear as described in this document<br /> </span></li>
+<li><span id="form1:panelPage1">DB2 in iSeries: error may appear as follows:  <em>[IBM][iSeries Access ODBC Driver]Numeric value 1234567890 out of range</em></span></li>
+</ul>
+<p> </p>
+<hr />
+<p><big><big><strong>Case Study 1</strong><br /> </big></big></p>
+<p>This error and the source is described in &lt;Bug 13963743&gt; <em>PRP FINISH COMPLETELY WITH JOB STATUS ERROR</em></p>
+<p><span style="text-decoration: underline;">Cause</span><br /> After running PRP, "Allocate Inventory to Project" (message type A) is created for a component. At this time, PRP assigns F3111.TRQT into F3411.LNID. And PRP job ends with job status Error. However, "Generation Successful" is printed on PRP PDF. Side effect of this problem can cause error in DB2 when demand quantity is greater than 1000. F3411.LNID overflows because its maximum value is 999.999.</p>
+<hr />
+<p> </p>
+<p><big><big><strong>Case Study 2</strong><br /> </big></big></p>
+<p>Inventory Transaction ends in Commit Fail error in updating Average Cost for a specific set of data. (Data Specific)<br /> <br /> Inventory Transaction Applications<br />     |-- xxx End Doc of master business functions called in above listed applications<br />         |-- F4111EndDocument<br />             |-- AverageCostUpdate</p>
+<div style="margin-left: 40px;">Calling Business function UpdateItemCost from F4111EndDocument <br /> IN-&gt;[  1] szCostingMethod                  [02] <br /> IN-&gt;[  2] cCostLevel                       [2] <br /> IN-&gt;[  3] mnShortItemNumber                [60011] <br /> IN-&gt;[  4] szBranchPlant                    [         M30] <br /> IN-&gt;[  5] szLocation                       [A.              ] <br /> IN-&gt;[  6] szLot                            [ ] <br /> IN-&gt;[  7] mnCost                           [<span style="color: red;">-682542037686393.161600000</span>] <br /> IN-&gt;[  8] szProgramID                      [EP4205] <br /> IN-&gt;[  9] idF4105RowPointer                [1] <br /> IN-&gt;[ 10] szSecondItemNumber               [210                      ] <br /> IN-&gt;[ 11] szThirdItemNumber                [210                      ] <br /> IN-&gt;[ 12] cPurchasingSelection             [] <br /> IN-&gt;[ 13] cInventorySelection              [] <br /> IN-&gt;[ 14] cGetDefaultFlag                  [] <br /> IN-&gt;[ 15] cCostChangedFlag                 [1] <br />
+<div style="margin-left: 40px;">Entering JDB_UpdateTable (Table F4105) <br /> UPDATE PRODDTA/F4105  SET COITM=60011.000000,COLITM='400005400',COAITM='110001',COMCU='       10010',COLOCN=SPACE,COLOTN=SPACE,COLOTG=SPACE,COLEDG='02',<span style="color: red;">COUNCS=-6825420376863931400.000000</span>,COCSPO=SPACE,COCSIN=SPACE, COURCD=SPACE,COURDT=0,COURAT=0.000000,COURAB=0.000000,COURRF=SPACE,COUSER='WANGMM',COPID='EP4205',COJOBN='K3SERVERBA', COUPMJ=110232,COTDAY=140605.000000,COCCFL='1',COCRCS=0.000000,COOSTC=0.000000,COSTOC=0.000000 WHERE  ( COLEDG = '02' AND  COITM = 60011.000000 AND COMCU = '            M30' AND COLOCN = SPACE AND COLOTN = SPACE )  AND  ( COMCU &lt;&gt; '       10020' ) <br /> Entering DBPerformRequest <br /> ODBC[Jdbodbc.c,3981] wSQLExecute failure. rc = -1 <br /> <span style="color: #3333ff;">ODBC[Jdbodbc.c,3981] STMT:00 [22003][30160] [IBM][iSeries Access ODBC Driver]Numeric value 1917846520 <span style="color: red;">out of range</span>. </span><br style="color: #3333ff;" /> <span style="color: #3333ff;">ODB0000163 - wSQLExecute failure. rc=-1 </span><br style="color: #3333ff;" /> <span style="color: #3333ff;">ODB0000164 - STMT:00 [22003][30160] [IBM][iSeries Access ODBC Driver]Numeric value 1917846520 out of range. </span><br style="color: #3333ff;" /> <span style="color: #3333ff;">Exiting DBPerformRequest </span><br style="color: #3333ff;" /> <span style="color: #3333ff;">JDB9900401 - Failed to execute db request </span><br style="color: #3333ff;" /> <span style="color: #3333ff;">JDB3600011 - Failed to perform Update for F4105 </span><br style="color: #3333ff;" /> <span style="color: #3333ff;">JDB9901232 - Canceling transaction because: TC033 UpdateTable:  update failed </span><br /> Cancelling Transaction : 1444986890_1256_3948_325084637<br />  </div>
+</div>
+<div class="kmnotebox"><strong>Note:</strong> The value 1917846520 in log is representation of negative value into positive value so ignore it.</div>
+<p style="font-weight: bold;">Example 2:</p>
+<p>    UPDATE PRODDTA.F4105  SET COITM=14499.000000,COLITM='1061954                  ',COAITM='1061954                  ',COMCU='     1195400',COLOCN=' ',COLOTN=' ',COLOTG='   ',COLEDG='02',<span style="color: red;">COUNCS=-2745580031710329800000.000000</span>,COCSPO=' ',COCSIN=' ',COURCD='  ',COURDT=0,COURAT=0.000000,COURAB=0.000000,COURRF='               ',COUSER='AGGARWA7',COPID='EP4205',COJOBN='NZAKLEVFN6',COUPMJ=113163,COTDAY=190621.000000,COCCFL='1',COCRCS=0.000000,COOSTC=0.000000,COSTOC=0.000000 WHERE  ( COLEDG = '02' AND COITM = 14499.000000 AND COMCU = '     1195400' AND COLOCN = '                    ' AND COLOTN = '                              ' ) <br />     OCI0000178 - Unable to execute - UPDATE PRODDTA.F4105  SET COITM=:BND1,COLITM=:BND2,COAITM=:BND3,COMCU=:BND4,COLOCN=:BND5,COLOTN=:BND6,COLOTG=:BND7,COLEDG=:BND8,COUNCS=:BND9,COCSPO=:BND10,COCSIN=:BND11, COURCD=:BND12,COURDT=:BND13,COURAT=:BND14,COURAB=:BND15,COURRF=:BND16,COUSER=:BND17,COPID=:BND18,COJOBN=:BND19,COUPMJ=:BND20,COTDAY=:BND21, COCCFL=:BND22,COCRCS=:BND23,COOSTC=:BND24,COSTOC=:BND25 WHERE  ( COLEDG = :KEY1 AND COITM = :KEY2 AND COMCU = :KEY3 AND COLOCN = :KEY4 AND COLOTN = :KEY5 ) <br />     <span style="color: red;">OCI0000179 - Error - ORA-31495: error in synchronous change table on "PRODDTA"."F4105"</span><br /> <span style="color: red;">ORA-01438: value larger than specified precision allowed for this column </span>     <br />     JDB9900401 - Failed to execute db request <br />     JDB3600011 - Failed to perform Update for F4105 <br />     JDB9901232 - Canceling transaction because: TC033 UpdateTable:  update failed</p>
+<p><br /> <span style="font-weight: bold;">Example 3:</span><br /> In performing Inventory Transfer through P4113, user are getting error as below (iSeries),</p>
+<p style="margin-left: 30px;">UPDATE SEUPDDTA/F4105_ADT  SET COITM=76008460.000000,COLITM='76008460',COAITM='201F12/50607',COMCU='   201F22100',COLOCN=SPACE,COLOTN=SPACE,COLOTG=SPACE,COLEDG='02',<span style="color: red;">COUNCS=1427246608782783.000000</span>,COCSPO=SPACE,COCSIN=SPACE,COURCD=SPACE, COURDT=0,COURAT=0.000000,COURAB=0.000000,COURRF=SPACE,COUSER='AKOLHE2',COPID='EP4113',COJOBN='KPLCPDEU',COUPMJ=113161,COTDAY=85225.000000, COCCFL='1',COCRCS=0.000000,COOSTC=0.000000,COSTOC=0.000000,COCFRGUID='159.82.220.208:5426813708579738280',COCFRMKEY='10.176.6.136', COCFRPID='P4113',COCFRUSER='AKOLHE2',COCFRSEQN=COCFRSEQN+1 WHERE  ( COLEDG = '02' AND COITM = 76008460.000000 AND COMCU = '   201F22100' AND COLOCN = SPACE AND COLOTN = SPACE )  AND  (  ( COMCU = '         201' OR COMCU = '         ALL' OR COMCU = '        202F' OR COMCU BETWEEN '       201AA' AND '       201ZZ' OR COMCU BETWEEN '       999AA' AND '       999ZZ' OR COMCU BETWEEN '     2010000' AND '     201ZZZZ' OR COMCU BETWEEN '    20100000' AND '    201ZZZZZ' OR COMCU BETWEEN '   201000000' AND '   201ZZZZZZ' OR COMCU BETWEEN '  201F000000' AND '  201FZZZZZZ' OR COMCU BETWEEN '  201J000000' AND '  201JZZZZZZ' OR COMCU = ' ' )  ) <br /> <span style="color: red;">OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - SQL0302 - Conversion error on variable or parameter &amp;2 </span><br style="color: red;" /> <span style="color: red;">OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - SQL0302 - Conversion error on variable or parameter &amp;2 </span><br /> JDB9900401 - Failed to execute db request <br /> JDB3600011 - Failed to perform Update for F4105 <br /> JDB9901232 - Canceling transaction because: TC033 UpdateTable:  update failed <br /> Cancelling Transaction : 2672965900_305081_413678173 <br /> Exiting JDB_UpdateTable with Failure (Table F4105)</p>
+<div class="kmnotebox"><strong>Notes:</strong><br />
+<ul>
+<li>This type of error commonly occurs when:<br />
+<ul>
+<li>The value in F4105 (Item Cost) file is huge</li>
+<li>On hand quantity (PQOH) from F41021 (Item Location File) is negative when you allow negative on hand quantity. In this case you are not to use Average Cost</li>
+<li>In running R47071 (Receiving Advice for Receipt) which cause integrity issue because it fails to write a record into F43121 (because B4312.c returns error). But with current configuration this is natural because Transaction Processing is not implemented for R47071.</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<p><br /> <big><big><strong>Case Study 3</strong><br /> </big></big></p>
+<p>In performing Purchase Order Receipt through P4312 with 'Supplier Analysis' option ON transaction ends in COMMIT FAIL ERROR when F4311.PDDJ (Promised Delivery Date) and PO Receipt Date (Transaction Date) difference is more than 2.74 year (e.g., Order is placed 3 years ago).</p>
+<p>Cause of issue occurs when computing lead time to update F43090.ALTD and LLTD but defined value for these columns are:</p>
+<ul>
+<li>ALTD - LeadtimeAverage 5[2] so maximum value can hold is 999.99 (days)</li>
+<li>LLTD - LeadtimeLast 5[2] so maximum value is 999.99 (days) (= jdReceiptDate - jdPOTransactionDate)</li>
+</ul>
+<p>To overcome this type of issue in DB2 database system, apply &lt;Bug 12335832&gt; TRANSACTION ERROR IN P4312 WITH AS400 (if applicable). The change through this fix is that if date difference (long data type) exceeds 999.99, ALTD and LLTD are to be set with value of 999.99.</p>
+<p>Snapshot for Call Object Kernel log:</p>
+<div style="margin-left: 40px;">Entering JDB_OpenTable(Table = F43090) <br /> UPDATE E8111DTA/F43090  SET PCAN8=4343.000000,PCITM=60011.000000,PCLITM='210',PCAITM='210',PCMCU='         M30',PCCEFJ=113015,PCCXPJ=125365,PCCERS=SPACE,PCNROU=SPACE,PCTROU=SPACE,PCTFRQ=0.000000,PCORDS=0.000000,<br /> PCTFRD=0.000000,PCLTDJ=0,PCDAYE=0.000000,PCDAYL=0.000000,PCLTQP=9000.000000,PCLTNM=0.000000,PCLTTS=0.000000,<br /> <span style="font-weight: bold; color: red;">PCALTD=208700.000000,PCLLTD=208700.000000</span>,PCACST=0.000000,PCLCST=0.000000,PCNOOD=1.000000,PCQTYS=20000.000000,<br /> PCQTYR=0.000000,PCQTYC=0.000000,PCQTYW=0.000000,PCQTYJ=0.000000,PCQTYA=0.000000,PCUODR=0.000000,<br /> PCUREC=20000.000000,PCUPTD=0.000000,PCUONT=0.000000,PCUEAR=0.000000,PCULAT=20000.000000,PCAODR=0.000000,<br /> PCAREC=40000.000000,PCAPTD=0.000000,PCAONT=0.000000,PCAEAR=0.000000,PCALAT=40000.000000,PCRONT=0.000000,<br /> PCREAR=0.000000,PCRLAT=1.000000,PCURCD=SPACE,PCURDT=0,PCURAT=0.000000,PCURAB=0.000000,<br /> PCURRF=SPACE,PCROTP=SPACE,PCPOC='0' WHERE  ( PCAN8 = 4343.000000 AND PCMCU = '         M30' AND PCITM = 60011.000000 ) <br /> <span style="font-weight: bold;">OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - <span style="color: red;">SQL0406</span> - Conversion error on assignment to column &amp;2 </span><br /> OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - SQL0406 - Conversion error on assignment to column &amp;2 <br /> JDB9900401 - Failed to execute db request <br /> JDB3600011 - Failed to perform Update for F43090 <br /> JDB9901232 - Canceling transaction because: TC033 UpdateTable:  update failed <br /> Cancelling Transaction : 176918074_749069_401198248</div>
+<p> </p>
+<p><strong><big><big>How to Debug</big></big></strong></p>
+<p>If this error is encountered in a customer log file, also obtain/review the Call Object Kernel log. </p>
+<p>The size of numeric value is smaller than 15 digits (e.g., LNID, SEQ, JELN and so on). Though the size assigned numeric value is longer than the defined size error may not occur.</p>
+<ul>
+<li>Issue comes when updating item cost, check F41021.PQOH (On Hand Quantity) and F4105.UNCS (Unit Cost). Most case studies show the issue comes based on testing data</li>
+<li>Numeric column which contains SUM(column) and which is bigger than 15 digits</li>
+<li>Custom object - a customer adds object which has internal logic to manipulate data.  This object can be an application (batch or interactive), BSFN, stored procedure, table trigger, etc.</li>
+<li>Wrong API in custom routine in calling ParseNumericString () or ParseNumericStringEx() to convert string value to numeric. For this example, determine whether display decimal is handled properly or not.</li>
+</ul>
+<p>&lt;Internal_Only&gt;</p>
+<p>If the issue is caused by a custom object, the customer should review their code.  If this issue is caused by a standard object (application/UBE/BSFN), obtain all logs, name of object and engage the correct application team for additional support.</p>
+<p>&lt;/Internal_Only&gt;</p>
+<hr />
+<p> </p>
+<p><big><big><strong>Case Study 4</strong><br /> </big></big></p>
+<p>P4310 (Purchase Orders) ends in Transaction Failure (or, Commit Fail Error, Asychronous Business Function error) error in AS400 when,</p>
+<ul>
+<li>'Supplier Analysis' was on, P through processing option (to create F43090 - Supplier/Item Relationships file)</li>
+<li>F43090 does not have record for Branch Plant (MCU), Supplier (AN8) and Item Number (ITM) combination</li>
+</ul>
+<p><span style="text-decoration: underline; font-weight: bold;">Error in JDE.log</span><span style="font-weight: bold;">:</span></p>
+<div style="margin-left: 40px;">629/145 WRK:SDONGMYE_80000000_P4310           Tue Feb  4 19:53:22.005096    dbdrv_log.c196<br />     OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - SQL0406 - Conversion error on assignment to column &amp;2<br /> <br /> 629/145 WRK:SDONGMYE_80000000_P4310           Tue Feb  4 19:53:22.015152    jdb_drvm.c1005<br />     JDB9900401 - Failed to execute db request<br /> <br /> 629/145 WRK:SDONGMYE_80000000_P4310           Tue Feb  4 19:53:22.015304    jdb_exet.c6157<br />     JDB3400009 - Failed to perform Insert for F43090<br /> <br /> 629/145 WRK:SDONGMYE_80000000_P4310           Tue Feb  4 19:53:22.015376    jdb_exet.c8112<br />     JDB9901232 - Canceling transaction because: TC052 InsertTable:  Insert failed</div>
+<p><br /> <span style="text-decoration: underline; font-weight: bold;">Error in jdedebug.log:</span></p>
+<div style="margin-left: 40px;">INSERT INTO DATAE910/F43090 (PCAN8, PCITM, PCLITM, PCAITM, PCMCU, PCCEFJ, PCCXPJ, PCCERS, PCNROU, PCTROU, PCTFRQ, PCORDS, PCTFRD, PCLTDJ, PCDAYE, PCDAYL, <span style="color: red;">PCLTQP</span>, PCLTNM, PCLTTS, PCALTD, PCLLTD, PCACST, PCLCST, PCNOOD, PCQTYS, PCQTYR, PCQTYC, PCQTYW, PCQTYJ, PCQTYA, PCUODR, PCUREC, PCUPTD, PCUONT, PCUEAR, PCULAT, PCAODR, PCAREC, PCAPTD, PCAONT, PCAEAR, PCALAT, PCRONT, PCREAR, PCRLAT, PCURCD, PCURDT, PCURAT, PCURAB, PCURRF, PCROTP, PCPOC) VALUES (4343.000000,60011.000000,'210','210','         M30',114035,125365,' ',' ',SPACE,0.000000,0.000000,0.000000,0,0.000000,0.000000,<span style="color: red;">900000.000000</span>,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000, 0.000000,0.000000,0.000000,0.000000,0.000000,10000.000000,0.000000,0.000000,0.000000,0.000000,0.000000,53010.000000,0.000000,0.000000, 0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,SPACE,0,0.000000,0.000000,SPACE,SPACE,'0') <br /> OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - <span style="color: red;">SQL0406</span> - Conversion error on assignment to column &amp;2 <br /> OS400QL016 - ExecuteSQLRequest: QSQLMSG   *LIBL      - SQL0406 - Conversion error on assignment to column &amp;2 <br /> JDB9900401 - Failed to execute db request <br /> JDB3400009 - Failed to perform Insert for F43090 <br /> JDB9901232 - Canceling transaction because: TC052 InsertTable:  Insert failed <br /> Cancelling Transaction : 176918074_74495_434326848</div>
+<p><br /> <span style="font-weight: bold;">Further explanation on error:</span></p>
+<ul>
+<li>Related Business function: InsertSupplierItemRelationshipRo (B4300290 - F43090 Write Supplier Item Relationship)</li>
+<li>API jdeDDValidation called by InsertSupplierItemRelationshipRo.</li>
+</ul>
+<p><br /> <span style="font-weight: bold;">This issue is specific to:</span></p>
+<ul>
+<li>AS400/iSeries platform</li>
+<li>JDE API jdeDDValidation is called</li>
+<li>Default value is defined in DD level</li>
+<li>Display Decimal is not zero</li>
+<li>Display Edit Rule is 'M'</li>
+</ul>
+<p>   : Then nDecimalPosition returns 0 whereas actual value is 2 so 100 is to be multiplied twice (one by this API and the other by DD display decimal) so value computed by this API changes to 900000 which is longer than defined length 5.<br /> <br /> <span style="font-weight: bold;">How to resolve: </span><br /> Apply fix against &lt;Bug 18185838&gt; - DEFAULT VALUE FOR LTQP IGNORING DECIMAL PLACES when it is applicable</p>
+<hr />
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
