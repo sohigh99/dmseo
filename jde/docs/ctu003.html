@@ -1,0 +1,2385 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Design and Analysis of Algorithms</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {background-color: #f2f2f2;}
+
+    th, td {
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #B0C4DE; 
+    }
+
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Design and Analysis of Algorithms</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<p>Design and Analysis of Algorithms</p>
+<p>Dong Myeong Seo</p>
+
+<h2><font color="red"> !!! "I do not guarantee the solution in this document" !!! </font></h2>
+
+<p><h2>Table of Contents</h2></p>
+<p>1 &nbsp; <a href="#_Toc490067280">1 &ndash; Algorithms and Data Structure. 4</a></p>
+<p>1.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067281">Requirement 4</a></p>
+<p>1.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067282">Assignment Part 1. 4</a></p>
+<p>1.2.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067283">Selection Sort 4</a></p>
+<p>1.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067284">Assignment Part 2. 8</a></p>
+<p>1.3.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067285">Complexity. 9</a></p>
+<p>1.4 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067286">Assignment Part 3. 10</a></p>
+<p>1.4.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067287">Time Complexity for Selection sort 10</a></p>
+<p>2 &nbsp;<a href="#_Toc490067288">2 &ndash; Divide and Conquer 13</a></p>
+<p>2.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067289">Requirement 13</a></p>
+<p>2.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067290">Assignment Part 1. 13</a></p>
+<p>2.2.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067291">Divide-and-Conquer Search. 13</a></p>
+<p>2.2.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067292">Test 1 &ndash; Divide given string array into 3. 14</a></p>
+<p>2.2.3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067293">Test 2 &ndash; Divide given string array into 2. 17</a></p>
+<p>2.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067294">Assignment Part 2 &ndash; Time Complexity. 21</a></p>
+<p>2.3.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067295">Time Complexity for Assignment Part 1. 21</a></p>
+<p>2.3.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067296">Time Complexity Comparison. 21</a></p>
+<p>3 &nbsp;<a href="#_Toc490067297">3 &ndash; Greedy Methods. 23</a></p>
+<p>3.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067298">Requirement 23</a></p>
+<p>3.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067299">Assignment Part 1 &ndash; Pseudocode. 23</a></p>
+<p>3.2.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067300">Problem.. 23</a></p>
+<p>3.2.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067301">Pseudocode. 24</a></p>
+<p>3.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067302">Assignment Part 2 &ndash; Optimality. 26</a></p>
+<p>3.4 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067303">Assignment Part 3 &ndash; Time Complexity Comparison. 27</a></p>
+<p>4 &nbsp;<a href="#_Toc490067304">4 &ndash; Dynamic Programming. 28</a></p>
+<p>4.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067305">Requirement 28</a></p>
+<p>4.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067306">Assignment Part 1 &ndash; Pseudocode. 28</a></p>
+<p>4.2.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067307">Problem.. 28</a></p>
+<p>4.2.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067308">Pseudocode. 29</a></p>
+<p>4.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067309">Assignment Part 2 - Optimality. 32</a></p>
+<p>5 &nbsp;<a href="#_Toc490067310">5 &ndash; State Space Traversal &amp; Heuristics. 33</a></p>
+<p>5.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067311">Requirement 33</a></p>
+<p>5.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067312">State Space. 33</a></p>
+<p>5.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067313">Traversal Time Complexity. 34</a></p>
+<p>5.4 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067314">Heuristic Search. 36</a></p>
+<p>5.5 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc490067315">Pseudocode. 37</a></p>
+<p><a href="#_Toc490067316">References. 42</a></p>
+
+
+<h1><a name="_Toc490067280"></a>1 &ndash; Algorithms and Data Structure</h1>
+<h2><a name="_Toc490067281"></a>Requirement</h2>
+<p>You currently work in an algorithm development group for a large multimedia, mobile device corporation. Your group has been tasked with creating an app that will play an audio file backward (from end to beginning rather than the standard beginning to end). Because this app is likely to be used on a mobile device, your group figures that this algorithm should use as little memory and space as possible. Your group has therefore decided to construct this reversal order algorithm such that it is an "in-place" algorithm. This simply means that the audio file will be loaded to memory and reversed using the same memory locations (because you must use memory sparingly).</p>
+
+<h2><a name="_Toc490067282"></a>Assignment Part 1</h2>
+<p>The code below which is written using C is making use of Insert sort with the descending order.</p>
+<p>Before attempting this implementation, you choose to develop a simple prototype version of this algorithm in C++. Specifically, you will build an in-place, order reversal algorithm. This algorithm will take as an input an array of ints and will reverse the order of the elements in the array, in place (essentially using only the memory in the array). For example, if the array contains five elements [1,2,3,4,5], the output of the algorithm will be [5,4,3,2,1]. Comment your program.</p>
+<h3><a name="_Toc490067283"></a>Selection Sort</h3>
+<p>According to Tang, the Selection sort is an in-place comparison sort (Tang, 2016). Hence, it has O(n2) complexity.</p>
+
+<hr>
+
+<p>/*</p>
+<p>&nbsp;* File:&nbsp;&nbsp; main.cpp</p>
+<p>&nbsp;* Author: doseo</p>
+<p>&nbsp;*</p>
+<p>&nbsp;* Created on July 12, 2017, 4:02 PM</p>
+<p>&nbsp;*/</p>
+
+<p>#include &lt;cstdlib&gt;</p>
+<p>#include &lt;stdio.h&gt;</p>
+
+<p>// Simplified code without calling sub-function to using selection sort</p>
+<p>//</p>
+<p>int main(void)</p>
+<p>{</p>
+<p>int i=0, j=0, temp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Declare and Initialize variables</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int array[] = {3, 6, 1, 8, 4, 5};&nbsp;&nbsp;&nbsp; //Declare and Initialize array with 6 elements</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; int n = sizeof(array)/sizeof(array[0]); //The size of array</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (j=0 ; j&lt;(n-1) ; j++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Start with 0 and increment j</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=0 ; i&lt;(n-1) ; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Inner loop, increase i</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (array[i+1] &lt; array[i]) //Swap&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; temp = array[i];&nbsp;&nbsp;&nbsp; //Temp is sorted array</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i] = array[i + 1];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i + 1] = temp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf ("\n Output -------------------- \n");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=n ; i&gt;0 ; i--)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //to write descending order</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf (" %d", array[i-1]);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>Output:</p>
+<p><img src="../images/ctu00301.png" border="0" alt="Exercise Ouptut" title="Exercise Output" hspace="0" vspace="0"/></p>
+<p>Note that above code is written in C not C++ because my NETBEAN IDE 8.2 does not work correctly for below code which is written in C++.</p>
+
+<hr>
+
+<p>/*</p>
+<p>&nbsp;* File:&nbsp;&nbsp; main.cpp</p>
+<p>&nbsp;* Author: doseo</p>
+<p>&nbsp;*</p>
+<p>&nbsp;* Created on July 12, 2017, 3:01 PM</p>
+<p>&nbsp;*/</p>
+
+<p>#include&lt;iostream&gt;</p>
+<p>#include&lt;conio.h&gt;</p>
+
+<p>using namespace std;</p>
+
+<p>void display(int b[]);</p>
+
+<p>int main()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; int array[]={2,3,6,8,9,0,1,4,7,2};</p>
+<p>&nbsp;&nbsp;&nbsp; int large,index;</p>
+
+<p>&nbsp;&nbsp;&nbsp; cout&lt;&lt;"Numbers before SELECTION SORT\n";</p>
+<p>&nbsp;&nbsp;&nbsp; display(array);</p>
+
+<p>&nbsp;&nbsp;&nbsp; for(int i=9;i&gt;0;i--)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; large=array[9];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; index=0;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int j=1;j&lt;=i;j++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(array[j]&gt;large)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; large=array[j];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; index=j;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[index]=array[i];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i]=large;</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp; }</p>
+
+<p>cout&lt;&lt;"\nNumbers after SELECTION SORT\n";</p>
+<p>display(array);</p>
+<p>getch();</p>
+<p>return(0);</p>
+<p>}</p>
+
+<p>void display(int b[])</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; for(int i=0;i&lt;10;i++)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;b[i]&lt;&lt;" ";</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+
+<p>And InsertionSort() is tried only to find out that Insert sort is not in-place comparison (Tang, 2016).</p>
+
+<hr>
+
+<p>* Created on July 10, 2017, 7:52 PM</p>
+<p>&nbsp;*/</p>
+<p>// C program for insertion sort - like a playing card but this time it sorts descending order.&nbsp;</p>
+<p>#include &lt;stdio.h&gt;</p>
+<p>#include &lt;math.h&gt;</p>
+
+<p>/* C Function to sort an array using insertion sort - function insertionSort ()*/</p>
+<p>void insertionSort(int array[], int n)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; int i, j, temp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Declare variables to use&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; for(j = 1; j &lt; n ; j++)&nbsp;&nbsp;&nbsp; // Start with 1 (not 0)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; temp = array[j];&nbsp;&nbsp;&nbsp;&nbsp; // Assign temp with array</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(i = j - 1; (i &gt;= 0) &amp;&amp; (array[i] &lt; temp); i--)&nbsp;&nbsp; // Smaller values move up</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i+1] = array[i];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i+1] = temp;&nbsp;&nbsp;&nbsp; //Put key into its proper location</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; return;</p>
+<p>}</p>
+
+<p>// Optional - To show the output of an array of size 6</p>
+<p>void printArray(int array[], int n)</p>
+<p>{</p>
+<p>&nbsp;&nbsp; int i;</p>
+<p>&nbsp;&nbsp; for (i=0; i &lt; n; i++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("%d ", array[i]);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("\n");</p>
+<p>}</p>
+
+<p>/* Driver program to test insertion sort */</p>
+<p>int main()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; int array[] = {8, 7, 9, 3, 1, 2}; /* define array */</p>
+<p>&nbsp;&nbsp;&nbsp; int n = sizeof(array)/sizeof(array[0]);</p>
+
+<p>&nbsp;&nbsp;&nbsp; insertionSort(array, n);</p>
+<p>&nbsp;&nbsp;&nbsp; printArray(array, n);</p>
+
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>Output:</p>
+
+<p><img src="../images/ctu00302.png" border="0" alt="Output2" title="Output2" hspace="0" vspace="0"/></p>
+
+
+<h2><a name="_Toc490067284"></a>Assignment Part 2</h2>
+<p>Using this prototype, you will analyze the time complexity and space complexity of your algorithm in the worst case. Specifically, for time complexity, count the number of steps for each line of code, and write down the total lines executed as a mathematical expression where n is the size of the input array. For space complexity, write an expression for the number of memory locations and components that are required for the algorithm in the worst case. (Assume that each int is one location.)</p>
+<h3><a name="_Toc490067285"></a>Complexity</h3>
+<p>Below is complexity computed based on the input array {3, 6, 1, 8, 4, 5},</p>
+
+<p><img src="../images/ctu00321.png" border="0" alt="Complexity" title="Complexity" hspace="0" vspace="0"/></p>
+
+<table>
+<tbody>
+<tr>
+<th width="100">
+Index
+</th>
+<th width="61">
+0
+</th>
+<th width="61">
+1
+</th>
+<th width="61">
+2
+</th>
+<th width="61">
+3
+</th>
+<th width="61">
+4
+</th>
+<th width="65">
+5
+</th>
+</tr>
+<tr>
+<td width="100">
+Input Array
+</td>
+<td width="61">
+3
+</td>
+<td width="61">
+6
+</td>
+<td width="61">
+1
+</td>
+<td width="61">
+8
+</td>
+<td width="61">
+4
+</td>
+<td width="65">
+5
+</td>
+</tr>
+<tr>
+<td width="100">
+After 1<sup>st</sup> pass
+</td>
+<td width="61">
+8
+</td>
+<td width="61">
+3
+</td>
+<td width="61">
+6
+</td>
+<td width="61">
+1
+</td>
+<td width="61">
+4
+</td>
+<td width="65">
+5
+</td>
+</tr>
+<tr>
+<td width="100">
+After 2<sup>nd</sup> pass
+</td>
+<td width="61">
+8
+</td>
+<td width="61">
+6
+</td>
+<td width="61">
+3
+</td>
+<td width="61">
+1
+</td>
+<td width="61">
+4
+</td>
+<td width="65">
+5
+</td>
+</tr>
+<tr>
+<td width="100">
+After 3<sup>rd</sup> pass
+</td>
+<td width="61">
+8
+</td>
+<td width="61">
+6
+</td>
+<td width="61">
+5
+</td>
+<td width="61">
+3
+</td>
+<td width="61">
+1
+</td>
+<td width="65">
+4
+</td>
+</tr>
+<tr>
+<td width="100">
+After 4<sup>th</sup> pass
+</td>
+<td width="61">
+8
+</td>
+<td width="61">
+6
+</td>
+<td width="61">
+5
+</td>
+<td width="61">
+4
+</td>
+<td width="61">
+3
+</td>
+<td width="65">
+1
+</td>
+</tr>
+<tr>
+<td width="100">
+After 5<sup>th</sup> pass
+</td>
+<td width="61">
+8
+</td>
+<td width="61">
+6
+</td>
+<td width="61">
+5
+</td>
+<td width="61">
+4
+</td>
+<td width="61">
+3
+</td>
+<td width="65">
+1
+</td>
+</tr>
+</tbody>
+</table>
+
+<ul>
+<li>Worst Case Time Complexity: O(n^2) because the given code has two nested for loops.</li>
+<li>Best Case Time Complexity: O(n^2)</li>
+<li>Average Case Time Complexity: O(n^2)</li>
+<li>Space Complexity: O(1)</li>
+</ul>
+<p>So time complexity is computed based on (n&minus;1)+(n&minus;2)+⋯+(2)+(1)=n(n&minus;1)2&isin;O(n^2) when n is bigger this value reaches n^2 ).</p>
+<p>Hence the Selection sort algorithm for array sort meets the basic requirement for this assignment.</p>
+<p>According to Big-O complexity chart, &nbsp;</p>
+
+<p><img src="../images/ctu00303.png" border="0" alt="Big-O Complexity" title="Big-O Complexity" hspace="0" vspace="0"/></p>
+
+<p>The complexity can be represented as depicted above (Eric, et al., n.d.).</p>
+
+<h2><a name="_Toc490067286"></a>Assignment Part 3</h2>
+<p>Program a function, method or class that will track the true runtime of your algorithm. Find the true runtime of your algorithm using arrays of varying sizes (e.g., n = 500, n = 1,500, and n= 2,500) using your new tool. The plot, on a Cartesian plane, the runtime of your algorithm as a function of the size of the input array, n.</p>
+<h3><a name="_Toc490067287"></a>Time Complexity for Selection sort</h3>
+
+<hr>
+
+<p>#include &lt;stdio.h&gt;</p>
+<p>#include &lt;math.h&gt;</p>
+<p>#include &lt;time.h&gt;</p>
+
+<p>/* C Function to sort an array using insertion sort*/</p>
+
+<p>// Simplified code without calling sub-function to using selection sort</p>
+<p>//</p>
+<p>int selecionSort(int array[], int n)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int i=0, j=0, temp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Declare and Initialize variables</p>
+<p>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int array[] = {3, 6, 1, 8, 4, 5};&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Declare and Initialize array with 6 elements</p>
+<p>//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int n = sizeof(array)/sizeof(array[0]); //The size of array</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (j=0 ; j&lt;(n-1) ; j++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Start with 0 and increment j</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=0 ; i&lt;(n-1) ; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //Inner loop, increase i</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (array[i+1] &lt; array[i]) //Swap&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; temp = array[i];&nbsp;&nbsp;&nbsp; //Temp is sorted array</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i] = array[i + 1];</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; array[i + 1] = temp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf ("\n Output -------------------- \n");</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i=n ; i&gt;0 ; i--)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //to write descending order</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf (" %d", array[i-1]);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;</p>
+<p>}</p>
+
+<p>// To show the output of an array of size 6</p>
+<p>void printArray(int array[], int n)</p>
+<p>{</p>
+<p>&nbsp;&nbsp; int i;</p>
+<p>&nbsp;&nbsp; for (i=0; i &lt; n; i++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("%d ", array[i]);</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("Count = %d ", i);</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("\n");</p>
+<p>}</p>
+
+<p>// The main program calls fun() and measures time taken by insertionSort()</p>
+<p>int main()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; // Calculate the time taken by insertionSort()</p>
+<p>&nbsp;&nbsp;&nbsp; clock_t t;</p>
+<p>&nbsp;&nbsp;&nbsp; t = clock();</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; int input[] = {3, 6, 1, 8, 4, 5}; /* define array */</p>
+<p>&nbsp;&nbsp;&nbsp; int n = 1000;</p>
+
+<p>&nbsp;&nbsp;&nbsp; void selectionSort(input, n);</p>
+<p>&nbsp;&nbsp;&nbsp; printArray(input, n);</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; t = clock() - t;</p>
+<p>&nbsp;&nbsp;&nbsp; double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds</p>
+
+<p>&nbsp;&nbsp;&nbsp; printf("insertionSort() took %f seconds to execute \n", time_taken);</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<hr>
+
+<p>Output:</p>
+
+<p><img src="../images/ctu00304.png" border="0" alt="Output3" title="Output3" hspace="0" vspace="0"/></p>
+
+<p><img src="../images/ctu00322.png" border="0" alt="Table View" title="Table View" hspace="0" vspace="0"/></p>
+
+<table>
+<tbody>
+<tr>
+<th width="232">
+n
+</th>
+<th width="239">
+Time (second)
+</th>
+</tr>
+<tr>
+<td width="232">
+1000
+</td>
+<td width="239">
+0.001
+</td>
+</tr>
+<tr>
+<td width="232">
+1500
+</td>
+<td width="239">
+0.001
+</td>
+</tr>
+<tr>
+<td width="232">
+2000
+</td>
+<td width="239">
+0.001
+</td>
+</tr>
+<tr>
+<td width="232">
+2500
+</td>
+<td width="239">
+0.145
+</td>
+</tr>
+<tr>
+<td width="232">
+3000
+</td>
+<td width="239">
+0.416
+</td>
+</tr>
+<tr>
+<td width="232">
+3500
+</td>
+<td width="239">
+
+</td>
+</tr>
+</tbody>
+</table>
+<p><a name="_Toc485803926"></a>&nbsp;</p>
+<p>Possibly, above outcome can be represented as below,</p>
+
+<p><img src="../images/ctu00323.png" border="0" alt="Graphical View" title="Graphical View" hspace="0" vspace="0"/></p>
+
+
+<h1><a name="_Toc490067288"></a><a name="_Toc488252460"></a>2 &ndash; Divide and Conquer</h1>
+<h2><a name="_Toc490067289"></a><a name="_Toc488252461"></a>Requirement</h2>
+<p>Your company has been researching ways to improve the efficiency the mobile devices that it produces. Your group is tasked with finding a way to reduce media retrieval time from a playlist that is in alphabetical order. Your Algorithm Group has recently been reviewing the divide-and-conquer paradigm and has decided to test a divide and conquer approach.</p>
+<h2><a name="_Toc490067290"></a><a name="_Toc488252462"></a>Assignment Part 1</h2>
+<p>In C++, code a search algorithm that searches a list of strings for a particular song. The searching algorithm will have two inputs: the playlist, which is a string array that contains a list of songs in alphabetical order; and a particular song, which is a string. If the song is found in the list, the algorithm will return the index of the song, and it will return -1 otherwise.</p>
+<p>This searching algorithm will employ a divide-and-conquer approach similar to that in binary search, but with a slight variation. In binary search, a list is split into 2 sublists during each step; however, for your assignment, you will build and algorithm that splits the list into 3 sublists during each step.</p>
+<h3><a name="_Toc490067291"></a><a name="_Toc488252463"></a>Divide-and-Conquer Search</h3>
+<p>Commonly, binary search is one of the simplest and best-known search algorithms. When there is predetermined set numbers, which allow us to determine whether a given query number is in the set or not.</p>
+<p>This algorithm can be fulfilled, firstly, sort the table, then for any query number, look in the middle and search for left half. If the query number is not in there, then look into other half in the table or array (Sedgewick, 2013).</p>
+<p>Possible pseudo code can be (when we divide it into two),</p>
+<p>public static int search(int key, int lo, int hi)</p>
+<p>{</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (lo &gt; hi) return -1;</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int mid = lo + (hi - lo) / 2;</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (key &lt; a[mid])</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return search(key, lo, mid - 1);</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else if (key &gt; a[mid])</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return search(key, mid + 1, hi);</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else return mid;</p>
+<p>}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Here I performed two search routine using this pseudo code; the first one is dividing the array into 3 and the second one splits it into two,</p>
+<h3><a name="_Toc490067292"></a><a name="_Toc488252464"></a>Test 1 &ndash; Divide given string array into 3</h3>
+<p>/* Break In Code */</p>
+<p>/*</p>
+<p>&nbsp;* File:&nbsp;&nbsp; main.cpp</p>
+<p>&nbsp;* Author: doseo</p>
+<p>&nbsp;*</p>
+<p>&nbsp;* Created on July 19, 2017, 6:20 AM</p>
+<p>&nbsp;*/</p>
+
+<p>#include &lt;cstdlib&gt;</p>
+<p>#include &lt;iostream&gt;</p>
+<p>#include &lt;string&gt;</p>
+
+<p>using namespace std;&nbsp;</p>
+
+<p>int searchSong(string playList[], int arraySize, string songTitle, int songIndex){&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; arraySize; i++){</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; i &lt;&lt; ". " &lt;&lt; playList[i] &lt;&lt; endl;&nbsp; /* To print out the play list of Michael Jackson's */&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int start = 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* The 1st third */</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int stop = arraySize - 1;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int position1 = start + (stop - start + 1)/3;&nbsp;&nbsp; /* The 2nd third */&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int position2 = stop - start; /* The last Third; or, start + 2*(stop - start + 1)/3 */</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = -1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Initialize songIndex */&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while(start &lt; stop &amp;&amp; songIndex == -1){&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( (playList[start] &lt;= songTitle) &amp;&amp; (songTitle &lt; playList[position1]) ) /* 1st division */&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i = start; i &lt; stop; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(playList[i] == songTitle)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else if ( (playList[position1] &lt;= songTitle) &amp;&amp; (songTitle &lt; playList[position2]) ) /* 2nd division */&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i = start; i &lt; stop; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(playList[i] == songTitle)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else if ( (playList[position2] &lt;= songTitle) &amp;&amp; (songTitle &lt; playList[arraySize]) )&nbsp; /* 3rd division */&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i = start; i &lt; stop; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(playList[i] == songTitle)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = -1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>}</p>
+
+<p>int main(int argc, char** argv) {&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; char ans;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; do {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string playList[] = {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Bad",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Beat It",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Billie Jean",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Black or White",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Dirty Diana",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Don't Stop 'Til You Get",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Earth Song",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Heal the World",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Human Nature",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Leave Me Alone",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Love Never Felt So Good",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Man In the Mirror",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "P.Y.T.",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Remember the Time",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Rock with You",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Smooth Criminal",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "The Way You Make Me Feel",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "They Don't Care About Us",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Thriller",</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Wanna Be Startin' Something",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Who Is It",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Will You Be There",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "You Are Not Alone",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "You Rock My World"};</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int arraySize = sizeof(playList)/sizeof(string);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string songTitle;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Enter A Song Title from the playlist for Michael Jackson " &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getline (cin, songTitle);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Searching... " + songTitle &lt;&lt; endl &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int songIndex = searchSong(playList, arraySize, songTitle, songIndex);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "songIndex of " &lt;&lt; songTitle &lt;&lt; " is " &lt;&lt; songIndex &lt;&lt; endl &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Enter 'Y' to try again, else enter 'N' " &lt;&lt; endl;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Type either 'Y' to continue or 'N':&nbsp; ";</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cin &gt;&gt; ans;&nbsp;&nbsp; //unobserved trailing /n acting as "enter key strike"</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cin.ignore();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; } while ((ans == 'Y') || (ans == 'y'));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>}</p>
+<p>*** Break In Code ***</p>
+<p>Output:</p>
+
+<p><img src="../images/ctu00305.png" border="0" alt="Output4" title="Output4" hspace="0" vspace="0"/></p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : The first third, the second third, and the last were returned as coded.</p>
+
+<h3><a name="_Toc490067293"></a><a name="_Toc488252465"></a>Test 2 &ndash; Divide given string array into 2</h3>
+<p>/* Break In Code */</p>
+<p>/*</p>
+<p>&nbsp;* File:&nbsp;&nbsp; main.cpp</p>
+<p>&nbsp;* Author: doseo</p>
+<p>&nbsp;*</p>
+<p>&nbsp;* Created on July 14, 2017, 5:59 PM</p>
+<p>&nbsp;*/</p>
+
+<p>#include &lt;cstdlib&gt;</p>
+<p>#include &lt;iostream&gt;</p>
+<p>#include &lt;string&gt;</p>
+
+<p>using namespace std;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p>int searchSong(string playList[], int arraySize, string songTitle, int songIndex){&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp; for (int i = 0; i &lt; arraySize; i++){</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; i &lt;&lt; ". " &lt;&lt; playList[i] &lt;&lt; endl;&nbsp; /* To print out available play list */&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp; int start = 0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Start Index */&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; int stop = arraySize - 1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* End of string */</p>
+<p>&nbsp;&nbsp;&nbsp; int position = stop - start;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* To set mid-point in string array, which can be (start + stop)/2 */</p>
+
+<p>&nbsp;&nbsp;&nbsp; songIndex = -1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Initialize songIndex */</p>
+<p>&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; while(start &lt; stop &amp;&amp; songIndex == -1){&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( (playList[start] &lt;= songTitle) &amp;&amp; (songTitle &lt; playList[position]) )&nbsp; /* The 1st half */ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i = start; i &lt; stop; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(playList[i] == songTitle)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else if ( (playList[position] &lt;= songTitle) &amp;&amp; (songTitle &lt; playList[arraySize]) ) /* the second half */</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int i = start; i &lt; stop; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(playList[i] == songTitle)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* To handle illegal value and exit the function */</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; songIndex = -1;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return songIndex;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+
+<p>}</p>
+
+<p>int main(int argc, char** argv) {</p>
+<p>&nbsp;&nbsp;&nbsp; char ans;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; do {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string playList[] = {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Bad",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Beat It",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Billie Jean",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Black or White",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Dirty Diana",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Don't Stop 'Til You Get",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Earth Song",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Heal the World",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Human Nature",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Leave Me Alone",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Love Never Felt So Good",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Man In the Mirror",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "P.Y.T.",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Remember the Time",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Rock with You",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Smooth Criminal",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"The Way You Make Me Feel",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "They Don't Care About Us",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Thriller",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Wanna Be Startin' Something",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Who Is It",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "Will You Be There",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"You Are Not Alone",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "You Rock My World"};&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int arraySize = sizeof(playList)/sizeof(string);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string songTitle;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; " Enter A Song Title from the playlist for Michael Jackson " &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getline (cin, songTitle);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Searching ..." + songTitle &lt;&lt; endl &lt;&lt; endl;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int songIndex = searchSong(playList, arraySize, songTitle, songIndex);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "songIndex of " &lt;&lt; songTitle &lt;&lt; " is " &lt;&lt; songIndex &lt;&lt; endl &lt;&lt; endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Enter 'Y' to try again, otherwise enter 'N'" &lt;&lt; endl;</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "Type either 'Y' to continue or 'N' :";</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cin &gt;&gt; ans;&nbsp;&nbsp; //unobserved trailing /n acting as "enter key strike"</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cin.ignore();</p>
+
+<p>&nbsp;&nbsp;&nbsp; } while ((ans == 'Y') || (ans == 'y'));&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>}</p>
+<p>*** Break In Code ***</p>
+<p>The output for a song from the 1<sup>st</sup> half and 2<sup>nd</sup> half,</p>
+<p><img src="../images/ctu00306.png" border="0" alt="Output5" title="Output5" hspace="0" vspace="0"/></p>
+<p><img src="../images/ctu00324.png" border="0" alt="Output5.1" title="Output5.1" hspace="0" vspace="0"/></p>
+
+<h2><a name="_Toc490067294"></a><a name="_Toc488252466"></a>Assignment Part 2 &ndash; Time Complexity</h2>
+<p>The complexity of an algorithm is a measure of the amount of time and/or space required by an algorithm for an input of a given size (n). In analyzing an algorithm, through code and practice, we can predict the number of times &ldquo;the principle activity&rdquo; of a certain algorithm is performed (University of Glasgow, n.d.).</p>
+<h3><a name="_Toc490067295"></a><a name="_Toc488252467"></a>Time Complexity for Assignment Part 1</h3>
+<p>From the assignment Part 1, we have reviewed the possible implementation of divide-and-conquer search mechanism which is adopted from binary search in general. The first example divides given string array into three parts, and the second example splits it into 2. So the time complexity has to be O(log<sub>3</sub>N) and O(log<sub>2</sub>N)&nbsp;respectively. However, Big O does not deal with constant factors, so Log<sub>x</sub>(n) and Log<sub>y</sub>(n) are treated same because Big-O isn't concerned with the slope of the curve on the graph, only with the shape of the curve (StackOverflow, n.d.). So for the given array size 24, Log3(24) is about 2.89278926071 whereas Log2(24) yields 4.58496250072.</p>
+
+<h3><a name="_Toc490067296"></a><a name="_Toc488252468"></a>Time Complexity Comparison</h3>
+<p>To answer &ldquo;how does this time complexity compare to the time complexity of binary search (in terms of Big-O),&rdquo; which can be represented as Table 1 below,</p>
+<p><strong>Table 1</strong></p>
+<p><em>Time Complexities of Binary Search Algorithm (Hackerearth, n.d.).</em></p>
+<p><img src="../images/ctu00325.png" border="0" alt="Output5.1" title="Output5.1" hspace="0" vspace="0"/></p>
+<table>
+<tbody>
+<tr>
+<th width="134">
+<strong>Algorithm</strong>
+</th>
+<th colspan="3" width="353">
+<strong>Time Complexity</strong>
+</th>
+</tr>
+<tr>
+<td width="134">
+<strong>&nbsp;</strong>
+</td>
+<td width="93">
+<strong>Best</strong>
+</td>
+<td width="128">
+<strong>Average</strong>
+</td>
+<td width="132">
+<strong>Worst</strong>
+</td>
+</tr>
+<tr>
+<td width="134">
+Binary Search
+</td>
+<td width="93">
+&Omega;(1)
+</td>
+<td width="128">
+&theta;(log2(n))
+</td>
+<td width="132">
+O(log2(n))
+</td>
+</tr>
+<tr>
+<td width="134">
+Modified Serarch
+</td>
+<td width="93">
+&Omega;(1)
+</td>
+<td width="128">
+&theta;(log3(n))
+</td>
+<td width="132">
+O(log3(n))
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note</em>: Big-O, Little-o, Omega &Omega;, and Theta &Theta; are formal notational methods for stating the growth of resource needs (efficiency and storage) of an algorithm (gitbooks, n.d.).</p>
+
+<p>Since binary search is one of linear search, the worst case of binary search is when the value to search is not in the set of string array for this case study because the algorithm needs performing the maximum number of recursive call (Western University, n.d.). However generally constant terms are ignored. So in expression, which represents O(log n).</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1><a name="_Toc490067297"></a><a name="_Toc488864593"></a>3 &ndash; Greedy Methods</h1>
+<h2><a name="_Toc490067298"></a><a name="_Toc488864594"></a>Requirement</h2>
+<p>The multimedia/mobile company you work for is currently attempting to transfer large media files from older disks to newer disks (on various servers). The task of simply copying over all of these files in any haphazard order is fairly straightforward; however, you believe that you can improve upon a haphazard approach and hope to improve the efficiency of storage space on the new disks. You have a collection of m disks, but you believe that if you smartly organize the media files onto the disks, you may not need to use all m disks.</p>
+<p>You plan to design a greedy algorithm to efficiently transfer media to storage devices. Note that this is an optimization problem. Optimization problems have a general structure and consist of some quantity to be maximized or minimized under some list of constraints. In this problem, you have n files (f1, ..., fn) with corresponding sizes (in MBs) s1, ... sn. Your goal is to store these files onto m disks, d1, ..., dm, that have corresponding storages amounts t1, ..., tm. Note that one file cannot be spread across multiple disks. In this problem, the goal is to minimize the amount of storage that is not used on each disk (that is used). This should also minimize the total number of number of disks being used. That is, you would like to fill up each disk as much as possible while leaving a minimally small amount of unused storage. (In the perfect case, each disk would be perfectly filled, and there would be no unused storage.) If there are any disks left unused, you will be able to return them for a refund.</p>
+<h2><a name="_Toc490067299"></a><a name="_Toc488864595"></a>Assignment Part 1 &ndash; Pseudocode</h2>
+<h3><a name="_Toc490067300"></a><a name="_Toc488864596"></a>Problem</h3>
+<p>Design a greedy algorithm using pseudocode that solves this optimization problem of transferring files to disk while minimizing unused storage. The inputs to this algorithm are the number of files n, corresponding sizes (in MBs) s1, ... sn, m the number of disks, and corresponding storages amount t1, ..., tm. The algorithm should return an array map[i] which contains the disk index of which the ith media file should be stored.</p>
+<h3><a name="_Toc490067301"></a><a name="_Toc488864597"></a>Pseudocode</h3>
+<p>An optimisation problem involves finding a subset, S, from a collection of candidates, C; the subset, S, must satisfy some specified criteria (University of Liverpool, n.d.). Same can be represented as below,</p>
+<p>function select (C : candidate_set) return candidate;</p>
+<p>function solution (S : candidate_set) return boolean;</p>
+<p>function feasible (S : candidate_set) return boolean;</p>
+<p>--***************************************************</p>
+<p>function greedy (C : candidate_set) return candidate_set is</p>
+<p>x : candidate;</p>
+<p>S : candidate_set;</p>
+<p>begin</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S := {};</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while (not solution(S)) and C /= {} loop</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x := select( C );</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; C := C - {x};</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if feasible( S union {x} ) then</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; S := S union { x };</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end if;</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end loop;</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if solution( S ) then</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return S;</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return es;</p>
+<p>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;end if;</p>
+<p>Supposing that the source and target are unsorted arrays as below Table 1,</p>
+<p><em>Table 1 &ndash; Unsorted Array for Both Source File and Target Disk</em></p>
+
+<p><img src="../images/ctu00326.png" border="0" alt="Unsorted Array" title="Unsorted Array.1" hspace="0" vspace="0"/></p>
+
+<table width="0">
+<tbody>
+<tr>
+<th width="129">
+<strong>i</strong>
+</th>
+<th width="169">
+<strong>1</strong>
+</th>
+<th width="126">
+<strong>2</strong>
+</th>
+<th width="91">
+<strong>&hellip;</strong>
+</th>
+<th width="129">
+<strong>n/m</strong>
+</th>
+</tr>
+<tr>
+<td width="129">
+source
+</td>
+<td width="169">
+file(1) = f3 s(3)
+</td>
+<td width="126">
+file(2) f1 (s1)
+</td>
+<td width="91">
+&hellip;
+</td>
+<td width="129">
+fn (sn)
+</td>
+</tr>
+<tr>
+<td width="129">
+target
+</td>
+<td width="169">
+disk(1) d2 (t2)
+</td>
+<td width="126">
+disk(2) d3 (t3)
+</td>
+<td width="91">
+&hellip;
+</td>
+<td width="129">
+dm (tm)
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Note: These are an array of values which are not sorted by the size of the source file and the amount of target disk.</p>
+
+
+<p>Before we deal with pseudocode of a greedy algorithm, it is meaningful to review heapsort&nbsp; because this file transfer problem is about to make use of it. Heapsort is based on usage of the binary heap &ndash; data structure which acts as a priority queue. If we insert all elements of the array into the priority queue, the operation poll will always return (and remove) the element of the heap, which has the highest priority. If we use poll operation n times, we will obtain list of sorted elements. Meaning that in heapsort the unsorted elements will first be put into a heap structure, then if array needs to be sorted in descending order an ascending heap structure is to be used.</p>
+<p>Simple steps for heapsort can be,</p>
+<ol>
+<li>Build the heap using all elements of the array.</li>
+<li>Poll the highest element of the heap.</li>
+<li>Swap it with the last element of the heap (in the array).</li>
+<li>Reduce the heap size by 1 (elements at the end of the heap are already sorted).</li>
+<li>Repair the heap (move element swapped in 3 to its correct place in the structure).</li>
+<li>If there are any elements remaining in the heap GOTO: 2.</li>
+<li>The array is sorted according to the priority of the elements in reverse order (Programming-Algorithms.net, n.d.).</li>
+</ol>
+
+<p>Now to copy files to disks,</p>
+<ol>
+<li>Sort the source files and the target disks in descending order using heapsort to copy/map the largest file to the disk which has most available space like Table 2. Then store the original indices of the files and disks.</li>
+</ol>
+<p><em>Table 2 &ndash; Sorted Array for Both Source File and Target Disk</em></p>
+
+<p><img src="../images/ctu00327.png" border="0" alt="Sorted Array" title="Sorted Array.1" hspace="0" vspace="0"/></p>
+
+<table width="0">
+<tbody>
+<tr>
+<th width="78">
+<strong>i</strong>
+</th>
+<th width="210">
+<strong>1</strong>
+</th>
+<th width="136">
+<strong>2</strong>
+</th>
+<th width="91">
+<strong>&hellip;</strong>
+</th>
+<th width="129">
+<strong>n/m</strong>
+</th>
+</tr>
+<tr>
+<td width="78">
+source
+</td>
+<td width="210">
+file(2) = f1 s(1)
+</td>
+<td width="136">
+file(1) f3 (s3)
+</td>
+<td width="91">
+&hellip;
+</td>
+<td width="129">
+fn (sn)
+</td>
+</tr>
+<tr>
+<td width="78">
+target
+</td>
+<td width="210">
+disk(2) d3 (t3)
+</td>
+<td width="136">
+disk(3) d2 (t2)
+</td>
+<td width="91">
+&hellip;
+</td>
+<td width="129">
+dm (tm)
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Note: in case s1 is greater than the capacity of d1, s1 can&rsquo;t be copied.</p>
+
+<ol start="2">
+<li>Initialize the size of file with n, and the size of disk with m</li>
+<li>Array for the source file s[1 to m]</li>
+<li>(Assuming that files cannot be stored across disks). In following greedy paradigm, either a file can be on a disk, or it can not be copied over.</li>
+<li>Start with the file[1] which is the largest one and disk[1] the biggest capacity</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i = 0; i &lt; n; i++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // To check from the biggest source file</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(j=0;j&lt;=m; j++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // To check the capacity of disk</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (disk[j].capacity &lt; file[i].size)</p>
+<p>continue to find till it find disk with enough capacity</p>
+<p>else</p>
+<p>copy the file, and reduce the disk storage amount by the file size. Then move to the next file // map[the original index of file[i]] = the original index of disk[j]</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>Or, above routine can be presented as below,</p>
+<ul>
+<li>When the disk[j] is less than file[i], then the next disk[j] capacity is checked.</li>
+</ul>
+<ul>
+<li>When the disk[j] is greater than file[i], then the current file is stored, the disk is reduced by the file size finally it moves to the next file.</li>
+<li>map[i] is the storing the file as original index of file[i]=original index of disk [j].</li>
+</ul>
+<h2><a name="_Toc488864598"></a>&nbsp;</h2>
+<h2><a name="_Toc490067302"></a>Assignment Part 2 &ndash; Optimality</h2>
+<p>Possibly, continuous storing file to the disk can be an optimal solution using recursive routine. In other words, store each possible mapping of a file to the disk recursively. However, the greedy algorithm does not guarantee the entire problem to be optimal. So above algorithm is to demonstrate the shortest and quickest checking the files and disks.</p>
+<p>The time complexity for this instance can be O(mn + n log n) because both files and disks are sorted using heapsort, and iterate over all files, and each file iterates a tree of disks where the height of the tree is log(number of nodes).</p>
+<h2><a name="_Toc490067303"></a><a name="_Toc488864599"></a>Assignment Part 3 &ndash; Time Complexity Comparison</h2>
+<p>The brute force algorithm consists in checking, at all positions in the text between 0 and n-m, whether an occurrence of the pattern starts there or not. Then, after each attempt, it shifts the pattern by exactly one position to the right. So during the searching phase, the text character comparisons can be done in any order. The time complexity of this searching phase is O(m*n) where the number of files is n and the number of disks is m&nbsp; (Universite Paris-Est Marne-La-Vallee, n.d.). There is no sorting, no tree, but only two nested loops. So commonly pseudocode for Brute Force Algorithm can be,</p>
+<p>void BF(char *x, int m, char *y, int n) {</p>
+<p>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;int i, j;</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Searching */</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (j = 0; j &lt;= n - m; ++j) {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (i = 0; i &lt; m &amp;&amp; x[i] == y[i + j]; ++i);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;if (i &gt;= m)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OUTPUT(j);</p>
+<p>&nbsp;&nbsp; }</p>
+<p>}</p>
+
+
+
+
+<h1><a name="_Toc490067304"></a>4 &ndash; Dynamic Programming</h1>
+<h2><a name="_Toc490067305"></a>Requirement</h2>
+<p>Your algorithms group has been tasked with creating an app that performs special operations on images. Specifically, your app will compare one black-and-white image into another black-and-white image. There are a number of methods that can be used to perform this task, but your group has agreed that using dynamic programming is a fast and elegant scheme to solve this problem.</p>
+<h2><a name="_Toc490067306"></a>Assignment Part 1 &ndash; Pseudocode</h2>
+<h3><a name="_Toc490067307"></a>Problem</h3>
+<p>Design an algorithm (using pseudocode) that takes in as an input, two 2-D int arrays that are assumed to be 2 black-and-white images: initialImage x, whose dimensions are IxJ, and finalImage y, whose dimensions are IxK. The algorithm will compare x to the y, row-by-row, as defined below. Your algorithm will employ a dynamic programming scheme to compare X to Y identifying the minimal difference between each row.</p>
+<p>Because you are working with black-and-white images only, you should assume that each image is a 2-D int array consisting of 2 possible values: 0 or 1, where 0 represents black and 1 represents white. Thus, this 2-D grid of 0 and 1 values comprise a 2-D black-and-white image. Each row of this image is then simply a 1-D int array filled with either 0s or 1s. Therefore, you must define how you will measure the difference between the strings of 0s and 1s in each row.</p>
+<p>Remember that you will do the comparison one row in the images at a time.</p>
+<p>First, compare X1,* to Y1,*. (Here X1,* is the first row in image X and Y1,* is the first row in image Y ). Next, compare X2 to Y2... Each one of these comparisons will require the construction of a D (distance) matrix.</p>
+<p>In the following example, the first row of X is X1,*, and the first row of Y is Y1,* = 00110.</p>
+
+<p><img src="../images/ctu00307.png" border="0" alt="2-D arrary" title="2-D Array.1" hspace="0" vspace="0"/></p>
+
+<!-- <table width="0">
+<tbody>
+<tr>
+<th width="27">
+<strong>X</strong>
+</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="64">&nbsp;</th>
+<th width="27">
+<strong>Y</strong>
+</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+<th width="28">&nbsp;</th>
+</tr>
+<tr>
+<td width="27">&nbsp;</td>
+<td width="28">
+1
+</td>
+<td width="28">
+2
+</td>
+<td width="28">
+3
+</td>
+<td width="28">
+4
+</td>
+<td width="28">
+5
+</td>
+<td width="64">&nbsp;</td>
+<td width="27">&nbsp;</td>
+<td width="28">
+1
+</td>
+<td width="28">
+2
+</td>
+<td width="28">
+3
+</td>
+<td width="28">
+4
+</td>
+<td width="28">
+5
+</td>
+</tr>
+<tr>
+<td width="27">
+1
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+0
+</td>
+<td width="64">&nbsp;</td>
+<td width="27">
+1
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+0
+</td>
+</tr>
+<tr>
+<td width="27">
+2
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+<td width="64">&nbsp;</td>
+<td width="27">
+2
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+</tr>
+<tr>
+<td width="27">
+3
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+<td width="64">&nbsp;</td>
+<td width="27">
+3
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+0
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+<td width="28">
+1
+</td>
+</tr>
+</tbody>
+</table> -->
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Use the following recurrence relation to develop your pseudocode:</p>
+
+<p><img src="../images/ctu00308.png" border="0" alt="pseudocode" title="pseudocode" hspace="0" vspace="0"/></p>
+
+<p>After the D matrix is completed, the minimum number in the bottom row is the minimal mismatch for this row. You will assign this value to the variable minVali. This number tells how different row X1,* is from row Y1,* . You will then repeat this comparison for all rows i and aggregate the difference when complete into variable totalDifference = &sum; minVali.</p>
+<p>As a result, the algorithm will compare the total difference to a threshold value called thresh. If total value is above the threshold, the images are declared different; otherwise, they are declared to be similar images. You can assume that the thresh variable is supplied as an input to your algorithm.</p>
+<h3><a name="_Toc490067308"></a>Pseudocode</h3>
+<p>Design pseudocode for the image comparison algorithm discussed above, given input Images X, Y, and thresh. The output is a declaration: The images are similar, or The images are different.</p>
+<p>Before moving on to the multiple rows, the distance in a single row can be written as below, &nbsp;</p>
+<p>int d[6][6]; // define character array with termination character</p>
+<p>#define min(x,y) ((x) &lt; (y) ? (x) : (y))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // define min() to get smaller number</p>
+<p>int main()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int i,j,k,temp,tracker; // additional int temp and tracker are defined</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char x[] = "11001"; // j[] &ndash; columns from table X (Row 2 is used for easier representation )</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char y[] = "01101"; // k[] &ndash; columns from table Y</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; k = strlen(x); &nbsp; // for this instance, assumed both j and k have same length</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>for(i=0;i&lt;=k;i++)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[0][i] = i;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // iterate</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(j=0;j&lt;=k;j++)</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[j][0] = j;</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (j=1;j&lt;=k;j++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // based on target y</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(i=1;i&lt;=k;i++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(x[i-1] == y[j-1])</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tracker = 0;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tracker = 1;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; temp = min((d[i-1][j]+1),(d[i][j-1]+1)); // save off min value</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[i][j] = min(temp,(d[i-1][j-1]+tracker)); // compare it with temp</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("&nbsp; minVali %d\n",d[k][k]); // for this example, k is 5</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The d[k][k] = minVali will be 0, 2, 1 respectively. Hence, totalDifference = &sum; minVali = 0 + 2 +1. If thres is 2 the image X and Y are different.</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Now we are checking the distance between the table X and Y row by row basis. So possible pseudocode for dynamic programming can be,</p>
+<p>#define min(x,y) ((x) &lt; (y) ? (x) : (y))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // min() function</p>
+<p>int d[6][6];</p>
+<p>int MAX_COLUMNS = 6; // the length of string + 1</p>
+
+<p>void compabImage(int x[][], int y[][], int thresh){ //2-D Array for X and Y, threshold value as input</p>
+<p>&nbsp;&nbsp; int i, j, k, a, b, c;</p>
+
+<p>&nbsp;&nbsp; int d[j][k];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // string (character array for x and y for each row - [6][6]</p>
+<p>&nbsp;&nbsp; int totalDifference =0;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SUM of individual rows</p>
+
+<p>&nbsp;&nbsp; for(int r=0 ; r&lt;i ;r++){&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // to iterate all rows i for x and y</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int a=0 ;a &lt; j ;a++)&nbsp;&nbsp;&nbsp; // to iterate all column in X (a string)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int b=0 ; b &lt; k ;b++)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // to iterate all columns in y</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[a][b]=6;&nbsp; // based on sample table x and y (or strlen for each string)</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if((a-1)&gt;=0 &amp;&amp; (b-1)&gt;=0)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(x[r][a]==y[r][b]])&nbsp; // Compare values - when x and y has same value</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[a][b] = d[a-1][b-1];&nbsp;&nbsp; // no change 0</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[a][b] = d[a-1][b-1]+1; //&nbsp; 1</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(a-1 &gt;= 0)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[a][b] = min(d[a][b],d[a-1][b]+1); // Compare it with previous 2-D value</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(b-1 &gt;= 0)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; d[a][b] = min(d[a][b],d[a][b-1]+1);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int minVali =6;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for(int c=0 ; c &lt; k ; c++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; minVali =min(d[j-1][c],minVali);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; totalDifference += minVali ;</p>
+<p>&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; if(totalDifference &gt;thresh)</p>
+<p>&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("different");</p>
+<p>&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp; else</p>
+<p>&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;printf("similar");</p>
+<p>&nbsp;&nbsp; }</p>
+<p>}</p>
+<h2><a name="_Toc490067309"></a>Assignment Part 2 - Optimality</h2>
+<p>The Basic idea of optimality in the dynamic programming is that we can use optimal solutions to the smaller subproblems so long as it yields the optimal solutions to the larger ones. Unlike divide-and-conquer (as in mergesort or quicksort) it is OK if our subproblems overlap, so long as there are not too many of them (Carnegie Mellon University, n.d.). To compare the similarity of given image from above example, we solved subproblems row by row basis by comparing one string from X with another string from Y; then we move it to all given rows. Furthermore, we could prevent recursive search by storing the immediate comparison outcome into 2 dimensional array d[][].</p>
+<p>So we conclude that the time complexity for this pseudocode has to be O (i*j*k) which are the number of rows, the number of columns in X, and the number of columns in Y respectively.</p>
+<h1><a name="_Toc488864600"></a>&nbsp;</h1>
+
+
+<h1><a name="_Toc490067310"></a>5 &ndash; State Space Traversal &amp; Heuristics</h1>
+<h2><a name="_Toc490067311"></a>Requirement</h2>
+<p>Your team is requested to design an application using the design of an artificial intelligence agent, to solve a Sudoku game, given any starting state of the game. The goal of Sudoku is to fill in a 9&times;9 grid with digits so that each column, row, and 3&times;3 section contain the numbers between 1 to 9 (Sudoku, n.d.). To solve Sudoku, we commonly adopt three different algorithms: backtrack, rule-based, and Boltzmann machine (Berggren &amp; Nilsson, n.d.).</p>
+<h2><a name="_Toc490067312"></a>State Space</h2>
+<p>Here I am going to make use of backtracking algorithm to solve Sudoku program because multiple case study reads that this algorithm performs fairly well along with rule-based algorithm (Ekne &amp; Bylleus, 2015). To solve the problem here, I need to familiar with the rule and constraint in Sudoku game itself. Based on the rule given, the goal has to be,</p>
+<ul>
+<li>Any row contains more than one of the same number from 1 to 9 (or, each integer 1 through 9 should appear once in a row)</li>
+<li>Any column contains more than one of the same number from 1 to 9 (or, each integer 1 through 9 should appear once in a column)</li>
+<li>Any 3&times;3 grid contains more than one of the same number from 1 to 9 (or, each integer from 1 through 9 should appear once in each of 3x3 sub-grid (Sudoku, n.d.)</li>
+</ul>
+<p>&nbsp;So a starting state is a partially filled 9x9 2-dimensional array where sub-grid 3 to 5 pre-set integer values as below,</p>
+
+<p><img src="../images/ctu00309.png" border="0" alt="Partial view" title="Partial" hspace="0" vspace="0"/></p>
+
+<table width="0">
+<tbody>
+<tr>
+<th width="21">&nbsp;</th>
+<th width="25">
+<strong><em>1</em></strong>
+</th>
+<th width="25">
+<strong><em>2</em></strong>
+</th>
+<th width="25">
+<strong><em>3</em></strong>
+</th>
+<th width="25">
+<strong><em>4</em></strong>
+</th>
+<th width="25">
+<strong><em>5</em></strong>
+</th>
+<th width="25">
+<strong><em>6</em></strong>
+</th>
+<th width="34">
+<strong><em>7</em></strong>
+</th>
+<th width="25">
+<strong><em>8</em></strong>
+</th>
+<th width="25">
+<strong><em>9</em></strong>
+</th>
+</tr>
+<tr>
+<td width="21">
+<strong><em>1</em></strong>
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+2
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+4
+</td>
+<td width="34">
+8
+</td>
+<td width="25">
+1
+</td>
+<td width="25">
+
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>2</em></strong>
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+4
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+8
+</td>
+<td width="34">
+2
+</td>
+<td width="25">
+6
+</td>
+<td width="25">
+3
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>3</em></strong>
+</td>
+<td width="25">
+3
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+1
+</td>
+<td width="25">
+6
+</td>
+<td width="25">
+
+</td>
+<td width="34">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+4
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>4</em></strong>
+</td>
+<td width="25">
+1
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+4
+</td>
+<td width="25">
+
+</td>
+<td width="34">
+5
+</td>
+<td width="25">
+8
+</td>
+<td width="25">
+
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>5</em></strong>
+</td>
+<td width="25">
+6
+</td>
+<td width="25">
+3
+</td>
+<td width="25">
+5
+</td>
+<td width="25">
+8
+</td>
+<td width="25">
+2
+</td>
+<td width="25">
+
+</td>
+<td width="34">
+&nbsp;4,9
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+7
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>6</em></strong>
+</td>
+<td width="25">
+2
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+5
+</td>
+<td width="25">
+9
+</td>
+<td width="25">
+
+</td>
+<td width="34">
+1
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>7</em></strong>
+</td>
+<td width="25">
+9
+</td>
+<td width="25">
+1
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+7
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="34">
+
+</td>
+<td width="25">
+4
+</td>
+<td width="25">
+
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>8</em></strong>
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+6
+</td>
+<td width="25">
+8
+</td>
+<td width="25">
+
+</td>
+<td width="34">
+7
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+1
+</td>
+</tr>
+<tr>
+<td width="21">
+<strong><em>9</em></strong>
+</td>
+<td width="25">
+8
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+4
+</td>
+<td width="25">
+
+</td>
+<td width="25">
+3
+</td>
+<td width="34">
+
+</td>
+<td width="25">
+5
+</td>
+<td width="25">
+
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>Based on this starting status and given a rule, the total number of cells or n elements is 9x9 = 81. In other words, incomplete n^2 x n^2 with n x n subgrids (NP-complete problems). So to solve the problem, construct for each empty cell (x,y) a list Lxy of compatible digits. For this example, cell (5, 7) with L57 = {4, 9}. Then order it cardinally on lists. So the value assigned will be cardinality 1, and the list of value is 2 then cardinality is 2 and so on, which can be described as a tree. This is true since backtracking is also known as depth first search, we may look at the strings as nodes of a tree. So generating strings in dictionary order constitutes a tree traversal that systematically eliminates subtrees and moves down and backs up along branches (Chi &amp; Lange, 2012).</p>
+<h2><a name="_Toc490067313"></a>Traversal Time Complexity</h2>
+<p>Commonly it is easy to find the time complexity using pseudocode, which pseudocode for brute force can be,&nbsp;</p>
+<p>boolean solve() :=</p>
+<p>x = 0, y = 0</p>
+<p>for x,y in grid:</p>
+<p>if grid[x][y].value == 0</p>
+<p>found = true</p>
+<p>break</p>
+<p>if !(found)</p>
+<p>return valid()</p>
+<p>candidates = boolean[10]</p>
+<p>for i := 0 -&gt; 9:</p>
+<p>candidates[grid[x][i].value] = true</p>
+<p>candidates[grid[i][y].value] = true</p>
+<p>for (cells in same box as cell x,y):</p>
+<p>candidates[cell.value] = true</p>
+<p>for j := 1 -&gt; 9:</p>
+<p>if !(candidates[j]):</p>
+<p>grid[x][y].value = j</p>
+<p>if solve()</p>
+<p>return true</p>
+<p>grid[x][y].value</p>
+
+<p>So the complexity for above pseudocode has to be O(n^2) because it generates all possible configurations of numbers from 1 through 9 to fill the empty cell. So it tries every configuration one by one until the correct configuration is found.</p>
+<p>Based on given status, possible numbers can be,</p>
+
+<p><img src="../images/ctu00310.png" border="0" alt="solution view" title="Solution" hspace="0" vspace="0"/></p>
+
+<table width="0">
+<tbody>
+<tr>
+<th width="39">&nbsp;</th>
+<th width="43">
+<em>1</em>
+</th>
+<th width="43">
+<em>2</em>
+</th>
+<th width="43">
+<em>3</em>
+</th>
+<th width="43">
+<em>4</em>
+</th>
+<th width="43">
+<em>5</em>
+</th>
+<th width="43">
+<em>6</em>
+</th>
+<th width="43">
+<em>7</em>
+</th>
+<th width="43">
+<em>8</em>
+</th>
+<th width="43">
+<em>9</em>
+</th>
+</tr>
+<tr>
+<td width="39">
+<em>1</em>
+</td>
+<td width="43">
+57
+</td>
+<td width="43">
+579
+</td>
+<td width="43">
+3679
+</td>
+<td width="43">
+2
+</td>
+<td width="43">
+356
+</td>
+<td width="43">
+4
+</td>
+<td width="43">
+8
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+59
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>2</em>
+</td>
+<td width="43">
+57
+</td>
+<td width="43">
+4
+</td>
+<td width="43">
+179
+</td>
+<td width="43">
+9
+</td>
+<td width="43">
+579
+</td>
+<td width="43">
+8
+</td>
+<td width="43">
+2
+</td>
+<td width="43">
+6
+</td>
+<td width="43">
+3
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>3</em>
+</td>
+<td width="43">
+3
+</td>
+<td width="43">
+25789
+</td>
+<td width="43">
+2789
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+6
+</td>
+<td width="43">
+579
+</td>
+<td width="43">
+9
+</td>
+<td width="43">
+79
+</td>
+<td width="43">
+4
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>4</em>
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+679
+</td>
+<td width="43">
+679
+</td>
+<td width="43">
+39
+</td>
+<td width="43">
+4
+</td>
+<td width="43">
+67
+</td>
+<td width="43">
+5
+</td>
+<td width="43">
+8
+</td>
+<td width="43">
+2689
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>5</em>
+</td>
+<td width="43">
+6
+</td>
+<td width="43">
+3
+</td>
+<td width="43">
+5
+</td>
+<td width="43">
+8
+</td>
+<td width="43">
+2
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+49
+</td>
+<td width="43">
+9
+</td>
+<td width="43">
+7
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>6</em>
+</td>
+<td width="43">
+2
+</td>
+<td width="43">
+78
+</td>
+<td width="43">
+478
+</td>
+<td width="43">
+5
+</td>
+<td width="43">
+9
+</td>
+<td width="43">
+67
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+38
+</td>
+<td width="43">
+68
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>7</em>
+</td>
+<td width="43">
+9
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+236
+</td>
+<td width="43">
+7
+</td>
+<td width="43">
+15
+</td>
+<td width="43">
+256
+</td>
+<td width="43">
+368
+</td>
+<td width="43">
+4
+</td>
+<td width="43">
+268
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>8</em>
+</td>
+<td width="43">
+45
+</td>
+<td width="43">
+25
+</td>
+<td width="43">
+234
+</td>
+<td width="43">
+6
+</td>
+<td width="43">
+8
+</td>
+<td width="43">
+259
+</td>
+<td width="43">
+7
+</td>
+<td width="43">
+2
+</td>
+<td width="43">
+1
+</td>
+</tr>
+<tr>
+<td width="39">
+<em>9</em>
+</td>
+<td width="43">
+8
+</td>
+<td width="43">
+267
+</td>
+<td width="43">
+267
+</td>
+<td width="43">
+4
+</td>
+<td width="43">
+1
+</td>
+<td width="43">
+3
+</td>
+<td width="43">
+69
+</td>
+<td width="43">
+5
+</td>
+<td width="43">
+269
+</td>
+</tr>
+</tbody>
+</table>
+<p>Note: candidate p is written in size 8 fonts above. The cardinality is 1 through 5 which can be represented as a tree.&nbsp;</p>
+<h2><a name="_Toc490067314"></a>Heuristic Search</h2>
+<p>A heuristic search method is a depth first search as complete solutions must be created before testing. It is often called the British Museum method as it is like looking for an exhibit at random. A heuristic is needed to sharpen up the search. Consider the problem of four 6-sided cubes, and each side of the cube is painted in one of four colors. The four cubes are placed next to one another, and the problem lies in arranging them so that the four available colors are displayed whichever way the 4 cubes are viewed. The problem can only be solved if there are at least four sides colored in each color and the number of options tested can be reduced using heuristics if the most popular color is hidden by the adjacent cube (Cardiff University, n.d.). So possibly backtracking algorithm can enhance the performance of search, which checks whether it is safe to assign before assigning integer into an empty cell. So simply check same numbers which are not present in the current row, current column and current 3x3 sub-grid. At once safety is checked, assign the number, and recursively check whether this assignment leads to a solution or not (GeeksforGeeks, n.d.).</p>
+<p>Based on the candidate made above,</p>
+<p>L62&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 78</p>
+<p>L63&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 478&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>L33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 2789</p>
+<p>L32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 25789&nbsp;</p>
+<p>This example does not branch out (the state-status I made was a simple example), but it gives some good idea how it fails to grow based on vertex set. Same can be simplified as below (Henrik &amp; Viktor, n.d),</p>
+
+<p><img src="../images/ctu00311.png" border="0" alt="traverse" title="traverse" hspace="0" vspace="0"/></p>
+
+<h2><a name="_Toc490067315"></a>Pseudocode</h2>
+<p>For backtracking implementation, set initial status with given numbers in Sudoku template (9x9). Then initialize the 2-D array with 81 empty grids(nx=9,ny=9). Next, fill in some available empty grid with the known values and make an original copy of the array.</p>
+<p><em>Algorithm</em></p>
+<p>&nbsp; Find row, col of an unassigned cell&nbsp; --- so each row and columns have candidate</p>
+<p>&nbsp; If there is none, return true</p>
+<p>&nbsp; For digits from 1 to 9&nbsp; --- available digits for columns and rows</p>
+<ol>
+<li>a) If there is no conflict for digit at row, col --- for this example Lxy</li>
+</ol>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; assign digit to row, col and recursively try fill in rest of grid</p>
+<ol>
+<li>b) If recursion successful, return true</li>
+<li>c) Else, remove digit and try another</li>
+</ol>
+<p>&nbsp; If all digits have been tried and nothing worked, return false</p>
+<p><em>Pseudocode</em></p>
+<p>Start from top left grid(nx=0,ny=0), check if grid is empty</p>
+<p>if (grid is empty)</p>
+<p>assign the empty grid with values (i)</p>
+<p>if (no numbers exist in same rows &amp; same columns same as</p>
+<p>(i) &amp; 3x3 zone (i) is currently in)</p>
+<p>fill in the number</p>
+<p>if (numbers exists in same rows &amp; same columns same as</p>
+<p>(i) &amp; 3x3 zone (i) is currently in)</p>
+<p>discard (i) and try other values (i++)</p>
+<p>}else{</p>
+<p>while (nx&lt;9){</p>
+<p>Proceed to next row grid(nx++,ny)</p>
+<p>if (nx equal 9){</p>
+<p>reset nx = 1</p>
+<p>proceed to next column grid(nx,ny++)</p>
+<p>if (any equal 9){</p>
+<p>print solutions}}}</p>
+<p><em>C++ Implementation and output</em></p>
+<p>#include &lt;cstdlib&gt;</p>
+<p>#include &lt;stdio.h&gt;</p>
+
+<p>using namespace std;</p>
+
+<p>#define UNASSIGNED 0&nbsp; // Or, a space</p>
+<p>#define n 9 // total number of row and column (x,y)</p>
+
+<p>bool IsUnassignedCell(int grid[n][n], int &amp;row, int &amp;col);</p>
+<p>bool testValueSafety(int grid[n][n], int row, int col, int num); // Sudoku rule</p>
+
+<p>/* Function to solve given puzzle */</p>
+<p>bool backTracking(int grid[n][n])</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; int row, col;</p>
+<p>&nbsp;&nbsp;&nbsp; if (!IsUnassignedCell(grid, row, col))&nbsp;&nbsp;&nbsp; // if assigned cell</p>
+<p>&nbsp;&nbsp;&nbsp; return 1; // because return value boolean</p>
+
+<p>&nbsp;&nbsp;&nbsp; for (int num = 1; num &lt;= 9; num++) // Iterate 1 through 9</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (testValueSafety(grid, row, col, num))&nbsp;&nbsp;&nbsp;&nbsp; // test value by assigning one</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; grid[row][col] = num;&nbsp;&nbsp;&nbsp;&nbsp; // Try</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (backTracking(grid))</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; grid[row][col] = UNASSIGNED; // To try again = 0</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>bool IsUnassignedCell(int grid[n][n], int &amp;row, int &amp;col)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; for (row = 0; row &lt; n; row++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (col = 0; col &lt; n; col++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (grid[row][col] == UNASSIGNED)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>bool checkRow(int grid[n][n], int row, int num)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; for (int col = 0; col &lt; n; col++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (grid[row][col] == num)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>bool checkColumn(int grid[n][n], int col, int num)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; for (int row = 0; row &lt; n; row++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (grid[row][col] == num)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>bool checkSubgrid(int grid[n][n], int subgridRowStart, int subgridColStart, int num)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; for (int row = 0; row &lt; 3; row++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int col = 0; col &lt; 3; col++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (grid[row+subgridRowStart][col+subgridColStart] == num)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 1;</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>bool testValueSafety(int grid[n][n], int row, int col, int num)</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; return !checkRow(grid, row, num) &amp;&amp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !checkColumn(grid, col, num) &amp;&amp;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !checkSubgrid(grid, row - row%3 , col - col%3, num);</p>
+<p>}</p>
+
+<p>void showOutput(int grid[n][n])&nbsp; // To show output</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; for (int row = 0; row &lt; n; row++)</p>
+<p>&nbsp;&nbsp;&nbsp; {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; for (int col = 0; col &lt; n; col++)</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("%2d", grid[row][col]);</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("\n"); // return carriage</p>
+<p>&nbsp;&nbsp;&nbsp; }</p>
+<p>}</p>
+
+<p>int main()</p>
+<p>{</p>
+<p>&nbsp;&nbsp;&nbsp; int grid[n][n] = {{0, 0, 0, 2, 0, 4, 8, 1, 0}, // Cells to fill in is 0</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {0, 4, 0, 0, 0, 8, 2, 6, 3},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {3, 0, 0, 1, 6, 0, 0, 0, 4},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {1, 0, 0, 0, 4, 0, 5, 8, 0},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {6, 3, 5, 8, 2, 0, 0, 0, 7},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {2, 0, 0, 5, 9, 0, 1, 0, 0},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {9, 1, 0, 7, 0, 0, 0, 4, 0},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {0, 0, 0, 6, 8, 0, 7, 0, 1},</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {8, 0, 0, 4, 0, 3, 0, 5, 0}};</p>
+
+<p>&nbsp;&nbsp;&nbsp; if (backTracking(grid) == 1)&nbsp; // 1 = TRUE</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; showOutput(grid);</p>
+<p>&nbsp;&nbsp;&nbsp; else</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf("No solution with this function");</p>
+<p>&nbsp;&nbsp;&nbsp; return 0;</p>
+<p>}</p>
+
+<p>Output based on given values:</p>
+<p><img src="../images/ctu00312.png" border="0" alt="Output6" title="Output3" hspace="0" vspace="0"/></p>
+
+
+
+
+<h1><a name="_Toc490067316"></a>References</h1>
+<ul>
+<li><p>Berggren, P. &amp; Nilsson, D. (n.d.). A study of Sudoku solving algorithms. Retrieved from August 7, 2017, from <a href="http://www.csc.kth.se/utbildning/kth/kurser/DD143X/dkand12/Group6Alexander/final/Patrik_Berggren_David_Nilsson.report.pdf">http://www.csc.kth.se/utbildning/kth/kurser/DD143X/dkand12/Group6Alexander/final/Patrik_Berggren_David_Nilsson.report.pdf</a></p></li>
+<li><p>Carnegie Mello University. (n.d.). Dynamic Programming. Retrieved, August 01, 2017, from <a href="https://www.cs.cmu.edu/~avrim/451f09/lectures/lect1001.pdf">https://www.cs.cmu.edu/~avrim/451f09/lectures/lect1001.pdf</a></p></li>
+<li><p>Chi, E. &amp; Lange, K. (2012). Techniques for Solving Sudoku Puzzles. Retrieved, August 8, 2017, from <a href="http://www.ericchi.com/ec_papers/1203.2295v1.pdf">http://www.ericchi.com/ec_papers/1203.2295v1.pdf</a></p></li>
+<li><p>Ekne, S. &amp; Gylleus, K. (2015). Analysis and comparison of solving algorithms for sudoku, Focusing on efficiency. Retrieved from August 8, 2017, from <a href="https://pdfs.semanticscholar.org/18ca/ea2e5869ddc59b693445c8458864cbde9e44.pdf">https://pdfs.semanticscholar.org/18ca/ea2e5869ddc59b693445c8458864cbde9e44.pdf</a></p></li>
+<li><p>Eric, et al. (n.d.). Big-O Cheat Sheet. Big-O Complexity Chart. Retrieved, July 11, 2017, from <a href="http://bigocheatsheet.com/">http://bigocheatsheet.com/</a></p></li>
+<li><p>GeeksforGeeks. (n.d.). Backtracking|Set 7 (Sudoku). Retrieved, August 9, 2017, from <a href="http://www.geeksforgeeks.org/backtracking-set-7-suduku/">http://www.geeksforgeeks.org/backtracking-set-7-suduku/</a></p></li>
+<li><p>Henrik, V. &amp; Viktor, M. (n.d.). Performance and Scalability of Sudoku Solvers. Retrieved, August 9, 2017, from, <a href="http://www.csc.kth.se/utbildning/kth/kurser/DD143X/dkand13/Group1Vahid/report/henrik-viksten.viktor-mattsson-kex.pdf">http://www.csc.kth.se/utbildning/kth/kurser/DD143X/dkand13/Group1Vahid/report/henrik-viksten.viktor-mattsson-kex.pdf</a></p></li>
+<li><p>Sedgewick, R. (2013). An Introduction to the Analysis of Algorithms (Second Edition). Upper Saddle River, New Jersey. Pearson Education.</p></li>
+<li><p>StackOverflow. (n.d.). Big O confusion. Retrieved July 19, 2017, from <a href="https://stackoverflow.com/questions/20512642/big-o-confusion-log2n-vs-log3n">https://stackoverflow.com/questions/20512642/big-o-confusion-log2n-vs-log3n</a></p></li>
+<li><p>Sudoku. (n.d.). How to play Sudoku. Retrieved August 8, 2017, from <a href="http://www.sudoku.com/">http://www.sudoku.com/</a></p></li>
+<li><p>Progreamming-Algorithm.net. (n.d.). Heapsort. Retrieved July 25, 2017, from <a href="https://programming-algorithms.net/article/39807/Heapsort">https://programming-algorithms.net/article/39807/Heapsort</a></p></li>
+<li><p>Tang, D. (2016). CS241 -- Lecture Notes: Sorting Algorithm. Retrieved, July 11, 2017, from <a href="https://www.cpp.edu/~ftang/courses/CS241/notes/sorting.htm">https://www.cpp.edu/~ftang/courses/CS241/notes/sorting.htm</a></p></li>
+<li><p>University of Hawaii. (n.d.). Greedy Algorithm. Retrieved July 21, 2017, from <a href="https://www2.hawaii.edu/~janst/311/Notes/Topic-13.html">https://www2.hawaii.edu/~janst/311/Notes/Topic-13.html</a></p></li>
+<li><p>University of Glasgow. (n.d.). Complexity. Retrieved, July 19, 2017, from <a href="http://www.dcs.gla.ac.uk/~pat/52233/complexity.html">http://www.dcs.gla.ac.uk/~pat/52233/complexity.html</a></p></li>
+<li><p>University of Liverpool. (n.d.). Greedy Algorithms. Retrieved July 14, 2017, from <a href="http://cgi.csc.liv.ac.uk/~ped/teachadmin/algor/greedy.html">http://cgi.csc.liv.ac.uk/~ped/teachadmin/algor/greedy.html</a></p></li>
+<li><p>Universite Paris-Est Marne-La-Vallee. (n.d.). Brute Force algorithm. Retrieved July 26, 2017, from <a href="http://www-igm.univ-mlv.fr/~lecroq/string/node3.html">http://www-igm.univ-mlv.fr/~lecroq/string/node3.html</a></p></li>
+<li><p>Western University, (n.d.).&nbsp; Time Complexity of Binary Search in the Worst Case. Retrieved, July 19, 2017, from <a href="https://www.csd.uwo.ca/Courses/CS2210a/slides/binsearch.pdf">https://www.csd.uwo.ca/Courses/CS2210a/slides/binsearch.pdf</a></p></li>
+</ul>
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+
+  </body>
+</html>
+
