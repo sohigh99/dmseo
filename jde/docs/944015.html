@@ -98,6 +98,41 @@ function topFunction() {
 <p>The purpose of JD Edwards' JDB Database Caching is for <strong>Data Integrity/Coherency</strong> and <strong>Performance Improvement</strong>. Since cache is written to Memory (RAM) it yields better performance (avoiding round trips to database) and it is Shared Cache (read-only cache) coherency problems are easily avoided (so this may cause Dirty/Phantom Reads) for data which are requested frequently/repeatedly. <br /><br />This document will briefly explain frequently asked questions from an end-user's point of view. This document explains <span style="font-weight: bold;">server</span> (as response for a certain request) and <span style="font-weight: bold;">client</span> (issuing request) based on HTML client configuration.</p>
 <p>For cache information and troubleshooting the different scenarios, causes and resolutions for caching issues in Server Manager, refer to &lt;Document 866662.1&gt; - Cache Information And Troubleshooting Caching Issues In Server Manager.</p>
 
+<ul>      
+  <li><a href="#Q1">Q1. What is Environment Cache and what tables belong to this cache?</a></li>
+  <li><a href="#Q2">Q2. When is the JDB Database Cache Loaded?</a></li>
+  <li><a href="#Q3">Q3. When is the JDB Database Cache Used?</a></li>
+  <li><a href="#Q4">Q4. What kind of information is cached in JAS (Java Application Server)?</a></li>
+  <li><a href="#Q5">Q5. What kind of information is cached in Logic Server (where BSFNs and UBEs run)?</a></li>
+  <li><a href="#Q6">Q6. Are any other tables cached on the Server other than for object cache?</a></li>
+  <li><a href="#Q7">Q7. Can a custom Service Cache and/or Database Cache be defined?</a></li>
+  <li><a href="#Q8">Q8. Where to find information on Database Caching and Service Cache?</a></li>
+  <li><a href="#Q9">Q9. Is there a full list of tables for Database Cache and Service Cache?</a></li>
+  <li><a href="#Q10">Q10. How to refresh/ reset/ flush Database Cache and Service Cache?</a></li>
+  <li><a href="#Q11">Q11. How does it make use of the caching data in programming?</a></li>
+  <li><a href="#Q12">Q12. What does "cache can not be updated" mean?</a></li>
+  <li><a href="#Q13">Q13. What is the impact on applications if you remove any table (Ex: F0008) from F98613 and not re-add it?</a></li>
+  <li><a href="#Q14">Q14. How to determine whether a certain application is making use of cache or not?</a></li>
+  <li><a href="#Q15">Q15. How to trace Cache Manager through logging?</a></li>
+  <li><a href="#Q16">Q16. Can database cache be reset/flushed when multiple users are connected to a data source you want to reset?</a></li>
+  <li><a href="#Q17">Q17. What kind of BSFN/API will cache tables?</a></li>
+  <li><a href="#Q18">Q18. Is it possible to cache a certain range of data (not the entire table) in calling CacheTableForUBE?</a></li>
+  <li><a href="#Q19">Q19. Is there a way to force subsystem process/jobs to pick up changes to UDCs that occurred since the subsystem UBE was first submitted?</a></li>
+  <li><a href="#Q20">Q20. What is the memory area name in JDE?</a></li>
+  <li><a href="#Q21">Q21. Which are other types of caches used? Other Industry caches.</a></li>
+  <li><a href="#Q22">Q22. Will the data in table Company Constant (F0010) be cached?</a></li>
+  <li><a href="#Q23">Q23. What are the common errors you may get that are caused by uncompleted Cache Refreshing which is related to data in F0010?</a></li>
+  <li><a href="#Q24">Q24. How to debug when the issue appears to be caused by data in F0010?</a></li>
+  <li><a href="#Q25">Q25. How does the system make use of runtime cache when submitting a UBE to the Server?</a></li>
+  <li><a href="#Q26">Q26. Unable to see changes to tables F0006 and F0901 listed in P98613 after they are updated. Is there any impact to these tables if they are removed from P98613?</a></li>
+  <li><a href="#Q27">Q27. What does the message "System cache is full" in the server JDE.LOG mean?</a></li>
+  <li><a href="#Q28">Q28. Is there any manual steps to delete cache and reload javascript in JAS?</a></li>
+  <li><a href="#Q29">Q29. What is JSP Cache and how to clear JSP Cache?</a></li>
+  <li><a href="#Q30">Q30. Can both JDBj Service Cache in JAS and Database Cache in Logic Server can be flushed even when these connection has active users associated?</a></li>
+  <li><a href="#Q31">Q31. In Tools Release 8.9, How can we clear single Database Table Cache (Say for F0010)?</a></li>
+</ul>
+
+
 <p> </p>
 <h3 class="km"><big><big><a name="Q1"></a><span style="font-size: medium;"><small>Q1. What is Environment Cache and what tables belong to this cache?</small></span></big></big></h3>
 <p><big><span style="color: red;">Environment Cache</span></big> is the cache which is initialized during E1 login or when starting JDE service(s). This concept is similar to PGA (Program Global Area), a memory region that stores the data and control information for the server processes. Some of the tables that are cached:</p>

@@ -100,6 +100,18 @@ function topFunction() {
 <li><a href="http://docs.oracle.com/cd/E53430_01/nav/changemgmt.htm" alt="JD Edwards EnterpriseOne Tools Documentation - Release 9.2.x, Change Management tab" title="JD Edwards EnterpriseOne Tools Documentation - Release 9.2.x, Change Management tab" target="_blank">JD Edwards EnterpriseOne Tools Documentation - Release 9.2.x</a> - Change Management tab.</li>
 <li><a href="http://docs.oracle.com/cd/E24705_01/nav/administration.htm" alt="JD Edwards EnterpriseOne Tools Documentation - Release 9.1.x, Administration tab" title="JD Edwards EnterpriseOne Tools Documentation - Release 9.1.x, Administration tab" target="_blank">JD Edwards EnterpriseOne Tools Documentation - Release 9.1.x</a> - Administration tab.</li>
 </ul>
+
+<h2>Questions in Spec</h2>
+<div>
+  <ul>
+  <li><a href="#Q1">Q1> What is the relationship between central object and TAMSpec?</a></li>
+  <li><a href="#Q2">Q2> How is each specification described in Serialized Object Table F989999?</a></li>
+  <li><a href="#Q3">Q3> What is the list of JDE Spec Types?</a></li>
+  <li><a href="#Q4">Q4> What is follow up action to take in changing any information pertains to Data Dictionary Item?</a></li>
+  <li><a href="#Q5">Q5> Is any recommendation for purging the global spec tables on a regular basis?</a></li>
+</ul>
+</div>
+
 <p>The details covered in this document is in reference to E1 specification which is the attribute of a certain object.  In general, an object is made up of 'C Components' and 'SPEC' and this document will focus on specs.<br /> <br /><strong> Depending on encoding, location and usage, specs may be called from any of the following:</strong> </p>
 <table style="width: 820px; height: 111px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -129,7 +141,10 @@ function topFunction() {
 </tr>
 </tbody>
 </table>
-<p> </p>
+
+
+
+
 <div class="kmnotebox"><strong>Notes:</strong><br />
 <ul>
 <li>In Database technology metadata refers to data which can contain for example, glbltbl. But in this document metadata will be used for specification.</li>
@@ -166,7 +181,7 @@ function topFunction() {
 
 
 <p> </p>
-<h3 class="km">Q1&gt; What is the relationship between central object and TAMSpec?</h3>
+<h3 class="km"><a name="Q1"></a>Q1&gt; What is the relationship between central object and TAMSpec?</h3>
 <p>Below is a brief description for each TAMSpec:</p>
 <table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -358,7 +373,7 @@ function topFunction() {
 </ul>
 </ul>
 </div>
-<h3 class="km">Q2&gt; How is each specification described in Serialized Object Table F989999?</h3>
+<h3 class="km"><a name="Q2"></a>Q2&gt; How is each specification described in Serialized Object Table F989999?</h3>
 <p>Some examples:</p>
 <ul>
 <li>APP*: (FDASPEC)</li>
@@ -387,7 +402,7 @@ function topFunction() {
 <li>Serialized Objects can be replicated per User (by generating user specific object) and Language (if there is any language available packages to generate)</li>
 </ul>
 </div>
-<h3 class="km">Q3&gt; What is the list of JDE Spec Types?</h3>
+<h3 class="km"><a name="Q3"></a>Q3&gt; What is the list of JDE Spec Types?</h3>
 <p>This is to determine which table to access(hence the description may be different from above tamspec) as below (this sequence is same with the sequence of package build):</p>
 <ul>
 <li>JDESPECTYPE_UNDEFINED = 0 ,</li>
@@ -427,10 +442,10 @@ function topFunction() {
 <li>In changing any specification, proper follow-up has to be taken (e.g., Generate Serialized Object and/or delete caches in JAS, etc.)</li>
 </ul>
 </div>
-<h3 class="km">Q4&gt; What is follow up action to take in changing any information pertains to Data Dictionary Item?</h3>
+<h3 class="km"><a name="Q4"></a>Q4&gt; What is follow up action to take in changing any information pertains to Data Dictionary Item?</h3>
 <p> For detail steps, refer to &lt;Document 626511.1&gt; E1: DD: Deploying Data Dictionary Changes. And make it sure that serialized objects includes Data Dictionary Item changed are flushed and generated again and clear all object caches in Java Applicaiton Server (JAS) machine.</p>
 <p>To understand better on cache in JAS, refer to &lt;Document 944015.1&gt; E1: ENV: Frequently Asked Questions on Caching in EnterpriseOne and &lt;Document 650630.1&gt; E1: FDA: Tables Cached by JDBJ on the Web Client (JDBj Database Caches).</p>
-<h3 class="km">Q5&gt; Is any recommendation for purging the global spec tables on a regular basis?</h3>
+<h3 class="km"><a name="Q5"></a>Q5&gt; Is any recommendation for purging the global spec tables on a regular basis?</h3>
 <p>There is no recommendation for purging the global spec tables on a regular basis as they are regenerated automatically. Only in case that some corruption occurs, should they be deleted and regenerated upon login. Please refer to &lt;Document 2164730.1&gt; E1: ENV: How to Manually Delete Global Tables (including Data Dictionary Specs), Runtime Cache, and UBE Overrides on how delete global tables (including Data Dictionary) specs.</p>
 <div class="kmnotebox">
 <ul>
