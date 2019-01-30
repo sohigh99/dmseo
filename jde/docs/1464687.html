@@ -97,15 +97,7 @@ function topFunction() {
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
 <div class="kmnotebox"><strong>Note</strong>: If you encounter business function error while using standard application or UBE, it maybe already reported, install ESU for fix. If issue has not been reported, open service request with team that support the application or UBE, example, select product JD Edwards EnterpriseOne Sales Order Management while opening a SR if encountering business function issue while using P4210.<br />If you encounter issue with standard business function used in custom object (application or UBE), check if issue also appear with standard application or UBE. If issue does not appear, most likely there is no bug with the standard business function.</div>
-<p> </p>
-<p><span style="font-size: inherit;">The purpose of this document is to explain in high level, some memory issues encountered in running standard business functions through the CallObject Kernel in EnterpriseOne. This document includes case studies and resolutions on certain memory issues. This document is not intended to cover specific definition on memory errors or how to detect memory problems. </span></p>
-<p><span style="font-size: inherit;">This document is intended to help internal JDE developer on what to check when hitting memory errors in EnterpriseOne and how to apply possible fix for these errors while working on reported bug. But information in this document maybe helpful for developing custom business function.<br /></span></p>
-<p><span style="font-size: inherit;">The audience for this document is someone with expert 'C' Programming Language development knowledge. This document only contains examples. It is not meant to be all encompassing. Also see the second document in this series &lt;Document 1554611.1&gt; E1: BSFN: Case Study on Memory Violation, Memory Corruption, Memory Overwrite, ACCESS VIOLATION and Zombie Kernel Caused by Standard Business Functions Part 2.</span></p>
-<p><span style="font-size: inherit;">This document does not cover any memory corruption issues caused by the Tools Foundation Layer which is usually fixed through tools release upgrade. This document mainly focuses on memory errors caused by standard business functions which results in CallObject Kernels to crash or runbatch application to fail.</span></p>
-<div class="kmnotebox">
-<p><strong>Caution</strong>: This document may contain information, software, products or services which are not supported by Oracle Support Services and are being provided &lsquo;as is&rsquo; without warranty. Please refer to the following site for My Oracle Support Terms of Use: <a href="https://support.oracle.com/CSP/ui/TermsOfUse.html">https://support.oracle.com/CSP/ui/TermsOfUse.html</a>.  For <strong>custom business function</strong>, field services may need to be engaged.</p>
-</div>
-<p> </p>
+
 <h3>Table of Contents</h3>
 <ul>
   <li><a href="#memoryerror">Memory Error</a></li>
@@ -127,6 +119,17 @@ function topFunction() {
 <li><a href="#summary">Summary:</a></li>
 <li><a href="#knownissue">Known Issues and Bugs:</a></li>
 </ul>
+
+<p> </p>
+<p><span style="font-size: inherit;">The purpose of this document is to explain in high level, some memory issues encountered in running standard business functions through the CallObject Kernel in EnterpriseOne. This document includes case studies and resolutions on certain memory issues. This document is not intended to cover specific definition on memory errors or how to detect memory problems. </span></p>
+<p><span style="font-size: inherit;">This document is intended to help internal JDE developer on what to check when hitting memory errors in EnterpriseOne and how to apply possible fix for these errors while working on reported bug. But information in this document maybe helpful for developing custom business function.<br /></span></p>
+<p><span style="font-size: inherit;">The audience for this document is someone with expert 'C' Programming Language development knowledge. This document only contains examples. It is not meant to be all encompassing. Also see the second document in this series <a href="../docs/1554611.html">document 1554611</a> <i>Case Study on Memory Violation, Memory Corruption, Memory Overwrite, ACCESS VIOLATION and Zombie Kernel Caused by Standard Business Functions Part 2.</i></span></p>
+<p><span style="font-size: inherit;">This document does not cover any memory corruption issues caused by the Tools Foundation Layer which is usually fixed through tools release upgrade. This document mainly focuses on memory errors caused by standard business functions which results in CallObject Kernels to crash or runbatch application to fail.</span></p>
+<div class="kmnotebox">
+<p><strong>Caution</strong>: This document may contain information, software, products or services which are not supported by Oracle Support Services and are being provided &lsquo;as is&rsquo; without warranty. Please refer to the following site for My Oracle Support Terms of Use: <a href="https://support.oracle.com/CSP/ui/TermsOfUse.html">https://support.oracle.com/CSP/ui/TermsOfUse.html</a>.  For <strong>custom business function</strong>, field services may need to be engaged.</p>
+</div>
+<p> </p>
+
 
 
 <!-- ======================================== Body Starts Here =================================== -->

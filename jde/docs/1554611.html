@@ -97,8 +97,20 @@ function topFunction() {
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
 <div class="kmnotebox"><strong>Note</strong>: If you encounter business function error while using standard application or UBE, it maybe already reported, install ESU for fix. If issue has not been reported, open service request with team that support the application or UBE, example, select product JD Edwards EnterpriseOne Sales Order Management while opening a SR if encountering business function issue while using P4210.<br />If you encounter issue with standard business function used in custom object (application or UBE), check if issue also appear with standard application or UBE. If issue does not appear, most likely there is no bug with the standard business function.</div>
+
+<h4>Table of Contents</h4>
+<ul>
+  <li><a href="#case1">Case 1 - Memory Overwrite</a></li>
+  <li><a href="#case2">Case 2 - Buffer Overflow (called Business Function fails into zombie)</a></li>
+  <li><a href="#case3">Case 3 - Integer value is too long</a></li>
+  <li><a href="#case4">Case 4 - R42565 (Print Invoice) Falls into Zombie</a></li>
+  <li><a href="#case5">Case 5 - ACCESS VIOLATION</a></li>
+  <li><a href="#case6">Case 6 - Memory Overwrite II</a></li>
+  <li><a href="#case8">Case 7 - Column Array Mismatch</a></li>
+</ul>
+
 <p> </p>
-<p>This document is the second part of &lt;Document 1464687.1&gt; E1: BSFN: Case Study on Memory Violation, Memory Corruption, Memory Overwrite, Access Violation and Zombie Kernel Caused by Standard Business Functions and this document is to cover case studies which you face from both Interactive Application and Batch Application.</p>
+<p>This document is the second part of <a href="../docs/1464687.html">document 1464687</a> <i>Case Study on Memory Violation, Memory Corruption, Memory Overwrite, Access Violation and Zombie Kernel Caused by Standard Business Functions for further detail on Memory Corruption.</i> and this document is to cover case studies which you face from both Interactive Application and Batch Application.</p>
 <p>This document is intended to help internal JDE developer on what to check when hitting memory errors in EnterpriseOne and how to apply possible fix for these errors while working on reported bug. But information in this document maybe helpful for developing custom business function.</p>
 <p>This document does not cover any Memory Corruption issues caused by the Tools Foundation Layer which is usually fixed through tools release upgrade. This document mainly focuses on memory errors caused by standard business functions which results in CallObject Kernels to crash or runbatch application to fail.</p>
 <div class="kmnotebox">
@@ -107,9 +119,9 @@ function topFunction() {
 
 
 <!-- ======================================== Body Starts Here =================================== -->
-<p> Refer to &lt;Document 1464687.1&gt; E1: BSFN: Case Study on Memory Violation, Memory Corruption, Memory Overwrite, Access Violation and Zombie Kernel Caused by Standard Business Functions for further detail on Memory Corruption.</p>
-<h3 class="km"><strong><a name="casestudy"></a>Case Study:</strong></h3>
-<h4 class="km"><a name="case1"></a>Case 1 - Memory overwrite</h4>
+<p> Refer to <a href="../docs/1464687.html">document 1464687</a> <i>Case Study on Memory Violation, Memory Corruption, Memory Overwrite, Access Violation and Zombie Kernel Caused by Standard Business Functions for further detail on Memory Corruption.</i></p>
+<h2 class="km"><strong><a name="casestudy"></a>Case Study:</strong></h2>
+<h3 class="km"><a name="case1"></a>Case 1 - Memory overwrite</h3>
 <p><br /> For this example, two business functions are not able to communicate properly. The size of string (Character Array) of calling routine is smaller than the size assigned by called routine.<br /> <br /> <span style="text-decoration: underline; font-weight: bold;">JDE.log:</span></p>
 <div style="margin-left: 40px;">INFO: Entering kernel signal handler, process exiting soon: iParam: 1338273596<br /> INFO: In kernel signal handler, starting alarm handler: iParam: 1338273597<br /> INFO: Done setting IPC Handle State structures to abandoned, process exiting immediately: iParam: 1338273597</div>
 <p style="font-weight: bold; text-decoration: underline;">JDEDEBUG.log:</p>
@@ -128,7 +140,7 @@ function topFunction() {
 <p> </p>
 <hr />
 <p> </p>
-<h4 class="km"><a name="case2"></a>Case 2 - Buffer Overflow (called Business Function fails into zombie)</h4>
+<h3 class="km"><a name="case2"></a>Case 2 - Buffer Overflow (called Business Function fails into zombie)</h3>
 <p>Called business function fails to return to calling routine. This type of memory error can occur when a certain routine is checking individual characters in a character array (namely, string).</p>
 <p style="font-weight: bold; text-decoration: underline;">JDE.log:</p>
 <div style="margin-left: 40px;">Last Debug Time Stamp: Thu May  3 17:06:10.843219<br /> INFO: Entering kernel signal handler, process exiting soon: iParam: 1336057570<br /> Last Debug Time Stamp: Thu May  3 17:06:11.846414<br /> INFO: In kernel signal handler, starting alarm handler: iParam: 1336057571<br /> Last Debug Time Stamp: Thu May  3 17:06:11.846414<br /> INFO: Done setting IPC Handle State structures to abandoned, process exiting immediately: iParam: 1336057571</div>
@@ -142,7 +154,7 @@ function topFunction() {
 <p> </p>
 <hr />
 <p> </p>
-<h4 class="km"><a name="case3"></a>Case 3 - Integer value is too long</h4>
+<h3 class="km"><a name="case3"></a>Case 3 - Integer value is too long</h3>
 <p><br /> This case is to show possible memory corruption which is caused by data. Similar issue can occur when a certain string value contains Special Character in it. For special characters in C language, refer to &lt;Document 1271740.1&gt; E1: BSFN: How to Write a C Business Function to Return a Special Character.</p>
 <p style="font-weight: bold; text-decoration: underline;">e1root_*.log:</p>
 <div style="margin-left: 40px;">View Job Status (P986110B|W986110BA) row exit Print from HTML client causes zombie for jobs executed on second Enterprise Server. The user also receives this error:<br />
@@ -165,7 +177,7 @@ function topFunction() {
 <p> </p>
 <hr />
 <p> </p>
-<h4 class="km"><a name="case4"></a>Case Study 4 - R42565 (Print Invoice) Falls into Zombie</h4>
+<h3 class="km"><a name="case4"></a>Case 4 - R42565 (Print Invoice) Falls into Zombie</h3>
 <p> </p>
 <p>R42565 (Print Invoice) falls into zombie in server when the processing options are set to send an email. The UBE fails to run on server but it is running alright when submitted locally.</p>
 <p><span style="font-weight: bold;">JDEDEBUG_*.log</span></p>
@@ -188,7 +200,7 @@ function topFunction() {
 <p style="margin-left: 40px;">Note: Similar issue is reported through &lt;Bug 11008628&gt; : SALES UPDATE ENDS IN ERROR - SAR: 8926589 in running R42800 (Sales Update) which is caused by short cache name definition or mismatch in cache name size</p>
 <hr />
 <p> </p>
-<h4 class="km"><a name="case5"></a>Case Study 5 - ACCESS VIOLATION</h4>
+<h3 class="km"><a name="case5"></a>Case 5 - ACCESS VIOLATION</h3>
 <p>This error is coming usually in</p>
 <ul>
 <li>function cleanup where free memory, close handles and so on</li>
@@ -217,7 +229,7 @@ function topFunction() {
 <p> </p>
 <hr />
 <p> </p>
-<h4 class="km"><a name="case6"></a>Case Study 6 - Memory Overwrite II</h4>
+<h3 class="km"><a name="case6"></a>Case 6 - Memory Overwrite II</h3>
 <p>This type of error can come in API jdeStrcpy() and jdeStrncpy() when the size between left operand is different from right operand.<br /> Example 1: In AS400, all the inventory transaction fails when transaction UOM is different from Primary UOM</p>
 <p style="font-weight: bold;">Code Sample in XT4111Z1</p>
 <p style="margin-left: 40px;">*** Break In Code ***<br /> <span style="font-style: italic;">void I4100940_GetUOM() {</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">    jdeCallObject(_J("GetItemMasterDescUOM"), (LPFNBHVR)NULL, lpBhvrCom, lpVoid, &amp;dsUOM, (CALLMAP *)NULL, 0, (JCHAR *)NULL, (JCHAR *)NULL, 0);</span><br style="font-style: italic;" /> <span style="font-style: italic;">:</span><br style="font-style: italic;" /> <span style="font-style: italic;">   if (!IsStringBlank(dsUOM.szPrimaryUOM))</span><br style="font-style: italic;" /> <span style="font-style: italic;">   {</span><br style="font-style: italic;" /> <span style="font-style: italic;">      jdeStrcpy((JCHAR *)szUOM, (const JCHAR *)dsUOM.szPrimaryUOM); /* before correction: jdeStrncpyTerminate((JCHAR *)szUOM, (const JCHAR *)dsUOM.szPrimaryUOM, </span><span style="color: red; font-style: italic;">DIM</span><span style="font-style: italic;">(szUOM)); */</span><br style="font-style: italic;" /> <span style="font-style: italic;">   }</span><br /> <span style="font-style: italic;">*** Break</span> In Code ***</p>
@@ -237,7 +249,7 @@ function topFunction() {
 <p> </p>
 <hr />
 <p> </p>
-<h4 class="km"><a name="b3202030"></a>Case Study 7 - Column Array Mismatch</h4>
+<h3 class="km"><a name="b3202030"></a>Case 7 - Column Array Mismatch</h3>
 <p>The Columns array used to open the table did not match the data structure used to fetch the data from the table; as a result the fetched record from table got incorrectly mapped to the cache Data Structure in return this resulted in memory overwrite. Most of standard business function stores data pointer rather than returning actual column value but when there is any business function which has to return column value to data structure defined, the sequence of columns for a specific table (through Array) has to be in synch with data structure defined.</p>
 <p>Example: P3210 (Configured Item Revisions) issues WEB CLIENT EXCEPTION and CallObject Kernel ends abruptly (output LPDS does not shows all) or value returns are not valid.</p>
 <p><span style="font-weight: bold;">Code example of  B3202030 - F4101ConfiguratorCache</span></p>
