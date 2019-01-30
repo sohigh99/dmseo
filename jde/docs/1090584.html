@@ -98,8 +98,8 @@ function topFunction() {
 
 <p>This document answers some frequently asked questions on Business Functions which are running in JAS.&nbsp;&nbsp; This document does not cover JNI (Java Native Interface) programming. And this document does not cover Business Service Implementation which calls multiple business method in Business Service Server. <br /><br />There are two main configurations for making business functions work in JAS as below:</p>
 <ul>
-<li><strong>BusinessMethodCatalog.xml</strong>: Maps business function names to Java class names</li>
-<li><strong>LocalLogicCatalog.xml</strong>: Designates specific business functions to run locally, that is, within the runtime context of the presentation server</li>
+<li>BusinessMethodCatalog.xml: Maps business function names to Java class names</li>
+<li>LocalLogicCatalog.xml: Designates specific business functions to run locally, that is, within the runtime context of the presentation server</li>
 </ul>
 <p>&nbsp;</p>
 <div class="kmnotebox">NOTE:<br />
@@ -109,26 +109,52 @@ function topFunction() {
 </ul>
 </div>
 
+<h2> Table of Contents </h2>
+<ul>
+<li><a href="#q1">Question 1: Why certain business functions are converted to JAVA to run on JAS ?</a></li>
+<li><a href="#q2">Question 2: What are the differences between JNI and Java code in JAS?</a></li>
+<li><a href="#q3">Question 3: What is the file which has definition of Business Method?</a></li>
+<li><a href="#q4">Question 4: What is the container (*.JAR file) which contain these files?</a></li>
+<li><a href="#q5">Question 5: How does JAS determine whether to execute these business methods in JAS or business function in Logic Server?</a></li>
+<li><a href="#q6">Question 6:. What are the list of Business Methods that belong to this group?</a></li>
+<li><a href="#q7">Question 7: Are there any other Business Methods which are to run in JAS other than the Business Function listed above?</a></li>
+<li><a href="#q8">Question 8: Why there are only limited business function defined here?</a></li>
+<li><a href="#q9">Question 9: Are there Named Event Rules (NER) running in JAS?</a></li>
+<li><a href="#q10">Question 10: How to revert the bsfn back to running on Enterprise Server ?</a></li>
+<li><a href="#q11">Question 11: What is the impact of reverting bsfn to run on Enterprise Server ?</li>
+<li><a href="#q12">Question 12: Is there conversion tool to convert c bsfn to java ?</a></li>
+<li><a href="#q13">Question 13: Why does B1100007 - DecimalsTriggerGetbyCOCRCD sometimes still runs on the Enterprise Server even when LocalLogicCatalog.xml is set to run local on JAS?</a></li>
+<li><a href="#q14">Question 14: Do you have an example of Log Entries showing how a BSFN that runs on JAS looks like in JAS logs? (example B1100007-DecimalsTriggerGetbyCOCRCD which is invoke from F4211 Table Trigger)</a></li>
+<ul>
+
 
 <!-- ======================================== Body Starts Here =================================== -->
-<h3 class="km"><strong>Question 1:</strong> Why certain business functions are converted to JAVA to run on JAS ?</h3>
-<p><strong>Answer 1:</strong> Certain business functions are called many times by interactive application and converting them to java function to run on JAS instead of Enterprise Logic server will avoid network overhead and improve performance.</p>
+<h3 class="km"><a name="q1"></a>Question 1: Why certain business functions are converted to JAVA to run on JAS ?</h3>
+<p>Answer 1: Certain business functions are called many times by interactive application and converting them to java function to run on JAS instead of Enterprise Logic server will avoid network overhead and improve performance.</p>
 <hr />
-<h3 class="km"><strong>Question 2:</strong> What are the differences between JNI and Java code in JAS?</h3>
-<p><strong>Answer 2:</strong> JNI is calling C (or C++ Function) directly whereas listed business functions here are Java programming which *.class (compiled file of java) is to be executed upon request from JAS</p>
+
+
+<h3 class="km"><a name="q2"></a>Question 2: What are the differences between JNI and Java code in JAS?</h3>
+<p>Answer 2: JNI is calling C (or C++ Function) directly whereas listed business functions here are Java programming which *.class (compiled file of java) is to be executed upon request from JAS</p>
 <div class="kmnotebox">NOTE: JNI interface will be handled by JNIGEN.dll file</div>
 <hr />
-<h3 class="km"><strong>Question 3:</strong> What is the file which has definition of Business Method?</h3>
-<p><br /> <strong>Answer 3:</strong> BusinessMethodCatalog.xml<br /> <br /> This definition can be found in OAS at <span style="text-decoration: underline;"><em>\\JASMachineName\E1Release\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\lib\ApplicationLogic_JAR\BusinessMethodCatalog.xml</em></span></p>
+
+
+<h3 class="km"><a name="q3"></a>Question 3: What is the file which has definition of Business Method?</h3>
+<p><br /> Answer 3: BusinessMethodCatalog.xml<br /> <br /> This definition can be found in OAS at <span style="text-decoration: underline;"><em>\\JASMachineName\E1Release\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\lib\ApplicationLogic_JAR\BusinessMethodCatalog.xml</em></span></p>
 <hr />
-<h3 class="km"><strong>Question 4:</strong> What is the container (*.JAR file) which contain these files?</h3>
-<p><strong>Answer 4:</strong> ApplicationLogic.JAR</p>
+
+
+<h3 class="km"><a name="q4"></a>Question 4: What is the container (*.JAR file) which contain these files?</h3>
+<p>Answer 4: ApplicationLogic.JAR</p>
 <div class="kmnotebox">NOTE:&nbsp; In computing software, a JAR file (or Java ARchive) aggregates many files into one. Software developers generally use .jar files to distribute Java applications or libraries, in the form of classes and associated metadata and resources (text, images, etc.) JAR files build on the ZIP file format. Computer users can create or extract JAR files using the jar command that comes with a JDK. They can also use zip tools to do so, however caution should be exercised as to the order of entries in the zip file headers as the manifest likely needs to be first<br /> <br /> For more detail go to <a href="http://java.sun.com/j2se/1.5.0/docs/guide/jar/jarGuide.html" alt="jar guide" title="jar guide">http://java.sun.com/j2se/1.5.0/docs/guide/jar/jarGuide.html</a></div>
 <p>&nbsp;</p>
 <div class="kmnotebox">In OAS, <br /> <span style="text-decoration: underline;"><em>\\JASMachineName\E1Release\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\lib\ApplicationLogic_JAR\com\peoplesoft\e1\bsfn\</em></span><br /> <br /> Equivalent Data Structure is defined at <br /> <span style="text-decoration: underline;"><em>\\JASMachineName\E1Release\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\lib\ApplicationLogic_JAR\com\peoplesoft\e1\datastructures\internal\base</em></span></div>
 <hr />
-<h3 class="km"><strong>Question 5:</strong> How does JAS determine whether to execute these business methods in JAS or business function in Logic Server?</h3>
-<p><strong>Answer 5: </strong>By referencing LocalLogicCatalog.xml. For example, <br /> <em>&lt;business-logic module="B0000045" function="ConvertNumericToString" <strong>run-local="true"</strong> /&gt; </em><br /> <br /> This definition can be found in OAS at \\JASMachineName\E1Release\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\classes\LocalLogicCatalog.xml</p>
+
+
+<h3 class="km"><a name="q5"></a>Question 5: How does JAS determine whether to execute these business methods in JAS or business function in Logic Server?</h3>
+<p>Answer 5: By referencing LocalLogicCatalog.xml. For example, <br /> <em>&lt;business-logic module="B0000045" function="ConvertNumericToString" run-local="true" /&gt; </em><br /> <br /> This definition can be found in OAS at \\JASMachineName\E1Release\system\OC4J\j2ee\home\applications\webclient.ear\webclient\WEB-INF\classes\LocalLogicCatalog.xml</p>
 <div class="kmnotebox">NOTE:&nbsp; LocalLogicCatalog.xml contains an entry for each business function that the EnterpriseOne development team has certified to run locally on the presentation server. These business functions are selected primarily to optimize the performance of frequently called table triggers and typically come in two varieties. <br />
 <ul>
 <li>First there are business functions written using Table Event Rules (TER) that are traditionally generated into C business functions that run on the enterprise server. Designating these to run locally tells the presentation server to interpret them locally rather than invoking their corresponding remote implementation.</li>
@@ -136,8 +162,10 @@ function topFunction() {
 </ul>
 </div>
 <hr />
-<h3 class="km"><strong>Question 6:.</strong> What are the list of Business Methods that belong to this group?</h3>
-<p><strong>Answer 6:</strong> List of Business Functions (java code) are the following:</p>
+
+
+<h3 class="km"><a name="q6"></a>Question 6:. What are the list of Business Methods that belong to this group?</h3>
+<p>Answer 6: List of Business Functions (java code) are the following:</p>
 <table class="km" style="width: 989px; height: 1258px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
 <tr><th class="km">BSFN</th><th class="km">in JAS?</th><th class="km">Description</th><th class="km">Remark</th></tr>
@@ -413,7 +441,7 @@ function topFunction() {
 </tr>
 <tr>
 <td style="vertical-align: top; width: 62px;">b9800150</td>
-<td style="vertical-align: top; color: red; width: 49px;"><strong>FALSE</strong></td>
+<td style="vertical-align: top; color: red; width: 49px;">FALSE</td>
 <td style="vertical-align: top; width: 533px;"><span style="text-decoration: underline;">LeftJustifyUDCValue (Left Justify UDC Value)</span> <br /> LeftJustifyUDCValue is to be called in selecting Environment in logging in EnterpriseOne. So this is the 1st BSFN which is being called. So JDE let LeftJustifyUDCValue run on the enterprise server, because it effectively initializes the call object kernel for subsequent calls. Through this mapping, Logic Server will return a Process ID per user or per E1 session</td>
 <td style="vertical-align: top; width: 322px;">&nbsp;</td>
 </tr>
@@ -437,17 +465,19 @@ function topFunction() {
 </tr>
 <tr>
 <td style="vertical-align: top; width: 62px;">x0005</td>
-<td style="vertical-align: top; color: red; width: 49px;"><strong>FALSE</strong></td>
+<td style="vertical-align: top; color: red; width: 49px;">FALSE</td>
 <td style="vertical-align: top; width: 533px;"><span style="text-decoration: underline;">GetUDC (Get UDC)</span><br /> GetUDC is running in Logic Server (not in JAS) This is necessary so that Logic Server and Web server service cache does not go out of synch. Calls to UpdateUDC business function will update the table but since it runs on Logic Server then either you need to refresh the service cache or bounce the web server<br /> Note that BSFN X0005 is member of JDEKRNL.dll</td>
 <td style="vertical-align: top; width: 322px;">&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <p>&nbsp;</p>
-<div class="kmnotebox">NOTE:&nbsp; In running the above Business Functions in JAS,&nbsp; the system needs data from certain tables, so to maintain high concurrency it reads Service Cache. Tables that belong to <strong>Service Cache</strong> are to provide cached data without retrieving it from the database through JDBj. For additional details refer to &lt;Document 944015.1&gt; E1: ENV: General Questions on Caching in EnterpriseOne.</div>
+<div class="kmnotebox">NOTE:&nbsp; In running the above Business Functions in JAS,&nbsp; the system needs data from certain tables, so to maintain high concurrency it reads Service Cache. Tables that belong to Service Cache are to provide cached data without retrieving it from the database through JDBj. For additional details refer to &lt;Document 944015.1&gt; E1: ENV: General Questions on Caching in EnterpriseOne.</div>
 <hr />
-<h3 class="km"><strong>Question 7</strong>: Are there any other Business Methods which are to run in JAS other than the Business Function listed above?</h3>
-<p><strong>Answer 7:</strong> Yes TERs (Table Trigger / Table Event Rule) run in JAS with the exception of Table Triggers which are called in other tables trigger or Business Functions (Second level Table Triggers)</p>
+
+
+<h3 class="km"><a name="q7"></a>Question 7: Are there any other Business Methods which are to run in JAS other than the Business Function listed above?</h3>
+<p>Answer 7: Yes TERs (Table Trigger / Table Event Rule) run in JAS with the exception of Table Triggers which are called in other tables trigger or Business Functions (Second level Table Triggers)</p>
 <table class="km" style="width: 977px; height: 455px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
 <tr><th class="km">BSFN</th><th class="km">Reason for Exception</th></tr>
@@ -514,7 +544,7 @@ function topFunction() {
 </tbody>
 </table>
 <p>&nbsp;Simple rule is that if any TER is calling another Business Function and this Business Function is running on the Logic Server, these TERs are not supposed to be running in JAS (or Java Application Server).</p>
-<p><strong>Clarification on error in JAS</strong></p>
+<p>Clarification on error in JAS</p>
 <ul>
 <ul>: [GENERATOR]JavaGen error code = SECOND_LEVEL_NER_IN_TER com.jdedwards.runtime.generator.JavaGenException: The second level of NER in TER is unsupported and the children NER of N7001510_PlugAndPlay_F04572 will not be generated. Please ignore this error if the TER is not configured to run locally.&nbsp;</ul>
 </ul>
@@ -522,8 +552,10 @@ function topFunction() {
 <ul>Table Trigger through JDEdwards Tool&nbsp;that run inside of JDBj (as opposed to JDBj calling the same triggers on the enterprise server that are compiled as C business functions) have certain limitations. One of these limitations is that a TER will not run inside of JDBj if it calls a NER and that NER wants to call another NER (because the code has to be serialized). The above message is a warning indicating that this table has triggers that violate this rule and thus cannot run inside of JDBj and will have to run on the enterprise server (where all triggers are guaranteed to run). Anyway, table triggers have to be explicitly defined to run in the LocalLogicCatalog.xml file. If they are not defined in this file, they will run on the enterprise server. However, the generation process doesn't know this when generating a table so it outputs this error as a notification in case someone puts this table in the LocalLogicCatalog.xml file and wonders why the trigger fails to run.</ul>
 </ul>
 <hr />
-<h3 class="km"><strong>Question 8:</strong> Why there are only limited business function defined here?</h3>
-<p><strong>Answer 8:</strong> It is important to know that the listed Business Functions are all related with Validation in the presentation layer</p>
+
+
+<h3 class="km"><a name="q8"></a>Question 8: Why there are only limited business function defined here?</h3>
+<p>Answer 8: It is important to know that the listed Business Functions are all related with Validation in the presentation layer</p>
 <ul>
 <ul>
 <li>Get Audit Information</li>
@@ -533,8 +565,10 @@ function topFunction() {
 </ul>
 <div class="kmnotebox">NOTE: Listed objects above may be changed without having prior notice</div>
 <hr />
-<h3 class="km"><strong>Question 9: </strong>Are there Named Event Rules (NER) running in JAS?</h3>
-<p><strong>Answer 9:</strong> Interpretive NER with the following characteristics run on JAS through Serialization (i.e. not native Java code).</p>
+
+
+<h3 class="km"><a name="q9"></a>Question 9: Are there Named Event Rules (NER) running in JAS?</h3>
+<p>Answer 9: Interpretive NER with the following characteristics run on JAS through Serialization (i.e. not native Java code).</p>
 <ul>
 <li>Client Only NER (where F9860.BFLOCN = '1')</li>
 <li>NER that call another interactive application (form interconnect)</li>
@@ -542,17 +576,25 @@ function topFunction() {
 </ul>
 <div class="kmnotebox">NOTE: Refer to &lt;Document 1317478.1&gt; - E1: BSFN: Batch Control Processing and Related Business Functions in EnterpriseOne and &lt;Document 632000.1&gt; - E1:&nbsp; BSFN: Frequently Asked Questions on Business Functions including Finding, Designing and Debugging Business Functions</div>
 <hr />
-<h3 class="km"><strong>Question 10: </strong>How to revert the bsfn back to running on Enterprise Server ?</h3>
-<p><strong>Answer 10:</strong> Modify LocalLogicCatalog.xml and restart the JAS because LocalLogicCatalog.xml supercedes OCM mapping.</p>
+
+
+<h3 class="km"><a name="q10"></a>Question 10: How to revert the bsfn back to running on Enterprise Server ?</h3>
+<p>Answer 10: Modify LocalLogicCatalog.xml and restart the JAS because LocalLogicCatalog.xml supercedes OCM mapping.</p>
 <hr />
-<h3 class="km"><strong>Question 11:</strong> What is the impact of reverting bsfn to run on Enterprise Server ?</h3>
-<p><strong>Answer 11:</strong> Performance might be impacted but please test as performance is different for every customer or site.</p>
+
+
+<h3 class="km"><a name="q11"></a>Question 11: What is the impact of reverting bsfn to run on Enterprise Server ?</h3>
+<p>Answer 11: Performance might be impacted but please test as performance is different for every customer or site.</p>
 <hr />
-<h3 class="km"><strong>Question 12: </strong>Is there conversion tool to convert c bsfn to java ?</h3>
-<p><strong>Answer 12:</strong> Oracle does not provide any conversion tool/batch application to enable you to create *.class file. Oracle do not encourage you to create your own Java code which can be implemented in ApplicationLogic_JAR.jar</p>
+
+
+<h3 class="km"><a name="q12"></a>Question 12: Is there conversion tool to convert c bsfn to java ?</h3>
+<p>Answer 12: Oracle does not provide any conversion tool/batch application to enable you to create *.class file. Oracle do not encourage you to create your own Java code which can be implemented in ApplicationLogic_JAR.jar</p>
 <hr />
-<h3 class="km"><strong>Question 13: </strong>Why does B1100007 - DecimalsTriggerGetbyCOCRCD sometimes still runs on the Enterprise Server even when LocalLogicCatalog.xml is set to run local on JAS?</h3>
-<p><strong>Answer 13:</strong> The B1100007 - DecimalsTriggerGetbyCOCRCD business function is called from the Table Trigger (Table Event Rules - TER) of the F4211 table. F4211 can be accessed in the following ways:</p>
+
+
+<h3 class="km"><a name="q13"></a>Question 13: Why does B1100007 - DecimalsTriggerGetbyCOCRCD sometimes still runs on the Enterprise Server even when LocalLogicCatalog.xml is set to run local on JAS?</h3>
+<p>Answer 13: The B1100007 - DecimalsTriggerGetbyCOCRCD business function is called from the Table Trigger (Table Event Rules - TER) of the F4211 table. F4211 can be accessed in the following ways:</p>
 <ol>
 <li>&nbsp;Through interactive application (example P4210). In this case, B1100007 - DecimalsTriggerGetbyCOCRCD is running on JAS.</li>
 <li>&nbsp;Through another business function or batch application. In this case, B1100007 - DecimalsTriggerGetbyCOCRCD is run on the Logic Server / Enterprise Server.</li>
@@ -560,11 +602,13 @@ function topFunction() {
 <p>The LocalLogicCatalog.xml setting is only referred when running interactive application on JAS. Application running on JAS which access the F4211 table, and the F4211 TER invoke B1100007. System will then reference LocalLogicCatalog.xml. If run-local="true" for this business function, then it will run the business function on JAS.</p>
 <p>If any batch application or business function which access F4211, the calling batch application or business function is already running on the Enterprise Server. In this case B1100007 is running on the Enterprise Server.</p>
 <hr />
-<h3 class="km"><strong>Question 14: </strong>Do you have an example of Log Entries showing how a BSFN that runs on JAS looks like in JAS logs? (example <span id="form1:panelPage1">B1100007-DecimalsTriggerGetbyCOCRCD which is invoke from F4211 Table Trigger)</span><strong><br /></strong></h3>
-<p><strong>Answer 14:</strong> The following shows an example of the log entries after enabling User Specific JAS Debug log and the user runs P4210 application on the web client and clicking the Find button. You will see [RUNTIME] and [JDBJ] statements as follows:</p>
+
+
+<h3 class="km"><a name="q14"></a>Question 14: Do you have an example of Log Entries showing how a BSFN that runs on JAS looks like in JAS logs? (example <span id="form1:panelPage1">B1100007-DecimalsTriggerGetbyCOCRCD which is invoke from F4211 Table Trigger)</span><br /></h3>
+<p>Answer 14: The following shows an example of the log entries after enabling User Specific JAS Debug log and the user runs P4210 application on the web client and clicking the Find button. You will see [RUNTIME] and [JDBJ] statements as follows:</p>
 <div class="kmcodeblock">07 Jun 2018 09:39:00,033 [Line -1] [APP&nbsp;&nbsp; ] JDE - [JDBJ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object Called: F4211.F4211_CURRENCY<br />07 Jun 2018 09:39:00,033 [Line -1] [APP&nbsp;&nbsp; ] JDE - [RUNTIME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Executing TER F4211_CURRENCY inline:<br />07 Jun 2018 09:39:00,034 [Line -1] [APP&nbsp;&nbsp; ] JDE - [RUNTIME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Executing DecimalsTriggerGetbyCOCRCD inline : Line = 3<br />...<br />07 Jun 2018 09:39:00,042 [Line -1] [APP&nbsp;&nbsp; ] JDE - [JDBJ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Object Called: B1100007.DecimalsTriggerGetbyCOCRCD</div>
 
-
+<p>&nbsp;</p>
 
 
 <!-- ======================================== End of Body ==================================== -->
@@ -580,6 +624,7 @@ function topFunction() {
           </form>
         </section>
       </div>
+      <p>&nbsp;</p>
       <div class="text-center">&copy; Copyright Dong's Page 2019</div>
     </div>
   </footer>

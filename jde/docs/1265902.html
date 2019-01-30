@@ -97,6 +97,16 @@ function topFunction() {
 
 <p><span style="font-weight: bold;">Master Business Function (MBF)</span> is a Business Function written to process a record into the JDE system which is made up of many sub-routines. JD Edwards provides MBFs to allow calling programs to process certain predefined transactions. An MBF encapsulates the required logic, enforces data integrity, and insulates the calling programs from the database structures.This document details general topics on Master Business Function (MBF) in EnterpriseOne including the types of Master Business Functions, purpose of MBFs, their components, how these business functions are called and how to troubleshoot them.</p>
 
+<ul>
+  <li><a href="#what">What is a Master Business Function?</a></li>
+  <li><a href="#why">What is the purpose of using Master Business Function?</a></li>
+  <li><a href="#Q3">Transactional File Master Business Function</a></li>
+  <li><a href="#built">How transaction MBF is built to run?</a></li>
+  <li><a href="#communication">How it calls internal BSFN for Edit Line in complex routine?</a></li>
+  <li><a href="#debug">How to debug issue on Master Business Function?</a></li>
+  <li><a href="#considerations">Considerations</a></li>
+</ul>
+
 <p> </p>
 
 
@@ -109,7 +119,7 @@ function topFunction() {
 <p style="margin-left: 60px;">N4900710 - F4215 UnScheduled Delivery MBF<br style="color: black;" /> N4900730 - Disposition Load MBF<br style="color: black;" /> N4900780 - Load Confirm By Compartment MBF<br style="color: black;" /> N4900140 - Create Load MBF</p>
 <p style="margin-left: 60px;">XT4311Z1/XT4311Z2 - Purchase Order Entry<br /> XT4312Z1/XT4314Z2 - Purchase Order Receipts<br /> XT4314ZN/XT4314Z2 - Voucher Match<br /> <br /> X4801/B4800210 - X4801 Work Order Entry Master Business Function along with B4800210 - X4801 Manufacturing Editing Module<br /> <br /> B03B0011 - Invoice Entry Master Business Function<br /> B03B0138/B03B0149 - F03B13 Maintain Receipt Header/F03B14 Maintain Receipt Detail<br /> N03B0176 - Account Netting Master Business Function<br /> <br /> B0400047 - Voucher Entry Master Business Function<br /> B0400016 - A/P Payments Master Business Function<br /> <br /> B0900049 - Journal Entry<br /> <br /> N3002040 - F3002 Bill of Material Master Bsfn<br /> N3001780 - F3003 Master Business Function<br /> B3100770 - Work Order Completion MBF<br /> B3101260 - F3111 Parts List Master Business Function<br /> B3101250 - F3112 Work Order Routings Master Business Function<br style="color: black;" /> B3101040 - F31122 WO Hours &amp; Quantities Master Business Function<br /> B3102270 - Work Order Issues Master Business Function<br /> B3401200 - F3460, Edit Line And Update Master Business Function<br style="color: black;" /> N3700070 - F3701 Test Definitions Master Business Function<br style="color: black;" /> N3700100 - F3702 Specifications Master Business Function<br style="color: black;" /> B3100770 - Work Order Completions MBF<br style="color: black;" /> B3102080 - Co_By Completions MBF<br style="color: black;" /> B3401360 - Process Messages MBF<br style="color: black;" /> N3401430 - F3460 Forecast MBF</p>
 <ul>
-<li style="color: black;"><big><big><strong><a name="masterfile"></a><small><span style="color: red;">Master File</span> Master Business Function</small></strong></big></big></li>
+<li style="color: black;"><big><big><strong><a name="masterfile"></a><span style="color: red;">Master File</span> Master Business Function</strong></big></big></li>
 <ul style="color: black;">
 <li>N0100041 - Address Book MBF</li>
 <li>N0100042 - Customer Master -MBF</li>
@@ -189,7 +199,7 @@ function topFunction() {
 <p> </p>
 <hr />
 <p> </p>
-<h3 class="km">Transactional File Master Business Function</h3>
+<h3 class="km"><a name="q3"></a>Transactional File Master Business Function</h3>
 <p>What are components of Transaction MBF?<br /> A Transaction MBF is made up of below components:</p>
 <ul>
 <li>Begin Doc</li>
@@ -331,12 +341,12 @@ function topFunction() {
 <table class="km" style="width: 610px; height: 105px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
 <tr>
-<td class="km"> <small> Get Local Computer ID<br />      VA rpt_WorkStationId_JOBN &lt;&gt; BF szMachineKey<br /> <br /> <strong>  <big>F4114 Begin Document</big></strong><br /> </small>
-<div style="margin-left: 40px;"><small>    VA rpt_WorkStationId_JOBN -&gt; BF szComputerID</small><br /> <small>   " M30" -&gt; BF szBranchPlant</small><br /> <small>   </small><small>-&gt; BF mnBatchNumber</small><br /> <small>   SL DateToday -&gt; BF jdBatchDate</small><br /> <small>   "II" -&gt; BF szDocumentType</small><br /> <small>   SL DateToday -&gt; BF jdGLDate</small></div>
-<small><br /> <strong>  <big>F4114 Edit Line</big></strong><br /> </small>
-<div style="margin-left: 40px;"><small>   VA rpt_WorkStationId_JOBN -&gt; BF szComputerID</small><br /> <small>   SL DateToday -&gt; BF jdGLDate</small><br /> <small>   "Inventory Issue" -&gt; BF szGLExplanation</small><br /> <small>   "1" -&gt; BF cUpdateQuantityOnHand</small><br /> <small>   "1" X BF cAllowQtyOverAvailable</small><br /> <small>   "F" -&gt; BF cFromTo</small><br /> <small>   "1" -&gt; BF cDefaultFromPrimaryLocation</small><br /> <small>   SL DateToday -&gt; BF jdTransactionDate</small><br /> <small>   "II" -&gt; BF szDocumentType</small><br /> <small>   SL DateToday -&gt; BF jdBatchDate</small><br /> <small>    VA rpt_BatchNumber_ICU &lt;- BF mnBatchNumber (<a href="#r1">Ref #1</a>)</small><br /> <small>   " M30" -&gt; BF szBranchPlant</small><br /> <small>   "210" -&gt; BF szItemNumber</small><br /> <small>   "1.0000" -&gt; BF mnTransactionQty</small><br /> <small>   "1.00" -&gt; BF mnTransactionProcessType</small><br /> <small>    VA rpt_DocVoucherInvoiceE_DOC &lt;- BF mnDocumentNumber (<a href="#r2">Ref #2</a>)</small><br style="font-style: italic;" /> <small>    VA rpt_JobnumberA_F0911 &lt;- BF mnF0911JobNumber (<a href="#r3">Ref #3</a>)</small><br /> <small>   "00200" -&gt; BF szKeyCompany</small><br /> <small>   VA rpt_JobnumberA_Inventory &lt;- BF mnInvJobNumber (<a href="#r4">Ref #4</a>)</small><br /> <small>   "1" -&gt; BF cProcessJE</small><br /> <small>   "" -&gt; BF mnSecondaryQty</small></div>
-<small><br /> <strong>  <big>F4114 End Document</big></strong><br /> </small>
-<div style="margin-left: 40px;"><small>   "EP4112" -&gt; BF szProgramID</small><br /> <small>   VA rpt_DocVoucherInvoiceE_DOC -&gt; BF mnDocumentNumber (<a name="r2"></a>Ref #2)</small><br /> <small>   VA rpt_WorkStationId_JOBN -&gt; BF szComputerID</small><br /> <small>   "1" -&gt; BF cWriteCardex</small><br /> <small>   "II" -&gt; BF szDocumentType</small><br /> <small>   "1.00" -&gt; BF mnTransactionProcessType</small><br /> <small>   VA rpt_JobnumberA_F0911 -&gt; BF mnF0911Jobnumber (<a name="r3"></a>Ref #3)</small><br style="font-style: italic;" /> <small>   VA rpt_BatchNumber_ICU -&gt; BF mnBatchNumber (<a name="r1"></a>Ref #1)</small><br /> <small>   "1" -&gt; BF cProcessCloseBatch</small><br /> <small>    VA rpt_JobnumberA_Inventory -&gt; BF mnInvJobNumber (<a name="r4"></a>Ref #4)</small></div>
+<td class="km">  Get Local Computer ID<br />      VA rpt_WorkStationId_JOBN &lt;&gt; BF szMachineKey<br /> <br /> <strong>  <big>F4114 Begin Document</big></strong><br /> 
+<div style="margin-left: 40px;">    VA rpt_WorkStationId_JOBN -&gt; BF szComputerID<br />    " M30" -&gt; BF szBranchPlant<br />    -&gt; BF mnBatchNumber<br />    SL DateToday -&gt; BF jdBatchDate<br />    "II" -&gt; BF szDocumentType<br />    SL DateToday -&gt; BF jdGLDate</div>
+<br /> <strong>  <big>F4114 Edit Line</big></strong><br /> 
+<div style="margin-left: 40px;">   VA rpt_WorkStationId_JOBN -&gt; BF szComputerID<br />    SL DateToday -&gt; BF jdGLDate<br />    "Inventory Issue" -&gt; BF szGLExplanation<br />    "1" -&gt; BF cUpdateQuantityOnHand<br />    "1" X BF cAllowQtyOverAvailable<br />    "F" -&gt; BF cFromTo<br />    "1" -&gt; BF cDefaultFromPrimaryLocation<br />    SL DateToday -&gt; BF jdTransactionDate<br />    "II" -&gt; BF szDocumentType<br />    SL DateToday -&gt; BF jdBatchDate<br />     VA rpt_BatchNumber_ICU &lt;- BF mnBatchNumber (<a href="#r1">Ref #1</a>)<br />    " M30" -&gt; BF szBranchPlant<br />    "210" -&gt; BF szItemNumber<br />    "1.0000" -&gt; BF mnTransactionQty<br />    "1.00" -&gt; BF mnTransactionProcessType<br />     VA rpt_DocVoucherInvoiceE_DOC &lt;- BF mnDocumentNumber (<a href="#r2">Ref #2</a>)<br style="font-style: italic;" />     VA rpt_JobnumberA_F0911 &lt;- BF mnF0911JobNumber (<a href="#r3">Ref #3</a>)<br />    "00200" -&gt; BF szKeyCompany<br />    VA rpt_JobnumberA_Inventory &lt;- BF mnInvJobNumber (<a href="#r4">Ref #4</a>)<br />    "1" -&gt; BF cProcessJE<br />    "" -&gt; BF mnSecondaryQty</div>
+<br /> <strong>  <big>F4114 End Document</big></strong><br /> 
+<div style="margin-left: 40px;">   "EP4112" -&gt; BF szProgramID<br />    VA rpt_DocVoucherInvoiceE_DOC -&gt; BF mnDocumentNumber (<a name="r2"></a>Ref #2)<br />    VA rpt_WorkStationId_JOBN -&gt; BF szComputerID<br />    "1" -&gt; BF cWriteCardex<br />    "II" -&gt; BF szDocumentType<br />    "1.00" -&gt; BF mnTransactionProcessType<br />    VA rpt_JobnumberA_F0911 -&gt; BF mnF0911Jobnumber (<a name="r3"></a>Ref #3)<br style="font-style: italic;" />    VA rpt_BatchNumber_ICU -&gt; BF mnBatchNumber (<a name="r1"></a>Ref #1)<br />    "1" -&gt; BF cProcessCloseBatch<br />     VA rpt_JobnumberA_Inventory -&gt; BF mnInvJobNumber (<a name="r4"></a>Ref #4)</div>
 <strong><em><br /> </em></strong></td>
 </tr>
 </tbody>
@@ -490,10 +500,8 @@ function topFunction() {
 </div>
 <p> </p>
 <hr />
-<p> </p>
-<p> </p>
-<p>&lt;Internal_Only&gt;For internal purpose, how to implement user reserved columns are added which explains routine for master business function well <span style="text-decoration: underline;"><br /> &lt;/Internal_Only&gt; <br /> <br /> </span></p>
-<p> </p>
+
+
 
   <footer class="panel-footer">
     <div class="container">
