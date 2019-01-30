@@ -99,15 +99,22 @@ function topFunction() {
 <p>This document describes possible error codes that appear in the E1ROOT_*.LOG or JDEROOT_*.LOG files in Tools Releases 8.96 and below for JAS.<br /><br />For example:</p>
 <div class="kmcodeblock" style="margin-left: 30px;">[RUNTIME] *ERROR* CallObject@5c0697: CallObject.executeRequest(): Problem executing function [F4114EndDocument] lib [COPBASE] <strong>TM_TRAN_CANCELLED</strong> was received from CallObject user:UserID Env:JPD812</div>
 
+<h3><a name="TheContent"></a>Table of Contents</h3>
+<ul>
+  <li><a href="#q1">Question 1:  Where are JAS Exception Error Codes defined?</a></li>
+<li><a href="#q2">Question 2:  What kind of errors occur in relation to Call object kernel?</a></li>
+<li><a href="#q3">Question 3:  Which errors will cause Call Object Kernel to return an error immediately (without retrying)?</a></li>
+<li><a href="#q4">Question Question 4:  What are some examples of common error messages?</a></li>  
+</ul>
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-<h3 class="km">Question 1:&nbsp; Where are JAS Exception Error Codes defined?</h3>
+<h3 class="km"><a name="q1"></a>Question 1:&nbsp; Where are JAS Exception Error Codes defined?</h3>
 <p>CallObjectSystemException</p>
 <div class="kmcodeblock" style="width: 95%; margin-left: 30px;"><strong>public class CallObjectSystemException extends CallObjectException{}</strong></div>
 <p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
 <p>&nbsp;</p>
-<h3 class="km">Question 2:&nbsp; What kind of errors occur in relation to Call object kernel?</h3>
+<h3 class="km"><a name="q2"></a>Question 2:&nbsp; What kind of errors occur in relation to Call object kernel?</h3>
 <p>Errors are defined as below:</p>
 <table class="km" style="width: 647px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -242,7 +249,7 @@ function topFunction() {
 <div class="kmnotebox"><strong>IMPORTANT:</strong> When getting above error, enable debug on the Enterprise Server and review the JDEDEBUG.LOG (Call Object kernel log) for the process.&nbsp; Analyze it as the issue is coming from the server where logic is processed.&nbsp; No logic is ever processed on an HTML/JAS machine.</div>
 <p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
 <p>&nbsp;</p>
-<h3 class="km">Question 3:&nbsp; Which errors will cause Call Object Kernel to return an error immediately (without retrying)?</h3>
+<h3 class="km"><a name="q3"></a>Question 3:&nbsp; Which errors will cause Call Object Kernel to return an error immediately (without retrying)?</h3>
 <table class="km" style="width: 834px; height: 123px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
 <tr><th class="km" style="text-align: center; width: 226px; background-color: #3366ff; color: white;"><strong>Error Message<br /> </strong></th><th class="km" style="text-align: center; width: 679px; background-color: #3366ff; color: white;"><strong>Action<br /> </strong></th></tr>
@@ -262,7 +269,7 @@ function topFunction() {
 </table>
 <p><br /> <br /> For this type of error, a retry does not take place. Rather, JAS just issues an error and stops processing.</p>
 <p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
-<h3 class="km">Question 4:&nbsp; What are some examples of common error messages?</h3>
+<h3 class="km"><a name="q4"></a>Question 4:&nbsp; What are some examples of common error messages?</h3>
 <p>In general, the errors below will come when a certain Business Function is called with 'Transaction Processing' ON (MANUAL Commit) and it was called Asynchronously across E1 Distribution Module.</p>
 <table class="km" style="width: 1088px; height: 208px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -286,12 +293,10 @@ function topFunction() {
 </tbody>
 </table>
 <p>&nbsp;</p>
-<div class="kmnotebox"><strong>Note:</strong> To accommodate new tools releases, Oracle Support may change the contents of this document without notice.</div>
+
 <p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
 <p>&nbsp;</p>
-<div class="kmnotebox">To discuss this information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <strong><a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/web_portal_technologies_-_jde1" target="_blank">JD Edwards EnterpriseOne Tools &amp; Technology Web/Portal Technologies Community</a></strong>. For additional information including knowledge documents, documentation, Advisor Webcasts, training and more, please visit the <strong><a href="&lt;&lt;INLINE_NOTE:1382038.2&gt;&gt;" target="_blank">JD Edwards EnterpriseOne Web Technologies Information Center</a></strong>.</div>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
+
 
 
 
