@@ -12,7 +12,7 @@
 
     <style>
       body {
-        font-family: Calibri, Arial, Helvetica, sans-serif;
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
 /*        background-color: #FFFAFA;*/
 /*        font-size: 14px;*/
       }
@@ -91,36 +91,48 @@ function topFunction() {
 </body>
 
 
-<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- <h1 <a name="subtitle"></a><span style="font-size: large;">Caching in EnterpriseOne</span></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+<h2 <a name="section01"></a><span style="font-size: medium;">Purpose of Document</span></h2>
 
 <p>This document provides an analysis of common common causes of Memory Allocation errors in batch applications.</p>
 
 <!-- ======================================== Body Starts Here =================================== -->
+<h3><a name="TheContent"></a>Table of Content</h3>
+<ul>
+  <li><a href="#overview">Overview</a> JDE.log may contain errors listed here</li>
+  <li><a href="#q1">Q1. What are commonly reported UBEs that may produce the MEMORY ALLOCATION FAILURE issue?</a></li>
+  <li><a href="#q2">Q2. What is maximum size of memory can be allocated per process/kernel?</a></li>
+  <li><a href="#q3">Q3. How Does EnterpriseOne manage Memory?</a></li>
+  <li><a href="#q4">Q4. How to estimate the memory size needed?</a></li>
+  <li><a href="#q5">Q5. What is the best way to work around this type of error?</a></li>
+  <li><a href="#q6">Q6. Are there some example of changing physical memory size?</a></li>
+  <li><a href="#q7">Q7. Is there way not to dump memory diagnostic in dmp file when jdemem code log Memory Allocation Failure?</a></li>
+</ul>
+
 
 <p> </p>
-<h3 class="km">Overview</h3>
+<h3> <a name="overview"></a>Overview</h3>
 <p>MEMORY ALLOCATION FAILURE message occurs when memory cannot be allocated when needed. <br /> <br /> Below are different scenarios where the error is seen.</p>
-<h4 class="km">Example 1: CMRB000007 - ERROR: Memory allocation failed</h4>
+<h4>Example 1: CMRB000007 - ERROR: Memory allocation failed</h4>
 <div style="margin-left: 40px;">MEMORY ALLOCATION FAILURE<br /> File: \builds\8.98.03.01.01\Rels\common\Jdekrnl\jdecache\jdecm_rb.c Line:251 iParam: 0000000404<br /> 3096/632 WRK:Starting jdeCallObject                       Wed Sep 08 09:41:12.013000                   jdecm_rb.c2521<br /> CMRB000007 - ERROR: Memory allocation failed</div>
 <p> </p>
-<h4 class="km">Example 2: CAC0000018 - Failed to allocate memory for stored key</h4>
+<h4>Example 2: CAC0000018 - Failed to allocate memory for stored key</h4>
 <div style="margin-left: 40px;">MEMORY ALLOCATION FAILURE<br /> File: \builds\_activebuild\common\Jdekrnl\jdecache\Jdecm.c Line:74 iParam: -0000130744<br /> 8632/10908 WRK:Starting jdeCallObject                     Tue Mar 27 15:06:27.671005                    Jdecm.c752<br /> CAC0000018 - Failed to allocate memory for stored key</div>
 <p> </p>
-<h4 class="km">Example 3: Not enough storage is available to process this command</h4>
+<h4>Example 3: Not enough storage is available to process this command</h4>
 <div style="margin-left: 40px;">Memory error: Allocation failure : Not enough storage is available to process this command. .<br /> The operation has been cancelled.</div>
 <p> </p>
-<h4 class="km">Example 4: SQL0000047 - Allocation failed</h4>
+<h4>Example 4: SQL0000047 - Allocation failed</h4>
 <div style="margin-left: 40px;">MEMORY ALLOCATION FAILURE<br /> File: \b9\common\jdbdrv\dbsql\dbsql_x.c Line:26 iParam: 0000008212<br /> 4168/4208 WRK:Starting jdeCallObject                      Wed Apr 25 13:21:48.241000                     dbsql_x.c270<br /> SQL0000047 - Allocation failed<br /> <br /> 4168/4208 WRK:Starting jdeCallObject                      Wed Apr 25 13:21:48.241002                     dbsql_s.c1085<br /> SQL0000039 - Allocation failed</div>
 <p> </p>
-<h4 class="km">Example 5: OCI0000020 - Out of memory for allocating return values</h4>
+<h4>Example 5: OCI0000020 - Out of memory for allocating return values</h4>
 <div style="margin-left: 40px;">MEMORY ALLOCATION FAILURE<br /> File: b3400500.c Line:625 iParam: 0000005050<br /> <br /> MEMORY ALLOCATION FAILURE<br /> File: b3400500.c Line:626 iParam: 0000005050<br /> <br /> MEMORY ALLOCATION FAILURE<br /> File: ../oracle/dbbndout.c Line:81 iParam: 0000008568<br /> 3605/1 WRK:Starting jdeCallObject                    Sun Jul 26 00:48:17.203515             dbbndout.c821<br /> OCI0000020 - Out of memory for allocating return values<br /> <br /> 3605/1 WRK:Starting jdeCallObject                    Sun Jul 26 00:48:17.203736              dbbndout.c827<br /> OCI0000021 - Error - DBOCI: insufficient memory to process request<br /> <br /> 3605/1 WRK:Starting jdeCallObject                     Sun Jul 26 00:48:17.203887              dbinitrq.c885<br /> OCI0000139 - Failed to bind input values - INSERT INTO PRODDTA.F3413 (MRITM, MRMCU, MRQT, MRSTRT, MRTRQT) VALUES (:BND1,:BND2,:BND3,:BND4,:BND5)<br /> <br /> 3605/1 WRK:Starting jdeCallObject                     Sun Jul 26 00:48:17.204088               dbinitrq.c892<br /> OCI0000140 - Error - ORA-00000: normal, successful completion<br /> <br /> (continue ...)<br /> <br /> MEMORY ALLOCATION FAILURE<br /> File: jdecm_rb.c Line:250 iParam: 0000004014<br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.354208              jdecm_rb.c2515<br /> CMRB000008 - ERROR: Memory allocation failed<br /> <br /> MEMORY ALLOCATION FAILURE<br /> File: ../dbsql/dbsql_x.c Line:26 iParam: 0000004108<br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.355409               dbsql_x.c270<br /> SQL0000047 - Allocation failed<br /> <br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.355541               dbsql_d.c78<br /> SQL0000013 - Allocation failed<br /> <br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.355670              dbinitrq.c593<br /> OCI0000131 - Failed to generate SQL statement<br /> <br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.355816              dbinitrq.c599<br /> OCI0000132 - Error - DBOCI: error in SQL generator<br /> <br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.355953              jdb_drvm.c893<br /> JDB9900168 - Failed to initialize db request<br /> <br /> 3605/1 WRK:Starting jdeCallObject                      Sun Jul 26 00:48:17.356098              jdb_exet.c4666<br /> JDB3500011 - Failed to delete for F3412</div>
 <p><em><br /> </em></p>
 <div class="kmnotebox">Note: This document does not cover memory allocation failure in your database server</div>
 <hr />
-<h3 class="km">Analysis</h3>
+<h3> Analysis</h3>
 <p>There are a few known causes to the error MEMORY ALLOCATION FAILURE. The most common are:</p>
 <ul>
 <li>Insufficient memory</li>
@@ -140,8 +152,10 @@ function topFunction() {
 </ul>
 <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<h4 class="km"><big>Common Questions on Insufficient Memory Issues</big></h4>
-<h5 class="km"><big>Q1. What are commonly reported UBEs that may produce the MEMORY ALLOCATION FAILURE issue?</big></h5>
+<h2> Common Questions on Insufficient Memory Issues</h2>
+
+
+<h3><a name="q1"></a> Q1. What are commonly reported UBEs that may produce the MEMORY ALLOCATION FAILURE issue?</h3>
 <p>Most commonly the issue is coming when the source data is huge or when a certain routine uses huge amount of cache to hold information before print out or commit it to a certain table. Mostly issue may come report:</p>
 <ul>
 <li>UBE run periodically (weekly, monthly or yearly)</li>
@@ -163,17 +177,23 @@ function topFunction() {
 </ul>
 <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<h5 class="km"><big>Q2. What is maximum size of memory can be allocated per process/kernel?</big></h5>
+
+
+<h3><a name="q2"></a>Q2. What is maximum size of memory can be allocated per process/kernel?</h3>
 <p>It is varies depending on the enterprise server platform, hardware configuration and operating system. You may contact your vendor to find out more.</p>
 <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<h5 class="km"><big>Q3. How Does EnterpriseOne manage Memory?</big></h5>
+
+
+<h3><a name="q3"></a>Q3. How Does EnterpriseOne manage Memory?</h3>
 <p>Each memory space is sized exactly based on the data in tables. For example, a tree node is needed for each record for each index in each table. Plus an extra NIL node is needed for each table to indicate tree leaves for the table indices. So we multiply the number of records by the number of indices plus 1 for each table and add them all up to create the exact number of tree nodes needed to load the cache. This means if somebody adds a record to a table and reloads the cache we do not have enough memory to hold all records. In this situation, we create an extra memory space for the needed type whenever we run out of memory. However, if records are deleted, we do not get rid of memory and shrink the size of the cache.</p>
 <div class="kmnotebox">Note: <strong>A red-black tree</strong> is a type of self-balancing binary search tree, a data structure used in computing science, typically used to implement associative arrays.</div>
 <p> </p>
 <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<h5 class="km"><big>Q4. How to estimate the memory size needed?</big></h5>
+
+
+<h3><a name="q4"></a>Q4. How to estimate the memory size needed?</h3>
 <p>This calculation assumes the keys and indices to a certain table is left unchanged. If keys or indices are changed, the cache should still work, however the following calculation will be off. <strong>Approximately 193K</strong> will be used by the cache that is non-data related. Plus, the size of memory will be equivalent to the size of data in a certain table. In Unicode and 2 bytes Asian language, it requires two bytes per character. That is why, the usage of memory in Unicode environment will be higher than single byte environment.<br /> <br /> Computation of size in byte:</p>
 <table style="text-align: left; width: 619px;" border="1" cellspacing="2" cellpadding="2">
 <tbody>
@@ -232,7 +252,9 @@ function topFunction() {
  </blockquote>
 <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<h5 class="km"><big>Q5. What is the best way to work around this type of error?</big></h5>
+
+
+<h3><a name="q5"></a>Q5. What is the best way to work around this type of error?</h3>
 <p>This has to be approached from the application point of view or your business logic to cope with technical limitation.</p>
 <ul>
 <li>Purge data you do not want to handle</li>
@@ -252,7 +274,9 @@ function topFunction() {
 <p> </p>
 <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<h5 class="km"><big>Q6. Are there some example of changing physical memory size?</big></h5>
+
+
+<h3><a name="q6"></a>Q6. Are there some example of changing physical memory size?</h3>
 <p>Below is example which may (not) have fixed issue. Be consulted system administrator in your own organization and let them to adjust it if needed.<br /> <br /> Set <strong>Large Physical Memory</strong> on Unix as below</p>
 <ul>
 <li><em>(Before change) vmo -r -o lgpg_regions=640 -o lgpg_size=16777216</em></li>
@@ -272,15 +296,18 @@ function topFunction() {
 <li>Same error can occur in interactive application in copying huge data (e.g., Account Copy)</li>
 </ul>
 </div>
-<hr />
-<h5 class="km">Q7. Is there way not to dump memory diagnostic in dmp file when jdemem code log Memory Allocation Failure?</h5>
+<p> </p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p> </p>
+
+
+<h3><a name="q7"></a>Q7. Is there way not to dump memory diagnostic in dmp file when jdemem code log Memory Allocation Failure?</h3>
 <p>From Tools Release 9.1.2.0 onwards "DmpMemDiagForMAF" under [DEBUG] section in enterprise server JDE.INI which will disable out of memory flag when set to 0 and will not dump memory diagnostic in dmp file when jdemem code log Memory Allocation Failure. This parameter has been implemented through &lt;Bug 13715335&gt; : NO CONFIGURATION SETTING TO DISABLE DMP FILE CREATION FOR OUT OF MEMORY.</p>
-<hr />
+
 <p> </p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
 <p> </p>
-<div class="kmnotebox">To discuss this information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/design_tools_&amp;_output_technologies_-_jde1" alt="Design Tools &amp; Output Technologies - JDE1 Community" title="Design Tools &amp; Output Technologies - JDE1 Community" target="_blank">Design Tools &amp; Output Technologies - JDE1 Community</a>.<br /> <br /> To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details . If your topic is not currently scheduled please suggest it.</div>
-<p> </p>
-<p> </p>
+
 <p> </p>
 
 
