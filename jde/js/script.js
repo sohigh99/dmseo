@@ -82,3 +82,82 @@ function getCookie(name) {
 }
 
 
+function myFunction1() {
+  var x = document.getElementById("myFoundation");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+
+function myFunction2() {
+  var x = document.getElementById("myOther");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+function myFunction3() {
+  var x = document.getElementById("myCustom");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+function myFunction4() {
+  var x = document.getElementById("myFinancial");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+function myFunction5() {
+  var x = document.getElementById("myInventory");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+function myFunction6() {
+  var x = document.getElementById("mySales");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+function myFunction7() {
+  var x = document.getElementById("myProcurement");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+function myFunction8() {
+  var x = document.getElementById("myManufacturing");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+
+function myFunction9() {
+  var x = document.getElementById("myHR");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}

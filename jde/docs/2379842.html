@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R41548 Case Study with Huge Data from F4111 - Troubleshooting</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+            .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R41548 Case Study with Huge Data from F4111 - Troubleshooting</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><a name="subtitle"></a> style="font-size: large;">Caching in EnterpriseOne</h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><a name="section01"></a>Purpose of Document</h2>
+
+<p>This document is a case study only for the EnterpriseOne user with huge rows from F4111 (Item Ledger File). The manipulation of data using query tool has to be your last resort because it is not the scope of Oracle Global Support.&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>Supposing that the row count for the tables related read as belsow,</p>
+<table style="border-collapse: collapse; width: 863px; height: 284px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 122pt;" width="163" /> <col style="width: 91pt;" width="121" /> <col style="width: 122pt;" width="163" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 122pt; color: white; background-color: #999999; font-weight: bold; text-align: center;">&nbsp;</td>
+<td style="width: 91pt; color: white; background-color: #999999; font-weight: bold; text-align: center;" width="121">Row Count</td>
+<td style="width: 122pt; color: white; background-color: #999999; font-weight: bold; text-align: center;" width="163">Others</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">F4111 (Item Ledger File)</td>
+<td>
+<p>ilipcd&nbsp; Row Count<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 3,543,693<br /> S&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 1,108,063<br /> X&nbsp;&nbsp;&nbsp; &nbsp; 12,119,218<br /> Y&nbsp;&nbsp;&nbsp; 761,244,068<br /> -------------------<br /> &nbsp;&nbsp;&nbsp; 778,015,042</p>
+</td>
+<td>
+<p>&nbsp;Currently there is no standard method to archive/purge F4111 though the records with IPCD in ('X', 'Y') may not affect inventory cost. Some customer may implement partitioning but this is not Oracle's support scope. <br /></p>
+<p>sql&gt; select ilipcd, count (*) from proddta.f4111 group by ilipcd;</p>
+</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">F41112 (Item ASOF Flie)<br /></td>
+<td>
+<p>Zeros bucket &nbsp;&nbsp;&nbsp;&nbsp; 229,414,921<br /> Non-zero buckets 17,635,062</p>
+<p>-----------------------</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 247,049,983</p>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">F41021 (Item Location Flie)<br /></td>
+<td>
+<p>Zero bucket&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7,989,879<br /> Non-zero buckets&nbsp; 2,051,557</p>
+<p>---------------------------</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10,041,436</p>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">F4105 (Item Cost File)<br /></td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 21,428,554</td>
+<td>&nbsp;There is no means to check whether a certain row is a historical datum or not. Refer suggestion below. <br /></td>
+</tr>
+</tbody>
+</table>
+
+<p>Note that the figure in above tables is case study only which does not imply actual data in real organization.</p>
+<p>Question 1&gt; Why R41548 keeps writing data into F41112 even when the values of all amount and quantity buckets are zero?</p>
+<p>Question 2&gt; How R41548 works?</p>
+<p>Question 3&gt; How to overcome the issue may be caused by the volume of data?</p>
+
+<h2>Solution</h2>
+
+<p>Through this document is to answer some technical questions on As Of Updating (R41548) report. Refer to &lt;Document 625402.1&gt; - E1: 41: As Of Processing (P4111 / P41112 / R41760 / R41540 / R41542) which you may use for Month-End Closing and Year End Closing process.</p>
+<p>Answer 1&gt; Why R41548 keeps writing data into F41112 even when the values of all amount and quantity buckets are zero?</p>
+<p>Currently, R41548 inserts records into F41112 regardless the accumulated values are zero. So the number of records from F41112 increases 2 times whenever you run R41548 for your year-end closing. For this example, the total number of records from F41112 for this case study will be equal to or greater than 494,099,966 [= {247,049,983 + newly added rows of F41021) * 2}]. </p>
+<p>Not to have this issue, refer to &lt;Document 625402.1&gt; - E1: 41: As Of Processing (P4111 / P41112 / R41760 / R41540 / R41542). </p>
+<p><em>Excerpt:</em><br /><strong>Important</strong>: When using report R41542 for a complete regeneration, all existing records from table F41112 will be purged regardless of the data selection. The data selection will be used only to regenerate the new records into table F41112. It is recommended that <strong>the complete regeneration is run once for the first fiscal year</strong> with inventory activity (with F4111 records) for all items. R41542 should run in batches, with data selection over separate fiscal years. This will ensure that balance forwards will be restored for each fiscal year.</p>
+<p>Updating Balance Forward Records for Inactivity in the Fiscal Year<br />To include records of prior year activity, run the As Of Updating (R41548) UBE after the Item Ledger As Of Record Generation (R41542) program.</p>
+<p>Problem: you may not run R41542 with complete regeneration when the data volume of F4111 is huge as given example. Hence, there is no way to purge F41112. <br /></p>
+
+<p>Answer 2&gt; Detail routines is depicted as below,</p>
+<p><img src="../images/integrity01.png" border="0" alt="r41548" title="r41548" hspace="0" vspace="0" /></p>
+<p>In this figure,</p>
+<p style="margin-left: 30px;">a CUMA_New = F41112.CUMA + AN01 + AN02 + &hellip; + AN12 + AN13 + AN14<br />&nbsp;&nbsp; CMQT_New = F4112.CMQT + NQ01 + NQ02 + &hellip; + NQ13 + NQ14</p>
+<p style="margin-left: 30px;">b. Read F41112 on DCT, FY = FY_New, CTRY, ITM, MCU, LOCN, LOTN, and GLPT</p>
+<p style="margin-left: 30px;">c. CFY_New = ( F41112.CTRY*100 + F41112.FY ) + 1</p>
+<p>&nbsp;</p>
+<p>Answer 3&gt; Currently there is no viable option not to write F41112. <br /></p>
+<p>Try, </p>
+<p>- Purge historic data using R4102P<br />Reference:</p>
+<ul>
+<li style="font-size: small;">1322000.1&gt; - E1: 41: Inventory Purge Programs (R4101P / R4102P)</li>
+<li style="font-size: small;">&lt;Document 1125633.1&gt; - E1: 40: R4102P and Tables Related per Processing Option Value. Note that R4102P can delete historical data from F4105, F30026, F41002, F41021, F4102 (this is conditional based on the processing option parameters which is explained in this document), F41022, and F41171. So make it sure you backup these files before proceed.</li>
+</ul>
+<p><br class="_mce_tagged_br" />As explained above, there is no standard means to delete F41112 without running R41542. Hence, </p>
+<p>1. Back up F41112</p>
+<p>2. DELETE the rows with all quantity/amount buckets with zero using WHERE clause where ( incuma = 0 and inan01 = 0 and inan02 = 0 and inan03 = 0 and inan03 = 0 and inan04 = 0 and inan05 = 0 and inan06 = 0 and inan07 = 0 and inan08 = 0 and inan09 = 0 and inan10 = 0 and inan11= 0 and inan12 = 0 and inan13 = 0 and nan14 0 and incmqt = 0 and innq01 = 0 and innq02 = 0 and innq03 = 0 and innq04 = 0 and innq05 = 0 and innq06 = 0 and innq07 = 0 and innq08 = 0 and innq09 = 0 and innq10 = 0 and innq11 = 0 and innq12 = 0 and innq13 = 0 and innq14 = 0 );</p>
+<p>Refer to &lt;Document 1082128.1&gt; - E1: ENV: Archive and Purging within JD Edwards EnterpriseOne, which may give you all available archive and purge options in EnterpriseOne. <br /></p>
+<p>&lt;Internal_Only&gt;</p>
+<p>Query used for the collection of row count, </p>
+<p>sql&gt; select ilipcd, count (*) from proddta.f4111 group by ilipcd;<br />sql&gt; select count (*) from proddta.f41112;<br />sql&gt; select count (*) from proddta.f41112<br />where ( incuma = 0 and inan01 = 0 and inan02 = 0 and inan03 = 0 and inan03 = 0 and inan04 = 0 and inan05 = 0 and inan06 = 0 and inan07 = 0 and inan08 = 0 and inan09 = 0 and inan10 = 0 and inan11= 0 and inan12 = 0 and inan13 = 0 and inan14 = 0 and incmqt = 0 and innq01 = 0 and innq02 = 0 and innq03 = 0 and innq04 = 0 and innq05 = 0 and innq06 = 0 and innq07 = 0 and innq08 = 0 and innq09 = 0 and innq10 = 0 and innq11 = 0 and innq12 = 0 and innq13 = 0 and innq14 = 0 );<br />sql&gt; select count (*) from proddta.f41021;<br />sql&gt; SELECT COUNT (*) FROM PRODDTA.F41021<br />WHERE ( LIPBIN &lt;&gt; 'P' AND LIPQOH = 0 AND LIPBCK = 0 AND LIPREQ = 0 AND LIQWBO = 0 AND LIOT1P = 0 AND LIOT2P = 0 AND LIOT1A = 0 AND LIHCOM = 0 AND LIPCOM = 0 AND LIFCOM = 0 AND LIFUN1 = 0 AND LIQOWO = 0 AND LIQTTR = 0 AND LIQTIN = 0 AND LIQONL = 0 AND LIQTRI = 0 AND LIQTRO = 0 AND LIQTY1 = 0 AND LIQTY2 = 0 AND LIQTO1 = 0 AND LIQTO2 = 0 AND LIHCMS = 0 AND LIPJCM = 0 AND LIPJDM = 0 AND LISCMS = 0 AND LISIBW = 0 AND LISOBW = 0 AND LISQOH = 0 AND LISQWO = 0 AND LISREQ = 0 AND LISWHC = 0 AND LISWSC = 0 );<br />sql&gt; select count (*) from proddta.f4105;</p>
+<p>&lt;/Internal_Only&gt;</p>
+
+<p>Do not delete F41021 using query tool because which leaves huge number of rows from Item Cost, Item Cost Detail, and Lot Master Files. </p>
+<p>It is always recommended to archive (when it is applicable) and purge the historic data. </p>
+<p>&nbsp;</p>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

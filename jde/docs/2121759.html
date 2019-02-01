@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>P0030G Updating Records Incorrectly by Recognizing Form Mode as Update Mode in Clicking Add Button</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -36,13 +36,13 @@
       #myBtn:hover {
         background-color: #555;
       }
-            .kmnotebox {
+
+      .kmnotebox {
         background-color: #FFFFE0;
         border-left: 10px;
         /*border-style: dotted;*/
       }
 
-      
     </style>
 
   </head>
@@ -73,7 +73,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P0030G Updating Records Incorrectly by Recognizing Form Mode as Update Mode in Clicking Add Button</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -104,9 +104,60 @@ function topFunction() {
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
 
+<p>When adding a new bank account through P0030G (G/L Bank Accounts), Bank Account and Transit Number are being pre-populated with values from an unrelated bank account record in F0030. If you do not change those numbers, the original bank account record is updated with the new account description when the new account is added.</p>
+<p>Note that this type of issue (where SV Form_Mode is UPDATE_MODE in adding a new record) can be occurred in your running Address Book Master (P01012) or Item Master (P4101) which has primary key value with '0'. However this document shall not explain why '0' value is stored because there are too many possible scenario for this. So application listed here is a case study only.<br /><br /></p>
+
+
 
 <!-- ======================================== Body Starts Here =================================== -->
 
+<p>There is a record with F0030.UKID = 0 which is primary key. <br /> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>In case you need to debug similar issue by yourself, check form mode either through JASDEBUG.log or Debuggr.exe application</li>
+<li>For example, JASDEBUG.log may reads as below,</li>
+</ul>
+<p>          SELECT AYFLR,AYCKSV,AYUPMJ,AYJOBN,AYSWFT,AYFLP,AYUPMT,AYAID,AYIBAN,AYPID,AYCBNK,AYAN8,AYDL01,AYADPI,AYCHKD,AYBKTP,AYUKID,AYUSER,AYCTR,AYTNST FROM CRPDTA.F0030 WHERE ((AYUKID = 0 )) <br />         JDBCProxy.jdbcProxy()&gt;&gt;&gt;response is good(execute()) -&gt; , status = 2, nextpageid = -1, data = JASResultSet is returning 1 rows</p>
+</div>
+<p> </p>
+
+<p>To revolve issue,</p>
+<ol>
+<li>Go to query tool (SQLPlus for example)</li>
+<li>Issue sql&gt; DELECT CRPDTA.F0030 WHERE AYUKID = 0;</li>
+<li>COMMIT;</li>
+</ol>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>This is considered functioning as designed for following reason,
+<ul>
+<li>BOB_MODE is message on the status of business view</li>
+<li>Currently available BOB_MODE (enumeration) are,
+<ul>
+<li>BOB_MODE_UNDEFINED = 0</li>
+<li>BOB_MODE_SPECIAL = 1</li>
+<li><strong>BOB_MODE_ADD = 2</strong></li>
+<li>BOB_MODE_ADD_PRIMARY = 3</li>
+<li>BOB_MODE_ADD_SPECIAL = 4</li>
+<li>BOB_MODE_DELETE = 5</li>
+<li><strong>BOB_MODE_UPDATE = 6</strong></li>
+<li>BOB_MODE_UPDATE_SPECIAL = 7</li>
+<li>BOB_MODE_INQUIRE = 8</li>
+<li>BOB_MODE_COPY = 9</li>
+</ul>
+</li>
+<li>So it is communication between JDBC (or ODBC) and tools code in opening any form (if business view is associated - otherwise, it depends on button clicked - e.g., Select for update and so on). It checks mode based on business view with primary key, if found, then it sets BOB_MODE as update mode (else, update mode or copy mode).</li>
+<li>In many applications/forms, the way it handles data in form/grid are vary depending on SV Form_Mode.</li>
+<li>To adjust UKID, refer to &lt;Document 2015705.1&gt; - E1: 04: Troubleshooting GL Bank Account Set Up (P0030G)Delete Reference</li>
+<li>Same issue can be arisen in P4101 (when F4101 contains a record with F4101.ITM has = 0) or P01012 (when F0101 contains a row with F0101.AN8 = 0)</li>
+</ul>
+</li>
+</ul>
+</div>
+<p>&nbsp;</p>
 
 
 

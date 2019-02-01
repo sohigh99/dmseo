@@ -130,38 +130,38 @@
       <li><h4><font color="black">Process Improvement </font><a href="docs/ctu011.html">Process Improvement </a></h4></li>
       <li><h4><font color="black">ERP in the Cloud </font><a href="docs/ctu012.html">ERP in the Cloud </a></h4></li>
 
-
-      <li><font color="black">Architectural View of JD Edwards   </font><a href="docs/0000005.html">Architectural View of EnterpriseOne</a></li><span>Simplified view of JDE structure. JDE is not only client-server model rather it is more like layered structure.</span><p> </p>
-
-      <li><font color="black">Caching  </font><a href="docs/944015.html">Caching in EnterpriseOne</a></li><span>This document took long time to complete and required extensive test and research. For this, various codes in the sytem level and application level are tested and analyzed. </span><p> </p>
-
-      <li><font color="black">Specification  </font><a href="docs/1142313.html">Specification in EnterpriseOne</a></li><span>JDE comprises C function and its specification which determines how a user interfaces and how it is represented. This is important aspect of any enterprise solutions with the layered architecture. </span><p> </p>
-
       <li><font color="black">Listing of Transaction Processing  </font><a href="docs/1320968.html">Listing of Transaction Processing in EnterpriseOne</a></li><span> The transaction processing is the core of enterprise solutions which manipulate various data. The applications listed here is tightly associated with MBF (Mater Business Function). Do not add any custom procedure, trigger, function when a certain table is to be manipulated in Transaction Processing (TP) boundaries, which results in the deadlock.</span><p> </p>
 
-      <li><font color="black">Master Business Function  </font><a href="docs/1265902.html">Master Business Function in EnterpriseOne</a></li><span> The Master Business Functions are the most important components of Enterprise Solutions (ERP, SCM, CRM, Commerce and so on). Commonly, the MBF compries Begin Doc to validate/default header information (business entity) and create cache for it, Edit Line to validate/default detail information (items and others) and create cache for it. Optionally, Edit Doc can be implemented either to check integrity between header cache and detail cache or to call additional routine before commit takes place. Lastly, End Doc gets called with Transaction Processing to commit cache created/validated through Begin Doc and Edit Line to commit to database.</span><p> </p> 
+      <p><button class="button" onclick="myFunction1()">&gt;&gt;&gt;See More in E1 Foundation Area</button></p>
+      <div id="myFoundation">
+          <li><font color="black">Specification  </font><a href="docs/1142313.html">Specification in EnterpriseOne</a></li><span>JDE comprises C function and its specification which determines how a user interfaces and how it is represented. This is important aspect of any enterprise solutions with the layered architecture. </span><p> </p>
+          <li><font color="black">Architectural View of JD Edwards   </font><a href="docs/0000005.html">Architectural View of EnterpriseOne</a></li><span>Simplified view of JDE structure. JDE is not only client-server model rather it is more like layered structure.</span><p> </p>
+          <li><font color="black">Caching  </font><a href="docs/944015.html">Caching in EnterpriseOne</a></li><span>This document took long time to complete and required extensive test and research. For this, various codes in the sytem level and application level are tested and analyzed. </span><p> </p>
 
-      <li><font color="black">Transaction Processing  </font><a href="docs/1208208.html">Transaction, Transaction Processing, Commit, and Rollback</a></li><span> The Transaction Processing is tightly related with MBF where data is handled using cache when it requires higher integrity among tables. For instance, Item Cost, Item Location, General Ledger, and Cardex for Inventory Transaction. </span><p> </p>
+          <li><font color="black">Master Business Function  </font><a href="docs/1265902.html">Master Business Function in EnterpriseOne</a></li><span> The Master Business Functions are the most important components of Enterprise Solutions (ERP, SCM, CRM, Commerce and so on). Commonly, the MBF compries Begin Doc to validate/default header information (business entity) and create cache for it, Edit Line to validate/default detail information (items and others) and create cache for it. Optionally, Edit Doc can be implemented either to check integrity between header cache and detail cache or to call additional routine before commit takes place. Lastly, End Doc gets called with Transaction Processing to commit cache created/validated through Begin Doc and Edit Line to commit to database.</span><p> </p> 
 
-      <li><font color="black">Deadlock </font><a href="docs/1228683.html">Deadlock in EnterpriseOne</a></li><span> The deadlock can take place when there is any racing condition - two different process/thread compete to get lock information. In code-current environment, common cause of deadlock is custom code including database level add-on. To have deadlock two different processes are accessing same table with Transaction Processing on. The reason for this behavior is that TP boundaries issues blocking from sql> Begin Trans through sql> Commit Trans, or sql> Rollback Trans. So, it is important to have minimum value for JDENETTimeout because this parameter determines how long it will block. </span><p> </p>
+          <li><font color="black">Transaction Processing  </font><a href="docs/1208208.html">Transaction, Transaction Processing, Commit, and Rollback</a></li><span> The Transaction Processing is tightly related with MBF where data is handled using cache when it requires higher integrity among tables. For instance, Item Cost, Item Location, General Ledger, and Cardex for Inventory Transaction. </span><p> </p>
 
-      <li><font color="black">JDEDB_COMMIT_MANUAL  </font><a href="docs/1513147.html">JDEDB_COMMIT_MANUAL and TP Boundaries</a></li><span>JDEDB_COMMIT_AUTO is used to put a certain table outside Transaction Processing when a certain table need accessing more than one time. The example of this configuration can be Item Location File (F41021) and Item Branch File (F4102) to update MRPC (Net Change Flag) to use during MRP running. In case you need to add a certain routine inside End Doc routine which is called with Transcation Processing, make it sure you call Auto Commit not to cause deadlock. </span><p> </p>
+          <li><font color="black">Deadlock </font><a href="docs/1228683.html">Deadlock in EnterpriseOne</a></li><span> The deadlock can take place when there is any racing condition - two different process/thread compete to get lock information. In code-current environment, common cause of deadlock is custom code including database level add-on. To have deadlock two different processes are accessing same table with Transaction Processing on. The reason for this behavior is that TP boundaries issues blocking from sql> Begin Trans through sql> Commit Trans, or sql> Rollback Trans. So, it is important to have minimum value for JDENETTimeout because this parameter determines how long it will block. </span><p> </p>
 
-      <li><font color="black">Server Map (SVM920)  </font><a href="docs/1348278.html">Sever Map - SVM920</a></li><span>The tables listed in this document superceds any configuration you made which controls the data source (or, source of data) and OCM mapping. The environment is defined as the path code (the instruction set of codes which is made up of C functions and specification) and OCM (Object Configuration Management) where the latter determines the source and destination of instruction and data.</span><p> </p> 
+          <li><font color="black">JDEDB_COMMIT_MANUAL  </font><a href="docs/1513147.html">JDEDB_COMMIT_MANUAL and TP Boundaries</a></li><span>JDEDB_COMMIT_AUTO is used to put a certain table outside Transaction Processing when a certain table need accessing more than one time. The example of this configuration can be Item Location File (F41021) and Item Branch File (F4102) to update MRPC (Net Change Flag) to use during MRP running. In case you need to add a certain routine inside End Doc routine which is called with Transcation Processing, make it sure you call Auto Commit not to cause deadlock. </span><p> </p>
 
-      <li><font color="black">Business Function Naming Conversion  </font><a href="docs/1389392.html">Business Function Naming</a></li><span>Basic naming of business function in E1. Some of naming follows World Software naming convention which is the origin of highly distruted JD Edwards system.</span><p> </p>
+          <li><font color="black">Server Map (SVM920)  </font><a href="docs/1348278.html">Sever Map - SVM920</a></li><span>The tables listed in this document superceds any configuration you made which controls the data source (or, source of data) and OCM mapping. The environment is defined as the path code (the instruction set of codes which is made up of C functions and specification) and OCM (Object Configuration Management) where the latter determines the source and destination of instruction and data.</span><p> </p> 
 
-      <li><font color="black">Functions in JAS  </font><a href="docs/1090584.html">Functions in JAS</a></li><span>Basically there are two types of functions one is business function and another is system function. There are equivalent set of system function in java and most of embedded (the associated function with data dictionary items) and trigger (either at the DD level or Table level) function have its own java code.</span><p> </p> 
-      <li><font color="black">Exception/Error Code in JAS  </font><a href="docs/1094464.html">Exception/Error Code in JAS when Call Object Kernel Fails on Logic Server with Error Code COSE#9999</a></li> 
+          <li><font color="black">Business Function Naming Conversion  </font><a href="docs/1389392.html">Business Function Naming</a></li><span>Basic naming of business function in E1. Some of naming follows World Software naming convention which is the origin of highly distruted JD Edwards system.</span><p> </p>
 
-      <li><font color="black">Memory Violation Part I </font></span> <a href="docs/1464687.html">Memory Violation Part I</a></li><span>The corruption of memory is commonly coming when the memory allocated is different from what memory is assigned, or in referening NULL pointer in nature. The outcome can vary depending on the operating system and its compiler. Commonly, you may not get zombie kernel or memory corruption when your code is up to date. </span>
-      <li><font color="black"> Memory Violation Part II </font><a href="docs/1554611.html">Memory Violation Part II</a></li><p> </p>
+          <li><font color="black">Functions in JAS  </font><a href="docs/1090584.html">Functions in JAS</a></li><span>Basically there are two types of functions one is business function and another is system function. There are equivalent set of system function in java and most of embedded (the associated function with data dictionary items) and trigger (either at the DD level or Table level) function have its own java code.</span><p> </p> 
+          <li><font color="black">Exception/Error Code in JAS  </font><a href="docs/1094464.html">Exception/Error Code in JAS when Call Object Kernel Fails on Logic Server with Error Code COSE#9999</a></li> 
 
-      <li><font color="black">Interoperability Quick Reference Guide </font><a href="docs/1275030.html">Interoperability Quick Reference Guide</a></li><span>There are a few of ways to talk to the external systems - EDI, Interop, Business Services. Commonly, interop is used to audit the change made against master files or the tables associated with the master business function.</span><p> </p>
+          <li><font color="black">Memory Violation Part I </font></span> <a href="docs/1464687.html">Memory Violation Part I</a></li><span>The corruption of memory is commonly coming when the memory allocated is different from what memory is assigned, or in referening NULL pointer in nature. The outcome can vary depending on the operating system and its compiler. Commonly, you may not get zombie kernel or memory corruption when your code is up to date. </span>
+          <li><font color="black"> Memory Violation Part II </font><a href="docs/1554611.html">Memory Violation Part II</a></li><p> </p>
 
-      <li><font color="black">Memory Allocation Failure </font><a href="docs/1272974.html">Memory Allocation Failure</a></li><span>Generally, the memory allocation failure is complaint from operating system that the assigned memory (when it is not dynamic) is insufficient to handle a certain task. To overcome the overuse of physical memory, the work file (physical tables) is used in batch applications.</span><p> </p>
+          <li><font color="black">Interoperability Quick Reference Guide </font><a href="docs/1275030.html">Interoperability Quick Reference Guide</a></li><span>There are a few of ways to talk to the external systems - EDI, Interop, Business Services. Commonly, interop is used to audit the change made against master files or the tables associated with the master business function.</span><p> </p>
 
-      <li><font color="black">Logging Foundation </font><a href="docs/0000007.html">Logging Foundation</a></li><span>At once you know how to turn on and retrieve log, you are almost there to figure out the root cause of any issue in EnterpriseOne. This document briefs the mechanism of logging and how to go about it.</span><p> </p>
+          <li><font color="black">Memory Allocation Failure </font><a href="docs/1272974.html">Memory Allocation Failure</a></li><span>Generally, the memory allocation failure is complaint from operating system that the assigned memory (when it is not dynamic) is insufficient to handle a certain task. To overcome the overuse of physical memory, the work file (physical tables) is used in batch applications.</span><p> </p>
+
+          <li><font color="black">Logging Foundation </font><a href="docs/0000007.html">Logging Foundation</a></li><span>At once you know how to turn on and retrieve log, you are almost there to figure out the root cause of any issue in EnterpriseOne. This document briefs the mechanism of logging and how to go about it.</span><p> </p>
+        </div>
 
 
       <!-- *** other useful document *** -->
@@ -172,61 +172,66 @@
         <li><font color="black">Representation of Paths in EnterpriseOne </font><a href="docs/1305796.html">Represenation of Path</a></li><span>: It is essential knowledge to find the document requested in dealing with EDI. This document entails how to set correct paths in implementing it.</span>
         
         <li><font color="black">Asynchronous Business Function Error  </font><a href="docs/1307451.html">Asynchronous Business Function Error </a></li><span>: Commonly, the majors pieces of master business function are the Edit Line and End Doc routines. Both are calling asynchronously - Call Object kernel issues another thread without a process when there is no memory reference from each other. Edit Line may fail in handling huge number of detail information and End Doc may fail for various reason. It is important to review JDE.log since the failure is determined by system or kernel level.</span>
+
+        <p><button class="button" onclick="myFunction2()">&gt;&gt;&gt;See More in Other useful documents</button></p>
+        <div id="myOther">
                 
-        <li><font color="black">Stored Procedure and Deadlock in E1 </font><a href="docs/1301427.html">Stored Procedure and Deadlock </a></li>
-        
-        <li><font color="black">Interop and R00460 in E1 </font><a href="docs/1334253.html">Interop and R00460 </a></li><span>: This document briefs the usage of R00460 when you turn on the outbound Interop. In modern computing environment, the interop is more useful in auditing the change made.</span>
-        
-        <li><font color="black">Interface of Interop using R00460 in E1 </font><a href="docs/1342897.html">Interop and functions for interface </a></li><span>: This doucment reviews the associated functions to populate interop values to initiate additional interface.</span>
-        <li><font color="black">Interop Tab for export in E1 </font><a href="docs/1347858.html">Interop tab for export in E1 </a></li>
+            <li><font color="black">Stored Procedure and Deadlock in E1 </font><a href="docs/1301427.html">Stored Procedure and Deadlock </a></li>
+            
+            <li><font color="black">Interop and R00460 in E1 </font><a href="docs/1334253.html">Interop and R00460 </a></li><span>: This document briefs the usage of R00460 when you turn on the outbound Interop. In modern computing environment, the interop is more useful in auditing the change made.</span>
+            
+            <li><font color="black">Interface of Interop using R00460 in E1 </font><a href="docs/1342897.html">Interop and functions for interface </a></li><span>: This doucment reviews the associated functions to populate interop values to initiate additional interface.</span>
+            <li><font color="black">Interop Tab for export in E1 </font><a href="docs/1347858.html">Interop tab for export in E1 </a></li>
 
-        <li><font color="black">Language Preference in EntrpriseOne </font><a href="docs/1476100.html">Language Preference in EnterpriseOne </a></li><span>: Most enterprise solutions works in the global environment. Hence, it is important information which can have local language and so on. There are various ways to implement it but make it sure it gives users easier means to maintain the change made. </span>
-        
-        <li><font color="black">Case Study - Error ORA-00001 (Unique Constraint Violated) When Updating (JDB_UpdateTable()) </font><a href="docs/1500253.html">Error ORA-00001 (Unique Constraint Violated) When Updating (JDB_UpdateTable()) </a></li>
-        
-        <li><font color="black">XERCES XML Wrapper Functions for XML Creation </font><a href="docs/1529797.html">XERCES XML Wrapper Functions for XML Creation </a></li>
-        
-        <li><font color="black">JDE API Essentials Part I - Math_Numeric </font><a href="docs/1593495.html">JDE API Essentials Part I - Math_Numeric</a></li>
-        
-        <li><font color="black">Dynamic Database Caching in EnterpriseOne </font><a href="docs/1617534.html">Dynamic Database Caching in EnterpriseOne</a></li>
+            <li><font color="black">Language Preference in EntrpriseOne </font><a href="docs/1476100.html">Language Preference in EnterpriseOne </a></li><span>: Most enterprise solutions works in the global environment. Hence, it is important information which can have local language and so on. There are various ways to implement it but make it sure it gives users easier means to maintain the change made. </span>
+            
+            <li><font color="black">Case Study - Error ORA-00001 (Unique Constraint Violated) When Updating (JDB_UpdateTable()) </font><a href="docs/1500253.html">Error ORA-00001 (Unique Constraint Violated) When Updating (JDB_UpdateTable()) </a></li>
+            
+            <li><font color="black">XERCES XML Wrapper Functions for XML Creation </font><a href="docs/1529797.html">XERCES XML Wrapper Functions for XML Creation </a></li>
+            
+            <li><font color="black">JDE API Essentials Part I - Math_Numeric </font><a href="docs/1593495.html">JDE API Essentials Part I - Math_Numeric</a></li>
+            
+            <li><font color="black">Dynamic Database Caching in EnterpriseOne </font><a href="docs/1617534.html">Dynamic Database Caching in EnterpriseOne</a></li>
 
-        <li><font color="black">Record Reservation Functions </font><a href="docs/1289755.html">Record Reservation Function </a></li><span>: Record reservation works with transaction processing along with batch control in any enterprise solution. Basic idea is not to allow other process or user to update the working transaction.</span>
-        
-        <li><font color="black">Record Reservation in Interactive App </font><a href="docs/1142464.html">Record Reservation in Interactive Application</a></li>
-        
-        <li><font color="black">Record Reservation in Batch </font><a href="docs/1145943.html">Record Reservation in Batch </a></li>
+            <li><font color="black">Record Reservation Functions </font><a href="docs/1289755.html">Record Reservation Function </a></li><span>: Record reservation works with transaction processing along with batch control in any enterprise solution. Basic idea is not to allow other process or user to update the working transaction.</span>
+            
+            <li><font color="black">Record Reservation in Interactive App </font><a href="docs/1142464.html">Record Reservation in Interactive Application</a></li>
+            
+            <li><font color="black">Record Reservation in Batch </font><a href="docs/1145943.html">Record Reservation in Batch </a></li>
 
-        <li><font color="black">RUN0000066/RUN0000067 </font><a href="docs/779449.html">How to Debug Message RUN0000066/RUN0000067 - Warning - ProcOpt Data Size Mismatch</a></li><span>: This document may give you the allowed data type in JDE and other software programming. The data type and size is one of most important definition in any programming language when you actively make use of memory.</span>
-        <li><font color="black">Runtime Messages in jde.log </font><a href="docs/988832.html">Runtime Messages in jde.log from Interactive Applications </a></li>
-        <li><font color="black">RUN0000044 - Error </font><a href="docs/1319499.html">RUN0000044 - Error - ProcOpt Data Size Mismatch Message Clarification </a></li>
-        <li><font color="black">Troubleshooting the "RUN0000050" Error in Interactive </font><a href="docs/1090533.html">Troubleshooting the "RUN0000050" Error in Logs for EnterpriseOne Interactive Applications </a></li>
-        <li><font color="black">Troubleshooting the "RUN0000050" Error in Batch </font><a href="docs/1107653.html">Troubleshooting the "RUN0000050" Error in Logs for EnterpriseOne Batch Applications (Related to API AllocatePOVersionData)</a></li>
+            <li><font color="black">RUN0000066/RUN0000067 </font><a href="docs/779449.html">How to Debug Message RUN0000066/RUN0000067 - Warning - ProcOpt Data Size Mismatch</a></li><span>: This document may give you the allowed data type in JDE and other software programming. The data type and size is one of most important definition in any programming language when you actively make use of memory.</span>
+            <li><font color="black">Runtime Messages in jde.log </font><a href="docs/988832.html">Runtime Messages in jde.log from Interactive Applications </a></li>
+            <li><font color="black">RUN0000044 - Error </font><a href="docs/1319499.html">RUN0000044 - Error - ProcOpt Data Size Mismatch Message Clarification </a></li>
+            <li><font color="black">Troubleshooting the "RUN0000050" Error in Interactive </font><a href="docs/1090533.html">Troubleshooting the "RUN0000050" Error in Logs for EnterpriseOne Interactive Applications </a></li>
+            <li><font color="black">Troubleshooting the "RUN0000050" Error in Batch </font><a href="docs/1107653.html">Troubleshooting the "RUN0000050" Error in Logs for EnterpriseOne Batch Applications (Related to API AllocatePOVersionData)</a></li>
 
-        <li><font color="black">Grid Collapse in HTML </font><a href="docs/947798.html">Grid Collapse in HTML </a></li>
-        <li><font color="black">How to Convert Business Data for QTYINV Class Data Items to Reflect Display Decimal Change </font><a href="docs/962481.html">How to Convert Business Data for QTYINV Class Data Items to Reflect Display Decimal Change </a></li>
-        <li><font color="black">How to Troubleshoot Error Messages </font><a href="docs/1058052.html">UBE: How to Troubleshoot Error Messages in Work Center When There Are No Valid Logs to Analyze Using F01131M</a></li>
-        <li><font color="black">How to Add a Leading Zero and Comma </font><a href="docs/1061536.html">How to Add a Leading Zero and Comma for a Numeric Value with a Four Display Decimal Value</a></li>
-        <li><font color="black">Edit Code </font><a href="docs/1061562.html">Frequently Asked Questions on Edit Codes Available within a Report (UDC 98/EC)</a></li>
-        <li><font color="black">Batch to End Subsystem Job </font><a href="docs/1066429.html">How to Create a Batch Application to End Subsystem Jobs</a></li>
-        <li><font color="black">Application Level Business Functions Built into JDEKRNL.dll </font><a href="docs/1079010.html">Application Level Business Functions Built into JDEKRNL.dll</a></li>
-        <li><font color="black">How to Sum/Aggregate Quantity or Amount using JDE API </font><a href="docs/1082178.html">How to Sum/Aggregate Quantity or Amount using JDE API</a></li>
-        <li><font color="black">How to Get MAX/Aggregate using JDE API </font><a href="docs/1337735.html">How to Get MAX/Aggregate using JDE API</a></li>
-        <li><font color="black">How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs </font><a href="docs/1533578.html">How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs</a></li>
-        <li><font color="black">How to Write LIKE Key Word SQL through a Business Function </font><a href="docs/1092305.html">How to Write LIKE Key Word SQL through a Business Function</a></li>
-        <li><font color="black">How to Write a C Business Function to Return a Special Character </font><a href="docs/1271740.html">How to Write a C Business Function to Return a Special Character</a></li>
-        <li><font color="black">Business Function B0100067-Formatted Address With Who's Who </font><a href="docs/1173464.html">Business Function B0100067-Formatted Address With Who's Who</a></li>
-        <li><font color="black">jdeCallObject API and Error message COB0000* </font><a href="docs/1179493.html">Call Object Kernel Errors Clarification - jdeCallObject API and Error message COB0000*</a></li>
-        <li><font color="black">INFINITE LOOP DETECTION </font><a href="docs/1255264.html">"INFINITE LOOP DETECTION WITHIN APPLICATION ER" Error Received when Running Custom Application</a></li>
-        <li><font color="black">Alpha Name and Search Routine for Asian language </font><a href="docs/1268271.html">Alpha Name and Search Routine for Asian language</a></li>
-        <li><font color="black">Dump Memory in JDEDEBUG.log </font><a href="docs/1292671.html">How to Dump Memory in JDEDEBUG.log for Debugging/tracing Using jdeWriteLog and jdeTraceSz1 APIs</a></li>
-        <li><font color="black">jdeFopen() API </font><a href="docs/1298219.html">Format and Use of jdeFopen() API Function for Text Files</a></li>
-        <li><font color="black">Flat File Creation Procedure to Run R47002C </font><a href="docs/1305159.html">Flat File Creation Procedure to Run R47002C</a></li>
-        <li><font color="black">How to Combine Multiple Input Flat Files for EDI </font><a href="docs/1315327.html">How to Combine Multiple Input Flat Files for EDI</a></li>
-        <li><font color="black">Error CAC0001017 </font><a href="docs/1325310.html">Case Study - How to Interpret Error CAC0001017 in jde.log?</a></li>
-        <li><font color="black">"CLI0111E", "SQL0406", "OS400QL016" </font><a href="docs/1456043.html">How to Resolve Error Message "CLI0111E", "SQL0406", "OS400QL016" in Enterprise Server JDE.LOG</a></li>
-        <li><font color="black">PriceCalulateSingle (B4500460) Wrapper to Compute Item Price  </font><a href="docs/1684576.html">PriceCalulateSingle (B4500460) Wrapper to Compute Item Price</a></li>
+            <li><font color="black">Grid Collapse in HTML </font><a href="docs/947798.html">Grid Collapse in HTML </a></li>
+            <li><font color="black">How to Convert Business Data for QTYINV Class Data Items to Reflect Display Decimal Change </font><a href="docs/962481.html">How to Convert Business Data for QTYINV Class Data Items to Reflect Display Decimal Change </a></li>
+            <li><font color="black">How to Troubleshoot Error Messages </font><a href="docs/1058052.html">UBE: How to Troubleshoot Error Messages in Work Center When There Are No Valid Logs to Analyze Using F01131M</a></li>
+            <li><font color="black">How to Add a Leading Zero and Comma </font><a href="docs/1061536.html">How to Add a Leading Zero and Comma for a Numeric Value with a Four Display Decimal Value</a></li>
+            <li><font color="black">Edit Code </font><a href="docs/1061562.html">Frequently Asked Questions on Edit Codes Available within a Report (UDC 98/EC)</a></li>
+            <li><font color="black">Batch to End Subsystem Job </font><a href="docs/1066429.html">How to Create a Batch Application to End Subsystem Jobs</a></li>
+            <li><font color="black">Application Level Business Functions Built into JDEKRNL.dll </font><a href="docs/1079010.html">Application Level Business Functions Built into JDEKRNL.dll</a></li>
+            <li><font color="black">How to Sum/Aggregate Quantity or Amount using JDE API </font><a href="docs/1082178.html">How to Sum/Aggregate Quantity or Amount using JDE API</a></li>
+            <li><font color="black">How to Get MAX/Aggregate using JDE API </font><a href="docs/1337735.html">How to Get MAX/Aggregate using JDE API</a></li>
+            <li><font color="black">How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs </font><a href="docs/1533578.html">How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs</a></li>
+            <li><font color="black">How to Write LIKE Key Word SQL through a Business Function </font><a href="docs/1092305.html">How to Write LIKE Key Word SQL through a Business Function</a></li>
+            <li><font color="black">How to Write a C Business Function to Return a Special Character </font><a href="docs/1271740.html">How to Write a C Business Function to Return a Special Character</a></li>
+            <li><font color="black">Business Function B0100067-Formatted Address With Who's Who </font><a href="docs/1173464.html">Business Function B0100067-Formatted Address With Who's Who</a></li>
+            <li><font color="black">jdeCallObject API and Error message COB0000* </font><a href="docs/1179493.html">Call Object Kernel Errors Clarification - jdeCallObject API and Error message COB0000*</a></li>
+            <li><font color="black">INFINITE LOOP DETECTION </font><a href="docs/1255264.html">"INFINITE LOOP DETECTION WITHIN APPLICATION ER" Error Received when Running Custom Application</a></li>
+            <li><font color="black">Alpha Name and Search Routine for Asian language </font><a href="docs/1268271.html">Alpha Name and Search Routine for Asian language</a></li>
+            <li><font color="black">Dump Memory in JDEDEBUG.log </font><a href="docs/1292671.html">How to Dump Memory in JDEDEBUG.log for Debugging/tracing Using jdeWriteLog and jdeTraceSz1 APIs</a></li>
+            <li><font color="black">jdeFopen() API </font><a href="docs/1298219.html">Format and Use of jdeFopen() API Function for Text Files</a></li>
+            <li><font color="black">Flat File Creation Procedure to Run R47002C </font><a href="docs/1305159.html">Flat File Creation Procedure to Run R47002C</a></li>
+            <li><font color="black">How to Combine Multiple Input Flat Files for EDI </font><a href="docs/1315327.html">How to Combine Multiple Input Flat Files for EDI</a></li>
+            <li><font color="black">Error CAC0001017 </font><a href="docs/1325310.html">Case Study - How to Interpret Error CAC0001017 in jde.log?</a></li>
+            <li><font color="black">"CLI0111E", "SQL0406", "OS400QL016" </font><a href="docs/1456043.html">How to Resolve Error Message "CLI0111E", "SQL0406", "OS400QL016" in Enterprise Server JDE.LOG</a></li>
+            <li><font color="black">PriceCalulateSingle (B4500460) Wrapper to Compute Item Price  </font><a href="docs/1684576.html">PriceCalulateSingle (B4500460) Wrapper to Compute Item Price</a></li>
+            <li><font color="black">Implementing Transaction Processing Using System Function in Batch Application  </font><a href="docs/2265062.html">Implementing Transaction Processing Using System Function in Batch Application</a></li>
 
-        <li> Addtional knowlege contents to be added here. </li>
+            <li> Addtional knowlege contents to be added here. </li>
+        </div>
 
 
         <!-- *** customization opportunities *** -->
@@ -239,34 +244,43 @@
       <ul>
         <li><font color="black">Sales Order Detail Cache (F42UI11) </font><a href="docs/1918408.html">Sales Order Detail Cache (F42UI11) </a></li><span>: Even given example below deals with the user reserved columns, which can be expanded to any column in it. Ensure that you understood, the flow of Master Business Function and Transaction Processing, then you can follow the instruction given in these documents. Since the change involves multiple objects, document the change made properly. In general, any custom code may cause you to have proper support from the software vendors. </span>
         <li><font color="black">Work Order Routing (P3112)  </font><a href="docs/1941612.html">Work Order Routing (F3112)  </a></li>
-        <li><font color="black">Sales Order (P4210)  </font><a href="docs/1059889.html">Sales Order Entry (P4210) </a></li>
-        <li><font color="black">Sales Order - Power Form (P42101)  </font><a href="docs/1059353.html">Sales Order Power Form (P42101) </a></li>
-        <li><font color="black">Purchase Order Entry (P4310) </font><a href="docs/1060382.html">Purchase Order Entry (P4310) </a></li>
-        <li><font color="black">PO Receipt (P4312) </font><a href="docs/1067624.html">PO Rceipt (P4312) </a></li>
-        <li><font color="black">Voucher Match (P4314) </font><a href="docs/1059384.html">Voucher Match (P4314) </a></li>
-        <li><font color="black">Work Order Header (P48013) </font><a href="docs/1172243.html">work Order Header (P48013) </a></li>
-        <li><font color="black">Prevent Deadlock in Copied App </font><a href="docs/1461307.html">Prevent Deadlock in Your Copied App with Transaction Processing </a></li>
-        <li><font color="black">How To Split Sales Order Line through AdvancedSODetailLineSplit </font><a href="docs/2004719.html">How To Split Sales Order Line through AdvancedSODetailLineSplit</a></li>
-        <li><font color="black">How To Implement Flexible Account in Custom Routine </font><a href="docs/2256793.html">How To Implement Flexible Account in Custom Routine</a></li>
-        <li><font color="black">How to Check Existence, Copy, Delete or Rename a Flat File? </font><a href="docs/661013.html">How to Check Existence, Copy, Delete or Rename a Flat File?</a></li>
-        <li><font color="black">How to Output Record Count In Text File through Table Conversion </font><a href="docs/1958848.html">How to Output Record Count In Text File through Table Conversion</a></li>
-        <li><font color="black">Custom Versions Not Using the Processing Options as Set in the New Version (P4210) </font><a href="docs/989306.html">Custom Versions Not Using the Processing Options as Set in the New Version (P4210)</a></li>
-        <li><font color="black">Common Error in running R47002C to convert Flat File to SQL Format File </font><a href="docs/1136714.html">Common Error in running R47002C to convert Flat File to SQL Format File</a></li>
-        <li><font color="black">Rounding Up to Nearest Hundred Value </font><a href="docs/1152936.html">How to Implement Rounding Up to Nearest Hundred Value Using Round System Function</a></li>
-        <li><font color="black">How to Set a Scheduler Job to Submit a UBE Every 5 Minutes </font><a href="docs/1175674.html">How to Set a Scheduler Job to Submit a UBE Every 5 Minutes for a Specific Time Range</a></li>
-        <li><font color="black">Inventory Commitment Outside EnterpriseOne </font><a href="docs/1226293.html">How to Implement Inventory Commitment Outside EnterpriseOne</a></li>
-        <li><font color="black">Convert a Numeric Value to a String without Trailing Zeros </font><a href="docs/1295753.html">How to Convert a Numeric Value to a String without Trailing Zeros for Irregular Display Decimals</a></li>
-        <li><font color="black">Present Value Computation Like an Excel </font><a href="docs/1297473.html">Is There Any Business Function to Return PV (Present Value) Like MS Excel Does?</a></li>
-        <li><font color="black">How to Bypass certain DD Validation like Next Numbering using JDE API jdeDDValidation </font><a href="docs/1308713.html">How to Bypass certain DD Validation like Next Numbering using JDE API jdeDDValidation</a></li>
-        <li><font color="black">Interoperability JDEIL </font><a href="docs/1334242.html">Interoperability JDEIL and Inventory Transaction</a></li>
-        <li><font color="black">jdeSetGBRErrorSubText </font><a href="docs/1335608.html">How To Implement Error with Glossary Text and Variables - jdeSetGBRErrorSubText ()</a></li>
-        <li><font color="black">Error with Text Substitution </font><a href="docs/1338552.html">How to Implement Error with Text Substitution</a></li>
-        <li><font color="black">Import UTIME </font><a href="docs/1600124.html">How to Import Text File that has UTime (JDEUTime) Data Type into JDE Table</a></li>
-        <li><font color="black">Listing of Header Files Containing typedef for Processing Option Template </font><a href="docs/2080173.html">Listing of Header Files Containing typedef for Processing Option Template</a></li>
-        <li><font color="black">Runtime Data Selection using Function  </font><a href="docs/2164191.html">How To Print Runtime Data Selection of Driver Section of Report Using B4309570/B4302450</a></li>
-        <li><font color="black">Relationship Between Table I/O and JDE Database APIs  </font><a href="docs/1142264.html">Relationship Between Table I/O and JDE Database APIs</a></li>
+        
 
-        <li> More contents in custom routines are to be added here</li>
+        <p><button class="button" onclick="myFunction3()">&gt;&gt;&gt;See More in Custom Opportunities</button></p>
+        <div id="myCustom">
+
+          <li><font color="black">Sales Order (P4210)  </font><a href="docs/1059889.html">Sales Order Entry (P4210) </a></li>
+          <li><font color="black">Sales Order - Power Form (P42101)  </font><a href="docs/1059353.html">Sales Order Power Form (P42101) </a></li>
+          <li><font color="black">Purchase Order Entry (P4310) </font><a href="docs/1060382.html">Purchase Order Entry (P4310) </a></li>
+          <li><font color="black">PO Receipt (P4312) </font><a href="docs/1067624.html">PO Rceipt (P4312) </a></li>
+          <li><font color="black">Voucher Match (P4314) </font><a href="docs/1059384.html">Voucher Match (P4314) </a></li>
+          <li><font color="black">Work Order Header (P48013) </font><a href="docs/1172243.html">work Order Header (P48013) </a></li>
+          <li><font color="black">Prevent Deadlock in Copied App </font><a href="docs/1461307.html">Prevent Deadlock in Your Copied App with Transaction Processing </a></li>
+          <li><font color="black">How To Split Sales Order Line through AdvancedSODetailLineSplit </font><a href="docs/2004719.html">How To Split Sales Order Line through AdvancedSODetailLineSplit</a></li>
+          <li><font color="black">How To Implement Flexible Account in Custom Routine </font><a href="docs/2256793.html">How To Implement Flexible Account in Custom Routine</a></li>
+          <li><font color="black">How to Check Existence, Copy, Delete or Rename a Flat File? </font><a href="docs/661013.html">How to Check Existence, Copy, Delete or Rename a Flat File?</a></li>
+          <li><font color="black">How to Output Record Count In Text File through Table Conversion </font><a href="docs/1958848.html">How to Output Record Count In Text File through Table Conversion</a></li>
+          <li><font color="black">Custom Versions Not Using the Processing Options as Set in the New Version (P4210) </font><a href="docs/989306.html">Custom Versions Not Using the Processing Options as Set in the New Version (P4210)</a></li>
+          <li><font color="black">Common Error in running R47002C to convert Flat File to SQL Format File </font><a href="docs/1136714.html">Common Error in running R47002C to convert Flat File to SQL Format File</a></li>
+          <li><font color="black">Rounding Up to Nearest Hundred Value </font><a href="docs/1152936.html">How to Implement Rounding Up to Nearest Hundred Value Using Round System Function</a></li>
+          <li><font color="black">How to Set a Scheduler Job to Submit a UBE Every 5 Minutes </font><a href="docs/1175674.html">How to Set a Scheduler Job to Submit a UBE Every 5 Minutes for a Specific Time Range</a></li>
+          <li><font color="black">Inventory Commitment Outside EnterpriseOne </font><a href="docs/1226293.html">How to Implement Inventory Commitment Outside EnterpriseOne</a></li>
+          <li><font color="black">Convert a Numeric Value to a String without Trailing Zeros </font><a href="docs/1295753.html">How to Convert a Numeric Value to a String without Trailing Zeros for Irregular Display Decimals</a></li>
+          <li><font color="black">Present Value Computation Like an Excel </font><a href="docs/1297473.html">Is There Any Business Function to Return PV (Present Value) Like MS Excel Does?</a></li>
+          <li><font color="black">How to Bypass certain DD Validation like Next Numbering using JDE API jdeDDValidation </font><a href="docs/1308713.html">How to Bypass certain DD Validation like Next Numbering using JDE API jdeDDValidation</a></li>
+          <li><font color="black">Interoperability JDEIL </font><a href="docs/1334242.html">Interoperability JDEIL and Inventory Transaction</a></li>
+          <li><font color="black">jdeSetGBRErrorSubText </font><a href="docs/1335608.html">How To Implement Error with Glossary Text and Variables - jdeSetGBRErrorSubText ()</a></li>
+          <li><font color="black">Error with Text Substitution </font><a href="docs/1338552.html">How to Implement Error with Text Substitution</a></li>
+          <li><font color="black">Import UTIME </font><a href="docs/1600124.html">How to Import Text File that has UTime (JDEUTime) Data Type into JDE Table</a></li>
+          <li><font color="black">Listing of Header Files Containing typedef for Processing Option Template </font><a href="docs/2080173.html">Listing of Header Files Containing typedef for Processing Option Template</a></li>
+          <li><font color="black">Runtime Data Selection using Function  </font><a href="docs/2164191.html">How To Print Runtime Data Selection of Driver Section of Report Using B4309570/B4302450</a></li>
+          <li><font color="black">Relationship Between Table I/O and JDE Database APIs  </font><a href="docs/1142264.html">Relationship Between Table I/O and JDE Database APIs</a></li>
+          <li><font color="black">Tips and Tricks in Creating a Header/Detail Form  </font><a href="docs/1452330.html">Tips and Tricks in Creating a Header/Detail Form</a></li>
+          <li><font color="black">How to Build Search Text for Media Object Text </font><a href="docs/1643511.html">How to Build Search Text for Media Object Text</a></li>
+          <li><font color="black">How to Upload Multiple UOM Data with CNV1 into F41002 </font><a href="docs/2120601.html">How to Upload Multiple UOM Data with CNV1 into F41002</a></li>
+
+          <li> More contents in custom routines are to be added here</li>
+        </div>
 
 
       </ul>
@@ -280,144 +294,185 @@
   <h2><font color="yellow"><a name="section2"></a>Applications</font></h2>
     <ul>
       <li><h3>Financial</h3></li>
-      <ul>
-        <li><font color="black">Batch Control Processing </font><a href="docs/1317478.html">Batch Control Processing </a></li><span>: Batch control is basic controlling mechanism when money is involved. Another function of batch control is that it isolate a certain transaction from other process or interface.</span>
-        <li><font color="black">XX0901 Analysis </font><a href="docs/1372342.html">XX0901 Analysis</a></li><span>: This document reviews as-is functionality of how the account number gets validated, formatted, and set. This document reviews the components of account (e.g., MCU.OJB.SUB) and detail routine. </span>
-        <li><font color="black">Tips and Tricks in FRW </font><a href="docs/2148677.html">Tips and Tricks in FRW </a></li><span>: The ultimate purpose of ERP is to generate the financial report. In JDE, FRW (Financial Report Write) determines how to summarize the financial activities for specific company in a certain period. Financial reports are written in Tabular Report template which uses huge number of memory to accumulate the individual line items. It is important to understand how the tabular reports works. Try to write a report using Group Section reporrts if you are not familiar with the tabular report. The management or the stakeholders are not interested in the internal routine of how the report is written rather their concern is how accurate it is and how fast it performs.</span>
-        <li><font color="black">F986113 Subsystem Job Master Table </font><a href="docs/859763.html">F986113 Subsystem Job Master Table Contains Multiple Records for R00460, R42950 and R09801 </a></li><span>: Along with F986110 (Job Master), the table F986114 belongs to the server map. Plus, when you uses various subsystem job (e.g., print out invoices in committing sales order), it is important not to have any waiting job in the subsystem job queue.</span>
-        <li><font color="black">JinShui in AR </font><a href="docs/1076343.html">How to Create Jinshui Information in Account Receivable </a></li><span>: I have created most of localization documents for China and Taiwan. This document explains baic idea of jinshui (金税) system in China. Additional information on Jinshui is to be added soon.</span>
-        <li><font color="black">Taiwan GUI </font><a href="docs/1076657.html">Taiwan Localization in calling GUI/VAT Application from P0411 between B7 and B9</a></li>
-        <li><font color="black">GUI Entry Generationon</font><a href="docs/1390842.html">Generation Error in Running P75T004 (GUI/VAT Transaction - 75T) </a></li><span>: This document discusses common issue in invoking loalization code.</span>
-        <li><font color="black">Global Location Number  </font><a href="docs/1487525.html">Global Location Number (GLN) </a></li><span></span>
-        <li><font color="black">Case study on R09705 Performance  </font><a href="docs/2232564.html">Case Study on Performance of R09705 and OutStand Requests = 101 </a></li><span></span>
-        <li><font color="black">Usage of F0411 Columns RP1, RP2, RP3, AC01 ~ AC10, and URC1 - Case Study  </font><a href="docs/2406688.html">Usage of F0411 Columns RP1, RP2, RP3, AC01 ~ AC10, and URC1 - Case Study </a></li><span></span>
-        <li><font color="black">Base Currency Conversion  </font><a href="docs/1593470.html">Base Currency Conversion </a></li><span></span>
-        <li><font color="black">ConvertNumericValueToWord (Convert Numeric Value To Word)   </font><a href="docs/1679046.html">Troubleshooting Tips/Techniques to use ConvertNumericValueToWord (Convert Numeric Value To Word) for your Country/Language </a></li><span></span>
-        <li><font color="black">Billed Paid Netting </font><a href="docs/1676201.html">Usage of Business Function N1500012 </a></li><span></span>
-        <li><font color="black">Business Function B0900114 (Retrieve F0901 Info Without Cache) </font><a href="docs/2009836.html">Business Function B0900114 (Retrieve F0901 Info Without Cache) and Retrieve B0900104 (F0901 - Retrieve Account Master Infor for GL Post)</a></li><span></span>
-        <li><font color="black">Text File Processor R007102 (Purge Processed Transactions) </font><a href="docs/2014349.html">Text File Processor R007102 (Purge Processed Transactions)</a></li><span></span>
-        <li><font color="black">Drilldown Manipulation in Financial Report </font><a href="docs/2109741.html">Drilldown Manipulation in Financial Report</a></li><span></span>
-
-        <li>More contents to be added here - there are numerous documents I have created in the area.</li>
-      </ul>
-
-      <p>&nbsp</p>
-
-      <li><h3>Inventory</h3></li>
-      <ul>
-        <li><font color="black">Inventory Transaction MBF - XT4111Z1    </font><a href="docs/1276239.html">Inventory Transaction MBF - XT4111Z1 </a></li><span>: XT411Z1 is the Master Business Fuction for the Inventory Transaction across EnterpriseOne which validates AAI (Automatic Accounting Instruction) and hook General Leddger Master Business Function (B0900049). So it is important to have clear understanding on this object.</span>
-        <li><font color="black">Cost and Price update using XT4111Z1    </font><a href="docs/1074030.html">Cost and Price Update using XT4111Z1 </a></li><span>: This document explains how the Inventory Transaction master business function deals with the item cost and price. Since, the item cost and price is reusable across system, the master function calls sub-function to get/update it accurately.</span>
-        <li><font color="black">Item Location and Lot Creation on the Fly   </font><a href="docs/1075187.html">Item Locaton and Lot Creation on the Fly </a></li>
-        <li><font color="black">Audit Item Cost (F4105) </font><a href="docs/1078559.html">Audit Item Cost</a></li>
-        <li><font color="black">Distribution and Manufacturing Constant </font><a href="docs/1154087.html">Distribution and Manufacturing Constant</a></li><span>: Likewise, other ERP systems in the market, this constant control how a specific branch/plant interfaces with other systems. This document bridges the gap between the column name and its useage and naming. </span>
-        <li><font color="black">Check On Hand Quantity in EnterpriseOne </font><a href="docs/1276984.html">Check On Hand Quantity in EnterpriseOne</a></li>
-        <li><font color="black">Average Cost Update - Troubleshooting Guide </font><a href="docs/1388042.html">Average Cost Update</a></li>
-        <li><font color="black">Location Validation and Lot Creation </font><a href="docs/1280385.html">Location Validation and Lot Creation</a></li><span>: Unique location and lot are important to have correct cost analyst and so on. This document explains the factors affect the location and lot creation. Location file (F41021) contains the movement of quantities where the lot file (F4108) holds the attribute of lot information when you utilizes Lot Number for your business.</span>
-        <li><font color="black">Record Zero Balance Adjustment </font><a href="docs/1417295.html">How to Record Zero Balance Adjustment</a></li><span>: Zero Balance Adjustment is accouting activiity to zerorize the accounting figure when the quantity goes to zero. There are various application which triggers the zero balance adjustment as this document reads.</span>
-        <li><font color="black">Vertical Features </font><a href="docs/1348712.html">Vertical Features UDC 40/VF</a></li><span>: This document goes through what is veritical feature how it affects transaction across distribution system.</span>
-        <li><font color="black">How to Troubleshoot R41501 (Inventory to GL Reconciliation Update) and GPF1 (Inventory Flag) </font><a href="docs/2132678.html">How to Troubleshoot R41501 (Inventory to GL Reconciliation Update) and GPF1 (Inventory Flag)</a></li>
-        <li><font color="black">R41543 and R41500 Comparison - Troubleshooting </font><a href="docs/2377574.html">R41543 and R41500 Comparison - Troubleshooting</a></li>
-        <li><font color="black">UOM conversion </font><a href="docs/1073985.html">How to get UOM Conversion Factor</a></li>
+          <ul>
+            <li><font color="black">Batch Control Processing </font><a href="docs/1317478.html">Batch Control Processing </a></li><span>: Batch control is basic controlling mechanism when money is involved. Another function of batch control is that it isolate a certain transaction from other process or interface.</span>
+            <li><font color="black">XX0901 Analysis </font><a href="docs/1372342.html">XX0901 Analysis</a></li><span>: This document reviews as-is functionality of how the account number gets validated, formatted, and set. This document reviews the components of account (e.g., MCU.OJB.SUB) and detail routine. </span>
+          </ul>
+            
+        
+        <p><button class="button" onclick="myFunction4()">&gt;&gt;&gt;See More in Financial Area</button></p>
+        <div id="myFinancial">
+          <ul>
+            <li><font color="black">Tips and Tricks in FRW </font><a href="docs/2148677.html">Tips and Tricks in FRW </a></li><span>: The ultimate purpose of ERP is to generate the financial report. In JDE, FRW (Financial Report Write) determines how to summarize the financial activities for specific company in a certain period. Financial reports are written in Tabular Report template which uses huge number of memory to accumulate the individual line items. It is important to understand how the tabular reports works. Try to write a report using Group Section reporrts if you are not familiar with the tabular report. The management or the stakeholders are not interested in the internal routine of how the report is written rather their concern is how accurate it is and how fast it performs.</span>
+            <li><font color="black">F986113 Subsystem Job Master Table </font><a href="docs/859763.html">F986113 Subsystem Job Master Table Contains Multiple Records for R00460, R42950 and R09801 </a></li><span>: Along with F986110 (Job Master), the table F986114 belongs to the server map. Plus, when you uses various subsystem job (e.g., print out invoices in committing sales order), it is important not to have any waiting job in the subsystem job queue.</span>
+            <li><font color="black">JinShui in AR </font><a href="docs/1076343.html">How to Create Jinshui Information in Account Receivable </a></li><span>: I have created most of localization documents for China and Taiwan. This document explains baic idea of jinshui (金税) system in China. Additional information on Jinshui is to be added soon.</span>
+            <li><font color="black">Taiwan GUI </font><a href="docs/1076657.html">Taiwan Localization in calling GUI/VAT Application from P0411 between B7 and B9</a></li>
+            <li><font color="black">GUI Entry Generationon</font><a href="docs/1390842.html">Generation Error in Running P75T004 (GUI/VAT Transaction - 75T) </a></li><span>: This document discusses common issue in invoking loalization code.</span>
+            <li><font color="black">Global Location Number  </font><a href="docs/1487525.html">Global Location Number (GLN) </a></li><span></span>
+            <li><font color="black">Case study on R09705 Performance  </font><a href="docs/2232564.html">Case Study on Performance of R09705 and OutStand Requests = 101 </a></li><span></span>
+            <li><font color="black">Usage of F0411 Columns RP1, RP2, RP3, AC01 ~ AC10, and URC1 - Case Study  </font><a href="docs/2406688.html">Usage of F0411 Columns RP1, RP2, RP3, AC01 ~ AC10, and URC1 - Case Study </a></li><span></span>
+            <li><font color="black">Base Currency Conversion  </font><a href="docs/1593470.html">Base Currency Conversion </a></li><span></span>
+            <li><font color="black">ConvertNumericValueToWord (Convert Numeric Value To Word)   </font><a href="docs/1679046.html">Troubleshooting Tips/Techniques to use ConvertNumericValueToWord (Convert Numeric Value To Word) for your Country/Language </a></li><span></span>
+            <li><font color="black">Billed Paid Netting </font><a href="docs/1676201.html">Usage of Business Function N1500012 </a></li><span></span>
+            <li><font color="black">Business Function B0900114 (Retrieve F0901 Info Without Cache) </font><a href="docs/2009836.html">Business Function B0900114 (Retrieve F0901 Info Without Cache) and Retrieve B0900104 (F0901 - Retrieve Account Master Infor for GL Post)</a></li><span></span>
+            <li><font color="black">Text File Processor R007102 (Purge Processed Transactions) </font><a href="docs/2014349.html">Text File Processor R007102 (Purge Processed Transactions)</a></li><span></span>
+            <li><font color="black">Drilldown Manipulation in Financial Report </font><a href="docs/2109741.html">Drilldown Manipulation in Financial Report</a></li><span></span>
+            <li><font color="black">P0030G Updating Records Incorrectly </font><a href="docs/2121759.html">P0030G Updating Records Incorrectly by Recognizing Form Mode as Update Mode in Clicking Add Button</a></li><span></span>
+            <li>More contents to be added here - there are numerous documents I have created in the area.</li>
+          </ul>
+        </div>
 
 
-        <li> More contents in Inventory are to be added here</li>
-      </ul>
+      <li><h3>Inventory </h3></li>
+          <ul>
+            <li><font color="black">Inventory Transaction MBF - XT4111Z1    </font><a href="docs/1276239.html">Inventory Transaction MBF - XT4111Z1 </a></li><span>: XT411Z1 is the Master Business Fuction for the Inventory Transaction across EnterpriseOne which validates AAI (Automatic Accounting Instruction) and hook General Leddger Master Business Function (B0900049). So it is important to have clear understanding on this object.</span>
+            <li><font color="black">Cost and Price update using XT4111Z1    </font><a href="docs/1074030.html">Cost and Price Update using XT4111Z1 </a></li><span>: This document explains how the Inventory Transaction master business function deals with the item cost and price. Since, the item cost and price is reusable across system, the master function calls sub-function to get/update it accurately.</span>
+          </ul>
+            
+        <p><button class="button" onclick="myFunction5()">&gt;&gt;&gt;See More in Inventory Area</button></p>
+        <div id="myInventory">
+          <ul>
+            <li><font color="black">Item Location and Lot Creation on the Fly   </font><a href="docs/1075187.html">Item Locaton and Lot Creation on the Fly </a></li>
+            <li><font color="black">Audit Item Cost (F4105) </font><a href="docs/1078559.html">Audit Item Cost</a></li>
+            <li><font color="black">Distribution and Manufacturing Constant </font><a href="docs/1154087.html">Distribution and Manufacturing Constant</a></li><span>: Likewise, other ERP systems in the market, this constant control how a specific branch/plant interfaces with other systems. This document bridges the gap between the column name and its useage and naming. </span>
+            <li><font color="black">Check On Hand Quantity in EnterpriseOne </font><a href="docs/1276984.html">Check On Hand Quantity in EnterpriseOne</a></li>
+            <li><font color="black">Average Cost Update - Troubleshooting Guide </font><a href="docs/1388042.html">Average Cost Update</a></li>
+            <li><font color="black">Location Validation and Lot Creation </font><a href="docs/1280385.html">Location Validation and Lot Creation</a></li><span>: Unique location and lot are important to have correct cost analyst and so on. This document explains the factors affect the location and lot creation. Location file (F41021) contains the movement of quantities where the lot file (F4108) holds the attribute of lot information when you utilizes Lot Number for your business.</span>
+            <li><font color="black">Record Zero Balance Adjustment </font><a href="docs/1417295.html">How to Record Zero Balance Adjustment</a></li><span>: Zero Balance Adjustment is accouting activiity to zerorize the accounting figure when the quantity goes to zero. There are various application which triggers the zero balance adjustment as this document reads.</span>
+            <li><font color="black">Vertical Features </font><a href="docs/1348712.html">Vertical Features UDC 40/VF</a></li><span>: This document goes through what is veritical feature how it affects transaction across distribution system.</span>
+            <li><font color="black">How to Troubleshoot R41501 (Inventory to GL Reconciliation Update) and GPF1 (Inventory Flag) </font><a href="docs/2132678.html">How to Troubleshoot R41501 (Inventory to GL Reconciliation Update) and GPF1 (Inventory Flag)</a></li>
+            <li><font color="black">R41543 and R41500 Comparison - Troubleshooting </font><a href="docs/2377574.html">R41543 and R41500 Comparison - Troubleshooting</a></li>
+            <li><font color="black">UOM conversion </font><a href="docs/1073985.html">How to get UOM Conversion Factor</a></li>
+            <li><font color="black">Relationship between Interop tables F4101Z1, F4101Z1A and Master tables F4101 and F4102 in R4101Z1I </font><a href="docs/1554632.html">Relationship between Interop tables F4101Z1, F4101Z1A and Master tables F4101 and F4102 in R4101Z1I</a></li>
+            <li><font color="black">As Of Posted Code (IPCD) and G/L Date Update (DGL) in Cardex (F4111) </font><a href="docs/2037130.html">As Of Posted Code (IPCD) and G/L Date Update (DGL) in Cardex (F4111)</a></li>
+            <li><font color="black">Primary Location Creation  </font><a href="docs/2146010.html">Cannot Add Primary Location - Workaround</a></li>
+            <li><font color="black">How Integrity Check Works - Cardex and G/L  </font><a href="docs/2379842.html">R41548 Case Study with Huge Data from F4111 - Troubleshooting</a></li>
+            <li> More contents in Inventory are to be added here</li>
+          </ul>
+      </div>
       
-<!--       <p>&nbsp</p> -->
 
-      <li><h3>Sales</h3></li>
-      <ul>
-        <li><font color="black">MVC Architecture and Sales Order Entry </font><a href="docs/1212163.html">MVC Architecture and Sales Order Entry</a></li><span>: P42101 is one of the first implementation of Model View Controller architecture. In fact, there is no change in model which still invokes the existing sales order master busineness function. So this approach is the loose implemenation of MVC. </span>
-        <li><font color="black">Labelling Mailing Address </font><a href="docs/1157643.html">Labelling Mailing Address </a></li><span>: In implementing any reports or documents to communicate with the external business parties, it is important to ensure that all legal name and addresses are recorded correctly. Especially, in dealing with oversea business parties, all information abide by the local requirements. This document may give you various format of address per country.</span>
+      <li><h3>Sales </h3></li>
+          <ul>
+            <li><font color="black">MVC Architecture and Sales Order Entry </font><a href="docs/1212163.html">MVC Architecture and Sales Order Entry</a></li><span>: P42101 is one of the first implementation of Model View Controller architecture. In fact, there is no change in model which still invokes the existing sales order master busineness function. So this approach is the loose implemenation of MVC. </span>
+            <li><font color="black">Labelling Mailing Address </font><a href="docs/1157643.html">Labelling Mailing Address </a></li><span>: In implementing any reports or documents to communicate with the external business parties, it is important to ensure that all legal name and addresses are recorded correctly. Especially, in dealing with oversea business parties, all information abide by the local requirements. This document may give you various format of address per country.</span>
+          </ul>
 
-        <li><font color="black">Address Invalid Error message upon exiting from ALKY </font><a href="docs/643400.html">Address Invalid Error message upon exiting from ALKY</a></li>
-        <li><font color="black">Data Selection of Sales Order Batch Price/Cost Update (R42950) </font><a href="docs/942212.html">Data Selection of Sales Order Batch Price/Cost Update (R42950)</a></li>
-        <li><font color="black">Check Price and Price History FAQ </font><a href="docs/980902.html">Check Price and Price History FAQ</a></li>
-        <li><font color="black">Work Files (F42UI01/F42UI02/F42UI11/F42UI12) </font><a href="docs/1051653.html">Work Files (F42UI01/F42UI02/F42UI11/F42UI12)</a></li>
-        <li><font color="black">Asynchronous Business Function Error During Confirm Shipment </font><a href="docs/1058112.html">Asynchronous Business Function Error During Confirm Shipment</a></li>
-        <li><font color="black">Updating Amount Columns in the Customer Master by Line of Business </font><a href="docs/1063250.html">Updating Amount Columns in the Customer Master by Line of Business </a></li>
-        <li><font color="black">Cancel Order Getting Async BSFN Error </font><a href="docs/1110095.html">Cancel Order Getting Async BSFN Error </a></li>
-        <li><font color="black">Open Cursor for Cache F42UI11 Failed (078M) Error </font><a href="docs/1115344.html">Open Cursor for Cache F42UI11 Failed (078M) Error</a></li>
-        <li><font color="black">Mailing Address in Invoice (R42565) </font><a href="docs/1153724.html">Mailing Address in Printing Invoice - R42565</a></li>
-        <li><font color="black">How to Debug Flex Accounting </font><a href="docs/1353763.html">How to Debug Flex Accounting issue in Sales Update</a></li>
-        <li><font color="black">B4504590 - Pricing Datamap Function and Cache and Workfile </font><a href="docs/1374201.html">B4504590 - Pricing Datamap Function and Cache and Workfile</a></li>
-        <li><font color="black">Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags </font><a href="docs/1375749.html">Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags</a></li>
-        <li><font color="black">How to maintain Order Integrity </font><a href="docs/1390905.html">How to maintain Order Integrity between SD/OD and ST/OT</a></li>
-        <li><font color="black">Split Sales Order and Line Number Assignment </font><a href="docs/1430995.html">Split Sales Order and Line Number Assignment</a></li>
-        <li><font color="black">Web Client Exception in P4210 after upgrading Tools Release </font><a href="docs/1586637.html">Web Client Exception in P4210 after upgrading Tools Release</a></li>
-        <li><font color="black">P4210 issues TRANSACTION ERROR for the first order </font><a href="docs/1158210.html">Mailing Address in R43500</a></li>
-        <li><font color="black">Mailing Address in R42500 </font><a href="docs/1529430.html">P4210 issues TRANSACTION ERROR for the first order (subsequent transactions get committed successfully)</a></li>
-        <li><font color="black">How to Troubleshoot application P45550 </font><a href="docs/1561348.html">How to Troubleshoot application P45550</a></li>
-        <li><font color="black">Case Study on R47131 ends in Memory Violation Error owing to missing settings </font><a href="docs/1572856.html">Case Study on R47131 ends in Memory Violation Error owing to missing settings</a></li>
-        <li><font color="black">Parameters in Sales Order Master Business Function </font><a href="docs/1985660.html">How to Understand Parameters in Sales Order Master Business Function B4200310/B4200311</a></li>
-        <li><font color="black">Supplemental Information on Pricing Related Method in JP420000 and JP410000 </font><a href="docs/2301701.html">Supplemental Information on Pricing Related Method in JP420000 and JP410000</a></li>
-        <li><font color="black">Case Study - R42520 Puts Order To Back Order with Available Quantity </font><a href="docs/2308926.html">Case Study - R42520 Puts Order To Back Order with Available Quantity</a></li>
-        <li><font color="black">How to Debug the Value Returned by B4205100 </font><a href="docs/983617.html">How to Debug the Value Returned by B4205100 (Sales Order ALPH String Functions)</a></li>
-        <li><font color="black">BSFN, Cache, and Examples of Why Sales Order Entry ( P4210) Fails To Save Data With No Error Message On Screen FAQs </font><a href="docs/988908.html">BSFN, Cache, and Examples of Why Sales Order Entry ( P4210) Fails To Save Data With No Error Message On Screen FAQs</a></li>
+        <p><button class="button" onclick="myFunction6()">&gt;&gt;&gt;See More in Sales Area</button></p>
+        <div id="mySales">
+          <ul>
 
 
-        <li> More contents in Sales area are to be added here soon!!! </li>
-      </ul>
+            <li><font color="black">Address Invalid Error message upon exiting from ALKY </font><a href="docs/643400.html">Address Invalid Error message upon exiting from ALKY</a></li>
+            <li><font color="black">Data Selection of Sales Order Batch Price/Cost Update (R42950) </font><a href="docs/942212.html">Data Selection of Sales Order Batch Price/Cost Update (R42950)</a></li>
+            <li><font color="black">Check Price and Price History FAQ </font><a href="docs/980902.html">Check Price and Price History FAQ</a></li>
+            <li><font color="black">Work Files (F42UI01/F42UI02/F42UI11/F42UI12) </font><a href="docs/1051653.html">Work Files (F42UI01/F42UI02/F42UI11/F42UI12)</a></li>
+            <li><font color="black">Asynchronous Business Function Error During Confirm Shipment </font><a href="docs/1058112.html">Asynchronous Business Function Error During Confirm Shipment</a></li>
+            <li><font color="black">Updating Amount Columns in the Customer Master by Line of Business </font><a href="docs/1063250.html">Updating Amount Columns in the Customer Master by Line of Business </a></li>
+            <li><font color="black">Cancel Order Getting Async BSFN Error </font><a href="docs/1110095.html">Cancel Order Getting Async BSFN Error </a></li>
+            <li><font color="black">Open Cursor for Cache F42UI11 Failed (078M) Error </font><a href="docs/1115344.html">Open Cursor for Cache F42UI11 Failed (078M) Error</a></li>
+            <li><font color="black">Mailing Address in Invoice (R42565) </font><a href="docs/1153724.html">Mailing Address in Printing Invoice - R42565</a></li>
+            <li><font color="black">How to Debug Flex Accounting </font><a href="docs/1353763.html">How to Debug Flex Accounting issue in Sales Update</a></li>
+            <li><font color="black">B4504590 - Pricing Datamap Function and Cache and Workfile </font><a href="docs/1374201.html">B4504590 - Pricing Datamap Function and Cache and Workfile</a></li>
+            <li><font color="black">Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags </font><a href="docs/1375749.html">Sales Order Edit Line SOEF String Functions (B4205101) and szSOEMBFInternalFlags</a></li>
+            <li><font color="black">How to maintain Order Integrity </font><a href="docs/1390905.html">How to maintain Order Integrity between SD/OD and ST/OT</a></li>
+            <li><font color="black">Split Sales Order and Line Number Assignment </font><a href="docs/1430995.html">Split Sales Order and Line Number Assignment</a></li>
+            <li><font color="black">Web Client Exception in P4210 after upgrading Tools Release </font><a href="docs/1586637.html">Web Client Exception in P4210 after upgrading Tools Release</a></li>
+            <li><font color="black">P4210 issues TRANSACTION ERROR for the first order </font><a href="docs/1158210.html">Mailing Address in R43500</a></li>
+            <li><font color="black">Mailing Address in R42500 </font><a href="docs/1529430.html">P4210 issues TRANSACTION ERROR for the first order (subsequent transactions get committed successfully)</a></li>
+            <li><font color="black">How to Troubleshoot application P45550 </font><a href="docs/1561348.html">How to Troubleshoot application P45550</a></li>
+            <li><font color="black">Case Study on R47131 ends in Memory Violation Error owing to missing settings </font><a href="docs/1572856.html">Case Study on R47131 ends in Memory Violation Error owing to missing settings</a></li>
+            <li><font color="black">Parameters in Sales Order Master Business Function </font><a href="docs/1985660.html">How to Understand Parameters in Sales Order Master Business Function B4200310/B4200311</a></li>
+            <li><font color="black">Supplemental Information on Pricing Related Method in JP420000 and JP410000 </font><a href="docs/2301701.html">Supplemental Information on Pricing Related Method in JP420000 and JP410000</a></li>
+            <li><font color="black">Case Study - R42520 Puts Order To Back Order with Available Quantity </font><a href="docs/2308926.html">Case Study - R42520 Puts Order To Back Order with Available Quantity</a></li>
+            <li><font color="black">How to Debug the Value Returned by B4205100 </font><a href="docs/983617.html">How to Debug the Value Returned by B4205100 (Sales Order ALPH String Functions)</a></li>
+            <li><font color="black">BSFN, Cache, and Examples of Why Sales Order Entry ( P4210) Fails To Save Data With No Error Message On Screen FAQs </font><a href="docs/988908.html">BSFN, Cache, and Examples of Why Sales Order Entry ( P4210) Fails To Save Data With No Error Message On Screen FAQs</a></li>
+
+
+            <li> More contents in Sales area are to be added here soon!!! </li>
+          </ul>
+      </div>
 
          
-      <li><h3>Procurement</h3></li>
-      <ul>
-        <li><font color="black">ALKY in Procurement and Sales Modules </font><a href="docs/1407950.html">ALKY in Procurement and Sales Module in E1</a></li><span>: ALKY is basic entry point to select the business entities (supplier, customer, and so on). All implemenation is done at the presentation layer so you need to review jasdebug.log when debugging any issue arises. </span>
-        <li><font color="black">Mailing Address in R43500 </font><a href="docs/1158210.html">Mailing Address in R43500</a></li>
-        <li><font color="black">Cache/Work File (workfile) in Procurement </font><a href="docs/1463725.html">Cache/Work File (workfile) in Procurement</a></li>
-        <li><font color="black">R43900 Technical Troubleshooting Guide (Computation and Considerations) </font><a href="docs/1594688.html">R43900 Technical Troubleshooting Guide (Computation and Considerations)</a></li>
-        <li><font color="black">Print Purchase Order and Language </font><a href="docs/1466100.html">R43500 and language override - Case Study </a></li>
-        <li><font color="black">Commit Failed Error in PY </font><a href="docs/779434.html">Commit Failed Error in PY after copying Business Data from PD to PY </a></li>
-        <li><font color="black">Discount Factor (DSPR) </font><a href="docs/1061652.html">Understanding the Discount Factor (DSPR) Field Value in Procurement </a></li>
-        <li><font color="black">Fetch From Cache Failed (078N) Error in P4314 - 3 Way Voucher Match </font><a href="docs/1395381.html">Fetch From Cache Failed (078N) Error in P4314 - 3 Way Voucher Match </a></li>
-        <li><font color="black">Error 0252 (Invalid Extended Price) Error Clarification </font><a href="docs/1517506.html">Error 0252 (Invalid Extended Price) Error Clarification </a></li>
-        <li><font color="black">Grid Collapses for Chinese </font><a href="docs/1523831.html">Grid Collapse for Chinese in P4314 </a></li>
-        <li><font color="black">Troubleshooting Duplicate Receipts </font><a href="docs/1525809.html">Troubleshooting Duplicate Receipts </a></li>
-        <li><font color="black">How to implement Partial reversal through P43250 (Stock to previous steps) </font><a href="docs/1571138.html">How to implement Partial reversal through P43250 (Stock to previous steps) </a></li>
-        <li><font color="black">How the Blanket Order Release Routine Handles Cancel Date (CNDJ) in Procurement </font><a href="docs/2151617.html">How the Blanket Order Release Routine Handles Cancel Date (CNDJ) in Procurement </a></li>
-        <li><font color="black">P4310 Issues Error 'You are not authorized to run this application.' </font><a href="docs/2365950.html">P4310 Issues Error 'You are not authorized to run this application.' In Capturing Supplier Analysis - CASE STUDY </a></li>
-        <li><font color="black">Commit Fail Error (SQL0723) with RTRECOUT in Performing Receipt Using P4312 in iSeries </font><a href="docs/2409019.html">Commit Fail Error (SQL0723) with RTRECOUT in Performing Receipt Using P4312 in iSeries </a></li>
-        <li><font color="black">Does JP430000 (processPurchaseOrderV2) Reference P43XPI|Version </font><a href="docs/2415783.html">Does JP430000 (processPurchaseOrderV2) Reference P43XPI|Version </a></li>
-        <li><font color="black">P43250 Performs Extremely Slow After Upgrading to 9.2 with Error SQL0913 </font><a href="docs/2422821.html">P43250 Performs Extremely Slow After Upgrading to 9.2 with Error SQL0913 </a></li>
-        <li><font color="black">Columns Mapped in Purchase Order Generation from Sales Order </font><a href="docs/1438174.html">Columns Mapped in Purchase Order Generation from Sales Order</a></li>
-        <li><font color="black">How to Debug Issue on P38200W (Agreement Selection Window) </font><a href="docs/1447306.html">How to Debug Issue on P38200W (Agreement Selection Window)</a></li>
-        <li><font color="black">How To Debug Error in Running R47071  </font><a href="docs/2095468.html">How To Debug Error in Running R47071</a></li>
-        <li><font color="black">How To Close Open Purchase Order  </font><a href="docs/2118344.html">How to Close open purchase order through N4301900</a></li>
+      <li><h3>Procurement </h3></li>
+          <ul>
+            <li><font color="black">ALKY in Procurement and Sales Modules </font><a href="docs/1407950.html">ALKY in Procurement and Sales Module in E1</a></li><span>: ALKY is basic entry point to select the business entities (supplier, customer, and so on). All implemenation is done at the presentation layer so you need to review jasdebug.log when debugging any issue arises. </span>
+            <li><font color="black">Mailing Address in R43500 </font><a href="docs/1158210.html">Mailing Address in R43500</a></li>
+          </ul>
 
 
-        <li>Other contents in Procurement are to be ready soon~~ </li>
-      </ul>
+        <p><button class="button" onclick="myFunction7()">&gt;&gt;&gt;See More in Procurement Area</button></p>
+        <div id="myProcurement">
+          <ul>
 
-        
-      <li><h3>Manufacturing</h3></li>
-      <ul>
-        <li><font color="black">P4021 Supply & Demand Technical Document </font><a href="docs/952806.html">How to troubleshoot Supply & Demand (P4021) </a></li><span>: Supply and Demand is a core feature of any ERP software since the primary purpose of ERP is to plan and forecast based on the transaction history.</span>
-        <li><font color="black">Net Change Flag </font><a href="docs/1050946.html">Net Change Flag (F4102.MRPC) </a></li><span>: MRP may run with the mode of Net Change to create MRP message only for the parts there are change in supply and demand or the gross regeneration. Net Change mode may run daily basis where gross regeneration may run once a week or month. So any transaction which affects the supply and demand sets the flag in the item branch file for the column MRPC (which is a net change flag). In turn, the leaves the potential deadlock when your custom code updates F4102 without considering this factor. </span>
-        <li><font color="black">MRP Troubleshooting Guide </font><a href="docs/1465629.html">MRP Troubleshooting Guide </a></li><span>: This document reviews the flow of MRP, which may give you idea how to debug when the problem arises. </span>
-        <li><font color="black">Production Costing (R30812) Troubleshooting Guide </font><a href="docs/1464914.html">Production Costing Simulation </a></li><span>: Many times, the product costing is one of most important factors in running ERP software because it lists up all possible cost factors in manufacturing a certain parts, components, subcomponents, and so forth. </span>
-        <li><font color="black">Configurator Upgrade - Troubleshooting </font><a href="docs/1492242.html">Configurator Upgrade - Technical Troubleshooting</a></li>
-        <li><font color="black">MRP Message - Integrity ST/OT/WO </font><a href="docs/1530456.html">MRP Message - Integrity ST/OT/WO</a></li>
-        <li><font color="black"> Work Order Workflow - Technical Troubleshooting Guide </font><a href="docs/1956782.html"> Work Order Workflow - Technical Troubleshooting Guide</a></li>
-        <li><font color="black">Forward/Backward Schedule </font><a href="docs/1547403.html">(Troubleshoot) How to call business functions to compute Forward/Backward Schedule, Leadtime and Shrinkage Quantity</a></li>
-        <li><font color="black">TP in Manufacturing </font><a href="docs/989586.html">Transaction Processing in E1 Manufacturing Module</a></li>
-        <li><font color="black">System Dates Issue in Distributed Environment </font><a href="docs/1067097.html">P3002 As of Date in Bill of Material Shows 1 Day Behind Until 10:00 AM</a></li>
-        <li><font color="black">MRP Falls into Zombie </font><a href="docs/1068635.html">R3482/R3483 MRP Falls into Zombie for a Certain Item</a></li>
-        <li><font color="black">Special Handling Code for Stocking in Manufacturing </font><a href="docs/1127134.html">Special Handling Code 'O' in UDC (41/I) - Stocking Type Code</a></li>
-        <li><font color="black">MRP Performance and Data Purge </font><a href="docs/1268674.html">R3482 and R3483 MRP Performance and Data Purge</a></li>
-        <li><font color="black">Interop Outbound for Shop Floor </font><a href="docs/1323732.html">R4801Z1X & R4801Z1P Outbound Interoperability for Shop Floor Management</a></li>
-        <li><font color="black">JDEWO Outbound </font><a href="docs/1342363.html">R00460 Implementing Work Order Z File Exports Using Subsystem Processing P48013 (JDEWO)</a></li>
-        <li><font color="black">R31804 - Error Code 'A224' </font><a href="docs/1351725.html">R31804 - Error Code 'A224' Case Study</a></li>
-        <li><font color="black">How to Chagne Display Label </font><a href="docs/1612397.html">How to change the Displayed Label on Unit Search (P15217) for Attributes Added for Filtering</a></li>
-        <li><font color="black">Fixed Asset with Invalid Row Number </font><a href="docs/1945333.html">Case Study - Web Client Exception in P1207 with Invalid row number (-1)</a></li>
-        <li><font color="black">Product Costing Best Practice Using Standard Cost </font><a href="docs/2272813.html">Product Costing Best Practice Using Standard Cost</a></li>
-        <li><font color="black">Troubleshooting Error JDB9900600 </font><a href="docs/2325330.html">Troubleshooting Error "JDB9900600 - Failed to store value, maximum exceeded". Probable cause is forgetting to call jdeRemoveDataPtr() in Running P3111 or Equivalent 3rd Party Integration</a></li>
-        <li><font color="black">Work Order Completion and Sales Order </font><a href="docs/2427459.html">Case Study on Work Order Resulted from W Line Type Sales Order</a></li>
-
+            <li><font color="black">Cache/Work File (workfile) in Procurement </font><a href="docs/1463725.html">Cache/Work File (workfile) in Procurement</a></li>
+            <li><font color="black">R43900 Technical Troubleshooting Guide (Computation and Considerations) </font><a href="docs/1594688.html">R43900 Technical Troubleshooting Guide (Computation and Considerations)</a></li>
+            <li><font color="black">Print Purchase Order and Language </font><a href="docs/1466100.html">R43500 and language override - Case Study </a></li>
+            <li><font color="black">Commit Failed Error in PY </font><a href="docs/779434.html">Commit Failed Error in PY after copying Business Data from PD to PY </a></li>
+            <li><font color="black">Discount Factor (DSPR) </font><a href="docs/1061652.html">Understanding the Discount Factor (DSPR) Field Value in Procurement </a></li>
+            <li><font color="black">Fetch From Cache Failed (078N) Error in P4314 - 3 Way Voucher Match </font><a href="docs/1395381.html">Fetch From Cache Failed (078N) Error in P4314 - 3 Way Voucher Match </a></li>
+            <li><font color="black">Error 0252 (Invalid Extended Price) Error Clarification </font><a href="docs/1517506.html">Error 0252 (Invalid Extended Price) Error Clarification </a></li>
+            <li><font color="black">Grid Collapses for Chinese </font><a href="docs/1523831.html">Grid Collapse for Chinese in P4314 </a></li>
+            <li><font color="black">Troubleshooting Duplicate Receipts </font><a href="docs/1525809.html">Troubleshooting Duplicate Receipts </a></li>
+            <li><font color="black">How to implement Partial reversal through P43250 (Stock to previous steps) </font><a href="docs/1571138.html">How to implement Partial reversal through P43250 (Stock to previous steps) </a></li>
+            <li><font color="black">How the Blanket Order Release Routine Handles Cancel Date (CNDJ) in Procurement </font><a href="docs/2151617.html">How the Blanket Order Release Routine Handles Cancel Date (CNDJ) in Procurement </a></li>
+            <li><font color="black">P4310 Issues Error 'You are not authorized to run this application.' </font><a href="docs/2365950.html">P4310 Issues Error 'You are not authorized to run this application.' In Capturing Supplier Analysis - CASE STUDY </a></li>
+            <li><font color="black">Commit Fail Error (SQL0723) with RTRECOUT in Performing Receipt Using P4312 in iSeries </font><a href="docs/2409019.html">Commit Fail Error (SQL0723) with RTRECOUT in Performing Receipt Using P4312 in iSeries </a></li>
+            <li><font color="black">Does JP430000 (processPurchaseOrderV2) Reference P43XPI|Version </font><a href="docs/2415783.html">Does JP430000 (processPurchaseOrderV2) Reference P43XPI|Version </a></li>
+            <li><font color="black">P43250 Performs Extremely Slow After Upgrading to 9.2 with Error SQL0913 </font><a href="docs/2422821.html">P43250 Performs Extremely Slow After Upgrading to 9.2 with Error SQL0913 </a></li>
+            <li><font color="black">Columns Mapped in Purchase Order Generation from Sales Order </font><a href="docs/1438174.html">Columns Mapped in Purchase Order Generation from Sales Order</a></li>
+            <li><font color="black">How to Debug Issue on P38200W (Agreement Selection Window) </font><a href="docs/1447306.html">How to Debug Issue on P38200W (Agreement Selection Window)</a></li>
+            <li><font color="black">How To Debug Error in Running R47071  </font><a href="docs/2095468.html">How To Debug Error in Running R47071</a></li>
+            <li><font color="black">How To Close Open Purchase Order  </font><a href="docs/2118344.html">How to Close open purchase order through N4301900</a></li>
+            <li>Other contents in Procurement are to be ready soon~~ </li>
+          </ul>
+      </div>
 
 
+      <li><h3>Manufacturing </h3></li>
+          <ul>
+            <li><font color="black">P4021 Supply & Demand Technical Document </font><a href="docs/952806.html">How to troubleshoot Supply & Demand (P4021) </a></li><span>: Supply and Demand is a core feature of any ERP software since the primary purpose of ERP is to plan and forecast based on the transaction history.</span>
+            <li><font color="black">Net Change Flag </font><a href="docs/1050946.html">Net Change Flag (F4102.MRPC) </a></li><span>: MRP may run with the mode of Net Change to create MRP message only for the parts there are change in supply and demand or the gross regeneration. Net Change mode may run daily basis where gross regeneration may run once a week or month. So any transaction which affects the supply and demand sets the flag in the item branch file for the column MRPC (which is a net change flag). In turn, the leaves the potential deadlock when your custom code updates F4102 without considering this factor. </span>
+          </ul>
 
-        <li> More contents in Manufacturing area are to be added here </li>
-      </ul>
+
+        <p><button class="button" onclick="myFunction8()">&gt;&gt;&gt;See More in Manufacturing Area</button></p>
+        <div id="myManufacturing">
+          <ul>
+            <li><font color="black">MRP Troubleshooting Guide </font><a href="docs/1465629.html">MRP Troubleshooting Guide </a></li><span>: This document reviews the flow of MRP, which may give you idea how to debug when the problem arises. </span>
+            <li><font color="black">Production Costing (R30812) Troubleshooting Guide </font><a href="docs/1464914.html">Production Costing Simulation </a></li><span>: Many times, the product costing is one of most important factors in running ERP software because it lists up all possible cost factors in manufacturing a certain parts, components, subcomponents, and so forth. </span>
+            <li><font color="black">Configurator Upgrade - Troubleshooting </font><a href="docs/1492242.html">Configurator Upgrade - Technical Troubleshooting</a></li>
+            <li><font color="black">MRP Message - Integrity ST/OT/WO </font><a href="docs/1530456.html">MRP Message - Integrity ST/OT/WO</a></li>
+            <li><font color="black"> Work Order Workflow - Technical Troubleshooting Guide </font><a href="docs/1956782.html"> Work Order Workflow - Technical Troubleshooting Guide</a></li>
+            <li><font color="black">Forward/Backward Schedule </font><a href="docs/1547403.html">(Troubleshoot) How to call business functions to compute Forward/Backward Schedule, Leadtime and Shrinkage Quantity</a></li>
+            <li><font color="black">TP in Manufacturing </font><a href="docs/989586.html">Transaction Processing in E1 Manufacturing Module</a></li>
+            <li><font color="black">System Dates Issue in Distributed Environment </font><a href="docs/1067097.html">P3002 As of Date in Bill of Material Shows 1 Day Behind Until 10:00 AM</a></li>
+            <li><font color="black">MRP Falls into Zombie </font><a href="docs/1068635.html">R3482/R3483 MRP Falls into Zombie for a Certain Item</a></li>
+            <li><font color="black">Special Handling Code for Stocking in Manufacturing </font><a href="docs/1127134.html">Special Handling Code 'O' in UDC (41/I) - Stocking Type Code</a></li>
+            <li><font color="black">MRP Performance and Data Purge </font><a href="docs/1268674.html">R3482 and R3483 MRP Performance and Data Purge</a></li>
+            <li><font color="black">Interop Outbound for Shop Floor </font><a href="docs/1323732.html">R4801Z1X & R4801Z1P Outbound Interoperability for Shop Floor Management</a></li>
+            <li><font color="black">JDEWO Outbound </font><a href="docs/1342363.html">R00460 Implementing Work Order Z File Exports Using Subsystem Processing P48013 (JDEWO)</a></li>
+            <li><font color="black">R31804 - Error Code 'A224' </font><a href="docs/1351725.html">R31804 - Error Code 'A224' Case Study</a></li>
+            <li><font color="black">How to Chagne Display Label </font><a href="docs/1612397.html">How to change the Displayed Label on Unit Search (P15217) for Attributes Added for Filtering</a></li>
+            <li><font color="black">Fixed Asset with Invalid Row Number </font><a href="docs/1945333.html">Case Study - Web Client Exception in P1207 with Invalid row number (-1)</a></li>
+            <li><font color="black">Product Costing Best Practice Using Standard Cost </font><a href="docs/2272813.html">Product Costing Best Practice Using Standard Cost</a></li>
+            <li><font color="black">Troubleshooting Error JDB9900600 </font><a href="docs/2325330.html">Troubleshooting Error "JDB9900600 - Failed to store value, maximum exceeded". Probable cause is forgetting to call jdeRemoveDataPtr() in Running P3111 or Equivalent 3rd Party Integration</a></li>
+            <li><font color="black">Work Order Completion and Sales Order </font><a href="docs/2427459.html">Case Study on Work Order Resulted from W Line Type Sales Order</a></li>
+            <li> More contents in Manufacturing area are to be added here </li>
+          </ul>
+    </div>
+
+
+   <li><h3>HR/Payroll</h3></li>
+          <ul>
+            <!-- <li><font color="black">P4021 Supply & Demand Technical Document </font><a href="docs/952806.html">How to troubleshoot Supply & Demand (P4021) </a></li><span>: Supply and Demand is a core feature of any ERP software since the primary purpose of ERP is to plan and forecast based on the transaction history.</span> -->
+        <p><button class="button" onclick="myFunction9()">&gt;&gt;&gt;See More in HR/Payroll Area</button></p>
+        <div id="myHR">
+          <ul>
+            <li> More contents in HR/Payroll area are to be added here </li>
+          </ul>
+    </div>
+
 
     <p>&nbsp</p>
 
@@ -467,11 +522,9 @@
   <ul>
   <div><h3>Individual Courses</h3></div>
     <li><font color="black">HTML, CSS, and Javascript for Web Developers </font><font color="green">by Johns Hopkins University</font>  <a href="https://www.coursera.org/account/accomplishments/certificate/A2HYBP9P4XVA" target="_blank">HTML, CSS, and Javascript</a></li>    
-
     <li><font color="black">Networking in GCP: Hybrid Connectivity and Network Management </font><font color="green">by Google Cloud</font>    <a href="https://www.coursera.org/account/accomplishments/certificate/YRWQD9NC825G" target="_blank">Networking in GCP: Hybrid Connectivity and Network Management</a></li>
-
     <li><font color="black">Networking in GCP: Defining and Implementing Networks </font><font color="green">by Google Cloud</font>  <a href="https://www.coursera.org/account/accomplishments/certificate/JWG44J6ABHRV" target="_blank">Networking in GCP: Defining and Implementing Networks</a></li>
-         
+        
     <li><font color="black">Google Cloud Platform Fundamentals: Core Infrastructure </font><font color="green">by Google Cloud</font>    <a href="https://www.coursera.org/account/accomplishments/certificate/VB64ZJL4VGWE" target="_blank">Google Cloud Platform Fundamentals: Core Infrastructure</a></li>
 
     <li><font color="black">Version Control with Git </font><font color="green">by Atlassian</font>  <a href="https://www.coursera.org/account/accomplishments/certificate/DK6V2ZWM2AZS" target="_blank">Version Control with Git </a></li>
@@ -524,8 +577,7 @@
         </section>
         <section id="address" class="col-sm-4">
           <span>Address:</span><br>
-<!--           1550 Peregrine Vista HTS APT #303<br>
-          Colorado Springs, CO 80921 -->
+
 <!--             <body onload="incrementCount(10)">
     <div class="main_container" id="id_main_container">
       <div class="container_inner" id="display_div_id">

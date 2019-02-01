@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tips and Tricks in Creating a Header/Detail Form</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Tips and Tricks in Creating a Header/Detail Form</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p><span style="font-size: 10pt;">This document discusses the Header/Detail form based on test implementation, which can be categorized as below :</span></p>
+<h4><a name="TheContent"></a>Table of Contents</h4>
+
+<ul>
+  <li><a href="#a">Modify properties for Header Detail form</a></li>
+  <li><a href="#b">Map Primary Keys to make relationship between Header and Detail</a></li>
+  <li><a href="#c">How to set Line Number for both Add/Update Mode</a></li>
+  <li><a href="#d">How to compute Grid Column (GC) variable value and map it to Header File</a></li>
+  <li><a href="#e">To avoid addition of empty grid row</a></li>
+  <li><a href="#f">How to set maximum value in grid column to header table</a></li>
+  <li><a href="#g">How to set/update the maximum value in a Grid Column to Header Table</a></li>
+  <li><a href="#h">How to limit maximum two grid rows to add/update data?</a></li>
+  </ul>
+  <p>For this example, primary key is made up of :-</p>
+  <ul>
+  <li>Header: F4201 with primary key DOCO, KCOO, DCTO</li>
+  <li>Detail: F4211 with primary Key DOCO, KCOO, DCTO, LNID</li>
+</ul>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Intended for developers who have Advanced knowledge of the EnterpriseOne Development tools, specifically Form Design Aid and Event Rules Design.</p>
+
+
+<h3 class="km"><a name="a"></a>Properties of Header Detail Form</h3>
+<p>Below routine explains general routine for Header/Detail form :</p>
+<ul>
+<li>Add Business view for Header</li>
+<li>Add Business view for Detail</li>
+<li>Add all Primary Key values in Header</li>
+<li>Set Filtering option with '=' on the Primary Key Form Control values</li>
+<li>In Form Properties set 'End form on add" to close Header Detail Form after OK button clicked</li>
+<li>Set Grid Properties "Automatically Find On Entry" so filtering option above and Auto Find Button clicked Detail Information will be filtered and display automatically.</li>
+</ul>
+
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+
+<h3 class="km"><a name="b"></a>Map Key Values in Header and Detail</h3>
+<p style="margin-left: 40px;"><span style="text-decoration: underline;">EVENT: Add Record to DB - Before</p>
+<p style="margin-left: 80px;">BC Order Type (F4201)(DCTO) = FC Order Type<br /> BC Order Company (Order Number) (F4201)(KCOO) = FC Order Company<br /> BC Document (Order No, Invoice, etc.) (F4201)(DOCO) = FC Order Number</p>
+<div style="margin-left: 40px;"><em>The primary key is mapped based on the Form Control (FC) Values. If possible, map Audit Information (USER, JOBN, UPMJ/TDAY, UPMT and PID). Without this mapping Header Detail form is not able to handle relationship between Header and Detail</em></div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Update Record to DB - Before</p>
+<p style="margin-left: 80px;">BC Order Type (F4201)(DCTO) = FC Order Type<br /> BC Order Company (Order Number) (F4201)(KCOO) = FC Order Company<br /> BC Document (Order No, Invoice, etc.) (F4201)(DOCO) = FC Order Number</p>
+<div style="margin-left: 40px;"><em>Map primary key before updating to BC Business View (which is medium between user interface and table)</em></div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Row is Exited</p>
+<p style="margin-left: 80px;">GC Order Number = FC Order Number<br /> GC Or Ty = FC Order Type<br /> GC Order Co = FC Order Company</p>
+<div style="margin-left: 40px;"><em>This is to build relationship between header and detail</em></div>
+<p style="margin-left: 40px;"><br /> <strong>CONTROL: GRID Grid</strong></p>
+<p style="margin-left: 40px;"><span style="text-decoration: underline;">EVENT: Add Grid Rec to DB - Before            </p>
+<p style="margin-left: 80px;">BC Document (Order No, Invoice, etc.) (F4211)(DOCO) = GC Order Number<br /> BC Order Company (Order Number) (F4211)(KCOO) = GC Order Co<br /> BC Order Type (F4211)(DCTO) = GC Or Ty<br /> BC Line Number (F4211)(LNID) = GC Line Number</p>
+<div style="margin-left: 40px;"><em>Primary Key for Detail Table is mapped based on GC (Grid Control). If needed assign Audit information (get/assign in Post Dialog is Initialized event) which is same with header</em></div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Update Grid Rec to DB-Before</p>
+<div style="margin-left: 80px;">BC Document (Order No, Invoice, etc.) (F4211)(DOCO) = GC Order Number<br /> BC Order Company (Order Number) (F4211)(KCOO) = GC Order Co<br /> BC Order Type (F4211)(DCTO) = GC Or Ty<br /> BC Line Number (F4211)(LNID) = GC Line Number</div>
+<p> </p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<h3 class="km"><a name="c"></a>Auto Line Numbering</h3>
+<p class="km">Below Event is to handle the increment of Line Number (LNID) in the Grid in both Add and Update Mode.</p>
+<p style="margin-left: 40px;"><span style="text-decoration: underline;">EVENT: Dialog is Initialized</p>
+<p style="margin-left: 80px;">VA frm_mnLineNumber_LNID = "0"</p>
+<div style="margin-left: 40px;"><em>Add a form variable using DD Alias LNID and name it as 'frm_mnLineNumber_LNID'. This can be initialized either in events (Dialog is Initialized or Post Dialog is Initialized</em>).</div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Grid Record is Fetched</p>
+<p style="margin-left: 80px;">If BC Line Number (F4211)(LNID) is greater than VA frm_mnLineNumber_LNID<br />   VA frm_mnLineNumber_LNID = BC Line Number (F4211)(LNID)<br /> End If</p>
+<div style="margin-left: 40px;"><em>This is to store latest line number in update mode by assigning BC value to form variable frm_mnLineNumber_LNID</em></div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Row is Exited</p>
+<p style="margin-left: 80px;">If GC Line Number is less than or equal to VA frm_mnLineNumber_LNID<br />   VA frm_mnLineNumber_LNID = [VA frm_mnLineNumber_LNID]+1<br />   GC Line Number = VA frm_mnLineNumber_LNID<br /> End If</p>
+<div style="margin-left: 80px;"><em>Increment 1 based on biggest line number used and assign it into GC Line Number. This can be written at Row is Exited/Changed - Inline.</em></div>
+<p> </p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<h3 class="km"><a name="d"></a>Computing FC Control Based on Grid Value entered to update it into the Header File.</h3>
+<p>To handle this, temporary columns are added and stored value before and after change.</p>
+<p style="margin-left: 40px;"><span style="text-decoration: underline;">EVENT: Write Grid Line-Before</p>
+<p style="margin-left: 80px;">GC Order Amount - Line = [GC Quantity Ordered]*[GC Unit Price]<br /> GC OTOT - Before (Hidden) = [GC Quantity Ordered]*[GC Unit Price]<br /> FC Order Gross Amount_edit = [FC Order Gross Amount_edit]+[GC OTOT - Before (Hidden)]</p>
+<div style="margin-left: 40px;"><em>This is to show FC variable on Update Mode</em>.</div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Add Record to DB - Before</p>
+<p style="margin-left: 80px;">BC Amount - Order Gross (F4201)(OTOT) = FC Order Gross Amount_edit</p>
+<div style="margin-left: 40px;"><em>Map computed FC value to BC (business view control)</em>.</div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Update Record to DB - Before</p>
+<p style="margin-left: 80px;">BC Amount - Order Gross (F4201)(OTOT) = FC Order Gross Amount_edit</p>
+<div style="margin-left: 40px;"><em>Map computed FC value on Update Mode to BC</em></div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Row is Exited</p>
+<p style="margin-left: 80px;">GC Order Amount - Line = [GC Quantity Ordered]*[GC Unit Price]</p>
+<div style="margin-left: 40px;"><em>Example of this computation can be performed Row is Exited/Changed - Async/Inline</em></div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">EVENT: Row Exit &amp; Changed - Asynch</p>
+<p style="margin-left: 80px;">If GC OTOT - Before (Hidden) is not equal to GC Order Amount - Line<br />   FC Order Gross Amount_edit = ([FC Order Gross Amount_edit]+[GC Order Amount - Line])-[GC OTOT - Before (Hidden)]<br /> End If<br /> GC OTOT - Before (Hidden) = GC Order Amount - Line</p>
+<div style="margin-left: 40px;"><em>This routine is one of simple way to check value changed. Make it sure after computing a new FC Value to save off temp value</em>.</div>
+<p style="margin-left: 40px;"><br /> <span style="text-decoration: underline;">CONTROL: HYPITEM &amp;Delete</p>
+<p style="margin-left: 40px;">EVENT: Button Clicked</p>
+<p style="margin-left: 80px;">FC Order Gross Amount_edit = [FC Order Gross Amount_edit]-[GC Order Amount - Line]</p>
+<p style="margin-left: 80px;"><em>In case Delete button against a single row is clicked, the value has to be subtracted</em></p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<h3 class="km"><a name="e"></a>To Avoid Addition of Empty Grid Row</h3>
+<p>In Header/Detail form, if you do not handle GC (Grid Column) or GB (Grid Buffer) in toggling mouse cursor up and down, it may add addtional grid row. The problem of this coding is that detail information can be created without having actual data.</p>
+<p>To prevent this, review code which computes/assigns GC/GB variable and put this assignment only when mandatory grid column has a valid value.</p>
+<p>For example,</p>
+<div style="margin-left: 40px;">EVENT: Row is Exited<br />
+<div style="margin-left: 40px;">If GC 2nd Item Number is not equal to &lt;Blank&gt;<br />   GC Order Amount - Line = [GC Quantity Ordered]*[GC Unit Price]<br /> End If</div>
+</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<h3 class="km"><a name="f"></a>How to differentiate rows from business view and newly added row</h3>
+<div>For example, many cases user may click Select to add additional rows to existing data (for instance, a certain sales order has 3 detail lines then user want to append additional line 4). In general, SV Form_Mode is determined by the button clicked made (Select for Update Mode, Add for Add mode, Delete for Delete mode and Copy for Copy Mode. So SV Form_Mode is not sufficient to make your application to differentiate as-is row with newly added row. To meet this requirement, commonly you can make use of form level event rule.</div>
+<div></div>
+<div>1. Add a column using Data Dictionary Item (e.g., EV01) so now you can make use of GC variable (which to be hidden)</div>
+<div>2. Assign GC at Form Level events (e.g.,&ldquo;Grid Record is Fetched&rdquo; (based on BC) , &ldquo;Write Grid Line-Before&rdquo; (based on GC) or &ldquo;Last Record Has Been Read&rdquo; (based on GC)"</div>
+<div>For example,</div>
+<div style="margin-left: 30px;"><span style="text-decoration: underline;">EVENT: Grid Record is Fetched</div>
+<div style="margin-left: 60px;"><br />If BC Line Number (F4211)(LNID) is not equal to &lt;Zero&gt;                      /* Existing lines F4211.LNID is always greater than zero because it is primary key */<br />   GC Flag(hidden) = "Y"                                                                   /* Assign any flag, you want to make use during Grid handling */<br />Else<br />   GC Flag(hidden) = " "<br />End If</div>
+<div>3. Then in Grid level event you can make use of GC Flag(hidden) based on your business requirement</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<h3 class="km"><a name="g"></a>How to set/update the maximum value in a Grid Column to Header Table</h3>
+<p>To save off the maiumum value of a specific grid column into a specific header table column. In example below, it is the maximum value of Unit Cost.</p>
+<p style="margin-left: 40px;"><span id="form1:panelPage1"><span style="text-decoration: underline;"> EVENT: Add Record to DB - Before</p>
+<p style="margin-left: 80px;"><span id="form1:panelPage1">VA frm_MAX_UNCS = "0"                                            /* Initialize temp value */<br /> VA frm_MaxRow = "0"                                              /* Initialize MaxGridRow - this form level varilable is created based on DD Alias SEQ */<br /> VA frm_CurrentRow = "1"                                          /* Initialize CurrentGridRow - this form level varialble is created based on DD Alias SEQ */<br /> Get Max Grid Rows(FC Grid, VA frm_MaxRow)                        /* Call System Function to get Max Grid Row. The value will be actual number of rows + 1 in the Header/Detail form */<br /> While VA frm_CurrentRow is less than VA frm_MaxRow               /* Note that relation key word is "is less than" not "is equal to or less than" not to handle the last row */<br />   Get Grid Row(FC Grid, VA frm_CurrentRow)                       /* Call System Function to get current row, pointer */<br />   If GC Unit Cost is greater than or equal to VA frm_MAX_UNCS    /* To store the biggest number */<br />     VA frm_MAX_UNCS = GC Unit Cost<br />   End If<br /> VA frm_CurrentRow = [VA frm_CurrentRow]+1                        /* Increase current row number otherwise, it falls into infinite looping because WHILE test will be always success */<br /> End While<br /> <br /> BC UnitCost (HeaderTable)(UNCS) = VA frm_MAX_UNCS                /* assign temporary value to Business View column */</p>
+<p style="margin-left: 40px;"><span id="form1:panelPage1"><span style="text-decoration: underline;">EVENT: Update Record to DB - Before<br /> </p>
+<p style="margin-left: 80px;"><span id="form1:panelPage1">Repeat same action as for <span id="form1:panelPage1"><span style="text-decoration: underline;">EVENT: Add Record to DB - Before.</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<h3 class="km"><a name="h"></a>How to limit maximum two grid rows to add/update data?</h3>
+<p>One of possible implementation is making use of system function for Grid Get Max Grid Rows(FC Grid, return value),</p>
+<p>Try,</p>
+<ol>
+<li>Add two form controls (one to count total number of rows using MATH01 (say FC mnNoOfRows_RCK7), and the other one for Push Button to compute max row numbers)</li>
+<li>Button clicked event of Push Button (to be hidden),</li>
+</ol>
+<p style="padding-left: 60px;">2-1. Call system function Get Max Grid Rows(FC Grid, FC mnNoOfRows_RCK7)</p>
+<p style="padding-left: 60px;">2-2. Subtract it by 1 because additional row is to be added automatically for both Headerless/Detail form and Header/Detail Form: FC mnNoOfRows_RCK7 = FC mnNoOfRows_RCK7 - 1</p>
+<p style="padding-left: 60px;">2-3. Validate FC mnNoOfRows_RCK7 and set error if it is greater than 2</p>
+<p style="padding-left: 30px;">3. Press Button when there is modification regardless Form Mode (e.g., Row Exit &amp; Changed - Inline event) using system fuction "Press Button(FC Push Button)</p>
+<p style="padding-left: 30px;">4. Recalculate max row when user delete any rows at the event of Button Clicked against Hyper Button Delete by calling Press Button(FC Push Button)</p>
+
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
