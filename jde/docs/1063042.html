@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Shipment Number Column is Disabled in P4310 in HTML Client</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -36,14 +36,8 @@
       #myBtn:hover {
         background-color: #555;
       }
-        .kmnotebox {
+            .kmnotebox {
         background-color: #FFFFE0;
-        border-left: 10px;
-        /*border-style: dotted;*/
-      }
-
-      .kmcodeblock {
-        background-color: #B0E0E6;
         border-left: 10px;
         /*border-style: dotted;*/
       }
@@ -79,7 +73,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Shipment Number Column is Disabled in P4310 in HTML Client</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -113,7 +107,18 @@ function topFunction() {
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-
+<h3 class="km">--- Goal ---</h3>
+<p><br /> Grid Column Control '<strong>Shipment Number</strong>' field in <em>P4310 - Purchase Order</em> is disabled in HTML client but this control is editable in FAT/Windows Client. How to make it editable in HTML client?</p>
+<h3 class="km">--- Solution ---</h3>
+<p><br /> The result in HTML client is correct as GC Shipment Number is not allowed to input any value through P4310. <br /><br />This column will be appeared only when Transportation Module is active. In case Transportation Module is active but it is not necessary for your daily business, please deactivate it as below,</p>
+<blockquote>1. (Fast Path) P99410 - Work With EnterpriseOne System Control<br />2. Look for data 'SY49' and Select go to to [EnterpriseOne System Control - Revisions]<br />3. Select radio button 'No' and click OK to save change<br />4. Log off/on EntepriseOne as table information from F99410 - OneWorld System Control File will be cached as defined in F98613 - Database Caching</blockquote>
+<p><br />If Transportation Module is ON and then to synchronize the result between HTML client and Windows client,</p>
+<blockquote>1. Go to OMW<br />2. Check out P4310<br />3. Focus on W4310A - [Order Detail]<br />4. Event: Dialog Is Initialized</blockquote>
+<p> </p>
+<div class="kmcodeblock" style="width: 95%;">If VA frm_cTransportationInstalled is not equal to "1"<br /><br />Else<br />
+<blockquote><strong>Disable Grid(FC Grid, , </strong><strong>)</strong></blockquote>
+End If</div>
+<p><br />The reason for this suggestion is that the issue is coming from Grid Column Properties 'Disable Input' against Business View Column control 'Shipment Number' which may not work in Windows client. In E1 8.11 and above you may be able to run P4310 through windows client by modifying F9860.SIANSIF column from 'W' to ' ' (A Space) but this type of test is not supported by GSC.</p>
 
 
 

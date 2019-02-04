@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>How R4101P Validates to Delete Item and Considerations</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How R4101P Validates to Delete Item and Considerations</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -109,9 +109,44 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#q1">What tables will be validated before data from the Item Master (F4101) gets deleted?</a></li>
+  <li><a href="#q2">How does R4101P validate data from above tables?</a></li>
 
+</ul>
 
 <!-- ======================================== Body Starts Here =================================== -->
+<p>As business grows, the data from the Item Master may grow. This document will provide guidance on how to maintain a compact item master file by purging it regularly.<br /><br /> R4101P is to be run after R4102P has run successfully; as R4102P has a routine to check whether there is any open transaction across EnterpriseOne. So R4102P validates a transactional file based on the master file, whereas R4101P validates against master files.</p>
+<h3 class="km"><a name="q1"></a>What tables will be validated before data from the Item Master (F4101) gets deleted?</h3>
+<p>Below are tables to be validated:</p>
+<ol>
+<li>F4102 - Item Branch File</li>
+<li>F41021 - Item Location File</li>
+<li>F4105 - Item Cost File</li>
+<li>F4108 - Lot Master</li>
+<li>F3002 - Bill of Material Master File</li>
+<li>F3003 - Routing Master File</li>
+<li>F43090 - Supplier/Item Relationships</li>
+</ol>
+<p> </p>
+<div class="kmnotebox">Note: Above information reflects validation sequence. So if F4102 contains item number to delete, it will exit from routine.</div>
+<p> </p>
+<p> </p>
+<p> </p>
+<h3 class="km"><a name="q2"></a>How does R4101P validate data from above tables?</h3>
+<p>It validates data through Business Functions to be listed below. This way we can minimize conflicts between F4101 and tables related.</p>
+<ol>
+<li>B4100210 - CheckItemBranch (F4102 Get Item Branch Row)</li>
+<li>XF41021 - VerifyAndGetItemLocation (F41021 Get Item Location Row)</li>
+<li>B4100060 - VerifyExistenceOfUnitCost (F4105 Verify Cost Existence)</li>
+<li>B4000610 - GetLotMasterByLotNumber (F4108, Get Lot Master Row)</li>
+<li>B4100060 - VerifyItemAsParentInBOM (F3002 Verify BOM Parent Existence)</li>
+<li>B4100060 - VerifyItemAsComponentInBoM (F3002 Verify BOM Component Existence)</li>
+<li>B4100190 - VerifyItemInRoutingFile (F3003 Verify Existence of Item)</li>
+</ol>
+<div class="kmnotebox">Note: If all the validation is successful (there is no data from tables listed above based on item number in F4101) data from F4101 gets deleted and not to have orphaned data from <em>Item Units of Measure Conversion Factors</em> (F41002).</div>
+<p>&nbsp; </p>
 
 
 

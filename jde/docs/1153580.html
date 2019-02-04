@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Can Data from Location Master (F4100) be Purged?</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Can Data from Location Master (F4100) be Purged?</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -113,7 +113,40 @@ function topFunction() {
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-
+<p>Over the years Location Master (F4100) contains huge orphaned data in it. To minimize possible performance impact across EnterpriseOne system unnecessary data needs to be purged. <br /> <br />Currently there is no batch application which purge data from F4100 rather Location Master (P4100) is to be used to delete records which appear in grid. For additional information refer to E1: ENV: Archive and Purging within EnterpriseOne (Doc ID <a href="&lt;&lt;INLINE_NOTE:1082128.1&gt;&gt;" target="_blank">1082128.1</a>).<br /><br />In deleting data through P4100 it validates deletion by checking data from Item Location File (F41021). If there is any data WHERE ( (F4100.MCU = F41021.MCU) AND (F4100.LOCN = F41021.LOCN)) hard error Delete Not Allowed - Item/Location Info (Error 3256) is to be issued.<br /><br />Potential Process<em> (make sure to backup data before proceeding)</em>:</p>
+<ol>
+<li>Run R4102P to purge data from F41021</li>
+<li>Delete F4100 through P4100</li>
+</ol>
+<p>Or</p>
+<ol>
+<li>Purge all the data from F4100</li>
+<li>Run Build Location Master (R41820) which creates F4100 based on F41021.</li>
+</ol>
+<p>Or</p>
+<blockquote>Use SQL tools (outside JDE - this process is not supported by Global Support Services)</blockquote>
+<ol>
+<li>Verify/count/update number of orphaned data from F4100</li>
+<li>Delete it</li>
+<li>Check existence</li>
+</ol>
+<div class="kmcodeblock" style="width: 95%;">sql&gt; select count(*) from proddta.f4100<br />     where <strong>not exists</strong><br />    (select *<br />     from proddta.f41021<br />     where (f41021.lilocn = f4100.lmlocn and f41021.limcu = f4100.lmmcu)<br />    )</div>
+<ul>
+<li>(optional) update</li>
+</ul>
+<div class="kmcodeblock" style="width: 95%;">sql&gt; update proddta.f4100<br />     set lmurrf = 'tobedeleted'<br />     <strong>where lmlocn in</strong><br />    (<br />       select lmlocn from proddta.f4100<br />       <strong>where not exists</strong><br />       (select *<br />       from proddta.f41021<br />       where f41021.lilocn = f4100.lmlocn and f41021.limcu = f4100.lmmcu<br />       )<br />    )</div>
+<ul>
+<li>Delete</li>
+</ul>
+<div class="kmcodeblock" style="width: 95%;">sql&gt; delete proddta.f4100 where lmurrf='tobedeleted'</div>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>There is no table to archive so it is always proper to back up data before take any action against a certain database and tables</li>
+<li>Before purge data from F4100, get familiar with how data from F41021 are to be purged</li>
+</ul>
+</div>
+<p>&nbsp;</p>
 
 
 

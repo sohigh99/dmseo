@@ -179,15 +179,15 @@ function topFunction() {
 <p>Try, </p>
 <p>- Purge historic data using R4102P<br />Reference:</p>
 <ul>
-<li style="font-size: small;">1322000.1&gt; - E1: 41: Inventory Purge Programs (R4101P / R4102P)</li>
-<li style="font-size: small;">&lt;Document 1125633.1&gt; - E1: 40: R4102P and Tables Related per Processing Option Value. Note that R4102P can delete historical data from F4105, F30026, F41002, F41021, F4102 (this is conditional based on the processing option parameters which is explained in this document), F41022, and F41171. So make it sure you backup these files before proceed.</li>
+<li>1322000.1&gt; - E1: 41: Inventory Purge Programs (R4101P / R4102P)</li>
+<li>&lt;Document 1125633.1&gt; - E1: 40: R4102P and Tables Related per Processing Option Value. Note that R4102P can delete historical data from F4105, F30026, F41002, F41021, F4102 (this is conditional based on the processing option parameters which is explained in this document), F41022, and F41171. So make it sure you backup these files before proceed.</li>
 </ul>
 <p><br class="_mce_tagged_br" />As explained above, there is no standard means to delete F41112 without running R41542. Hence, </p>
 <p>1. Back up F41112</p>
 <p>2. DELETE the rows with all quantity/amount buckets with zero using WHERE clause where ( incuma = 0 and inan01 = 0 and inan02 = 0 and inan03 = 0 and inan03 = 0 and inan04 = 0 and inan05 = 0 and inan06 = 0 and inan07 = 0 and inan08 = 0 and inan09 = 0 and inan10 = 0 and inan11= 0 and inan12 = 0 and inan13 = 0 and nan14 0 and incmqt = 0 and innq01 = 0 and innq02 = 0 and innq03 = 0 and innq04 = 0 and innq05 = 0 and innq06 = 0 and innq07 = 0 and innq08 = 0 and innq09 = 0 and innq10 = 0 and innq11 = 0 and innq12 = 0 and innq13 = 0 and innq14 = 0 );</p>
 <p>Refer to &lt;Document 1082128.1&gt; - E1: ENV: Archive and Purging within JD Edwards EnterpriseOne, which may give you all available archive and purge options in EnterpriseOne. <br /></p>
 <p>&lt;Internal_Only&gt;</p>
-<p>Query used for the collection of row count, </p>
+<p>Query used for the collection of row count, </p>s
 <p>sql&gt; select ilipcd, count (*) from proddta.f4111 group by ilipcd;<br />sql&gt; select count (*) from proddta.f41112;<br />sql&gt; select count (*) from proddta.f41112<br />where ( incuma = 0 and inan01 = 0 and inan02 = 0 and inan03 = 0 and inan03 = 0 and inan04 = 0 and inan05 = 0 and inan06 = 0 and inan07 = 0 and inan08 = 0 and inan09 = 0 and inan10 = 0 and inan11= 0 and inan12 = 0 and inan13 = 0 and inan14 = 0 and incmqt = 0 and innq01 = 0 and innq02 = 0 and innq03 = 0 and innq04 = 0 and innq05 = 0 and innq06 = 0 and innq07 = 0 and innq08 = 0 and innq09 = 0 and innq10 = 0 and innq11 = 0 and innq12 = 0 and innq13 = 0 and innq14 = 0 );<br />sql&gt; select count (*) from proddta.f41021;<br />sql&gt; SELECT COUNT (*) FROM PRODDTA.F41021<br />WHERE ( LIPBIN &lt;&gt; 'P' AND LIPQOH = 0 AND LIPBCK = 0 AND LIPREQ = 0 AND LIQWBO = 0 AND LIOT1P = 0 AND LIOT2P = 0 AND LIOT1A = 0 AND LIHCOM = 0 AND LIPCOM = 0 AND LIFCOM = 0 AND LIFUN1 = 0 AND LIQOWO = 0 AND LIQTTR = 0 AND LIQTIN = 0 AND LIQONL = 0 AND LIQTRI = 0 AND LIQTRO = 0 AND LIQTY1 = 0 AND LIQTY2 = 0 AND LIQTO1 = 0 AND LIQTO2 = 0 AND LIHCMS = 0 AND LIPJCM = 0 AND LIPJDM = 0 AND LISCMS = 0 AND LISIBW = 0 AND LISOBW = 0 AND LISQOH = 0 AND LISQWO = 0 AND LISREQ = 0 AND LISWHC = 0 AND LISWSC = 0 );<br />sql&gt; select count (*) from proddta.f4105;</p>
 <p>&lt;/Internal_Only&gt;</p>
 

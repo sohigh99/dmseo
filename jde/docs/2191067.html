@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Why Some Items in R41540 contains BF (Balance Forward)?</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Why Some Items in R41540 contains BF (Balance Forward)?</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -109,10 +109,18 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
+<p>Why some items in R41540 (Item Ledger Detail Print) reads Balance Forward (BF) but others are not?</p>
+<p><img src="../images/bf01.png" class="kmsmartresize" alt="As-Is output" title="As-Is output" width="1172" /></p>
+<p>Is there any way to view all IA (Inventory Adjustment transaction) without having Balance Forward information?<br />&nbsp;</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
+<p>BF (Balance Forward) in R41540 (Item Ledger Detail Print) is coming from F41112 (Item ASOF File) which can be written in your running R41542 (Item Ledger As Of Record Generation). So BF rows can be written when the start data of the processing option of R41540 (Item Ledger Detail Print) does not cover all transactions from F4111 so it pulls data from F41112 (Item ASOF File).</p>
+<p>Hence, set the begin data in your processing option of R41540 which can cover all IA (Inventory Adjustment Transaction) range.</p>
+<p><img src="../images/bf02.png" class="kmsmartresize" alt="To-Be output" title="To-Be output" width="1178" /></p>
+<p>For this example, the first transaction is done in August, so you are to set the Beginning Date which can cover this.</p>
+<p>&nbsp;</p>
 
 
 

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Populate a certain columns in F4111 (Item Ledger) through P4116</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Populate a certain columns in F4111 (Item Ledger) through P4116</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>Title: How to populate addition User Reserved Columns into F4111 table through P4116 or other inventory transaction.</p>
+<p><em>Abstract:&nbsp;This document explains how a certain unused columns can be added through Inventory Transaction (P4112, P4113, P4114 and P4116). Same routine can be applied in any routine which calls the Inventory Transaction Master Business Function XT4111Z1.</em></p>
+<p>Caution: This document may contain information, software, products or services which are not supported by Oracle Support Services and are being provided &lsquo;as is&rsquo; without warranty. Please refer to the following site for My Oracle Support Terms of Use: https://support.oracle.com/CSP/ui/TermsOfUse.html</p>
+<h3><a name="top"></a>Table of Contents</h3>
+<ul>
+  <li><a href="#q1">Introduction</a></li>
+  <li><a href="#q2">User Interface</a></li>
+  <li><a href="#q3">Action Plan</a></li>
+  <li><a href="#q4">Possible Implementation</a></li>
+  <li><a href="#q5">Objects Affected</a></li>
+</ul>
+
+
+<h2><a name="q1"></a>Introduction</h2>
+<p>Before implementing, try to understand the logic on how the system handles Inventory Transaction. Currently a table F41UI001 is used to store inventory transaction as temporary repository.</p>
+
+<p>Currently P4116 (Item Reclassifications) handles data as below,</p>
+<ol>
+<li>Call XT4116Z1 - F4116FSEditLine (F4116 FS Edit Line) to hand over grid columns to internal BSFNs to be called</li>
+<li>Then F4116FSEditLine calls XT4111Z1 &ndash; F4111EditLine (F4111 Edit Line) to validate/default/create cache of F41UI001</li>
+<li>In clicking OK button F4116FSEndDoc routine is calling F4111EndDocument (F4111 End Document) routines to commit inventory cache to F4111 &ndash; Cardex (Inventory Transaction File)</li>
+</ol>
+
+<p>Note: For this example, XT4116Z1 is NER code whereas other inventory transaction master business function XT4112Z1, XT4114Z1, XT4114Z1 are written in C Codes. However the way you can implement is same.</p>
+<p>For this example, we may modify below objects to accommodate this request,</p>
+<ul>
+<li>Business View: V4111F because DOCO, DCTO and KCOO are not a member of business view V4111F which is associated with P4116 (Inventory Reclassification)</li>
+<li>Data Structure: DXT4116Z1C because three columns listed above is not a member of data structure</li>
+<li>XT4116Z1 (NER): In calling XT4111Z1 (F4111EditLine) which does not handle listed columns</li>
+<li>Application: P4116 to assign GC value to XT4116Z1 (Edit Line) routine</li>
+</ul>
+
+<h5><a href="#top">Back to Top</a></h5>
+<h2><a name="q2"></a>User Interface</h2>
+<ul>
+<p>This will describe simple and standard functionality based on Adding a new grid rows.</p>
+<li>1.&nbsp;&nbsp;&nbsp;&nbsp; Launch &lsquo;Item Reclassifications&rsquo; P4116 &ndash; W4116W [Item Reclassifications]</li>
+<li>2.&nbsp;&nbsp;&nbsp;&nbsp; In Exiting Grid Row hands over User Input value into Edit Line routine and (in Update Mode) show value from F4111 into grid</li>
+<h3>&nbsp;</h3>
+<h2><a name="q3"></a>Action Plan</h2>
+<ol>
+<ul>
+<li>Verify existing logic in creation of F4111</li>
+<li>Study the NER Code of XT4116Z1 (this is named event rule code)</li>
+<li>Determine how User input value has to be written to cache (Work File), Cache Name and detailed routine.</li>
+</ul>
+</ol>
+<p>Note that this routine can be applied any type of inventory transaction so long as Cardex file is written through XT4111Z1 master business function routine. However we discourage you from your modification from standard routine because additional columns and/or additional routine may be in place in the future which can be conflict with the example written here.</p>
+
+<ol>
+<li>Add User Reserved Columns in Business View F4111F</li>
+<li>Show columns in Grid of W4116B</li>
+<li>In calling Edit Line in W4116B assign newly added columns in step 2</li>
+<li>In calling X4111Z1 &ndash; F4111EditLine assign the value assigned in step 3</li>
+<li>Test change made</li>
+</ol>
+
+
+<h2><a name="q4"></a>Possible Implementation</h2>
+
+<ol>
+<li>Business View: V4111F because DOCO, DCTO and KCOO are not a member of business view V4111F which is associated with P4116 (Inventory Reclassification)</li>
+</ol>
+<p>Alternatively you may handle data dictionary items in P4116 to minimize modification. For this case, data from F4111 has to be fetched/updated as designed</p>
+<ol>
+<li>Go to OMW</li>
+<li>Check out V4111F</li>
+<li>Go to Design</li>
+<li>Select columns DOCO (DocumentOrderInvoiceE), DCTO (Order Type) and KCOO (CompanyKeyOrderNo)</li>
+</ol>
+<p><img src="../images/p411601.png" border="0" alt="BSSV" title="BSSV" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411602.png" border="0" alt="BSSV" title="BSSV" hspace="0" vspace="0" /></p>
+
+
+<p>IMPORTANT: this is change of data structure so any change has to be done with extra care.</p>
+
+
+<ol>
+<li>Save changes</li>
+<li>Create a type definition to enforce system to understand the change. If needed, delete glbltbl.xdb and ddb from spec directory you are working on (which create bv4111f.h in include folder)</li>
+<li>Check in</li>
+</ol>
+
+
+<ol>
+<li>Data Structure: DXT4116Z1C (F4116 FS Edit Line) because three columns listed above is not a member of data structure</li>
+</ol>
+<ol>
+<li>Check out DXT4116Z1C through OMW</li>
+<li>Go to Data Structure Design</li>
+</ol>
+<p><img src="../images/p411603.png" border="0" alt="DS" title="DS" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411604.png" border="0" alt="DS" title="DS" hspace="0" vspace="0" /></p>
+<ol>
+<li>Create a type definition</li>
+</ol>
+<p><img src="../images/p411605.png" border="0" alt="TypeDef" title="TypeDef" hspace="0" vspace="0" /></p>
+<ol>
+<li>Check in</li>
+</ol>
+
+
+<ol>
+<li>XT4116Z1 (NER): In calling XT4111Z1 (F4111EditLine) which does not handle listed columns</li>
+</ol>
+<ol>
+<li>Check out XT41116Z1</li>
+<li>Go to &ldquo;Start Business Function Design&rdquo;</li>
+</ol>
+<p><img src="../images/p411606.png" border="0" alt="BSFN" title="BSFN" hspace="0" vspace="0" /></p>
+<ol>
+<li>(Form Exit) &gt; Edit</li>
+</ol>
+<p><img src="../images/p411607.png" border="0" alt="BSFN" title="BSFN" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411608.png" border="0" alt="BSFN" title="BSFN" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411609.png" border="0" alt="BSFN" title="BSFN" hspace="0" vspace="0" /></p>
+<ol>
+<li>Compile it by clicking &ldquo;build business function&rdquo;</li>
+</ol>
+
+
+<ol>
+<li>Application: P4116 to assign GC value to XT4116Z1 (Edit Line) routine</li>
+</ol>
+<ol>
+<li>Check out P4116</li>
+<li>Go to Form Design Aid</li>
+<li>Add 3 Grid Control Columns into FC Grid</li>
+</ol>
+
+<p><img src="../images/p411610.png" border="0" alt="column" title="column" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411611.png" border="0" alt="column" title="column" hspace="0" vspace="0" /></p>
+
+
+
+
+<ol>
+<li>Go to the event &ldquo;Row Exit &amp; Changed &ndash; Asynch&rdquo; event and assign GC controls in calling F4116 FS Edit Line</li>
+</ol>
+<p><img src="../images/p411612.png" border="0" alt="event rule" title="event rule" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411613.png" border="0" alt="event rule" title="event rule" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411614.png" border="0" alt="event rule" title="event rule" hspace="0" vspace="0" /></p>
+<p><img src="../images/p411615.png" border="0" alt="event rule" title="event rule" hspace="0" vspace="0" /></p>
+
+
+
+
+
+
+<h2><a name="q5"></a>Objects Affected</h2>
+<ol>
+<ul>
+<li>Business View V4111F</li>
+<li>NER XT4116Z1</li>
+<li>P4116</li>
+</ul>
+</ol>
+
+
+<h5><a href="#top">Back to Top</a></h5>
+
+<p>E1: FDA: Object Modification Recommendations: Interactive Applications (Doc ID 626586.1)&nbsp;</p>
+<p>E1: FDA: Object Modification Recommendations: Event Rules (Doc ID 626585.1)&nbsp;</p>
+<p>E1: TDA: Object Modification Recommendations: Business Views (Doc ID 626582.1)&nbsp;</p>
+
+<h5><a href="#top">Back to Top</a></h5>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

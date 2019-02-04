@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>P512000 Job Status Inquiry Screen Show Different Row Colors</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -45,6 +45,7 @@
       .kmcodeblock {
         background-color: #B0E0E6;
         border-left: 10px;
+        font-size: 0.9em;
         /*border-style: dotted;*/
       }
 
@@ -79,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P512000 Job Status Inquiry Screen Show Different Row Colors</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -104,16 +105,72 @@ function topFunction() {
 </body>
 
 
-<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></big></big></h2>
 
 
+<h4>What is routine which sets different fonts in P512000 (Job Status Inquiry-User Defined Columns)?</h4>
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-
+<h4>Answer:</h4>
+<p>First of all, fonts in Grid (row) is controlled by Grid System Function "Set Grid Font", which currently have 5 different color scheme as below,<br /><br /></p>
+<ul>
+<li>1 = Bold Blue by calling Set Grid Font(FC Grid, , , &lt;,Bold,10,Blue&gt;)
+<ul>
+<li>- Sequence Code is 1, 2, 3 or A</li>
+<li>- Category Subtotal is ON</li>
+<li>- Current row is Category Subtotal row</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Or,</p>
+<ul>
+<li>- Sequence Code is NOT (1, 2, 3 or A)</li>
+<li>- Level of Detail is greater than 2</li>
+<li>- Current row is Project Subtotals</li>
+</ul>
+<p>&nbsp;</p>
+</li>
+<li>2 = Bold Navy by calling Set Grid Font(FC Grid, , , &lt;,Bold,10,Navy&gt;)
+<ul>
+<li>- Sequence Code is NOT (1, 2, 3 or A)</li>
+<li>- Level of Detail is same with header level of detail</li>
+<li>- Current row is Project Subtotals</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<li>3 = Regular Navy by calling Set Grid Font(FC Grid, , , &lt;,Regular,10,Navy&gt;)
+<ul>
+<li>- SequenceCode is C or T (Processing Option)</li>
+<li>- Accounts changes</li>
+<li>- Quantity Buckets are not zero</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<li>4 = Bold Black by calling Set Grid Font(FC Grid, , , &lt;,Bold,10,Black&gt;)
+<ul>
+<li>- Sequence Code is NOT (1, 2, 3 or A)</li>
+<li>- Level of Detail is 1 or 2</li>
+<li>- Current row is Project Subtotals</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<li>5 = Default - Black
+<ul>
+<li>- Other conditions</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp;</p>
+<p>&lt;Internal_Only&gt;This document is to be refined when coming back from my holiday (17-July-2016)&lt;/Internal_Only&gt;</p>
+<p>&nbsp;</p>
 
 
 
