@@ -168,6 +168,7 @@ function topFunction() {
 <li>So database stores it as 050000</li>
 </ul>
 <p> </p>
+<hr>
 
 <h3><a name="q1.2"></a>Representation of data type for date (JDEDATE) and datetime (JDEUTIME)</h3>
 <p>A. Julian Date</p>
@@ -187,7 +188,7 @@ function topFunction() {
 <li>Julian Date in EnterpriseOne is different from common Julian Date. For this example, the JD Edwards Julian date (say, CYYDDD format) would be 113123, where C = 1 (for 21st century), YY = 13 (for 2013) and DDD is 123 (for the 123rd day of year 2013).  So the first 3 digits are for the Century and Current Year, and the last 3 digits indicates the number of days into the year.</li>
 </ul>
 </div>
-<p> </p>
+<hr>
 
 <h3><a name="q1.3"></a>Example of implementation:</h3>
 <p>Requirement:  2 columns (RSDJ (Date - Promised Delivery) and RSDT (Promised Delivery Time)) from F4211 (Sales Order Detail File) are to be adjusted based on user timezone defined.</p>
@@ -202,16 +203,74 @@ function topFunction() {
 <li>cTimeFormat: This parameter is required because time format can be HHMM without seconds. So depends on requirement, if needed additional '00' is to be appended by multiplying HHMM with 100</li>
 </ul>
 <p>2. Define necessary variable in reading data</p>
+
 <p>3. Check whether input RSDJ is NULL but RSDT is not zero then set RSDJ = Date Today</p>
-<p>If BF jdPromisedDeliveryDate is equal to &lt;Null Date&gt; And BF mnPromisedDeliveryTime is not equal to &lt;Zero&gt;<br />        BF jdPromisedDeliveryDate = SL DateToday<br /> End If<br /> <br /> 4. Retrieve Time Zone and Daylight Savings Rule for the user. This can be through BSFN or simple Table I/O as below,   <br />            <span style="text-decoration: underline;">F00921.Fetch Single</span><br />                 SL UserID =  TK User ID<br />                 VA evt_szUserTimeZone_TIMEZONES &lt;- TK Universal Time (UTCTIME)<br />                 VA evt_szUsrDayltSavRule_DSAVNAME &lt;- TK Future Use Field 4 (FUTTIME4)</p>
+<div class="kmcodeblock">
+<p>If BF jdPromisedDeliveryDate is equal to &lt;Null Date&gt; And BF mnPromisedDeliveryTime is not equal to &lt;Zero&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;         BF jdPromisedDeliveryDate = SL DateToday<br /> End If<br /> <br /> </p>
+</div>
+
+  <p>4. Retrieve Time Zone and Daylight Savings Rule for the user. This can be through BSFN or simple Table I/O as below,   <br />            
+  </p>
+
+  <div class="kmcodeblock">
+    <span style="text-decoration: underline;">F00921.Fetch Single</span><br />&nbsp;&nbsp;&nbsp;&nbsp;                 SL UserID =  TK User ID<br />&nbsp;&nbsp;&nbsp;&nbsp;                 VA evt_szUserTimeZone_TIMEZONES &lt;- TK Universal Time (UTCTIME)<br />&nbsp;&nbsp;&nbsp;&nbsp;                 VA evt_szUsrDayltSavRule_DSAVNAME &lt;- TK Future Use Field 4 (FUTTIME4)</p>
+  </div>
+
+
 <p>5. (If needed, you may implement server timezone which is different from UTC - 0, or GMT) For this example, for simple implementation we simply sets UTC - 0 timezone</p>
-<p>6. Set FROM and TO Time Zone values based on MODE flag<br />        If BF cMode is equal to "1" /* before write/update */<br />              VA evt_szFROMTimeZone_TIMEZONES = VA evt_szUserTimeZone_TIMEZONES<br />              VA evt_szTOTimeZone_TIMEZONES = VA evt_szSystemTimeZone_TIMEZONES /* e.g., Code 26 which is (UTC) from UDC H91/TZ */<br />         Else /* before read */<br />              VA evt_szFROMTimeZone_TIMEZONES = VA evt_szSystemTimeZone_TIMEZONES<br />              VA evt_szTOTimeZone_TIMEZONES = VA evt_szUserTimeZone_TIMEZONES<br />         End If</p>
-<p>7. Retrieve Daylight Savings Flag<br />         <span style="text-decoration: underline;">Is Daylight Savings in Effect</span> *** B9800009 - IsDaylightSavingsInEffect ***<br />                     BF jdPromisedDeliveryDate -&gt; BF jdDate<br />                     BF mnPromisedDeliveryTime -&gt; BF mnTime<br />                     VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName<br />                     VA evt_cDaylightSavingsFlag_EV01 &lt;- BF cDaylightSavingsFlag<br />                     BF cSuppressErrorMessages -&gt; BF cSuppressErrorMessage<br /> <br /> 8. (Only when jdPromisedDeliveryDate is not NULL Date) If the time format is '1' then the time is in HHMM format. If no value is passed the time is in HHMMSS format<br />       If BF cTimeFormat01 is equal to "1"<br />                    BF mnTime01 = [BF mnTime01]*100<br />       End If</p>
-<p>9. Convert User Date/Time to UTC format<br />          <span style="text-decoration: underline;">Get UTC Time</span>  *** B9800009 - GetUTCTime ***<br />                        VA evt_mnUTCTimeWithSec_UTCWSEC &lt;- BF mnUTCTime<br />                        BF jdPromisedDeliveryDate -&gt; BF jdDate<br />                        BF mnPromisedDeliveryTime -&gt; BF mnTime<br />                        "2" -&gt; BF cUTC_Local<br />                        VA evt_szFROMTimeZone_TIMEZONES -&gt; BF szTimeZone<br />                        VA evt_cDaylightSavingsFlag_EV01 -&gt; BF cDaylightSavings<br />                        VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName</p>
-<p>10.  Seconds are not considered by B9800009 and need to be appended to the converted value<br />            VA evt_nSeconds_INT01 = mod([BF mnTime01],100)</p>
-<p>11. Convert UTC Time to the requested time zone<br />          <span style="text-decoration: underline;">Get Time and Date From UTC</span>  *** B9800009 ***<br />                        VA evt_mnUTCTimeWithSec_UTCWSEC -&gt; BF mnUTCTime<br />                        BF mnPromisedDeliveryTime &lt;- BF mnTime<br />                        BF jdPromisedDeliveryDate &lt;- BF jdDate<br />                        "2" -&gt; BF cUTC_Local<br />                        VA evt_szTOTimeZone_TIMEZONES -&gt; BF szTimeZone<br />                        VA evt_cDaylightSavingsFlag_EV01 -&gt; BF cDaylightSavings<br />                        VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName<br />                       </p>
+<p>6. Set FROM and TO Time Zone values based on MODE flag<br /></p>
+
+<div class="kmcodeblock">        If BF cMode is equal to "1" /* before write/update */<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szFROMTimeZone_TIMEZONES = VA evt_szUserTimeZone_TIMEZONES<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szTOTimeZone_TIMEZONES = VA evt_szSystemTimeZone_TIMEZONES /* e.g., Code 26 which is (UTC) from UDC H91/TZ */<br />         Else /* before read */<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szFROMTimeZone_TIMEZONES = VA evt_szSystemTimeZone_TIMEZONES<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szTOTimeZone_TIMEZONES = VA evt_szUserTimeZone_TIMEZONES<br />         End If</p>
+</div>
+
+
+<p>7. Retrieve Daylight Savings Flag<br />        </p>
+<div class="kmcodeblock">
+ <span style="text-decoration: underline;">Is Daylight Savings in Effect</span> *** B9800009 - IsDaylightSavingsInEffect ***<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     BF jdPromisedDeliveryDate -&gt; BF jdDate<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     BF mnPromisedDeliveryTime -&gt; BF mnTime<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     VA evt_cDaylightSavingsFlag_EV01 &lt;- BF cDaylightSavingsFlag<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     BF cSuppressErrorMessages -&gt; BF cSuppressErrorMessage<br /> <br />
+ </div>
+ <p> 8. (Only when jdPromisedDeliveryDate is not NULL Date) If the time format is '1' then the time is in HHMM format. If no value is passed the time is in HHMMSS format<br /> </p>      
+
+ <div class="kmcodeblock"><p>If BF cTimeFormat01 is equal to "1"<br />&nbsp;&nbsp;&nbsp;&nbsp;                    BF mnTime01 = [BF mnTime01]*100<br />       End If</p>
+</div>
+
+<p>9. Convert User Date/Time to UTC format<br />         </p>
+<div class="kmcodeblock">
+ <span style="text-decoration: underline;">Get UTC Time</span>  *** B9800009 - GetUTCTime ***<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;VA evt_mnUTCTimeWithSec_UTCWSEC &lt;- BF mnUTCTime<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;BF jdPromisedDeliveryDate -&gt; BF jdDate<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;BF mnPromisedDeliveryTime -&gt; BF mnTime<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;"2" -&gt; BF cUTC_Local<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;VA evt_szFROMTimeZone_TIMEZONES -&gt; BF szTimeZone<br />
+ &nbsp;&nbsp;&nbsp;&nbsp; VA evt_cDaylightSavingsFlag_EV01 -&gt; BF cDaylightSavings<br />
+ &nbsp;&nbsp;&nbsp;&nbsp; VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName</p>
+</div>
+<p>10.  Seconds are not considered by B9800009 and need to be appended to the converted value<br /> </p>
+<div class="kmcodeblock" >          
+&nbsp;&nbsp;&nbsp;&nbsp;VA evt_nSeconds_INT01 = mod([BF mnTime01],100)</p></div>
+
+<p>11. Convert UTC Time to the requested time zone<br />         </p>
+<div class="kmcodeblock"> <span style="text-decoration: underline;">Get Time and Date From UTC</span>  *** B9800009 ***<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_mnUTCTimeWithSec_UTCWSEC -&gt; BF mnUTCTime<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;BF mnPromisedDeliveryTime &lt;- BF mnTime<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;BF jdPromisedDeliveryDate &lt;- BF jdDate<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;"2" -&gt; BF cUTC_Local<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_szTOTimeZone_TIMEZONES -&gt; BF szTimeZone<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_cDaylightSavingsFlag_EV01 -&gt; BF cDaylightSavings<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName<br />                       </p>
+
 <p>          BF mnTime01 = [BF mnTime01]+[VA evt_nSeconds_INT01] /* to describe hhmmss */</p>
-<p>11'. If the time format is '1' convert the time to HHMM format<br />                If BF cTimeFormat01 is equal to "1"<br />                         BF mnTime01 = [BF mnTime01]/100<br />                End If</p>
+</div>
+
+<p>11'. If the time format is '1' convert the time to HHMM format<br />  </p>
+<div class="kmcodeblock">              If BF cTimeFormat01 is equal to "1"<br />&nbsp;&nbsp;  &nbsp;  &nbsp;                         BF mnTime01 = [BF mnTime01]/100<br />                End If</p>
+</div>
+
+
 <p>12. Save it and compile</p>
 <p>13. Table Trigger design for table to update</p>
 <p>Implement above at,</p>
@@ -226,7 +285,7 @@ function topFunction() {
 <p> Note:</p>
 <p>This NER is to be implemented through table trigger, proper error has to be handled</p>
 </div>
-<p> </p>
+<hr>
 
 
 <h3><a name="q1.4"></a>PROBLEM: </h3>
@@ -293,8 +352,8 @@ function topFunction() {
 <li>Additional table trigger can affect performance</li>
 </ul>
 </div>
-<p> </p>
-<p> </p>
+<p>&nbsp; </p>
+
 
 <!-- ======================================== End of Body ==================================== -->
 
