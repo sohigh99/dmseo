@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P4114 Inventory Adjustment Issues an 'Item Number Invalid' with Flex Account - CASE STUDY</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P4114 Inventory Adjustment Issues an 'Item Number Invalid' with Flex Account - CASE STUDY</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></big></big></h2>
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#issue">Issue</a></li>
+  <li><a href="#error">Error representation in the JDEDEBUG</a></li>
+  <li><a href="#asis">As - Is Flex Account Setup using P40296 (Flex Rules Definition)</a></li>
+  <li><a href="#howto">How to debug the issue</a></li>
+</ul>
+
+<p>This document is a case study only with general debugging methods. </p>
+<h3 class="km"><a name="issue"></a>Issue</h3>
+<p>P4114 (Inventory Adjustment) issues error with Flex Account on as below, </p>
+<p style="margin-left: 30px;"><span style="text-decoration: underline;"><strong>Item Number Invalid</strong></span><br />A form level error has occurred.<br />CAUSE.... The Item Number entered does not exist in the Basic Item Master<br />(P4101).<br /><em><strong>ER Details</strong></em>:<br />Form&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; P4114_W4114A<br />Control Id&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<br />Control Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Grid<br />Event&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Row is Exit &amp; Changed - Asynch<br />Line No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 61<br /><em><strong>BSFN Details</strong></em>:<br />&nbsp;&nbsp;&nbsp; Source File&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x4101.c<br />&nbsp;&nbsp;&nbsp; Source Line&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1321<br />&nbsp;&nbsp;&nbsp; Error ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 026</p>
+
+<h3 class="km"><a name="error"></a>Error representation in the JDEDEBUG </h3>
+<p style="margin-left: 30px;">Same repeats in JDEDEBUG.log as below, <br /> sql&gt; SELECT IMITM, IMLITM, IMAITM, IMDSC1, IMDSC2, IMIFLA, IMTFLA, IMTMPL, IMSEG1, IMSEG2, IMSEG3, IMSEG4, IMSEG5, IMSEG6, IMSEG7, IMSEG8, IMSEG9, IMSEG0, IMMIC FROM PRODDTA.F4101 WHERE ( IMITM = <strong>741386741386</strong>.000000 )<br /> No More Data found (hRequest 0A6F44C0)</p>
+<p style="margin-left: 30px;">ERROR INFO JDEERR - ID= 0, Error= 0267 - x4101.c, Line= 1321</p>
+<div class="kmnotebox">
+<p style="margin-left: 30px;">&nbsp;Note:</p>
+<ul>
+<li>Compare this outcome with error presentation in HTML client. </li>
+<li>X4101 is the function getting item master information based on Short Item Number</li>
+</ul>
+</div>
+
+
+<h3 class="km"><a name="asis"></a>As - Is Flex Account Setup using P40296 (Flex Rules Definition)</h3>
+<p style="margin-left: 30px;"><strong>Flex Rule Definition - Flexible Sales Account Revisions</strong></p>
+<p style="margin-left: 30px;">AAI Table Number&nbsp;&nbsp;&nbsp; 4124&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Company 00001</p>
+<p style="margin-left: 30px;">Document Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IA</p>
+<table style="border-collapse: collapse; width: 934px; height: 199px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 24pt;" width="32" /> <col style="width: 69pt;" width="92" /> <col style="width: 56pt;" width="74" /> <col style="width: 55pt;" width="73" /> <col style="width: 26pt;" width="35" /> <col style="width: 59pt;" width="79" /> <col style="width: 52pt;" width="69" /> <col style="width: 54pt;" width="72" /> <col style="width: 23pt;" width="31" /> <col style="width: 107pt;" width="143" /> <col style="width: 51pt;" width="68" /> <col style="width: 53pt;" width="71" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 24pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;">Seq</td>
+<td class="xl64" style="width: 69pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="92">Business Unit</td>
+<td class="xl64" style="width: 56pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="74">Subsidiary</td>
+<td class="xl64" style="width: 55pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="73">Subledger</td>
+<td class="xl64" style="width: 26pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="35">Item</td>
+<td class="xl64" style="width: 59pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="79">Cost Object</td>
+<td class="xl64" style="width: 52pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="69">Cost Type</td>
+<td class="xl64" style="width: 54pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="72">File Name</td>
+<td class="xl64" style="width: 23pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="31">Len</td>
+<td class="xl64" style="width: 107pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="143">Description</td>
+<td class="xl64" style="width: 51pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="68">Data Item</td>
+<td class="xl64" style="width: 53pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center;" width="71">Data Type</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">1</td>
+<td class="xl63">X</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">F4102</td>
+<td align="right">6</td>
+<td class="xl63">Category Code 7</td>
+<td class="xl63">SRP7</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; background-color: #ffffcc;" align="right" height="20">2</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">X</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">F4102</td>
+<td style="background-color: #ffffcc;" align="right">8</td>
+<td class="xl63" style="background-color: #ffffcc;">Item Number - Short</td>
+<td class="xl63" style="background-color: #ffffcc;">ITM</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; background-color: #ffffcc;" align="right" height="20">3</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">X</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc;">F4102</td>
+<td style="background-color: #ffffcc;" align="right">8</td>
+<td class="xl63" style="background-color: #ffffcc;">Item Number - Short</td>
+<td class="xl63" style="background-color: #ffffcc;">ITM</td>
+<td class="xl63" style="background-color: #ffffcc;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">3</td>
+<td class="xl63">P</td>
+<td class="xl63">F4102</td>
+<td align="right">3</td>
+<td class="xl63">Commodity Class</td>
+<td class="xl63">PRP1</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">5</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">3</td>
+<td class="xl63">P</td>
+<td class="xl63">F4102</td>
+<td align="right">3</td>
+<td class="xl63">Commodity Class</td>
+<td class="xl63">PRP1</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">6</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">4</td>
+<td class="xl63">G</td>
+<td class="xl63">F4102</td>
+<td align="right">3</td>
+<td class="xl63">Supplier Rebate Code</td>
+<td class="xl63">PRP3</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">7</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">4</td>
+<td class="xl63">G</td>
+<td class="xl63">F4102</td>
+<td align="right">3</td>
+<td class="xl63">Supplier Rebate Code</td>
+<td class="xl63">PRP3</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Row 2 is to record F0911.ITM based on F4102.ITM </li>
+<li>Row 3 affects 741386741386 where F4102.ITM = 741386<br /></li>
+<li>P40296 allows you to define duplicated definition which is functioning as designed because some may set it such way intentionally.</li>
+</ul>
+</div>
+<p><span class="awizEndDelimiter">&nbsp;</p>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+
+<h3 class="km"><a name="howto"></a>How to debug the issue</h3>
+<p style="margin-left: 30px;">To debug and resolve this type of issue, <br /> 1. Capture jdedebug.log (call object kernel log) with error</p>
+<p style="margin-left: 30px;">2. Look for error based on the error code represented in HTML client<br /> &nbsp;&nbsp;For instance, you may find "<strong>ERROR INFO JDEERR - ID= 0, Error= 0267 - x4101.c, Line= 1321</strong>" in jdedebug.log captured<br /> &nbsp;&nbsp;Get the function name based on c Source File X4101C which is GetItemMasterByShortItem</p>
+<p style="margin-left: 30px;">3. Look for the SELECT statement failed by scrolling up a few lines. Based on the function analyzed GetItemMasterByShortItem, which issues query as below (Issue SELECT using ITM 741386741386)<br /> &nbsp;&nbsp;SELECT IMITM, IMLITM, IMAITM, IMDSC1, IMDSC2, IMIFLA, IMTFLA, IMTMPL, IMSEG1, IMSEG2, IMSEG3, IMSEG4, IMSEG5, IMSEG6, IMSEG7, IMSEG8, IMSEG9, IMSEG0, IMMIC FROM PRODDTA.F4101 WHERE ( IMITM = <em>741386741386</em>.000000 ) <br /> &nbsp;&nbsp;No More Data found (hRequest 0A6F44C0) <br /> &nbsp;&nbsp;: This query fails because the mnIdentifierShortItem repeats twice</p>
+<p style="margin-left: 30px;">4. Determine the condition to write ITM. Only possible cause of repetition is Flex Account settings (Refer &lt;Document ID 756543.1&gt; - E1: 42: Flexible Accounting for Distribution (R42800/P4112/P4113/P4114/P4312/P4314/P43291/P40296) if you are interested in). Commonly Item number can be set using Flexible account setup to record F0911.ITM based on the value specified.</p>
+<p style="margin-left: 30px;">5. Review Flex set up using P40296 (or, table F4096). </p>
+<p style="margin-left: 30px;">6. Delete replicated lines unless you want to set it up item master for the same. For this example, the short item number exceeds the defined length but both SQL and Oracle DB shall not issue any error (you may hit hard error in DB2 environment) when the length exceeds 8 digits.<br /> Seq Business Unit Subsidiary Subledger Item Cost Object Cost Type File Name Len Description Data Item Data Type</p>
+<p style="margin-left: 30px;">[To - Be] setting</p>
+<table style="border-collapse: collapse; width: 934px; height: 118px; margin-left: 30px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 24pt;" width="32" /> <col style="width: 69pt;" width="92" /> <col style="width: 56pt;" width="74" /> <col style="width: 55pt;" width="73" /> <col style="width: 26pt;" width="35" /> <col style="width: 59pt;" width="79" /> <col style="width: 52pt;" width="69" /> <col style="width: 54pt;" width="72" /> <col style="width: 23pt;" width="31" /> <col style="width: 107pt;" width="143" /> <col style="width: 51pt;" width="68" /> <col style="width: 53pt;" width="71" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl64" style="height: 15pt; width: 24pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;">Seq</td>
+<td class="xl64" style="width: 69pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="92">Business Unit</td>
+<td class="xl64" style="width: 56pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="74">Subsidiary</td>
+<td class="xl64" style="width: 55pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="73">Subledger</td>
+<td class="xl64" style="width: 26pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="35">Item</td>
+<td class="xl64" style="width: 59pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="79">Cost Object</td>
+<td class="xl64" style="width: 52pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="69">Cost Type</td>
+<td class="xl64" style="width: 54pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="72">File Name</td>
+<td class="xl64" style="width: 23pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="31">Len</td>
+<td class="xl64" style="width: 107pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="143">Description</td>
+<td class="xl64" style="width: 51pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="68">Data Item</td>
+<td class="xl64" style="width: 53pt; background-color: #3366ff; color: white; font-weight: bold; text-align: center; margin-left: 30px;" width="71">Data Type</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td style="height: 15pt; margin-left: 30px;" align="right" height="20">1</td>
+<td class="xl63" style="margin-left: 30px;">X</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">F4102</td>
+<td style="margin-left: 30px;" align="right">6</td>
+<td class="xl63" style="margin-left: 30px;">Category Code 7</td>
+<td class="xl63" style="margin-left: 30px;">SRP7</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td style="height: 15pt; background-color: #ffffcc; margin-left: 30px;" align="right" height="20">2</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">X</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">F4102</td>
+<td style="background-color: #ffffcc; margin-left: 30px;" align="right">8</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">Item Number - Short</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">ITM</td>
+<td class="xl63" style="background-color: #ffffcc; margin-left: 30px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td style="height: 15pt; margin-left: 30px;" align="right" height="20">3</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">3</td>
+<td class="xl63" style="margin-left: 30px;">P</td>
+<td class="xl63" style="margin-left: 30px;">F4102</td>
+<td style="margin-left: 30px;" align="right">3</td>
+<td class="xl63" style="margin-left: 30px;">Commodity Class</td>
+<td class="xl63" style="margin-left: 30px;">PRP1</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td style="height: 15pt; margin-left: 30px;" align="right" height="20">4</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+<td class="xl63" style="margin-left: 30px;">4</td>
+<td class="xl63" style="margin-left: 30px;">G</td>
+<td class="xl63" style="margin-left: 30px;">F4102</td>
+<td style="margin-left: 30px;" align="right">3</td>
+<td class="xl63" style="margin-left: 30px;">Supplier Rebate Code</td>
+<td class="xl63" style="margin-left: 30px;">PRP3</td>
+<td class="xl63" style="margin-left: 30px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;">&nbsp;</p>
+<p style="margin-left: 30px;">7. Delete Database Cache because F4096 is a member of Database Cache as defined in P98613</p>
+<p style="margin-left: 30px;">8. Test it again<br /> &nbsp;&nbsp;SELECT IMITM, IMLITM, IMAITM, IMDSC1, IMDSC2, IMIFLA, IMTFLA, IMTMPL, IMSEG1, IMSEG2, IMSEG3, IMSEG4, IMSEG5, IMSEG6, IMSEG7, IMSEG8, IMSEG9, IMSEG0, IMMIC FROM PRODDTA.F4101 WHERE ( IMITM = 741386.000000 ) <br /> &nbsp;&nbsp;Fetched the record (hRequest 0A6F3FB0)<br /> &nbsp;&nbsp;: F0911.ITM = F4102.ITM will be written<br /> &nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

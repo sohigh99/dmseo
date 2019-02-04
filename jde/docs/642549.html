@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Set Selection System Function for OR Condition</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Set Selection System Function for OR Condition</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -109,13 +109,36 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
 
+<p>We want to set data selection as follows on a Find/Browse form using Event Rules, how can we perform this?<br /><br />We have tried as follows,</p>
+<blockquote><em>Set Selection (Order Type = 'SO')<br />AND Set Selection (Order Type = 'SP')<br />OR Set Selection (Address Number='123')<br />AND Set Selection (Address Number='456')<br /></em></blockquote>
+<p>But the result is not correct.</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Cause</BIG></span></big></big></h2>
+
+<p>Detail implementation is,<br /><br /> Set Selection (FC Grid, F4201.DCTO, &lt;equal&gt;,'SO',&lt;AND&gt;)<br /> Set Selection (FC Grid, F4201.DCTO, &lt;equal&gt;,'SP',&lt;AND&gt;)<br /> Set Selection (FC Grid, F4201.AN8, &lt;equal&gt;,'4242',&lt;OR&gt;)<br /> Set Selection (FC Grid, F4201.AN8, &lt;equal&gt;,'4245',&lt;AND&gt;) <br /><br />Actual statement constructed by the EnterpriseOne tools set is:<br /><br /><span class="kmfixedwidthfont">SQL&gt; SELECT * FROM PRODDTA.F4201 WHERE DCTO = 'SO' AND DCTO = 'SP' OR AN8 = 4242 AND AN8 = 4245</span>;<br /><br />This query will not yield any value as there is no data which is SO and SP or 4242 and 4245 for a single row of F4201 against columns DCTO and AN8 respectively.</p>
+
+
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
 
-
+<p>There are two possible implementations for this:<br /><br />Determine actual query that is desired, for example, <br />SQL&gt; SELECT * FROM PRODDTA.F4201 WHERE DCTO IN ('SO', 'SP') OR AN8 IN (4242, 4245);<br /><br />Or above expectation can be translated as below, <br />{DCTO = 'SO' AND (AN8 = 4242 OR AN8 = 4245)} AND {DCTO = 'SP' AND (AN8 = 4242 OR AN8 = 4245)}<br /><br />Conventionally which can be implemented as below,<br /><br /></p>
+<div class="kmcodeblock" style="width: 95%;">If BC Order Type is not equal to 'SO, SP' <br />And BC Address Number is not equal to '123, 456'<br />      Suppress Grid Line<br /> End If</div>
+<p><br /> <br />But this implementation is not a cost-effective data fetch in the Web /  HTML client. So, possibly you may to implement as below,<br /><br /></p>
+<ul>
+<li>If DCTO is BC (business view column)</li>
+</ul>
+<blockquote>1. Let the EnterpriseOne tool set filter data using Filter Option for FC control<br />2. Call the System Function 'Set Selection()' for additional selection</blockquote>
+<ul>
+<li>If DCTO is not BC value</li>
+</ul>
+<blockquote>1. Create FC Variable with validation logic<br />2. Call system function 'Set Selection()' and 'Set Selection Group()'</blockquote>
+<p> </p>
+<div class="kmcodeblock" style="width: 95%;">Set Selection (FC Grid, F4201.DCTO, &lt;equal to&gt; 'FC DCTO', &lt;AND&gt;)<br /><em>Set Selection Group (FC Grid, F4201.AN8, &lt;equal to &gt; ,'4242', &lt;AND&gt;) <br />Set Selection Group (FC Grid, F4201.AN8, &lt;equal to&gt;, '4245', &lt;OR&gt;) </em></div>
+<p><br />     SQL&gt; SELECT * FROM PRODDTA.F4201 WHERE DCTO = 'FC DCTO' <em>AND (AN8 = 4242 OR AN8 = 4245)</em>;<br /><br /></p>
+<div class="kmnotebox">Note: Set Selection Group is available from EnterpriseOne tools release 8.96 and above. Refer to &lt;Note 656635.1&gt; <em>E1: FDA: Documentation for System Function Set Selection Group</em></div>
+<p><br /><br /></p>
 
 
 

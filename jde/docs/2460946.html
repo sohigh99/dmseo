@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>P41500 Unable To Unreconcile Transactions ('Unreconcile' Button Does Nothing)</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P41500 Unable To Unreconcile Transactions ('Unreconcile' Button Does Nothing)</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -104,18 +104,40 @@ function topFunction() {
 </body>
 
 
-<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></big></big></h2>
 
+<p>Why P41500 (Inventory GL Reconciliation) does not perform any in clicking 'Unreconcile' button? What is possible cause of it how to overcome the issue?<br />&nbsp;</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></big></big></h2>
 
-
+<p>The processing option of P41500|Version affects the behavior of reconcile and unreconcile as below,</p>
+<ul>
+<li>Settings<br />&nbsp;&nbsp;(Tab - WO Document Type)<br />&nbsp;&nbsp;#2. 2. Enter Work Order Issue Document Type = II (* where default value is IM for Material Issue *)</li>
+<li>The output in P41500<br />&nbsp;&nbsp;. Ordinary II: General Ledger Section is empty. By right, P41500 should not allow user to click "Reconcile" in this scenario<br />&nbsp;&nbsp;. Material Issue (II) with associated WO: it shows General Leger</li>
+</ul>
+<p>&nbsp;</p>
+<p>Reconcile and unreconcile maintains the status by updating columns below, </p>
+<ul>
+<li>F0911.R3 (Reference 3) &nbsp;</li>
+<li>F0911.DKC (Check Cleared)</li>
+<li>F0911.RCND (Reconciled Code)</li>
+<li>Where F0911.GPF1 (Inventory Flag) = 1.</li>
+</ul>
+<p>And, </p>
+<ul>
+<li>F4111.SVDT (Reconciliation Date)<br /><br /></li>
+</ul>
+<p>So, set different the document types between inventory issue for inventory general and material issue for work order not to have the integrity issue.</p>
+<p><br /><br /></p>
+<p>&lt;Internal_Only&gt;(to be hidden - for documentation purpose)<br />Meanwhile, I do agree with there is room for enhancing the usability of P41500 (do not allow reconcile when General Ledger does not appear) but it may not overcome the issue (depending on Material Issue document type defined, General Ledger are visible and invisible).</p>
+<p>This document is to be updated further to have better visual representation &lt;/Internal_Only&gt;</p>
+<p><br />&nbsp;</p>
 
 
 

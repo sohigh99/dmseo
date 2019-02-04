@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Troubleshoot Header To Detail Option in Sales Order and Purchase Order</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Troubleshoot Header To Detail Option in Sales Order and Purchase Order</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<p>This document is to give user possible means to debug any issue derived from Header To Detail option in P4210 (Sales Order Entry) and P4310 (Purchase Order Entry). So this document shall explain as-is behavior, constraint (in both Technical and Business) and known issues.</p>
+
+
+<p>&nbsp; </p>
+<h2>*********************Work in Progress********************</h2>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+<p>Below information is to be updated according.</p>
+<p>A. Explanation of P40HDR</p>
+<p>(To be implemented)</p>
+<p>&nbsp;</p>
+<p>B. Explanation of P4210</p>
+<p>(Detail information will be added)</p>
+<p>The enhancement request is not to be implemented any time soon neither P4310 nor P4210 because it disrupts current application behavior as described in E1: 42/43: P40HDR: Automatically Default Fields from the Header to Detail in Order Entry (P40HDR/P4210/P4310) (Doc ID 1095199.1).<br /><br />As described in the uploaded file &lt;doseo_P40HDR.SDEMCU_Clarification.doc&gt; P4210 Adds/Updates F4211.EMCU = F4201.MCU when you have set P40HDR.SHEMCU = 1.<br /><br />Simplified routine to handle Header To Detail is,<br />W4210G - Sales Order Header<br />&nbsp;&nbsp;&nbsp;&nbsp; |--- F4211FSBeginDoc: to validate/default and create cache for sales order based on changed value<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- DetermineChangedSOHeaderValues (N4201090, Determine Changed SO Header Values) to determine whether any value has changed or not<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- CacheProcessHeaderToDetailChange (B4002390, Cache Process Header To Detail Changes) to store cache because the informtion change has to be used in different form (say W4210A)<br /><br />W4210A - Sales Order Detail<br />&nbsp;&nbsp;&nbsp;&nbsp; |--- LoadChangedSOHeaderValues (N4201090, Load Changed SO Header Values) to load cache and return it before we call F4211FSEditLine which validates/default and create cache for Sales Order Detail File<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- F4211FSEditLine<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- LoadChangedSOHeaderValues (N4201090, Load Changed SO Header Values)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- CacheProcessHeaderToDetailChange B4002390 Cache Process Header To Detail Changes<br /><br />Value to be handled by Header To Detail functions: Note that only limited columns can be updated as below,<br />&nbsp;&nbsp;Load Changed SO Header Values<br />&nbsp;&nbsp;FC Order Number &lt;&gt; BF mnOrderNumber<br />&nbsp;&nbsp;FC Order Type &lt;&gt; BF szOrderType<br />&nbsp;&nbsp;FC Order Company &lt;&gt; BF szOrderKeyCompany<br />&nbsp;&nbsp;FC Address Number &lt;&gt; BF mnSoldTo<br />&nbsp;&nbsp;GC Customer PO &lt;&gt; BF szCustomerPO<br />&nbsp;&nbsp;GC Revenue Business Unit &lt;&gt; BF szHeaderBranch<br />&nbsp;&nbsp;GC Ship To Number &lt;&gt; BF mnShipTo<br />&nbsp;&nbsp;FC Order Date &lt;&gt; BF jdOrderDate<br />&nbsp;&nbsp;GC Requested Date &lt;&gt; BF jdDateRequested<br />&nbsp;&nbsp;GC Scheduled Pick &lt;&gt; BF jdPromisedDeliveryDate<br />&nbsp;&nbsp;GC Cancel Date &lt;&gt; BF jdCancelDate<br />&nbsp;&nbsp;GC Print Message &lt;&gt; BF szPrintMessage<br />&nbsp;&nbsp;VA frm_TaxExplanationCode &lt;&gt; BF szTaxExplanationCode<br />&nbsp;&nbsp;VA frm_TaxRateArea &lt;&gt; BF szTaxArea<br />&nbsp;&nbsp;VA frm_PaymentTermsCode &lt;&gt; BF szPaymentTerms<br />&nbsp;&nbsp;GC Pay Inst &lt;&gt; BF cPaymentInstrument<br />&nbsp;&nbsp;GC Carrier Number &lt;&gt; BF mnCarrier<br />&nbsp;&nbsp;VA frm_cApplyFreightChg_AFT &lt;&gt; BF cApplyFreightYN<br />&nbsp;&nbsp;VA frm_szFreightCodeChg_FRTH &lt;&gt; BF szFreightHandlingCode<br />&nbsp;&nbsp;VA frm_szChangedRouteCode_ROUT &lt;&gt; BF szRouteCode<br />&nbsp;&nbsp;VA frm_szChangedStopCode_STOP &lt;&gt; BF szStopCode<br />&nbsp;&nbsp;VA frm_szChangedZoneNum_ZON &lt;&gt; BF szZoneNumber<br />&nbsp;&nbsp;VA frm_Salesperson1 &lt;&gt; BF mnCommissionCode1<br />&nbsp;&nbsp;VA frm_SalespersonCommission1 &lt;&gt; BF mnRateCommission1<br />&nbsp;&nbsp;VA frm_Salesperson2 &lt;&gt; BF mnCommissionCode2<br />&nbsp;&nbsp;VA frm_SalespersonCommission2 &lt;&gt; BF mnRateCommission2<br />&nbsp;&nbsp;VA frm_szUserReservedCode_URCD &lt;&gt; BF szUserReservedCode<br />&nbsp;&nbsp;VA frm_jdUserReservedDate_URDT &lt;&gt; BF jdUserReservedDate<br />&nbsp;&nbsp;VA frm_mnUserReservedAmt_URAT &lt;&gt; BF mnUserReservedAmount<br />&nbsp;&nbsp;VA frm_mnUserReservedNumber_URAB &lt;&gt; BF mnUserReservedNumber<br />&nbsp;&nbsp;VA frm_szUserReservedRef_URRF &lt;&gt; BF szUserReservedReference<br />&nbsp;&nbsp;GC Adj. Schedule &lt;&gt; BF szPriceAdjustmentSchedule<br />&nbsp;&nbsp;VA frm_mnTradeDiscount_TRDC &lt;&gt; BF mnDiscountTrade<br />&nbsp;&nbsp;GC Requested Time &lt;&gt; BF mnRequestedDeliveryTime<br />&nbsp;&nbsp;GC Mod Trn &lt;&gt; BF szModeOfTransport<br />&nbsp;&nbsp;VA frm_szReasonCode &lt;&gt; BF szReasonCode<br />&nbsp;&nbsp;GC Deliver To &lt;&gt; BF mnDeliveredTo<br />&nbsp;</p>
+<p>&nbsp;</p>
+<p>C. Explanation of P4310</p>
+<p>(To be implemented)</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>Would you please publish this document? I am going to refine this document as early as possible - but not within usual time frame.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

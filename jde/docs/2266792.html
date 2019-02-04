@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P41024 Disallows Deletion for Secondary Location When Material is Issued but Work Order is not Completed</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P41024 Disallows Deletion for Secondary Location When Material is Issued but Work Order is not Completed</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p><span style="font-size: 10pt;">P41024 (Location Revisions) disallow user from deleting secondary location with zero quantities,</span></p>
+<ul>
+<li><span style="font-size: 10pt;">All quantity buckets for this secondary location is 0</span></li>
+<li><span style="font-size: 10pt;">Material is issued without completing work order <span id="form1:panelPage1"> (F4801.SRST NOT IN (99, 91, MJ, MM, MK))</span></span></li>
+</ul>
+<p style="padding-left: 60px;"><span class="kmfixedwidthfont">ERROR<br /><span style="font-size: 10pt;">-----------------------</span><br /><span style="font-size: 10pt;">Deleting Not Possible - Open Order Exist </span><br /><span style="font-size: 10pt;">ER Details: </span><br /><span style="font-size: 10pt;">  Form P41024_W41024B </span><br /><span style="font-size: 10pt;">  Control Id 1 </span><br /><span style="font-size: 10pt;">  Control Title Grid </span><br /><span style="font-size: 10pt;">  Event Delete Grid Rec Verify-Before </span><br /><span style="font-size: 10pt;">  Line No 71 </span><br /><span style="font-size: 10pt;">  Error ID 411O </span></span></p>
+<p style="padding-left: 60px;"><span style="font-size: 10pt;"><span><span style="font-size: 10pt;"> </span></span></span></p>
+<p><span style="font-size: 10pt;">cf., same is working fine for below scenario,</span></p>
+<ul>
+<li><span style="font-size: 10pt;">All quantity buckets for the secondary location is 0</span></li>
+<li><span style="font-size: 10pt;">Voucher is not paid (all receipt is vouchered)</span></li>
+</ul>
+<p><span style="font-size: 10pt;">        : Refer to &lt;Document 2246539.1&gt; - E1: 41: P41024 Item Location Do Not Allows Deletion When Quantity On Hand And Availability Is Zero </span></p>
+<div class="kmnotebox">
+<p><span style="font-size: 10pt;">Short history of this bug:</span></p>
+<ol>
+<li><span style="font-size: 10pt;">Enhancement Request with &lt;Bug 21129776&gt; : ABLE TO DELETE SECONDAY LOCATIONS WHEN WORKORDER STATUS IS NOT COMPLETE IN F3111</span></li>
+<li><span style="font-size: 10pt;">To fix issue in PO, &lt;Bug 25030814&gt; - P41024 DELETE LOCATION ERROR WHEN ON HAND AND AVAILABILITY IS ZERO</span></li>
+<li><span style="font-size: 10pt;">To fix issue in WO, this &lt;Bug 25891836&gt; - P41024 ISSUE ERROR 411O EVEN AFTER MATERIAL ISSUE FOR SECONDARY LOCATION</span></li>
+</ol>
+</div>
+<p> </p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+<p><span style="font-size: 10pt;">This issue is reported through &lt;Bug 25891836&gt; - P41024 ISSUE ERROR 411O EVEN AFTER MATERIAL ISSUE FOR SECONDARY LOCATION.</span></p>
+<p><span style="font-size: 10pt;">Note that there is an enhancement request for the same. Refer to &lt;Document 2012956.1&gt; - E1: 41: P41024 Deleting a Secondary Location Checks Work Order Status in F3111 Work Order Parts List.</span></p>
+
+
+<p><span style="font-size: 10pt;">Apply the fix upon completion of &lt;Bug 25891836&gt; - P41024 ISSUE ERROR 411O EVEN AFTER MATERIAL ISSUE FOR SECONDARY LOCATION.</span> </p>
+<p><span style="font-size: 10pt;">Note that &lt;Bug 25891836&gt; is categorized as an enhancement request. Refer to &lt;Document 2012956.1&gt; - E1: 41: P41024 Deleting a Secondary Location Checks Work Order Status in F3111 Work Order Parts List.</span></p>
+<p> </p>
+<p><span style="font-size: 12pt;"><strong>Update:-</strong></span></p>
+<p><span style="font-size: 10pt;">Now this enhancement is implemented. Add the WO status code in UDC 41/WC and reset database cache.</span></p>
+<p><span style="font-size: 10pt;">UDC 41/WC - Closed Work Order Status</span></p>
+<ul>
+<li><span style="font-size: 10pt;">91 - Complete - Cancelled</span></li>
+<li><span style="font-size: 10pt;">99 - Order Closed</span></li>
+<li><span style="font-size: 10pt;">MJ - W/O Completed</span></li>
+<li><span style="font-size: 10pt;">MK - W/O Closed</span></li>
+<li><span style="font-size: 10pt;">MM - W/O Cancelled</span></li>
+<li><span style="font-size: 10pt;">Add the WO status here in case you want to exclude from validation which stop you from deleting it. </span></li>
+</ul>
+<p> </p>
+<p>&lt;Internal_Only&gt;</p>
+<p><span style="font-size: 10pt;">Purpose: the purpose of this document is to walk through the possible implementation for allowing user to delete secondary location with zero quantities &ndash; after components of work order is issued. The Bug, 25030814 - P41024 DELETE LOCATION ERROR WHEN ON HAND AND AVAILABILITY IS ZERO, is used for this change. This routine checks F4101.CLEV and the processing option parameter &ndash; and deletion is allowed only when CLEV is not &lsquo;3&rsquo; (because it can cause integrity problem among, F41021, F4111 and F4105) and newly added processing option below, <br /><br />&bull;    As-is behavior: P41024 does not allow users to delete secondary location from F41021 when F4801.SRST NOT IN (&lsquo;99&rsquo;, &lsquo;91&rsquo;, &lsquo;MJ&rsquo;, &lsquo;MM&rsquo;, &lsquo;MK&rsquo;). <br />&bull;    To-be behavior: check F4101.CLEV and the processing option parameter &ndash; if clev is not &lsquo;3&rsquo; and the processing option value is 1 for above parameter, then allow user to delete it<br /><br />Possible implementation to workaround<br />1.    Go to form design aid<br />2.    Focus on Work with Item Location at the event of &ldquo;Delete Grid Rec Verify-Before&rdquo;<br />3.    Verify the function F4801VerifyOpenWorkOrderExist (B4100980, F4801,  Verify Open Work Order Exist)<br />         So long as the status of WO Header (F4801) is not the status of closed/cancelled which ends in error<br />4.    Validate F4101.clev and the processing option, then allow it as below, <br /> 0057                   F4801,  Verify Open Work Order Exist<br />                          VA evt_mnOrderNumber_DOCO -&gt; BF mnOrderNumber<br />                          "1" -&gt; BF mnIndex<br />                          "1" -&gt; BF mnKeys<br />                          VA evt_cWOFound_EV01 &lt;- BF cOpenWOExist<br />0058                   //<br />0059                   // START 26-Apr-2017 by DoSeo<br />0060                   // 1. Get F4101.CLEV to determine inventory costing level<br />0061                   // 2. Read the processing option parameter to determine whether the deletion<br />0062                   //       of secondary location is allowed or not<br />0063                   // * F3111.UORG = TRQT + SOCN + SOBK but it is not necessary to check it again<br />0064                   //    Because the function CheckAllQuantitiesAreZero (B4100730) checks it<br />0065                   //    at line 16<br />0066                   // Note: B4100980 simply sets WO is open when the status (F4801.SRST)<br />0067                   //     NOT IN (99, 91, MJ, MM, MK)<br />0068                   //<br />0069                   F4101.Fetch Single<br />                          GC Short Item No =  TK Item Number - Short<br />                          VA evt_cCostLevel_CLEV &lt;- TK Level - Inventory Cost<br />0070                   If VA evt_cCostLevel_CLEV is not equal to "3" And PO cAllowSecondaryLocDele_EV01 is equal to "1"<br />0071                      VA evt_cWOFound_EV01 = "0"<br />0072                   End If<br />0073                   // END 26-Apr-2017 by DoSeo</span></p>
+<p> </p>
+<p>&lt;/Internal_Only&gt;</p>
+<p><span style="font-size: 10pt;"> </span></p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

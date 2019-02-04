@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Database Output versus Table Conversion</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Database Output versus Table Conversion</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -109,6 +109,7 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
 
+<p>Can a text file created through 'Database Output' meet the following requirements?<br /> <br /> * Each column is to be Delimited using comma(,)<br /> * String column has to be written with double quotation (" ")<br /> * Math Numeric column has to be written without having double quotation as a column delimiter</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
@@ -116,9 +117,81 @@ function topFunction() {
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
 
 
+<p>No. The text file created through database output (not Table Conversion) cannot have mixed data format.<br /> <br /> The Database Output method in Report Design Aid (From Section menu -&gt;Database Output) does not support multiple formats where String columns are delimited with double quotation marks ("  ") and Math Numeric columns without the double quotation marks.<br /> <br /> Currently Database Output supports,</p>
+<ul>
+<li><span style="text-decoration: underline;">Operations</span></li>
+<ul>
+<li>Insert only</li>
+<li>Update</li>
+<li>Insert or Update</li>
+<li>Delete</li>
+</ul>
+</ul>
+<ul>
+<li><span style="text-decoration: underline;">Type</span></li>
+<ul>
+<li>Comma delimited file</li>
+<li>Fixed length record file</li>
+</ul>
+</ul>
+<ul>
+<li><span style="text-decoration: underline;">Output format</span></li>
+</ul>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km"> </th>
+<th class="km">Numbers</th>
+<th class="km">String</th>
+<th class="km">Date</th>
+</tr>
+<tr>
+<td class="km">Comma Delimited  file</td>
+<td class="km">32 digit numbers</td>
+<td class="km">Same size with defined DD size</td>
+<td class="km">JDE Date Format</td>
+</tr>
+<tr>
+<td class="km">Fixed length record file</td>
+<td class="km">32 digit numbers</td>
+<td class="km">Same size with defined DD size</td>
+<td class="km">JDE Date Format</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<ul>
+<li><span style="text-decoration: underline;">Example</span></li>
+<ul>
+<li>Output from Database output option (without converting numeric into String): 000000000000000044465.5900000000 (Does not meet requirement as zeroes '0' are padded in front of math numeric value.</li>
+<li>Output from Database output (after converting data into String): "44465.59" (Does not meet requirement as it is quoted with " (double quotation))</li>
+<li>Output from Table Conversion (in setting output format, number): 44465.59 (meets requirement) based on Data Dictionary (DD) definition</li>
+</ul>
+</ul>
+<p> </p>
+<div class="kmnotebox"><strong>NOTE:</strong><br />
+<ul>
+<li>The file created through Type 'Comma Delimited file' added " (double quotation) to indicate beginning of string and end of string</li>
+<li>Each column is delimited using a comma</li>
+<li>This output can be useful in converting output to Excel File like *.csv file output in report</li>
+<li>The file created through Type 'Fixed length record file' does not indicate the start of string and end of string</li>
+<li>There is no delimiter between columns</li>
+</ul>
+</div>
+<p><br /> <br /> The above requirements can be accomplished by using the Table Conversion Tool in EnterpriseOne. The Data format (e.g. String, Number, Date, etc.) can be specified for each column.</p>
+<ol>
+<li>Create Table Conversion Report</li>
+<li>Define as follows for the output file (User Defined Format - type)</li>
+<ul>
+<li>Format Type: Delimited - characters such as commas or tabs separate each column</li>
+<li>Set Column Delimiter: Comma (,) or define Other if needed</li>
+<li>Textual Qualifier: Select "Double Quotation". This will quality for String output value</li>
+<li>In your defining output column set type Number (you can choose String, Number and Date)</li>
+</ul>
+</ol>
+<div class="kmnotebox">Note: Through the use of Event Rules, additional logic can be implemented, if needed, to manipulate the data and the data format when creating the text file using the EnterpriseOne Table Conversion tool. </div>
 
-
-
+<p>&nbsp; </p>
 <!-- ======================================== End of Body ==================================== -->
 
   <footer class="panel-footer">

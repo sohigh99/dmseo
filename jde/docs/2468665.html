@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Why R42520 Sets F4211.LTTR = '982 - Canceled in Commitments' - CASE STUDY</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -79,7 +79,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThis</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Why R42520 Sets F4211.LTTR = '982 - Canceled in Commitments' - CASE STUDY</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -109,13 +109,31 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
 
+<p><span style="font-size: 10pt;">Why R42520 (Print Pick Slip) cancels out the sales order when, </span></p>
+<ul>
+<li><span style="font-size: 10pt;">Turn on Hard Commit Inventory in the processing option of R42520|Version</span></li>
+<li><span style="font-size: 10pt;">Not using Lot Controlled Item</span></li>
+<li><span style="font-size: 10pt;">Back Order is not allowed at the Branch/Plant Constant Level</span></li>
+</ul>
+<p> </p>
+<p><br /> </p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
 
-
+<p><span style="font-size: 10pt;">To debug this type of issue, </span></p>
+<ol>
+<li><span style="font-size: 10pt;">Capture UBE log by submitting job to the server with UBE logging level 6 in the advanced option</span></li>
+<li><span style="font-size: 10pt;">Review the query issued against F41021 (Item Location File)</span><br /><span style="font-size: 10pt;">sql&gt; SELECT * FROM PRODDTA.F41021 WHERE ( LIITM = 12345678.000000 AND LIMCU = '   30' ) <strong>AND ( LILOTN &lt;&gt; ' ' )</strong> ORDER BY LIITM ASC,LIMCU ASC,LILOTN ASC,LILOCN ASC</span><br /><span style="font-size: 10pt;"> </span></li>
+<li><span style="font-size: 10pt;">Above WHERE clause has appends AND ( LILOTN &lt;&gt; ' ') which is resulted from Inventory Commitment Method (F4102.CMGL) 2 or 3 where, </span></li>
+</ol>
+<p style="padding-left: 60px;"><span style="font-size: 10pt;">UDC H40/CM - Inventory Commitment Method</span></p>
+<p style="padding-left: 60px;"><span style="font-size: 10pt;">1 - Location With Most Quantity</span><br /><span style="font-size: 10pt;">2 - Lowest Lot Number</span><br /><span style="font-size: 10pt;">3 - Using Lot Date</span></p>
+<p> </p>
+<p><span style="font-size: 10pt;">Note to have this issue, set the inventory commitment method 1 (= Location with Most Quantity) unless you are using Lot Controlled Item (which writes F4108 - Lot Master File)</span></p>
+<p style="padding-left: 60px;"><br /><span style="font-size: 10pt;"> </span></p>
 
 
 
