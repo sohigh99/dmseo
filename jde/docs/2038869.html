@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting "JDB9900600 - Failed to Store Value, Maximum Exceeded" Error</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting "JDB9900600 - Failed to Store Value, Maximum Exceeded" Error</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+
+<p>The purpose of this document is to provide a troubleshooting guide to a commonly encountered business function error, &nbsp;"<strong>JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()</strong>",&nbsp;which is due to data pointers usage in a business function. &nbsp;This document &nbsp;guides user on how to debug this type of data pointer related issues which causes an EnterpriseOne application to malfunction. It provides some case study examples and detail troubleshooting steps to help resolve this type of data pointer issues.&nbsp;</p>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+<p>This error is platform independent and when you encounter this error in the jde.log (see example below) when running an application, first find out which is the offending business function.&nbsp;</p>
+<div class="kmcodeblock" style="margin-left: 2px; width: 1008px;">
+<p>29424/6 WRK:10007140_009560B8_<strong>P43081&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;</strong> Mon Jul 20 hh:mm:ss.032907&nbsp;&nbsp; &nbsp;jdb_utl1.c2644</p>
+<p>&nbsp;&nbsp; &nbsp;JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr()</p>
+</div>
+<p>&nbsp;</p>
+<p>To find out which is the offending business function and the general troubleshooting method, you can perform the steps below:</p>
+<ol>
+<li>Log on to Web Development Client (also known as a FAT client).</li>
+</ol><ol start="2">
+<li>Modify local JDE.INI. Set Output=FILE and set DataPointerTracing=1.</li>
+</ol>
+<p style="margin-left: 60px;">[DEBUG]<br /> Output=FILE<br /> DataPointerTracing=1</p>
+<p style="margin-left: 60px;"><span style="font-style: italic;">Note: do not turn on CMTrace=1 which traces Cache Manager.&nbsp; </span></p>
+<div class="kmnotebox" style="margin-left: 52px; width: 958px;">
+<p>When troubleshooting Data Pointers Leaked errors like JDB9900600, JDB4100005 and JDB4100006, you can set DataPointerTracing=TRUE or 1 and Output=FILE in the [DEBUG] section of the JDE.INI. You can also set logDPLeaksAtSignoff=TRUE in the [DEBUG] section of the JDE.INI and look for JDB4100006 error messages. This message (JDB4100005) will only appear with debug tools code or when debug logging is turned on.<br /> DataPointerTracing is a setting in the jde.ini which logs when a business function store, access, remove a pointer to the DataPointer Array&nbsp;</p>
+<p>Turning this setting on will not cause any performance improvement - it can however help application developers debug and make sure a business function is well coded so that it releases as many slots of DataPointer as it creates. This setting will put extra information in the logs for data pointer APIs executed by C BSFNs. This is helpful when trying to find a memory leak in relation to the following error message in the jde.log.&nbsp;</p>
+<p>"JDB9900600 - Failed to store value, maximum exceeded."&nbsp;Probable cause is forgetting to call jdeRemoveDataPtr().&nbsp;</p>
+<p>Examples:&nbsp;</p>
+<p>DP - Stored data pointer (0BEB4C20), pointer handle (1)&nbsp;</p>
+<p>DP - Removed data pointer (0BEB4C20), pointer handle (1)<span style="background-color: #ffffff;">&nbsp;</span></p>
+</div>
+<p style="margin-left: 60px;">&nbsp;</p>
+<ol start="3">
+<li>Run application.</li>
+</ol><ol start="4">
+<li>Save the jdedebug_&lt;ProcessId&gt;.log file.</li>
+</ol><ol start="5">
+<li>Launch PW.exe (Performance Workbench). Please see &lt;Document 747328.1&gt; - EnterpriseOne Performance Workbench for more information on how to install the Performance Workbench application.</li>
+</ol><ol start="6">
+<li>In Performance Workbench, click the Push Button "Edit DEBUG Strings" and then Enter Keyword like "DP - " which is written in JDEDEBUG.log (or CallObject Kernel log) because you have set DataPointerTracing=1.</li>
+</ol><ol start="7">
+<li>Allocate "jdedebug_ProcessID.log" at "Input JDEDEBUG Log" search entry then click "LogParse", this action creates a file like &lt;jdedebug_11224_072915_CALLSTACK5.txt&gt;.</li>
+</ol><ol start="8">
+<li>Open the file created and check the flow of data pointer usage. From the flow you will be able to find out the business function that returns the DP (Data Pointer).</li>
+</ol>
+<p style="margin-left: 30px;">&nbsp; &nbsp;Example:</p>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; DP - Stored data pointer (35C399F8), pointer handle (121) <br /> &nbsp;&nbsp;&nbsp; DP - Retrieved data pointer (35C399F8), pointer handle (121) <br /> &nbsp;&nbsp;&nbsp; DP - Removed data pointer (35C399F8), pointer handle (121)</div>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;or,&nbsp;</p>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; DP - Stored data pointer (35C399F8), pointer handle (121) <br /> &nbsp;&nbsp;&nbsp; DP - Removed data pointer (35C399F8), pointer handle (121)&nbsp;</div>
+<ol start="9">
+<li>Get the Event rule print of the offending application. See &lt;Document 626534.1&gt; -&nbsp;E1: FDA: How to Print Event Rules to a File.</li>
+</ol><ol start="10">
+<li>If needed, compare the parameters in the business function call in the application with the source code of the business function.</li>
+</ol>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h2>Case Study 1 : Purchase Order Approvals (P43081)</h2>
+<p>When clicking the Find button in the application P43081(Purchase Order Approvals) multiple times, it issues multiple errors like No Memory, Null Pointer and so on with JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call jdeRemoveDataPtr() message in JDE.log.</p>
+<p>&nbsp;</p>
+<h4 class="km"><strong>Study the Call Stack Analysis of P43081</strong></h4>
+<p>------------------------------- 1. Get Purchase Order Header Information -------------------------------</p>
+<p>&nbsp;&nbsp;&nbsp; 1. ENTER: GetPurchaseOrderHeader <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #ffff99; font-style: italic; color: red;">DP - Stored data pointer (35C399F8), pointer handle (121) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for GetPurchaseOrderHeader=0<br /> <br /> &nbsp;&nbsp;&nbsp; 1. ENTER: ReturnPOHeaderInformation <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #ffff99; font-style: italic; color: red;">DP - Retrieved data pointer (35C399F8), pointer handle (121) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for ReturnPOHeaderInformation=0<br /> <br /> &nbsp;&nbsp;&nbsp; 1. ENTER: FreePtrToDataStructure <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #ffff99; font-style: italic; color: red;">DP - Removed data pointer (35C399F8), pointer handle (121) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for FreePtrToDataStructure=0<br /> <br /> ------------------------------- 2. Get Purchase Order Detail Information -------------------------------<br /> &nbsp;&nbsp;&nbsp; 1. ENTER: RetrievePODetailRows <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #ccffff;">DP - Stored data pointer (35E19F20), pointer handle (121) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for RetrievePODetailRows=0<br /> <br /> &nbsp;&nbsp;&nbsp; 1. ENTER: ClosePODetailRowsHandle <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #ccffff; color: red; font-style: italic;">DP - Removed data pointer (35E19F20), pointer handle (121) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for ClosePODetailRowsHandle=0<br /> <br /> ------------------------------- 3. Get Address Book Information -------------------------------<br /> &nbsp;&nbsp;&nbsp; 1. ENTER: GetAddressBookData <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #99ff99; font-style: italic; color: red;">DP - Stored data pointer (3628D570), pointer handle (121) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for GetAddressBookData=0</p>
+<p>&nbsp;</p>
+<h4 class="km"><strong>Analyze the Corresponding Event Rules of P43081</strong></h4>
+<p>In case you need to know exact event, capture jasdebug.log and get it from it.</p>
+<ul>
+<li><span style="font-weight: bold;">Application</span> : Purchase Order Approvals (P43081)</li>
+<ul>
+<li><span style="font-weight: bold;">FORM</span>: Work With Orders Awaiting Approval [FIND BROWSE] (W43081A)</li>
+<ul>
+<li>CONTROL:&nbsp; FORM</li>
+<li>EVENT:&nbsp; Write Grid Line-Before</li>
+</ul>
+</ul>
+</ul>
+<p>------------------------------- 1. Get Purchase Order Header Information -------------------------------<br /> &nbsp;&nbsp;&nbsp; <strong>F4301 Get Purchase Order Header Row</strong> <span style="font-style: italic; color: #3333ff;">(GetPurchaseOrderHeader, B4300130)</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Co -&gt; BF szDocumentCompany<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Number -&gt; BF mnDocumentNumber<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Or Ty -&gt; BF szDocumentType<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cCallType<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cReturnF4301PtrFlag &nbsp; <span style="font-style: italic; color: #006600;">/* This parameter determines whether to return data pointer or not */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #ffff99; font-style: italic; color: red;">FC GENLNG-Pointer to F4301 (wf) &lt;&gt; BF idF4301RowPtr</span> &nbsp;<span style="color: #006600; font-style: italic;">/* Returned Data Pointer is to be used by next business function B4300190 */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC DTAI:Error Message (wf) &lt;- BF szErrorMessageID<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cSuppressErrorMessage</p>
+<div class="kmcodeblock" style="margin-left: 16px; width: 994px;">
+<p><strong>Code Example:</strong></p>
+<p>lpdsF4301 = (LPF4301)jdeAlloc(COMMON_POOL,sizeof(F4301),MEM_ZEROINIT) ;<span style="font-style: italic;"> <span style="color: #006600;">/* allocate memory at COMMON_POOL */</span></span><br /> if ( lpdsF4301 != (LPF4301)NULL) <span style="font-style: italic;">/* To avoid ACCESS VIOLATION */</span><br /> { &nbsp;<br /> &nbsp; &nbsp; &nbsp; memcpy ((void *)(lpdsF4301), (const void *)(&amp;dsF4301Fetch), sizeof(F4301) ) ;<span style="font-style: italic; color: #006600;"> /* Memory Copy */</span><br /> &nbsp; &nbsp; &nbsp; lpDS-&gt;idF4301RowPtr = <span style="color: red; font-weight: bold;">jdeStoreDataPtr</span>(hUser,(void *)lpdsF4301);<span style="font-style: italic;"> <span style="color: #006600;">/* Call API jdeStoreDataPtr) and return it */</span></span><br /> }</p>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; <strong>F4301 Get Addresses, Currency and Ordered By</strong>&nbsp; <span style="font-style: italic; color: #3333ff;">(ReturnPOHeaderInformation, B4300190)</span><br style="text-decoration: underline; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-style: italic; color: red; background-color: #ffff99;">FC GENLNG-Pointer to F4301 (wf) -&gt; BF idPointerToF4301DS</span> <span style="font-style: italic; color: #006600;">/* Data Pointer returned by B4300130 is used */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Hd CD &lt;- BF szOrderHoldCode<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Status(wf) &lt;- BF cPurchaseOrderStatus&nbsp;</p>
+<div class="kmcodeblock">
+<p style="margin-left: 14px; width: 996px;"><strong>Code Example:</strong><br /> &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br /> lpdsF4301 = (LPF4301) <span style="font-weight: bold; color: red;">jdeRetrieveDataPtr</span>(hUser,lpDS-&gt;idPointerToF4301DS); <span style="font-style: italic; color: #006600;">&nbsp;/* API jdeRetrieveDataPtr() is used to retrive data pointer stored at COMMON_POOL */</span><br /> if ( lpdsF4301 != (LPF4301) NULL)&nbsp;&nbsp;&nbsp;<span style="color: #006600; font-style: italic;"> /* To avoid Access Violation */</span><br /> {<br /> &nbsp; &nbsp; &nbsp;&nbsp;<span style="color: #006600; font-style: italic;">/* Break In Code */</span><br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;jdeStrcpy( (JCHAR*)lpDS-&gt;szOrderHoldCode, (const JCHAR *)(lpdsF4301-&gt;phhold) ); &nbsp;&nbsp;&nbsp; <span style="color: #006600; font-style: italic;">/* memory copy to get a specific column value */</span><br /> &nbsp; &nbsp; &nbsp;<span style="font-style: italic; color: #006600;"> /* Break In Code */</span><br /> }</p>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; <strong>Memory, Free Ptr To Data Structure</strong> &nbsp;<span style="color: #3333ff; font-style: italic;">(FreePtrToDataStructure, B4000460)</span><span style="color: #3333ff; font-style: italic;"> </span><br style="font-style: italic; text-decoration: underline;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #ffff99;">FC GENLNG-Pointer to F4301 (wf) &lt;&gt; BF idGenericLong &nbsp;<span style="background-color: white; color: black;"></span></span></p>
+<div class="kmcodeblock" style="margin-left: 17px; width: 993px;">
+<p><strong>Code Example:</strong></p>
+<p>if (lpDS-&gt;idGenericLong != (ID) 0) &nbsp; <span style="color: #006600; font-style: italic;">&nbsp;/* Not NULL */</span><br style="font-style: italic;" /> {<br /> &nbsp; &nbsp; &nbsp;lpGenericPtr = (void *)<span style="color: red; font-weight: bold;">jdeRemoveDataPtr</span>(hUser,lpDS-&gt;idGenericLong);&nbsp;<span style="color: #006600; font-style: italic;"> /* JDE API jdeRemoveDataPtr() is called to remove data pointer */</span><br /> &nbsp; &nbsp; &nbsp;if (lpGenericPtr != (void *) NULL)<br /> &nbsp; &nbsp; &nbsp;{<br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;jdeFree((void *)lpGenericPtr); &nbsp;<span style="font-style: italic; color: #006600;"> /* to release memory */</span><br style="color: #006600;" /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;lpDS-&gt;idGenericLong = (ID) 0;<br /> &nbsp; &nbsp; &nbsp;}<br /> }</p>
+</div>
+<p><br /> &nbsp;</p>
+<p>------------------------------- 2. Get Purchase Order Detail Information -------------------------------<br /> &nbsp;&nbsp;&nbsp; <strong>F4311 Get Item, Status, Amounts</strong> <span style="color: #3333ff; font-style: italic;">(RetrievePODetailRows, B4300520)</span><br style="font-style: italic; text-decoration: underline;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Number -&gt; BF mnOrderNumber<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Or Ty -&gt; BF szOrderType<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Order Co -&gt; BF szOrderKeyCompany<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-style: italic; color: red; background-color: #99ffff;">FC GENLN2-Pointer to F4311 Handle &lt;- BF idhRequestF4311</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_StatusCodeNext_NXTR &lt;- BF szStatusCodeNext</p>
+<div class="kmcodeblock" style="margin-left: 18px; width: 992px;">
+<p><strong>Code Example:</strong></p>
+<p>lpDS-&gt;idhRequestF4311 = (ID<span style="font-weight: bold;">)</span><span style="color: red; font-weight: bold;">jdeStoreDataPtr</span><span style="font-weight: bold;">(</span>hUser, (void *)(hRequest));<span style="color: #006600; font-style: italic;"> /* Pointer is returned to lpDS */</span><br /> <span style="color: #006600; font-style: italic;">/* This business function will read the Purchase Order Detail table F4311&nbsp;by the specified keys and return data from the table. */</span></p>
+</div>
+<p><br /> &nbsp;</p>
+<p>&nbsp;&nbsp;&nbsp; <strong>Close PODetailRows Handle</strong> &nbsp;<span style="font-style: italic; color: #3333ff;">(ClosePODetailRowsHandle, B4300520)</span><br style="font-style: italic; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ffff;">FC GENLN2-Pointer to F4311 Handle &lt;&gt; BF idhRequestF4311</span> <span style="font-style: italic; color: #006600;">&nbsp;/* To close out the pointer returned by RetrievePODetailRows */</span></p>
+<div class="kmcodeblock" style="margin-left: 15px; width: 995px;">
+<p><span style="text-decoration: underline;">Code Example:</span></p>
+<p>if ( lpDS-&gt;idhRequestF4311 != (ID) 0 ) &nbsp;<span style="font-style: italic; color: #006600;">/* when handle is NOT NULL */</span><br /> {<br /> &nbsp; &nbsp; &nbsp;hRequestF4311 = (HREQUEST)<span style="font-weight: bold; color: red;">jdeRemoveDataPtr</span>(hUser, lpDS-&gt;idhRequestF4311); <span style="color: #006600; font-style: italic;">&nbsp;/* Call JDE API jdeRemoveDataPtr() */</span><br /> &nbsp; &nbsp; &nbsp;lpDS-&gt;idhRequestF4311 = (ID) 0; &nbsp;<span style="font-style: italic; color: #006600;">/* Set handle NULL */</span><br /> }</p>
+</div>
+<p>&nbsp;</p>
+<p>------------------------------- 3. Get Address Book Information -------------------------------<br /> &nbsp;&nbsp;&nbsp; <strong>Get Address Book Data</strong> <span style="font-style: italic; color: #3333ff;">&nbsp;(GetAddressBookData, B0101201)</span><br style="text-decoration: underline; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Supplier Address Number -&gt; BF mnAddressNumber<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GC Supplier Name &lt;- BF szNameMailing</p>
+<div class="kmcodeblock" style="margin-left: 16px; width: 994px;">
+<p><strong>Code Example:</strong></p>
+<p>lpdsD0101201c = (LPDSD0101201C)jdeAlloc(COMMON_POOL,sizeof(DSD0101201C),MEM_ZEROINIT); &nbsp;<span style="color: #006600; font-style: italic;"> /* Allocate Memory at COMMON_POOL - Global Memory Area */</span><br /> if (lpdsD0101201c)<span style="font-style: italic; color: #006600;"> /* if memory is allocated then */</span><br /> {<br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;I0101201_SaveF0101Values(lpdsD0100041,lpdsD0101201c);&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;<span style="color: #006600; font-style: italic;"> /* Move All A/B values to dsD0100041*/</span><br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;lpdsD0101201c-&gt;idF0101Ptr= (ID) <span style="color: red; font-weight: bold;">jdeStoreDataPtr</span> (lpdsUserEnv-&gt;hUser,&nbsp;(void *) lpdsD0101201c);&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<span style="color: #006600; font-style: italic;"> /* JDE API jdeStoreDataPtr () gets called and returned through it is not used at all */</span><br /> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;lpDS-&gt;idF0101Ptr= lpdsD0101201c-&gt;idF0101Ptr; <span style="font-style: italic; color: #006600;">/* this is integer value so direct copy */</span><br /> }</p>
+</div>
+<p>&nbsp;</p>
+<h4 class="km"><strong>Analyze the Corresponding Jdedebug Log of P43081</strong></h4>
+<p>For easier reading, some values are not shown.</p>
+<div style="margin-left: 18px; width: 992px;">Calling Business function GetPurchaseOrderHeader from Level 1 for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[&nbsp; 1] szDocumentCompany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [00200] <br /> IN-&gt;[&nbsp; 2] mnDocumentNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [167] <br /> IN-&gt;[&nbsp; 3] szDocumentType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [OP] <br /> IN-&gt;[&nbsp; 4] cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> IN-&gt;[&nbsp; 5] cReturnF4301PtrFlag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> IN-&gt;[&nbsp; 6] cErrorCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> IN-&gt;[&nbsp; 7] idF4301RowPtr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> IN-&gt;[&nbsp; 8] szErrorMessageID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> IN-&gt;[&nbsp; 9] cSuppressErrorMessage&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> SELECT&nbsp; *&nbsp; FROM PRODDTA.F4301&nbsp; WHERE&nbsp; ( PHDOCO = 167.000000 AND PHDCTO = 'OP' AND PHKCOO = '00200' AND PHSFXO = '000' ) <br /> <span style="font-style: italic; color: red; background-color: #ffff99;">DP - Stored data pointer (35C399F8), pointer handle (121) </span><br /> OUT-&gt;[&nbsp; 1] szDocumentCompany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [00200] <br /> OUT-&gt;[&nbsp; 2] mnDocumentNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [167] <br /> OUT-&gt;[&nbsp; 3] szDocumentType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [OP] <br /> OUT-&gt;[&nbsp; 4] cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> OUT-&gt;[&nbsp; 5] cReturnF4301PtrFlag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> OUT-&gt;[&nbsp; 6] cErrorCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> <span style="background-color: #ffff99;">OUT-&gt;[&nbsp; 7] idF4301RowPtr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [121] </span><br /> OUT-&gt;[&nbsp; 8] szErrorMessageID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> OUT-&gt;[&nbsp; 9] cSuppressErrorMessage&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> Return value is 0 for GetPurchaseOrderHeader. (BSFNLevel = 1) <br /> <br /> Calling Business function ReturnPOHeaderInformation from Level 1 for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 1) <br /> <span style="background-color: #ffff99;">IN-&gt;[&nbsp; 1] idPointerToF4301DS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [121] </span><br /> ...<br /> <span style="color: red; background-color: #ffff99; font-style: italic;">DP - Retrieved data pointer (35C399F8), pointer handle (121) </span><br /> ...<br /> Return value is 0 for ReturnPOHeaderInformation. (BSFNLevel = 1) <br /> Calling Business function FreePtrToDataStructure from Level 1 for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 1) <br /> <span style="background-color: #ffff99;">IN-&gt;[&nbsp; 1] idGenericLong&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [121] </span><br /> <span style="color: red; font-style: italic; background-color: #ffff99;">DP - Removed data pointer (35C399F8), pointer handle (121) </span><br /> OUT-&gt;[&nbsp; 1] idGenericLong&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> Return value is 0 for FreePtrToDataStructure. (BSFNLevel = 1) <br /> <br /> <br /> Calling Business function RetrievePODetailRows from Level 1 for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[&nbsp; 1] mnOrderNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [167] <br /> IN-&gt;[&nbsp; 2] szOrderType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [OP] <br /> IN-&gt;[&nbsp; 3] szOrderKeyCompany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [00200] <br /> ... <br /> IN-&gt;[ 15] idhRequestF4311&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> ...<br /> SELECT&nbsp; *&nbsp; FROM PRODDTA.F4311&nbsp; WHERE&nbsp; ( PDDOCO = 167.000000 AND PDDCTO = 'OP' AND PDKCOO = '00200' )&nbsp; ORDER BY PDDOCO ASC,PDDCTO ASC,PDKCOO ASC,PDSFXO ASC,PDLNID ASC <br /> <span style="color: red; background-color: #99ffff; font-style: italic;">DP - Stored data pointer (35E19F20), pointer handle (121) </span><br /> OUT-&gt;[&nbsp; 1] mnOrderNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [167] <br /> OUT-&gt;[&nbsp; 2] szOrderType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [OP] <br /> OUT-&gt;[&nbsp; 3] szOrderKeyCompany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [00200] <br /> ...<br /> <span style="background-color: #99ffff;">OUT-&gt;[ 15] idhRequestF4311&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [121] </span><br /> ...<br /> Return value is 0 for RetrievePODetailRows. (BSFNLevel = 1) <br /> Calling Business function ClosePODetailRowsHandle from Level 1 for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 1) <br /> <span style="background-color: #99ffff;">IN-&gt;[&nbsp; 1] idhRequestF4311&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [121] </span><br /> <span style="background-color: #99ffff; font-style: italic; color: red;">DP - Removed data pointer (35E19F20), pointer handle (121) </span><br /> OUT-&gt;[&nbsp; 1] idhRequestF4311&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> Return value is 0 for ClosePODetailRowsHandle. (BSFNLevel = 1) <br /> <br /> <br /> Calling Business function GetAddressBookData from Level 1 for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[&nbsp; 1] mnAddressNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [74343] <br /> IN-&gt;[&nbsp; 2] szNameMailing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> ...<br /> IN-&gt;[ 27] idF0101Ptr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> ... <br />
+<div style="margin-left: 40px;">Calling Business function AddressBookMasterMBF from GetAddressBookData for UserID. Application Name [P43081], Version [ZJDE0001] (BSFNLevel = 2) <br /> ...<br /> Return value is 0 for AddressBookMasterMBF. (BSFNLevel = 2)</div>
+<span style="font-style: italic; color: red; background-color: #99ff99;">DP - Stored data pointer (3628D570), pointer handle (121) </span><br /> OUT-&gt;[&nbsp; 1] mnAddressNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [74343] <br /> OUT-&gt;[&nbsp; 2] szNameMailing&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Parts Emporium - fake (1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] <br /> ...<br /> <span style="background-color: #99ff99;">OUT-&gt;[ 27] idF0101Ptr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [121] </span><br /> ...<br /> Return value is 0 for GetAddressBookData. (BSFNLevel = 1)</div>
+<p><br /> &nbsp;</p>
+<h4 class="km"><strong>Resolution&nbsp;</strong></h4>
+<p>For this example, the purpose of calling business function GetAddressBookData is to get mailing name of supplier in Grid. Therefore, possible fix to this issue can be,&nbsp;</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Either Replace GetAddressBookData with GetMailingName (B0100031, F0111 Get Mailing Name) because the latter does not make use of data pointer and performs faster</li>
+<li>Or Call RemoveAddressBookDataPTR (B0101201, Remove Address Book Data PTR) or FreePtrToDataStructure after GetAddressBookData returned mailing name</li>
+</ul>
+</li>
+</ul>
+<p>As this example provided here occurs on the standard application P43081 and its related business functions, a bug has been reported for this issue. Please see&nbsp;Bug <a href="&lt;&lt;INLINE_BUG:21527282&gt;&gt;">21527282</a> - P43081 LEAVES DATA POINTER AFTER CALLING GETADDRESSBOOKDATA (B0101201). &nbsp;Check Bug <a href="&lt;&lt;INLINE_JDEUPDATE:21527282&gt;&gt;">21527282</a> for the latest ESU information once it becomes available.</p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<h2>Case Study 2 : Thin Manufacturing, Ad-hoc Completion (PF31011)</h2>
+<p>In completing work order through PF31011 (thin manufacturing, Ad-hoc completion), application issues error&nbsp;&nbsp;</p>
+<h4 class="km"><strong>Study the Call Stack Analysis of PF31011</strong><span style="text-decoration: underline;"><br /> </span></h4>
+<p>---------------------------------- 1. Read Item Branch (F4102) --------------------------------------------------<br /> &nbsp;&nbsp;&nbsp; 1. ENTER: CheckItemBranch <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; background-color: #99ff99; font-style: italic;">DP - Stored data pointer (07FA00F0), pointer handle (991) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for CheckItemBranch=0<br /> <br /> &nbsp;&nbsp;&nbsp; 1. ENTER: GetItemBranchInfo <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; background-color: #99ff99; font-style: italic;">DP - Retrieved data pointer (07FA00F0), pointer handle (991) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for GetItemBranchInfo=0<br /> <br /> &nbsp;&nbsp;&nbsp; 1. ENTER: FreePtrToDataStructure <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ff99;">DP - Removed data pointer (07FA00F0), pointer handle (991) </span><br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for FreePtrToDataStructure=0<br /> <br /> ----------------------------------- 2. Read F41021 -------------------------------------------------<br /> &nbsp;&nbsp;&nbsp; 1. ENTER: VerifyAndGetItemLocation <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ffff;">DP - Stored data pointer (07F8F018), pointer handle (991)</span> *** The data pointer stored by this function never gets deleted ***<br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for VerifyAndGetItemLocation=0<br /> <br /> &nbsp;&nbsp;&nbsp; 1. ENTER: GetItemLocationDetail <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ffff;">DP - Retrieved data pointer (07F8F018), pointer handle</span> (991) <br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for GetItemLocationDetail=0<br /> <br /> ----------------------------------- 3. Format Location&nbsp; -------------------------------------------------<br /> &nbsp;&nbsp;&nbsp; 1. ENTER: FormatLocation <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. ENTER: VerifyAndGetBranchPlantConstants <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red;"><span style="font-style: italic; background-color: #ffff99;">DP - Stored data pointer (2DD4EBC0), pointer handle (992)</span> </span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. EXIT: for VerifyAndGetBranchPlantConstants=0<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span style="color: red; font-style: italic; background-color: #ffff99;">DP - Removed data pointer (2DD4EBC0), pointer handle (992) </span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. ENTER: CheckLocationMaster <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. EXIT: for CheckLocationMaster=0<br /> &nbsp;&nbsp;&nbsp; 1. EXIT: for FormatLocation=0</p>
+<p>&nbsp;</p>
+<h4 class="km"><strong>Analyze the Corresponding Event Rules of PF31011</strong></h4>
+<p>In case you need to know exact event, capture jasdebug.log and get it from it.</p>
+<ul>
+<li><span style="font-weight: bold;">Application</span> : Item Completions (PF31011)</li>
+<ul>
+<li><span style="font-weight: bold;">FORM</span>: Item Completions - Complete Item [FIX INSPECT] (WF31011A)</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp;&nbsp; CONTROL:&nbsp; BUTTON Process Lots [HIDDEN]</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp; EVENT:&nbsp; Button Clicked</li>
+</ul>
+</ul>
+</ul>
+<p>---------------------------------- 1. Read Item Branch (F4102) --------------------------------------------------<br /> &nbsp;&nbsp;&nbsp; <strong>F4102 Get Item Branch Row</strong> &nbsp;<span style="font-style: italic; color: #3333ff;">(CheckItemBranch, B4100210)</span><br style="text-decoration: underline; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Branch -&gt; BF szBranchPlant<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Short Item Number -&gt; BF mnShortItemNumber<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF mnIndex<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "2" -&gt; BF mnKeys<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cCallType<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cReturnRecord &nbsp;<span style="font-style: italic; color: #006600;">/* parmeter determines whether to return data pointer (in the log it is handle) or not */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ff99;">VA evt_idF4102RowPointerGenlng &lt;- BF idItemBranchRecord</span></p>
+<div class="kmcodeblock" style="margin-left: 17px; width: 993px;">
+<p><span style="text-decoration: underline;">Code Example</span>:</p>
+<p>if ( lpDS-&gt;cReturnRecord == _J('1') ) &nbsp; <span style="font-style: italic; color: #006600;">/* when input parameter cReturnRecord is '1', then */</span><br /> {<br /> &nbsp; &nbsp; &nbsp;lpdsF4102Record = (LPF4102) jdeAlloc(COMMON_POOL, sizeof(F4102), MEM_ZEROINIT ) ; &nbsp;<span style="font-style: italic; color: #006600;">/* Allocate memory for F4102 data */</span><br style="color: #006600;" /> &nbsp; &nbsp; &nbsp;memcpy ( (void *)(lpdsF4102Record), (const void *)(&amp;dsF4102Fetch), sizeof(F4102) ) ; &nbsp;<span style="font-style: italic; color: #006600;"> /* Copy data into memory&nbsp;*/</span><br /> &nbsp; &nbsp; &nbsp;lpDS-&gt;idItemBranchRecord = (ID)<span style="font-weight: bold; color: red;">jdeStoreDataPtr</span>(hUser, (void *)lpdsF4102Record); &nbsp;<span style="font-style: italic; color: #006600;">/* &nbsp;Store data pointer */</span><br /> }&nbsp;&nbsp;&nbsp;</p>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp;<strong> F4102 Get Grade, Potency and Quantities</strong> &nbsp;<span style="color: #3333ff; font-style: italic;">(GetItemBranchInfo, B4100310)</span><br style="font-style: italic; text-decoration: underline;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ff99;">VA evt_idF4102RowPointerGenlng -&gt; BF idF4102RowPointer</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA evt_LayerCodeSource_SRCE &lt;- BF cLotProcessType<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_CountryOfOriginRequired &lt;- BF cCountryOfOriginRequired</p>
+<div class="kmcodeblock" style="margin-left: 17px; width: 993px;">
+<p><span style="text-decoration: underline;">Code Example</span>:</p>
+<p>lpF4102 = (LPF4102) <span style="font-weight: bold; color: red;">jdeRetrieveDataPtr</span>(hUser,lpDS-&gt;idF4102RowPointer); &nbsp; <span style="font-style: italic; color: #006600;">/* To retrive data pointer stored by B4100210 */</span><br /> if (lpF4102&nbsp;&nbsp;&nbsp; != (LPF4102) NULL )&nbsp;<br /> {<br /> &nbsp; &nbsp; &nbsp;/* Break In Code */<br /> &nbsp; &nbsp; &nbsp;lpDS-&gt;cLotProcessType&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = lpF4102-&gt;ibsrce ; &nbsp; <br /> &nbsp; &nbsp; &nbsp;jdeStrcpy((JCHAR *)lpDS-&gt;szCountryOfOrigin, (const JCHAR *)lpF4102-&gt;iborig);<br /> }</p>
+</div>
+<p>&nbsp;</p>
+<p><strong>&nbsp;&nbsp; Memory, Free Ptr To Data Structure</strong> <span style="font-style: italic; color: #3333ff;">&nbsp;(FreePtrToDataStructure, B4000460)</span> <span style="color: #006600; font-style: italic;">/* Generic function to remove data pointer */</span><br style="font-style: italic; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; font-style: italic; background-color: #99ff99;">VA evt_idF4102RowPointerGenlng -&gt; BF idGenericLong</span></p>
+<p>&nbsp;</p>
+<p>----------------------------------- 2. Read F41021 -------------------------------------------------<br /> &nbsp;&nbsp;&nbsp; <strong>F41021 Get Item Location Row</strong> &nbsp;<span style="font-style: italic; color: #3333ff;">(VerifyAndGetItemLocation, XF41021)</span>&nbsp; <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Branch -&gt; BF szBranchPlant<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Short Item Number -&gt; BF mnShortItemNumber<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Completed to Location -&gt; BF szLocation<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Lot/SN -&gt; BF szLotNumber<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "4" -&gt; BF mnIndex<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "3" -&gt; BF mnKeys<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cCallType<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cReturnRecord&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;<span style="color: #006600; font-style: italic;"> /* Input parameter whether to return data pointer or not */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="background-color: #99ffff; color: red; font-style: italic;">VA frm_idF41021PtrRecord_GENLNG &lt;- BF idItemLocationRecord</span> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_cErrorCode &lt;&gt; BF cSuppressErrorMessages<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szErrorMessageID &lt;&gt; BF szErrorMessageID</p>
+<div class="kmcodeblock" style="margin-left: 16px; width: 994px;">
+<p><strong>Code Example:</strong><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>if ( lpDS-&gt;cReturnRecord == _J('1') ) <span style="font-style: italic; color: #006600;">&nbsp;/* Only when input parameter cReturnRecord is '1', then */</span><br /> {<br /> &nbsp; &nbsp; &nbsp;lpdsF41021Record = (LPF41021) jdeAlloc ( COMMON_POOL, &nbsp;sizeof(F41021), MEM_ZEROINIT ) ; &nbsp; <span style="color: #006600; font-style: italic;">/* allocate memory */</span><br style="font-style: italic;" /> &nbsp; &nbsp; &nbsp;memcpy ( (void *)(lpdsF41021Record),&nbsp; (const void *)(&amp;dsF41021), sizeof(F41021) ) ; &nbsp; &nbsp; &nbsp;<span style="font-style: italic; color: #006600;">/* Copy data into memory allocated */</span><br /> &nbsp; &nbsp; &nbsp;lpDS-&gt;idItemLocationRecord = (ID) <span style="color: red; font-weight: bold;">jdeStoreDataPtr</span> ( hUser,&nbsp; (void *) lpdsF41021Record); <span style="color: #006600; font-style: italic;">&nbsp;/* Store and return */</span><br /> }&nbsp;&nbsp;&nbsp;</p>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; <strong>F41021 Get Item Location Quantities</strong> &nbsp;<span style="font-style: italic; color: #3333ff;">(GetItemLocationDetail, B4100280)</span><br style="text-decoration: underline; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: red; background-color: #99ffff; font-style: italic;">VA frm_idF41021PtrRecord_GENLNG -&gt; BF idF41021Pointer</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cSuppressErrorMessages<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szComptoLocation_COLOCN &lt;- BF szLocation <span style="font-style: italic; color: #006600;">&nbsp;/* This is the purpose of calling B4100280 */</span></p>
+<div class="kmcodeblock" style="margin-left: 16px; width: 994px;">
+<p><span style="text-decoration: underline;">Code Example</span>:</p>
+<p>memset((void *)(&amp;lpdsF41021), (int)(_J('\0')), sizeof(LPF41021) ); &nbsp; <span style="font-style: italic; color: #006600;">/* Initialize memory */</span><br /> if( lpDS-&gt;idF41021Pointer != (ID) 0 )<br /> {<br /> &nbsp; &nbsp; lpdsF41021 = (LPF41021) <span style="font-weight: bold; color: red;">jdeRetrieveDataPtr</span>(hUser,lpDS-&gt;idF41021Pointer);<br /> &nbsp;&nbsp;&nbsp; <span style="font-style: italic; color: #006600;">/* Break In Code */</span><br /> &nbsp; &nbsp; &nbsp;jdeStrcpy((JCHAR *)(lpDS-&gt;szLocation),&nbsp; (const JCHAR *)(lpdsF41021-&gt;lilocn)); &nbsp; &nbsp; <span style="color: #006600; font-style: italic;">/* copy memory for LOCN */</span><br /> }</p>
+</div>
+<p>&nbsp;</p>
+<p>----------------------------------- 3. Format Location&nbsp; -------------------------------------------------<br /> &nbsp;&nbsp;&nbsp; <strong>F4100 Format Location</strong> &nbsp;<span style="font-style: italic; color: #3333ff;">(FormatLocation, B4000310)</span> &nbsp;&nbsp;<br style="font-style: italic; color: #3333ff;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Branch -&gt; BF szCostCenter<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Completed to Location &lt;&gt; BF szDisplayFormatLocation<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA frm_szComptoLocation_COLOCN &lt;&gt; BF szFileFormatLocation<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "3" -&gt; BF cValidate<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "1" -&gt; BF cMode<br /> &nbsp;</p>
+<div class="kmcodeblock" style="margin-left: 15px; width: 995px;">
+<p><span style="text-decoration: underline;">Code example:</span></p>
+<p>if ( lpDS-&gt;idBranchConstantRecord &lt;= (ID) 0 ) &nbsp; &nbsp;<span style="font-style: italic; color: #009900;">/* when handle for idBranchConstantRecord is not specified as input value */</span><br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; memset((void *)(&amp;dsBranchConst), (int)(_J('\0')), sizeof(DSD4101390A)); <span style="color: #009900; font-style: italic;">&nbsp;/* initilalize data structure */</span><br style="font-style: italic;" /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; dsBranchConst.cReturnPointer = _J('1'); &nbsp;<span style="color: #009900; font-style: italic;">/* to return data pointer of &nbsp;F41001 */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; dsBranchConst.idF41001Pointer = (ID) 0 ; &nbsp;<span style="font-style: italic; color: #009900;">/* Initialize data pointer handle */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; dsBranchConst.cSuppressErrorMessage&nbsp; = _J('1') ; &nbsp; &nbsp;<span style="color: #009900; font-style: italic;">/* Not to have hard error */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; idReturnCode = jdeCallObject (_J("VerifyAndGetBranchPlantConstants"), &nbsp;<span style="font-style: italic; color: #009900;">/*&nbsp; Get Branch Constants retreives the record that contains the Size of Asile Bin Etc. and if it is Right or left justified */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NULL ,<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpBhvrCom,lpVoid, &amp;dsBranchConst, <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (CALLMAP *) NULL, (int) 0, (JCHAR *) NULL, <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (JCHAR *) NULL, (int) 0);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ( dsBranchConst.idF41001Pointer &gt; (ID) 0 &amp;&amp;&nbsp; idReturnCode == ER_SUCCESS ) <span style="font-style: italic; color: #009900;">&nbsp;/* &nbsp;When data pointer handle is returned by calling business function */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp; { &nbsp; &nbsp;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; lpdsF41001 = (LPF41001) <span style="font-weight: bold; color: red;">jdeRemoveDataPtr</span> ( hUser, &nbsp;(unsigned long) dsBranchConst.idF41001Pointer) ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-style: italic; color: #009900;"> /* jdeStoreDataPtr () is handled in called business function VerifyAndGetBranchPlantConstants */</span><br /> &nbsp;&nbsp;&nbsp; &nbsp; }<br /> }<br /> else<br /> {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpdsF41001 = (LPF41001) <span style="font-weight: bold; color: red;">jdeRetrieveDataPtr</span> ( hUser, (unsigned long) lpDS-&gt;idBranchConstantRecord) ; &nbsp;<span style="font-style: italic; color: #009900;"> /* because data pointer reside at COMMON_POOL in case&nbsp;VerifyAndGetBranchPlantConstants is called before B4000310 gets called */</span><br /> }</p>
+</div>
+<p>&nbsp;</p>
+<h4 class="km"><strong>Analyze the Corresponding Jdedebug Log of PF31011</strong></h4>
+<p>For easier reading, some values are ripped off.</p>
+<p style="margin-left: 80px;">Calling Business function CheckItemBranch from Level 1 for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[&nbsp; 1] szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> IN-&gt;[&nbsp; 2] mnShortItemNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [82571] <br /> IN-&gt;[&nbsp; 3] mnIndex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> IN-&gt;[&nbsp; 4] mnKeys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2] <br /> IN-&gt;[&nbsp; 5] cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> IN-&gt;[&nbsp; 6] cReturnRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> IN-&gt;[&nbsp; 7] cErrorCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> <span style="background-color: #99ff99;">IN-&gt;[&nbsp; 8] idItemBranchRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] </span><br /> SELECT&nbsp; *&nbsp; FROM CRPDTA.F4102&nbsp; WHERE&nbsp; ( IBMCU = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30' AND IBITM = 82571.000000 ) <br /> <span style="color: red; background-color: #99ff99; font-style: italic;">DP - Stored data pointer (07FA00F0), pointer handle (991) </span><br /> OUT-&gt;[&nbsp; 1] szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> OUT-&gt;[&nbsp; 2] mnShortItemNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [82571] <br /> OUT-&gt;[&nbsp; 3] mnIndex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> OUT-&gt;[&nbsp; 4] mnKeys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2] <br /> OUT-&gt;[&nbsp; 5] cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> OUT-&gt;[&nbsp; 6] cReturnRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> OUT-&gt;[&nbsp; 7] cErrorCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> <span style="background-color: #99ff99;">OUT-&gt;[&nbsp; 8] idItemBranchRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> Return value is 0 for CheckItemBranch. (BSFNLevel = 1) <br /> Calling Business function GetItemBranchInfo from Level 1 for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 1) <br /> <span style="background-color: #99ff99;">IN-&gt;[&nbsp; 1] idF4102RowPointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> ...<br /> <span style="background-color: #99ff99; color: red; font-style: italic;">DP - Retrieved data pointer (07FA00F0), pointer handle (991) </span><br /> <span style="background-color: #99ff99;">OUT-&gt;[&nbsp; 1] idF4102RowPointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> ...<br /> Return value is 0 for GetItemBranchInfo. (BSFNLevel = 1) <br /> Calling Business function FreePtrToDataStructure from Level 1 for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 1) <br /> <span style="background-color: #99ff99;">IN-&gt;[&nbsp; 1] idGenericLong&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> <span style="background-color: #99ff99; color: red; font-style: italic;">DP - Removed data pointer (07FA00F0), pointer handle (991) </span><br /> <span style="background-color: #99ff99;">OUT-&gt;[&nbsp; 1] idGenericLong&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] </span><br /> Return value is 0 for FreePtrToDataStructure. (BSFNLevel = 1) <br /> <br /> <br /> Calling Business function VerifyAndGetItemLocation from Level 1 for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[&nbsp; 1] szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> IN-&gt;[&nbsp; 2] mnShortItemNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [82571] <br /> IN-&gt;[&nbsp; 3] szLocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> IN-&gt;[&nbsp; 4] szLotNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> IN-&gt;[&nbsp; 5] mnIndex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4] <br /> IN-&gt;[&nbsp; 6] mnKeys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3] <br /> IN-&gt;[&nbsp; 7] cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> IN-&gt;[&nbsp; 8] cReturnRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> <span style="background-color: #99ffff;">IN-&gt;[&nbsp; 9] idItemLocationRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] </span><br /> IN-&gt;[ 10] cSuppressErrorMessages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> ...<br /> SELECT&nbsp; *&nbsp; FROM CRPDTA.F41021&nbsp; WHERE&nbsp; ( LIITM = 82571.000000 AND LIMCU = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30' AND LIPBIN = 'P' ) <br /> <span style="font-style: italic; color: red; background-color: #99ffff;">DP - Stored data pointer (07F8F018), pointer handle (991) </span><br /> OUT-&gt;[&nbsp; 1] szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> OUT-&gt;[&nbsp; 2] mnShortItemNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [82571] <br /> OUT-&gt;[&nbsp; 3] szLocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [11LLH06&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] <br /> OUT-&gt;[&nbsp; 4] szLotNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ] <br /> OUT-&gt;[&nbsp; 5] mnIndex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [4] <br /> OUT-&gt;[&nbsp; 6] mnKeys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3] <br /> OUT-&gt;[&nbsp; 7] cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> OUT-&gt;[&nbsp; 8] cReturnRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> <span style="background-color: #99ffff;">OUT-&gt;[&nbsp; 9] idItemLocationRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> OUT-&gt;[ 10] cSuppressErrorMessages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] <br /> ...<br /> Return value is 0 for VerifyAndGetItemLocation. (BSFNLevel = 1) <br /> <br /> <br /> Calling Business function GetItemLocationDetail from Level 1 for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 1) <br /> <span style="background-color: #99ffff;">IN-&gt;[&nbsp; 1] idF41021Pointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> ...<br /> <span style="background-color: #99ffff; font-style: italic; color: red;">DP - Retrieved data pointer (07F8F018), pointer handle (991) </span><br /> <span style="background-color: #99ffff;">OUT-&gt;[&nbsp; 1] idF41021Pointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [991] </span><br /> ...<br /> Return value is 0 for GetItemLocationDetail. (BSFNLevel = 1)</p>
+<p style="margin-left: 40px;">&nbsp;</p>
+<div style="margin-left: 72px; width: 938px;">Calling Business function FormatLocation from Level 1 for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 1) <br /> IN-&gt;[&nbsp; 1] szCostCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> IN-&gt;[&nbsp; 2] szDisplayFormatLocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> IN-&gt;[&nbsp; 3] szFileFormatLocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [LOC] <br /> IN-&gt;[&nbsp; 4] cValidate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3] <br /> ...<br /> IN-&gt;[ 15] cMode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> <span style="background-color: #ffff99;">IN-&gt;[ 16] idBranchConstantRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] </span><br />
+<div style="margin-left: 40px;">Calling Business function VerifyAndGetBranchPlantConstants from FormatLocation for JDE. Application Name [PF31011], Version [ZJDE0001] (BSFNLevel = 2) <br /> IN-&gt;[&nbsp; 1] szSystemCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> IN-&gt;[&nbsp; 2] szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> ...<br /> <span style="color: #333333; background-color: #ffff99;">IN-&gt;[102] idF41001Pointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] </span><br /> IN-&gt;[103] cReturnPointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> ...<br /> <span style="background-color: #ffff99; color: red; font-style: italic;">DP - Stored data pointer (2DD4EBC0), pointer handle (992) </span><br /> OUT-&gt;[&nbsp; 1] szSystemCode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ] <br /> OUT-&gt;[&nbsp; 2] szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> ...<br /> <span style="background-color: #ffff99;">OUT-&gt;[102] idF41001Pointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [992] </span><br /> OUT-&gt;[103] cReturnPointer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [1] <br /> ...<br /> Return value is 0 for VerifyAndGetBranchPlantConstants. (BSFNLevel = 2)</div>
+<span style="color: red; font-style: italic; background-color: #ffff99;">DP - Removed data pointer (2DD4EBC0), pointer handle (992) </span><br /> OUT-&gt;[&nbsp; 1] szCostCenter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; M30] <br /> OUT-&gt;[&nbsp; 2] szDisplayFormatLocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [11LLH06] <br /> OUT-&gt;[&nbsp; 3] szFileFormatLocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [11LLH06] <br /> OUT-&gt;[&nbsp; 4] cValidate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3] <br /> ...<br /> <span style="background-color: #ffff99;">OUT-&gt;[ 16] idBranchConstantRecord&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [0] </span><br /> Return value is 0 for FormatLocation. (BSFNLevel = 1)</div>
+<p>&nbsp;</p>
+<h4 class="km"><strong>Resolution</strong></h4>
+<p>For this example, data pointer created by business function&nbsp;VerifyAndGetItemLocation is not removed. To resolve this issue, a possible fix is to call FreePtrToDataStructure to remove the data pointer.</p>
+<p>As this example provided here occurs on the standard application PF31011&nbsp;and its related business functions, a bug has been reported for this issue. Please see&nbsp;Bug <a href="&lt;&lt;INLINE_BUG:21535726&gt;&gt;">21535726</a> - MEMORY LEAK IN PF31011 (JDB9900600 - FAILED TO STORE VALUE, MAXIMUM EXCEEDED). &nbsp;Check Bug <a href="&lt;&lt;INLINE_JDEUPDATE:21535726&gt;&gt;">21535726</a>&nbsp;for the latest ESU information once it becomes available.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>Conclusion:</h2>
+<ul>
+<li>Generally, the information stored in a certain table is bigger than the parameters in the business function which makes use of that table. Therefore, it is a common practice to store table values in the memory through the use of data pointer.</li>
+<li>When developing your own custom application which is calling any business function which has implementation of data pointer,
+<ul>
+<li>Capture jdedebug.log and make sure it does not cause any memory leak.</li>
+</ul>
+</li>
+<li>In many standard applications, calling routine is responsible for removing data pointer. For example,
+<ul>
+<li>When data pointer is returned by 1st Level business function then an application which is calling this function need to remove the data pointer.</li>
+<li>When data pointer is returned by 2nd level business function then 1st level business function has to remove it accordingly.</li>
+</ul>
+</li>
+<li>When you encounter this error, it is a good practice to review all jde.log on your logic server and list up all the applications and start debugging.</li>
+</ul>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

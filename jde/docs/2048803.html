@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Auto Approval is not working in 9.1.4.x Tools Release</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Auto Approval is not working in 9.1.4.x Tools Release</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Symptoms</BIG></span></big></big></h2>
+
+
+<p><span style="font-size: 10pt;">Auto-approval is not working in EneterpriseOne tools release 9.1.4.7 when submitting requisition through P43E10 (Add Requisition) though threshold amount is within auto-approval range.</span></p>
+<p><span style="font-size: 10pt;">Simplified <span id="form1:panelPage1">routine for auto-approval: <br />P43E10 (Requisition Orders)<br />---| Click "Submit" Button<br />------| Click Save button at Post Commit event of TP Subform (W43E10C)<br />---------| B43E1400 (SubmitForApprovalRequisition)<br />------------| B43E1403 (LaunchWorkFlowBSFN)<br />---------------| STARTWFProcess<br />------------------| (ROUTER) N43E1300 (WorkFlowRTR)<br />---------------------| Send Message Extended (APPROVEMSG to approver) ***<br />---------------------| (STARROUTE) N43E1300 (ApproveRejectUPD) ***<br />From this diagram Auto-Approval took place through N43E1300 (ApproveRejectUPD) after sending email message to the first approver. However jdedebug.log reads that your workflow kernel is not able to send out message Send Message Extended (APPROVEMSG to approver) because it is not able to get valid distribution list. As a result, it is not able to call ApproveRejectUPD. </span></span></p>
+<p><br /><span style="font-size: 10pt;">STEPS</span><br /><span style="font-size: 10pt;">-----------------------</span><br /><span style="font-size: 10pt;">The issue can be reproduced at will with the following steps:</span><br /><br /><span style="font-size: 10pt;">1. create an Address Book record for the Distribution List, Search Type = DL</span><br /><span style="font-size: 10pt;">2. create a Business Unit level Approval Authority for the 50000 BU ( Job ), using the new Approver Group and type = RSS</span><br /><span style="font-size: 10pt;">3. click on edit Distribution List and add the two approvers</span><br /><span style="font-size: 10pt;">  Approver 1 threshold = 0</span><br /><span style="font-size: 10pt;">  Approver 2 threshold = 10,000</span><br /><span style="font-size: 10pt;">4. sign in as Approver 1</span><br /><span style="font-size: 10pt;">5. key a requisition, for the business unit 50000</span><br /><span style="font-size: 10pt;">6. add to cart and submit the requisition - note the submitted requisition number</span><br /><span style="font-size: 10pt;">7. open Requisition Inquiry application, click Find to show all requisitions for this user</span><br /><span style="font-size: 10pt;">8. click on grid row for the new requisition, click on the Review Approvals button</span><br /><span style="font-size: 10pt;">9. form opens with Role set to Originator</span><br /><span style="font-size: 10pt;">10. Requisition status is Submitted, Approver is Approver 1 ( which is the originator ) and Approver Action is Unopened.</span><br /><br /><br /></p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Cause</BIG></span></big></big></h2>
+
+<p><span style="font-size: 10pt;">Issue is reported through &lt;Bug 16212379&gt; : RSS APPROVAL THRESHOLD ROUTING ISSUE. Note that this is tools bug not application bug.</span></p>
+
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+<p><span style="font-size: 10pt;">To fix this type of problem, upgrade tools release 9.1.5.2 and above. <br /></span></p>
+<p><span style="font-size: 10pt;">For detail, refer to &lt;Bug 16212379&gt; : RSS APPROVAL THRESHOLD ROUTING ISSUE. Note that this is tools bug not application bug.</span></p>
+<p><span style="font-size: 10pt;">&lt;Internal_Only&gt;Note that Auto-approval is not working in 9.1.5.5 so if possible supply client with POC &lt;/Internal_Only&gt;</span></p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

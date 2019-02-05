@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P42101 and P43070 Cause Deadlock in Competing to Update a Held Orders (F4209) Table</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P42101 and P43070 Cause Deadlock in Competing to Update a Held Orders (F4209) Table</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Troubleshooting Steps</BIG></span></big></big></h2>
+
+<p>When users are changing data in Sales Order Entry (P42101) and immediately try to Release Held Orders (P43070) causes a dead lock to Held Orders (F4209) table as &lt;Bug:10969260&gt; reads.<br /><br />Possible business scenario where this may happen:</p>
+<ol>
+<li>Sales staff create sales orders through R47011 with order hold (e.g., EDI Hold) with more than 30 detail lines</li>
+<li>Review/Update SO created through P42101 - Sales Order Entry</li>
+<li>Release order through P43070 - Release Held Order</li>
+</ol>
+<p> </p>
+<h3 class="km">When does this error occur?</h3>
+<p><span style="text-decoration: underline;"><strong>Case 1 - Valid transaction</strong></span><br />Sales staff create sales orders through R47011 with order hold (e.g., EDI Hold) with more than 30 detail lines</p>
+<ol>
+<li>Review/Update SO created through P42101 - Sales Order Entry</li>
+<li>Release order through P43070 - Release Held Order</li>
+</ol>
+<p> </p>
+<div class="kmcodeblock" style="width: 95%;"><span style="text-decoration: underline;"><strong>Through P42101 (TRANSACTION #1)</strong></span><br />1. ENTER: SalesOrderApplCtrlEX<br />   2. ENTER: F4211FSEndDoc /* With Transaction Processing ON - MANNUAL COMMIT */<br />      3. ENTER: WriteHoldCode<br />         sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)<br />      3. EXIT: for WriteHoldCode=0<br />   2. EXIT: for F4211FSEndDoc=0 /* sql&gt; COMMIT TRANSACTION */<br />1. EXIT: for SalesOrderApplCtrlEX=0</div>
+<p> </p>
+<div class="kmcodeblock" style="width: 95%;"><span style="text-decoration: underline;"><strong>Through P43070 (TRANSACTION #2)</strong></span><br />1. ENTER: ReleaseHeldOrder<br />   sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)<br />1. EXIT: for ReleaseHeldOrder=0</div>
+<p><br /><br /></p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>For above call stack F4211FSEndDoc is called with 'Transaction Processing' on so UPDATE of F4209 issues exclusive lock till sql&gt; COMMIT TRANSACTION is coming. Refer Doc ID 1208208.1 - E1: DB: Transaction, Transaction Processing, Commit and Rollback.</li>
+<li>From the 1st update statement till commit transaction blocking against F4209 will take place.</li>
+</ul>
+</div>
+<p><br /><br /><span style="text-decoration: underline;"><strong>Case 2 - Deadlock Transaction</strong></span><br /><br /></p>
+<div class="kmcodeblock" style="width: 95%;"><span style="text-decoration: underline;"><strong>Through P42101 (TRANSACTION #1)</strong></span><br />1. ENTER: SalesOrderApplCtrlEX<br />   2. ENTER: F4211FSEndDoc /* With Transaction Processing ON - MANNUAL COMMIT */<br />      3. ENTER: WriteHoldCode<br />         sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)<br />      3. EXIT: for WriteHoldCode=<br />*** Continue to COMMIT other tables ***<br />*** TRANSACTION #2 tries to get locking information for blocked table by TRANSACTION #1 ***</div>
+<p> </p>
+<div class="kmcodeblock" style="width: 95%;"><span style="text-decoration: underline;"><strong>Through P43070 (TRANSACTION #2)</strong></span><br />       1. ENTER: ReleaseHeldOrder<br />          sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)<br />         /* Transaction Stops here in getting locking information for table F4209 */<br />         /* Because it is blocked by 1st TRANSACTION */<br /> (TRANSACTION FAILURE)</div>
+<p><br /><br /></p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>For this example, two different transactions through two different applications (P42101 and P43070) are competing to update Held Orders (F4209) table.</li>
+<li>For small transaction from the 1st update of F4209 to F4211FSEndDoc it may not take time but if the number of transaction is huge in updating detail information it may consume some time.</li>
+<li>This is one of possible scenario rather than implying all the locking always being occurred this manner.</li>
+<li>Since 2nd UPDATE was issued it falls into deadlock error will be written in jde.log and jdedebug.log (if any) and e1root.log:</li>
+<ul>
+<li>jde.log will contain after locking took place</li>
+<li>This call object kernel be zombied</li>
+<li>e1root.log will contain COSE #1001 Timeout with calling(1st Level) BSFN SalesOrderApplCtrlEX</li>
+</ul>
+<li>This type of issue may occur when 'Transaction Processing' is on in dealing with critical transaction.</li>
+<li>To prevent this type of issue 'Record Reservation' logic will be implemented.</li>
+</ul>
+</div>
+<p><br /><br /></p>
+<h3 class="km">How can this be fixed?</h3>
+<ol>
+<li>(Fast Path) UDC</li>
+<li>Look for Product Code: 00 (Foundation Environment) and User Defined Codes 'RR' - Object In Use Application ID</li>
+<li>Verify/Add application ID P42101 and P43070 (If it is missing)</li>
+</ol>
+<p>Currently record reservation for applications P42101 and P43070 are implemented as below,<br /><br /></p>
+<ul>
+<li><strong>P42101 </strong>handled record reservation as E1: 42: MVC Architecture (Powerform) and Sales Order Entry (P42101) (Doc ID 1212163.1), simplified routine:</li>
+<ul>
+<li>Call B4210400 - W42101D_CreateSalesOrder (W42101D Create Sales Order View Controller) which is calling BSFN ValidateApplicationId then F00095ReserveObject</li>
+<li>Call F4211FSBeginDoc</li>
+<li>Call F4211FSEditLine</li>
+<li>Then call B4210900- SalesOrderApplCtrlEX (Sales Order Application Controller - External) which is calling B4204200 - CommitSalesOrder which eventually is calling B4200310 - F4211FSEndDoc then F00095RemoveReservation</li>
+</ul>
+<li><strong>P43070 </strong>handled record reservation through FORM: Work With Held Orders [FIND BROWSE]</li>
+<ul>
+<li>1st. EVENT: Dialog is Initialized</li>
+<ul>
+<li>Call BSFN ValidateApplicationId (Validate Application Id) (*** N0000604 to check UDC(00|RR) ***)</li>
+</ul>
+<li>2nd. EVENT: Write Grid Line-After</li>
+<ul>
+<li>Call BSFN F00095ReserveObject (F00095 Reserve Object)</li>
+</ul>
+<li>3rd. EVENT: End Dialog</li>
+<ul>
+<li>Call BSFN F00095RemoveReservation (F00095 Remove Business Object Reservation)</li>
+</ul>
+</ul>
+</ul>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Above routine is simplified routine in reality there will be more validation and assignment</li>
+<li>By defining application ID P42101 and P43070 through UDC (00|RR) 2nd update never take place till all the data through P42101 gets committed/roll-backed so this is safe way to guard integrity let alone which avoid possible deadlock</li>
+<li>Generally record reservation routine will be written at Dialog Initialized Event as soon as Revision form (where you can add/update data) is opened in UPDATE MODE</li>
+<li>However P43070 will reserve order in your clicking find button (more detail, after grid buffer was written or when you can see data in Grid). This routine is implemented through SAR 7938202</li>
+<li>UDC(00|RR) is to be validated through BSFN N0000604 - ValidateApplicationId (Validate Application Id). If a certain routine does not call this business function object/record reservation routine is hard coded within a certain routine</li>
+<li>In installing a new release program ID P42101 may not be in the F0005 for (00|RR) so it is important to add it into UDC (00|RR) reference E1: 40: User Record Reservations (Doc ID 625589.1) to determine what is suggestion made by EnterpriseOne.</li>
+<li>In procurement if the setting is not done properly same issue can be occurred between P4310 and P43060. Demo data you have referenced may not have application ID P43060 in UDC 00/RR. If so, add a record for the application P43060 to minimize possible deadlock issue for tables F4209 and F4311.To have full list of application which has this type of implementation Refer &lt;Document 1142464.1&gt; E1: FDA: F00095 Record/Object Reservation in EnterpriseOne Interactive Application</li>
+</ul>
+</div>
+<p> </p>
+<div class="kmnotebox">To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details &lt;Document 548764.1&gt; if your topic is not currently scheduled please suggest it.</div>
+<p><br /><br /><br /></p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

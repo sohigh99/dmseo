@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Populate Sales Order Detail Tag File (F49211) Based on Sales Order Detail File (F4211) in World Software to EnterpriseOne Data Migration</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Populate Sales Order Detail Tag File (F49211) Based on Sales Order Detail File (F4211) in World Software to EnterpriseOne Data Migration</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+
+<p><span style="font-size: 10pt;">This document is a guide to populate F49211 (Sales Order Detail File - Tag File) based on F4211 (Sales Order Detail File) when open sales order data are from World Software. This is a necessary routine because F49211 is used as optional in World Software whereas same table is used tightly in EnterpriseOne.</span>&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+<h3 class="km">Difference Between World Software and EnterpriseOne Software</h3>
+<p><span style="font-size: 10pt;">In JD Edwards World, the transportation module (SY49) does not exist and the closest functionality existing is the ECS module. Since Transportation was completely redone (even in later releases of E1) there never has been any migration programs developed between ECS (Energy and Chemical System in World) and Transportation (E1). So in case you have implemented or are implementing the Transportation Module, it is very likely that you may hit the same error/problem through multiple applications in Sales.</span></p>
+<hr />
+<h3 class="km">Example of Data Migration&nbsp;</h3>
+<p><span style="font-size: 10pt;">Example of Data Migration from World Software to EnterpriseOne:</span></p>
+<p style="padding-left: 30px;"><span style="font-size: 10pt;">&bull; Pre-World migration: F4211: 2,754,430; F49211: 21,925.</span></p>
+<p style="padding-left: 30px;"><span style="font-size: 10pt;">&bull; Post-World/E1 migrations: F4211: 2,754,424; F49211: 21,925</span></p>
+<hr />
+<h3 class="km">Error in Sales Order Entry (P42101) When F49211 Missing</h3>
+<p><span style="font-size: 10pt;">When the F49211 records are missing, an error is displayed managing open sales order through P42101 (Sales Order Entry)</span></p>
+<p style="padding-left: 60px;"><span style="font-size: 10pt;">Sales Order Detail (S421002C)<br /> <br /> <em>Error Record Invalid</em><br /> A form level error has occurred.<br /> CAUSE: The record being processed either already exists for an 'ADD'<br /> function or does not exist for an 'INQUIRY', 'CHANGE' or<br /> 'DELETE' function.<br /> RESOLUTION: If you are attempting to inquire, change or delete a record you<br /> previously added, there may be data base problems in your<br /> production library. You should notify your data processing<br /> department.<br /> <br /> ER Details:<br /> Form P421002_S421002C<br /> Control Id 20<br /> Control Title SOLines<br /> Event Get Custom Tree Node<br /> Line No 16<br /> <br /> BSFN Details:<br /> Source File \DNVMGSC51\E910\PD910\package\ESU910A\source\<strong>B4201270</strong>.c<br /> Source Line 654<br /> Error ID 0002<br /> </span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 10pt;">This document will guide the user to populate F49211 as a temporary resolution to overcome this error and roughly explain the simplified routine of B4201270.&nbsp;</span></p>
+<hr />
+<h3 class="km">Workaround to Overcome Record Invalid Error</h3>
+<p><span style="font-size: 10pt;">Error '0002' via F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table) can be avoided if you turn off the Transportation Module as below, </span></p>
+<ol>
+<li><span style="font-size: 10pt;">Go to P99410 (EnterpriseOne System Control)<br /> </span></li>
+<li><span style="font-size: 10pt;">Look for Entry 'SY49' and Select it</span></li>
+<li><span style="font-size: 10pt;">Select 'No' to disable it</span></li>
+<li><span style="font-size: 10pt;">Reset database Cache</span></li>
+</ol>
+<p><span style="font-size: 10pt;"> This workaround can be implemented only when the issue is specific to P42101 because B4201270 is called from B4210030 only when SY49 is active.</span></p>
+<hr />
+<p>Why the Error is Specific to P42101 and not P4210</p>
+<p><span style="font-size: 10pt;">Currently the way it checks the existence of F49211 in P42101 is different from that of P4210 because P42101 is written through MVC Architecture routine which handles data as below,</span></p>
+<p style="padding-left: 30px;"><span style="font-size: 10pt;">S421002C for user interface<br /> |--- (View) B4210620 - S421002C_SOLineViewController<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- (Controller) B4210900- SalesOrderApplCtrlEX<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- (Model) B4210000, B4210030<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table)<br /> </span></p>
+<p><span style="font-size: 10pt;">The validation routine is specific to P42101</span></p>
+<hr />
+<h3 class="km">When F49211 Records Are Created in EnterpriseOne</h3>
+<p><span style="font-size: 10pt;">When any sales order meets any of below condition, which calls business function F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table) which writes F49211 (Tag File),<br /> </span></p>
+<ul>
+<li><span style="font-size: 10pt;">Transportation Module is Active (SY49 is Active in P99410) *or OTM (Oracle Transportation Management) is in Use with E1 Transportation)<br /> </span></li>
+<li><span style="font-size: 10pt;">Bulk System is Active (SY41B is Active in P99410)</span></li>
+<li><span style="font-size: 10pt;">Intercompany Order (F4211.SO01 = 2 or 4, or ALPHA[INTERBRANCH_SO_ALPH01] = 2 or 4)</span></li>
+<li><span style="font-size: 10pt;">Order Promising is in Use (OPYN) (refer to &lt;Bug 12496751&gt; : OP2 INTEGRATION - B9 - SAR: 5814943)<br /> </span></li>
+<li><span style="font-size: 10pt;">Production Allocation is in Use</span>
+<ul>
+<li><span style="font-size: 10pt;">And (any of above condition met) not a Mobile Sales</span></li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 class="km">How to Implement F49211 Based on Migrated Data</h3>
+<p><span style="font-size: 10pt;">When any of above conditions met, then the relationship between F4211 and F49211 has to be 1 to 1. So populate it manually by mapping some columns as below,</span></p>
+<table style="border-collapse: collapse; width: 1229px; height: 4099px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15.75pt;">
+<td class="xl66" style="height: 15.75pt; width: 24pt; color: white; background-color: #3366ff; font-weight: bold; text-align: center;" width="32" height="21">Seq</td>
+<td class="xl66" style="width: 59pt; color: white; background-color: #3366ff; font-weight: bold; text-align: center;" width="79">Alias</td>
+<td class="xl66" style="color: white; background-color: #3366ff; font-weight: bold; text-align: center; width: 152px;">Mapping (lpds)</td>
+<td class="xl66" style="color: white; background-color: #3366ff; font-weight: bold; text-align: center; width: 170px;">Data Dictionry Item</td>
+<td class="xl66" style="color: white; background-color: #3366ff; font-weight: bold; text-align: center; width: 263px;">During Sales Order</td>
+<td class="xl66" style="color: white; background-color: #3366ff; font-weight: bold; text-align: center; width: 243px;">Ship Confirmed</td>
+<td class="xl66" style="color: white; background-color: #3366ff; font-weight: bold; text-align: center; width: 232px;">Others</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">1</td>
+<td>DOCO*<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">DocumentOrderInvoiceE (Document (Order No, Invoice, etc.))</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zddoco</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">Primary Key&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">2</td>
+<td>DCTO*<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">OrderType (Order Type)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zddcto</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">3</td>
+<td>KCOO*<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">CompanyKeyOrderNo<span> </span>(Order Company (Order Number))</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdkcoo</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">4</td>
+<td>LNID*<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">LineNumber (Line Number)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdlnid</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">Primary Key</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">5</td>
+<td>VMCU<span> </span></td>
+<td style="width: 152px;">szTripDepot</td>
+<td style="width: 170px;">CostCenterTrip (Depot - Trip)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">6</td>
+<td>TRP<span> </span></td>
+<td style="width: 152px;">mnTripNumber</td>
+<td style="width: 170px;">TripNumber (Trip Number)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">7</td>
+<td>LOAD<span> </span></td>
+<td style="width: 152px;">jdScheduledLoadDate</td>
+<td style="width: 170px;">DateLoaded (Date - Scheduled Load)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">8</td>
+<td>DSGP<span> </span></td>
+<td style="width: 152px;">szDispatchGrp</td>
+<td style="width: 170px;">DispatchGrp (Dispatch Group)</td>
+<td style="width: 263px;">F42UI11-&gt;zddsgp</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">9</td>
+<td>BPFG<span> </span></td>
+<td style="width: 152px;">cBulkPackedFlag</td>
+<td style="width: 170px;">BulkPackedFlag (Bulk/Packed Flag)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">10</td>
+<td>DSTN<span> </span></td>
+<td style="width: 152px;">mnDistance</td>
+<td style="width: 170px;">Distance<span> </span>(Distance)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">11</td>
+<td>UM</td>
+<td style="width: 152px;">szUnitOfMeasure</td>
+<td style="width: 170px;">UnitOfMeasure (Unit of Measure)<span> </span></td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">12</td>
+<td>DEFF<span> </span></td>
+<td style="width: 152px;">cDeferredEntriesFlag</td>
+<td style="width: 170px;">DeferredEntriesFlag (Deferred Entries Flag)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">13</td>
+<td>DUNC<span> </span></td>
+<td style="width: 152px;">mnDeferredCost</td>
+<td style="width: 170px;">AmountDeferredCost<span> </span>(Amount - Deferred Cost)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">14</td>
+<td>FDUC<span> </span></td>
+<td style="width: 152px;">mnForeignDeferredCost</td>
+<td style="width: 170px;">AmountForeignDeferredCos (Amount - Foreign Deferred Cost)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">15</td>
+<td>DREV<span> </span></td>
+<td style="width: 152px;">mnDeferredRevenue</td>
+<td style="width: 170px;">AmountDeferredRevenue (Amount - Deferred Revenue)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">16</td>
+<td>FDRV<span> </span></td>
+<td style="width: 152px;">mnForeignDeferredRevenue</td>
+<td style="width: 170px;">AmountForeignDeferredRe<span> </span>(Amount - Foreign Deferred Revenue)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">17</td>
+<td>ANUM<span> </span></td>
+<td style="width: 152px;">mnAaiTableNumber</td>
+<td style="width: 170px;">AaiTableNumber (Number - AAI Table Number)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">Hard Coded 4241</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">18</td>
+<td>SIDT<span> </span></td>
+<td style="width: 152px;">jdScheduledInvoiceDate</td>
+<td style="width: 170px;">ScheduledInvoiceDate (Scheduled Invoice Date)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">19</td>
+<td>INCY<span> </span></td>
+<td style="width: 152px;">szInvoiceCycle</td>
+<td style="width: 170px;">InvoiceCycleCode (Invoice Cycle Code)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">20</td>
+<td>LDDT<span> </span></td>
+<td style="width: 152px;">jdLoadConfirmDate</td>
+<td style="width: 170px;">LoadConfirmDate (Load Confirm Date)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">F4941.LDDT</td>
+<td style="width: 232px;">Transporation</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">21</td>
+<td>LDTM<span> </span></td>
+<td style="width: 152px;">mnLoadTime</td>
+<td style="width: 170px;">TimeLoad<span> </span>(Time - Load)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">F4941.RSDT</td>
+<td style="width: 232px;">Transporation</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">22</td>
+<td>DCDT<span> </span></td>
+<td style="width: 152px;">jdDeliveryConfirmDate</td>
+<td style="width: 170px;">DeliveryConfirmDate (Delivery Confirm Date)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">ADDJ - ActualShipDate</td>
+<td style="width: 232px;">Transporation</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">23</td>
+<td>PCQY<span> </span></td>
+<td style="width: 152px;">mnPrimaryCommittedQuantity</td>
+<td style="width: 170px;">UnitsPrimaryCommittedQua (Units - Primary Committed Quantity)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">24</td>
+<td>UOMC<span> </span></td>
+<td style="width: 152px;">szCommittedQuantityUOM</td>
+<td style="width: 170px;">UnitofMeasureCommittedQu (Unit of Measure - Committed Quantity)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">25</td>
+<td>TEMP<span> </span></td>
+<td style="width: 152px;">mnTemperature</td>
+<td style="width: 170px;">Temperature (Temperature)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">N41B0450</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">26</td>
+<td>STPU<span> </span></td>
+<td style="width: 152px;">cTemperatureType</td>
+<td style="width: 170px;">StrappingTemperatureUnit (Temperature Type)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">27</td>
+<td>DNTY<span> </span></td>
+<td style="width: 152px;">mnDensity</td>
+<td style="width: 170px;">Density (Density)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">28</td>
+<td>DNTP<span> </span></td>
+<td style="width: 152px;">cDensityType</td>
+<td style="width: 170px;">DensityTypeAtStandardTem (Density Type - At Standard Temperature)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">29</td>
+<td>DETP<span> </span></td>
+<td style="width: 152px;">mnDensityTemperature</td>
+<td style="width: 170px;">DensityTemperature<span> </span>(Density Temperature)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">30</td>
+<td>DTPU<span> </span></td>
+<td style="width: 152px;">cDensityTemperatureType</td>
+<td style="width: 170px;">DensityTemperatureUnit<span> </span>(Temperature Type)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">31</td>
+<td>VCF<span> </span></td>
+<td style="width: 152px;">mnVolumeCorrectionFactor</td>
+<td style="width: 170px;">VolumeCorrectionFactors<span> </span>(Volume Correction Factor)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">32</td>
+<td>PRAS<span> </span></td>
+<td style="width: 152px;">cPriceatAmbiantorStandard</td>
+<td style="width: 170px;">PriceatAmbiantorStandard (Price at Ambient/Standard/Weight (A,S,W))</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdalph[23] if this value is blank then get default value from DD PRAS</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">33</td>
+<td>CP01<span> </span></td>
+<td style="width: 152px;">cSalesPriceBasedOnDate</td>
+<td style="width: 170px;">PricingBasedOnDate<span> </span>(Sales Price Based On Date)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zddtbs</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">34</td>
+<td>IQTY<span> </span></td>
+<td style="width: 152px;">mnInvoiceQuantity</td>
+<td style="width: 170px;">UnitsInvoiceQuantity (Units - Invoice Quantity)</td>
+<td style="width: 263px;">this is computation result by B4000520 which different Bulk stock with non-bulk; if if (lpdsF42UI12-&gt;zdalloc == _J('1')), then mnInvoiceQuantity = soqs + sone</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">35</td>
+<td>STUM<span> </span></td>
+<td style="width: 152px;">mnStockUOM</td>
+<td style="width: 170px;">StockTotalinPrimaryUOM<span> </span>(Quantity - Primary Stock Accounting Unit)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">36</td>
+<td>BUM6<span> </span></td>
+<td style="width: 152px;">szUM6</td>
+<td style="width: 170px;">UnitofMeasure6 (Unit of Measure)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">37</td>
+<td>AMBR<span> </span></td>
+<td style="width: 152px;">mnAmbientVolume</td>
+<td style="width: 170px;">AmbientResult<span> </span>(Volume - Ambient)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">38</td>
+<td>BUM3<span> </span></td>
+<td style="width: 152px;">szUM3</td>
+<td style="width: 170px;">UnitofMeasure3 (Unit of Measure)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">39</td>
+<td>WGTR<span> </span></td>
+<td style="width: 152px;">mnWeightResult</td>
+<td style="width: 170px;">WeightResult<span> </span>(Weight Result)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">40</td>
+<td>BUM5<span> </span></td>
+<td style="width: 152px;">szUM5</td>
+<td style="width: 170px;">UnitofMeasure5 (Unit of Measure 5)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">41</td>
+<td>FRTV<span> </span></td>
+<td style="width: 152px;">cSupplierFreightCalculate</td>
+<td style="width: 170px;">VendorFreightCalculatedY (Supplier Freight Calculated)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">42</td>
+<td>FRTD<span> </span></td>
+<td style="width: 152px;">cCustomerFreightCalculate</td>
+<td style="width: 170px;">CustomerFreightCalculate (Customer Freight Calculated)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">43</td>
+<td>FRCC<span> </span></td>
+<td style="width: 152px;">mnCustomerFreightCharge<span> </span></td>
+<td style="width: 170px;">AmountCustomerFreightCha (Amount - Customer Freight Charge)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">44</td>
+<td>FRVC<span> </span></td>
+<td style="width: 152px;">mnVendorFreightCharge<span> </span></td>
+<td style="width: 170px;">AmountVendorFreightCharg (Amount - Supplier Freight Charge)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">45</td>
+<td>PVEH<span> </span></td>
+<td style="width: 152px;">szPrimaryVehicleId<span> </span></td>
+<td style="width: 170px;">PrimaryVehicleId (Primary Vehicle Id)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">46</td>
+<td>RLNO<span> </span></td>
+<td style="width: 152px;">szRegistrationLicenseNum<span> </span></td>
+<td style="width: 170px;">RegistrationLicenseNumbe (Registration/License Number)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">47</td>
+<td>MCUR<span> </span></td>
+<td style="width: 152px;">szBusUnitArDefault<span> </span></td>
+<td style="width: 170px;">CostCenterArDefault (Business Unit - A/R Default)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">48</td>
+<td>FLTN<span> </span></td>
+<td style="width: 152px;">szFlightNumber<span> </span></td>
+<td style="width: 170px;">FlightNumber<span> </span>(Flight Number)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">49</td>
+<td>DSNN<span> </span></td>
+<td style="width: 152px;">szDestination<span> </span></td>
+<td style="width: 170px;">Destination (Destination)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">50</td>
+<td>ARCT<span> </span></td>
+<td style="width: 152px;">szAircraftType<span> </span></td>
+<td style="width: 170px;">AircraftType<span> </span>(Aircraft Type)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">51</td>
+<td>SORG<span> </span></td>
+<td style="width: 152px;">szOrigin<span> </span></td>
+<td style="width: 170px;">Origin (Origin)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">52</td>
+<td>ELTM<span> </span></td>
+<td style="width: 152px;">mnTimeElapsed<span> </span></td>
+<td style="width: 170px;">TimeElapsed (Time - Elapsed)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">53</td>
+<td>PTNR<span> </span></td>
+<td style="width: 152px;">mnShipmentNumber<span> </span></td>
+<td style="width: 170px;">ShipmentNumberB73<span> </span>(Shipment Number)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">54</td>
+<td>IAN8<span> </span></td>
+<td style="width: 152px;">mnBondIssuedAddress<span> </span></td>
+<td style="width: 170px;">AddressNumberIssued (Address Number - Bond Issued)</td>
+<td style="width: 263px;">lpdsF42UI01-&gt;zhian8</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">55</td>
+<td>PTC<span> </span></td>
+<td style="width: 152px;">szPaymentTerms<span> </span></td>
+<td style="width: 170px;">PaymentTermsCode01<span> </span>(Payment Terms Code)</td>
+<td style="width: 263px;">lpdsF42UI01-&gt;zhtrar</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">56</td>
+<td>DOC<span> </span></td>
+<td style="width: 152px;">mnDocumentNumber<span> </span></td>
+<td style="width: 170px;">DocVoucherInvoiceE<span> </span>(Document (Voucher, Invoice, etc.))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">57</td>
+<td>DCT<span> </span></td>
+<td style="width: 152px;">szDocumentType<span> </span></td>
+<td style="width: 170px;">DocumentType<span> </span>(Document Type)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">58</td>
+<td>KCO<span> </span></td>
+<td style="width: 152px;">szDocumentCompany<span> </span></td>
+<td style="width: 170px;">CompanyKey (Document Company)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">59</td>
+<td>CRR<span> </span></td>
+<td style="width: 152px;">mnExchangeRate<span> </span></td>
+<td style="width: 170px;">CurrencyConverRateOv (Currency Conversion Rate - Spot Rate)</td>
+<td style="width: 263px;">lpdsF42UI01-&gt;zhcrrd</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">60</td>
+<td>CRCD<span> </span></td>
+<td style="width: 152px;">szCurrencyCode<span> </span></td>
+<td style="width: 170px;">CurrencyCodeFrom (Currency Code - From)</td>
+<td style="width: 263px;">lpdsF42UI01-&gt;zhcrce</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">61</td>
+<td>TXA1<span> </span></td>
+<td style="width: 152px;">szTaxRateArea<span> </span></td>
+<td style="width: 170px;">TaxArea1<span> </span>(Tax Rate/Area)</td>
+<td style="width: 263px;">lpdsF42UI01-&gt;zhtxa1</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">62</td>
+<td>EXR1<span> </span></td>
+<td style="width: 152px;">szTaxExplanationCode<span> </span></td>
+<td style="width: 170px;">TaxExplanationCode1 (Tax Expl Code 1)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdexr1</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">63</td>
+<td>FRDM<span> </span></td>
+<td style="width: 152px;">cForeignDomesticFlag</td>
+<td style="width: 170px;">ForeignDomesticFlag (International/Domestic Flag)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">64</td>
+<td>FUPT<span> </span></td>
+<td style="width: 152px;">szFuelingPort<span> </span></td>
+<td style="width: 170px;">FuelingPort (Fueling Port)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">65</td>
+<td>RINO<span> </span></td>
+<td style="width: 152px;">szRegistrationIdentificati<span> </span></td>
+<td style="width: 170px;">RegistrationIdentificati (Registration/Identification Number)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">66</td>
+<td>GLOC<span> </span></td>
+<td style="width: 152px;">szDeliveryLocation<span> </span></td>
+<td style="width: 170px;">DeliveryLocationN<span> </span>(Delivery Location)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">67</td>
+<td>AUTA<span> </span></td>
+<td style="width: 152px;">szAuthorizationName<span> </span></td>
+<td style="width: 170px;">AuthorizationName<span> </span>(Authorization Name)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">68</td>
+<td>ALPH<span> </span></td>
+<td style="width: 152px;">szAlphaName<span> </span></td>
+<td style="width: 170px;">NameAlpha (Name - Alpha)<span> </span></td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">69</td>
+<td>MET1<span> </span></td>
+<td style="width: 152px;">szMeterTicket1<span> </span></td>
+<td style="width: 170px;">MeterTicket1<span> </span>(Meter Ticket 1)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">70</td>
+<td>OPN1<span> </span></td>
+<td style="width: 152px;">mnOpeningReading1<span> </span></td>
+<td style="width: 170px;">UnitsBeginningThroughput (Units - Beginning Throughput Qty. 1)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">71</td>
+<td>PNR1<span> </span></td>
+<td style="width: 152px;">mnClosingReading1<span> </span></td>
+<td style="width: 170px;">ClosingReading1 (Closing Reading 1)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">72</td>
+<td>MET2<span> </span></td>
+<td style="width: 152px;">szMeterTicket2<span> </span></td>
+<td style="width: 170px;">MeterTicket2<span> </span>(Meter Ticket 2)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">73</td>
+<td>OPN2<span> </span></td>
+<td style="width: 152px;">mnOpeningReading2<span> </span></td>
+<td style="width: 170px;">UnitsBeginningThroughpu2 (Units - Beginning Throughput Qty. 2)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">74</td>
+<td>PNR2<span> </span></td>
+<td style="width: 152px;">mnClosingReading2<span> </span></td>
+<td style="width: 170px;">ClosingReading2 (Closing Reading 2)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">75</td>
+<td>MET3<span> </span></td>
+<td style="width: 152px;">szMeterTicket3<span> </span></td>
+<td style="width: 170px;">MeterTicket3<span> </span>(Meter Ticket 3)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">76</td>
+<td>OPN3<span> </span></td>
+<td style="width: 152px;">mnOpeningReading3<span> </span></td>
+<td style="width: 170px;">UnitsBeginningThroughpu3 (Units - Beginning Throughput Qty. 3)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">77</td>
+<td>PNR3<span> </span></td>
+<td style="width: 152px;">mnClosingReading3<span> </span></td>
+<td style="width: 170px;">ClosingReading3 (Closing Reading 3)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">78</td>
+<td>ARDT<span> </span></td>
+<td style="width: 152px;">jdDateArrival<span> </span></td>
+<td style="width: 170px;">DateArrival (Date - Arrival)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">79</td>
+<td>ARTM<span> </span></td>
+<td style="width: 152px;">mnTimeArrival<span> </span></td>
+<td style="width: 170px;">TimeArrival (Time - Arrival)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">80</td>
+<td>DPDT<span> </span></td>
+<td style="width: 152px;">jdDateDeparture<span> </span></td>
+<td style="width: 170px;">DateDeparture<span> </span>(Date - Departure)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">81</td>
+<td>DETM<span> </span></td>
+<td style="width: 152px;">mnTimeDeparture<span> </span></td>
+<td style="width: 170px;">TimeDeparture<span> </span>(Time - Departure)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">82</td>
+<td>DSTJ<span> </span></td>
+<td style="width: 152px;">jdDateStartJob<span> </span></td>
+<td style="width: 170px;">DateStartJobJulian<span> </span>(Date - Start Job(Julian))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">83</td>
+<td>STM<span> </span></td>
+<td style="width: 152px;">mnStartTimeHHMM<span> </span></td>
+<td style="width: 170px;">TimeBeginningHHMM<span> </span>(Time - Start (HH/MM))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">84</td>
+<td>END<span> </span></td>
+<td style="width: 152px;">jdDateEnding<span> </span></td>
+<td style="width: 170px;">DateEnding (Date - Ending)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">85</td>
+<td>ETM<span> </span></td>
+<td style="width: 152px;">mnEndTimeHHMM<span> </span></td>
+<td style="width: 170px;">TimeStopHHMM<span> </span>(Time - End (HH/MM))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">86</td>
+<td>TV01<span> </span></td>
+<td style="width: 152px;">cLineOrigin</td>
+<td style="width: 170px;">FutureUse01t<span> </span>(Sales Detail Line Origin)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">87</td>
+<td>TV02<span> </span></td>
+<td style="width: 152px;">cFutureUse02</td>
+<td style="width: 170px;">FutureUse02t<span> </span>(Future Use 02)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">88</td>
+<td>TV03<span> </span></td>
+<td style="width: 152px;">cFutureUse03</td>
+<td style="width: 170px;">FutureUse03t<span> </span>(Future Use 03)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">89</td>
+<td>TV04<span> </span></td>
+<td style="width: 152px;">cFutureUse04</td>
+<td style="width: 170px;">FutureUse04 (Future Use 04)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">90</td>
+<td>TV05<span> </span></td>
+<td style="width: 152px;">cFutureUse05</td>
+<td style="width: 170px;">FutureUse05 (Future Use 05)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">91</td>
+<td>TVCD<span> </span></td>
+<td style="width: 152px;">szFutureUseCode<span> </span></td>
+<td style="width: 170px;">FutureUseCode<span> </span>(Future Use Code)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">92</td>
+<td>TVQT<span> </span></td>
+<td style="width: 152px;">mnFutureUseQuantity<span> </span></td>
+<td style="width: 170px;">FutureUseQuantityt<span> </span>(Future Use Quantity)</td>
+<td style="width: 263px;">(OTM is in USE) dsD4277753A.mnPercenttoFill</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">93</td>
+<td>TVDT<span> </span></td>
+<td style="width: 152px;">jdFutureUseDate<span> </span></td>
+<td style="width: 170px;">FutureUseDate<span> </span>(Future Use Date)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">94</td>
+<td>TVUM<span> </span></td>
+<td style="width: 152px;">szFutureUseUnitofMeasure<span> </span></td>
+<td style="width: 170px;">FutureUseUnitofMeasure<span> </span>(Future Use Unit of Measure)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">95</td>
+<td>USER<span> </span></td>
+<td style="width: 152px;">szUserId<span> </span></td>
+<td style="width: 170px;">UserId (User ID)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zduser</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">96</td>
+<td>PID<span> </span></td>
+<td style="width: 152px;">szProgramId<span> </span></td>
+<td style="width: 170px;">ProgramId (Program ID)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdpid</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">97</td>
+<td>JOBN<span> </span></td>
+<td style="width: 152px;">szWorkStationId<span> </span></td>
+<td style="width: 170px;">WorkStationId<span> </span>(Work Station ID)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdjobn</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">98</td>
+<td>UPMJ<span> </span></td>
+<td style="width: 152px;">jdDateUpdated<span> </span></td>
+<td style="width: 170px;">DateUpdated (Date - Updated)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdupmj</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">99</td>
+<td>TDAY<span> </span></td>
+<td style="width: 152px;">mnTimeOfDay<span> </span></td>
+<td style="width: 170px;">TimeOfDay (Time of Day)</td>
+<td style="width: 263px;">lpdsF42UI11-&gt;zdtday</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">100</td>
+<td>SBCK<span> </span></td>
+<td style="width: 152px;">cCheckSellByDate</td>
+<td style="width: 170px;">CheckSellByDate (Check Sell By Date)</td>
+<td style="width: 263px;"><span> </span>SAR 4579777, when lpdsF42UI02-&gt;cSystemShipAscendingDate == _J('1'), then lpds4200310D-&gt;cCheckSellByDate</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">101</td>
+<td>EDCK<span> </span></td>
+<td style="width: 152px;">cCheckExpirationDate</td>
+<td style="width: 170px;">CheckExpirationDate (Check Expiration Date)</td>
+<td style="width: 263px;">lpds4200310D-&gt;cCheckExpirationDate</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">102</td>
+<td>CMDM<span> </span></td>
+<td style="width: 152px;">cCommitmentDateMethod</td>
+<td style="width: 170px;">CommitmentDateMethod (Commitment Date Method)</td>
+<td style="width: 263px;">lpds4200310D-&gt;cCommitmentDateMethod</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">103</td>
+<td>BBCK<span> </span></td>
+<td style="width: 152px;">cCheckBestBeforeDate</td>
+<td style="width: 170px;">CheckBestBeforeDate (Check Best Before Date)</td>
+<td style="width: 263px;">lpds4200310D-&gt;cCheckBestBeforeDate</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">104</td>
+<td>RQSJ<span> </span></td>
+<td style="width: 152px;">jdDateRequestedShip<span> </span></td>
+<td style="width: 170px;">DateRequestedShip<span> </span>(Date - Requested Ship)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">105</td>
+<td>PSDJ<span> </span></td>
+<td style="width: 152px;">jdDatePromisedShipJu<span> </span></td>
+<td style="width: 170px;">DatePromisedShipJu (Date - Future Date 2)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">106</td>
+<td>ADLJ<span> </span></td>
+<td style="width: 152px;">jdDateActualDelivery<span> </span></td>
+<td style="width: 170px;">DateActualDelivery<span> </span>(Date - Actual Delivery)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">107</td>
+<td>SUB<span> </span></td>
+<td style="width: 152px;">szSubsidiary<span> </span></td>
+<td style="width: 170px;">Subsidiary (Subsidiary)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">108</td>
+<td>STTS<span> </span></td>
+<td style="width: 152px;">szLineStatus_2<span> </span></td>
+<td style="width: 170px;">LineStatus (Line Status)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">109</td>
+<td>RATT<span> </span></td>
+<td style="width: 152px;">cRateTypeFreightMisc</td>
+<td style="width: 170px;">RateTypeFreightMisc (Rate Type - Freight/Misc)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">110</td>
+<td>FUF1<span> </span></td>
+<td style="width: 152px;">cApplyFreight</td>
+<td style="width: 170px;">ApplyFreight<span> </span>(AIA Document Flag)<span> </span></td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdaft</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">111</td>
+<td>FRTC<span> </span></td>
+<td style="width: 152px;">cFreightCalculatedYN</td>
+<td style="width: 170px;">FreightCalculatedYN (Freight Calculated (Y/N))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">112</td>
+<td>FRAT<span> </span></td>
+<td style="width: 152px;">szRateCodeFrieghtMisc<span> </span></td>
+<td style="width: 170px;">RateCodeFrieghtMisc (Rate Code - Frieght/Misc)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">113</td>
+<td>AFT<span> </span></td>
+<td style="width: 152px;">cApplyFreightYN</td>
+<td style="width: 170px;">ApplyFreightYN (Apply Freight - Y/N)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">114</td>
+<td>OMCU<span> </span></td>
+<td style="width: 152px;">szPurchasingCostCenter<span> </span></td>
+<td style="width: 170px;">PurchasingCostCenter (Project Business Unit)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">115</td>
+<td>OBJ<span> </span></td>
+<td style="width: 152px;">szObjectAccount<span> </span></td>
+<td style="width: 170px;">ObjectAccount<span> </span>(Object Account)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">116</td>
+<td>LT</td>
+<td style="width: 152px;">szLedgerType<span> </span></td>
+<td style="width: 170px;">LedgerType (Ledger Types)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">117</td>
+<td>FAPP<span> </span></td>
+<td style="width: 152px;">cDiscntApplicationType</td>
+<td style="width: 170px;">DiscntApplicationType (Discount Application Type)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">118</td>
+<td>DSPR<span> </span></td>
+<td style="width: 152px;">mnDiscountFactor<span> </span></td>
+<td style="width: 170px;">DiscountFactor (Discount Factor)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">119</td>
+<td>DSFT<span> </span></td>
+<td style="width: 152px;">cDiscountFactorTypeOr</td>
+<td style="width: 170px;">DiscountFactorTypeOr (Discount Factor Type - $ or % (D/P))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">120</td>
+<td>DMT1<span> </span></td>
+<td style="width: 152px;">szContractNumberDistrsecoN<span> </span></td>
+<td style="width: 170px;">ContractNumberDistrsecoN (Agreement Number - Distr. (secondary))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">121</td>
+<td>DMS1<span> </span></td>
+<td style="width: 152px;">mnSecondarycontractsupp<span> </span></td>
+<td style="width: 170px;">Secondarycontractsupp (Agreement Supplement - Dist. (Secondary))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">122</td>
+<td>COT<span> </span></td>
+<td style="width: 152px;">szConditionsOfTransport<span> </span></td>
+<td style="width: 170px;">ConditionsOfTransport (Conditions of Transport)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">123</td>
+<td>CMGL<span> </span></td>
+<td style="width: 152px;">cAllocateByLot</td>
+<td style="width: 170px;">AllocateByLot<span> </span>(Commitment Method)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">124</td>
+<td>BALU<span> </span></td>
+<td style="width: 152px;">cContractBalancesUpdatedY</td>
+<td style="width: 170px;">ContractBalancesUpdatedY (Contract Balances Updated Y/N)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">125</td>
+<td>APOT<span> </span></td>
+<td style="width: 152px;">mnActualPotency<span> </span></td>
+<td style="width: 170px;">ActualPotency (Actual Potency)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">126</td>
+<td>ACGD<span> </span></td>
+<td style="width: 152px;">szActualGrade<span> </span></td>
+<td style="width: 170px;">ActualGrade (Actual Grade)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">127</td>
+<td>ANI<span> </span></td>
+<td style="width: 152px;">szAcctNoInputMode<span> </span></td>
+<td style="width: 170px;">AcctNoInputMode (Account Number - Input (Mode Unknown))</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">128</td>
+<td>AID<span> </span></td>
+<td style="width: 152px;">szAccountId<span> </span></td>
+<td style="width: 170px;">AccountId (Account ID)</td>
+<td style="width: 263px;">&nbsp;</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">129</td>
+<td>OPOL<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">OPOriginalLineNumber (OP Original Line Number)</td>
+<td style="width: 263px;">B4205050 but no actual implemenation</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">130</td>
+<td>OPBO<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">OPBusinessObjective (OP Business Objective)</td>
+<td style="width: 263px;">B4205050</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">131</td>
+<td>OPID<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">OPScenarioID<span> </span>(OP Scenario ID)</td>
+<td style="width: 263px;">B4205050</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">132</td>
+<td>OPCS<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">OPCost (OP Cost)</td>
+<td style="width: 263px;">B4205050</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">133</td>
+<td>OPLL<span> </span></td>
+<td style="width: 152px;">cOPPartialShipLineItems<span> </span></td>
+<td style="width: 170px;">OPPartialShipLineItems<span> </span>(OP Partial Ship Line Items)</td>
+<td style="width: 263px;">SAR 5814943 - ORDER PROMISING BEGINS, lpdsF42UI12-&gt;zdopll</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">134</td>
+<td>OPMS<span> </span></td>
+<td style="width: 152px;">cOPAllowMultiSource</td>
+<td style="width: 170px;">OPAllowMultiSource<span> </span>(OP Allow Multi Source)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdopms</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">135</td>
+<td>OPSS<span> </span></td>
+<td style="width: 152px;">cOPAllowSubstitutes<span> </span></td>
+<td style="width: 170px;">OPAllowSubstitutes<span> </span>(OP Allow Substitutes)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdopss</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">136</td>
+<td>OPBA<span> </span></td>
+<td style="width: 152px;">cOPAllowBackorders<span> </span></td>
+<td style="width: 170px;">OPAllowBackorders<span> </span>(OP Allow Backorders)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdopba</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">137</td>
+<td>FXSR<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">FixSourceLocation (Fix Source Location)<span> </span></td>
+<td style="width: 263px;">B4205050</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">138</td>
+<td>OPMG<span> </span></td>
+<td style="width: 152px;">szOPMultiSourceGroup<span> </span></td>
+<td style="width: 170px;">OPMultiSourceGroup<span> </span>(OP Multi Source Group)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdopmg</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">139</td>
+<td>OPSG<span> </span></td>
+<td style="width: 152px;">szOPShippingGroup<span> </span></td>
+<td style="width: 170px;">OPShippingGroup (OP Shipping Group)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdopsg</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">140</td>
+<td>OPYN<span> </span></td>
+<td style="width: 152px;">cOPPromiseLineYN<span> </span></td>
+<td style="width: 170px;">OPPromiseLineYN (OP Promise Line (Y/N))</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdopyn</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">141</td>
+<td>OPSU<span> </span></td>
+<td style="width: 152px;">&nbsp;</td>
+<td style="width: 170px;">OPAllowSplitUOM (OP Allow Split UOM)</td>
+<td style="width: 263px;">B4205050</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">142</td>
+<td>PSJOBNO</td>
+<td style="width: 152px;">szProdSeqJobNo<span> </span></td>
+<td style="width: 170px;">ProdSeqJobNo<span> </span>(Production Sequencing Job Number)</td>
+<td style="width: 263px;">SAR 7758877, lpdsF42UI12-&gt;zdpsjobno</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">143</td>
+<td>JOBSQ<span> </span></td>
+<td style="width: 152px;">szJobSequence<span> </span></td>
+<td style="width: 170px;">JobSequence (Job Sequence Number)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdjobsq</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">144</td>
+<td>CARDNO</td>
+<td style="width: 152px;">szCardNumber<span> </span></td>
+<td style="width: 170px;">CardNumber (Card Number)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zdcardno</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">145</td>
+<td>DELBATCH<span> </span></td>
+<td style="width: 152px;">szDeliveryBatchNumber<span> </span></td>
+<td style="width: 170px;">DeliveryBatchNumber (Delivery Batch Number)</td>
+<td style="width: 263px;">lpdsF42UI12-&gt;zddelbatch</td>
+<td style="width: 243px;">&nbsp;</td>
+<td style="width: 232px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p><span style="font-size: 10pt;">Note </span></p>
+<ul>
+<li><span style="font-size: 10pt;">The primary purpose of above table is help user to create F49211 based on F4201/F4211 for exiting data</span></li>
+<li><span style="font-size: 10pt;">The columns to be mapped during ship confirmation and other routine (e.g., cycle billing, order promising etc.) is to be implemented soon</span></li>
+</ul>
+<p>&nbsp;</p>
+</div>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 10pt;">&nbsp;</span></p>
+<p>&lt;Internal_Only&gt;</p>
+<p><span style="font-size: 10pt;">SR Notes: </span><br /> <span style="font-size: 10pt;">F4211.OMCU is an unused field in XE vanilla. Some customers may have been using this field within their customizations. </span><br /> <span style="font-size: 10pt;">The F49211 is predominantly used in ECS for bulk products and loads etc. It is however also borrowed by other modules, for example, container management and cycle billing functionality and Intercompany orders within Enterprise One. </span><br /> <span style="font-size: 10pt;">F49211 file contains additional information about the sales order and it is updated during Sales Order entry and Shipment Confirmation. For standard sales orders not using bulk items, transportation, or cycle billing, then F49211 will not be updated.</span><br /> <span style="font-size: 10pt;">...</span><br /> <br /> <br /> <span style="font-size: 10pt;">F49211MaintainSalesDetailTable</span><br /> <span style="font-size: 10pt;">F49211MaintainSalesDetailTable (B4201270,&nbsp; F49211 Maintain Sales Detail Table)</span></p>
+<p><strong><span style="font-size: 10pt;"><span style="text-decoration: underline;">cActionCode</span> </span></strong></p>
+<ul>
+<li><span style="font-size: 10pt;">ADD MODE : A, 1</span></li>
+<li><span style="font-size: 10pt;">UPDATE MODE: C, 2</span></li>
+<li><span style="font-size: 10pt;">DELETE MODE: D, P, 3</span></li>
+<li><span style="font-size: 10pt;">INQUIRE MODE: I, 4</span></li>
+<li><span style="font-size: 10pt;">COPY MODE: X, 5 </span></li>
+<li><span style="font-size: 10pt;">UPDATE OR INSERT A RECORD: Y, 6 (or, R, 7)</span><br /> <span style="font-size: 10pt;"> </span></li>
+<li><span style="font-size: 10pt;"></span><span style="font-size: 10pt;">COPY ORIGINAL AND UPDATE SPLIT MODE: Z, 8</span></li>
+</ul>
+<p>&nbsp;</p>
+<p><span style="font-size: 10pt;">if ((lpdsF42UI11-&gt;zdactn == _J('D')) ||</span><br /> <span style="font-size: 10pt;"> ((lpdsF42UI11-&gt;zdactn == _J('P')) &amp;&amp; </span><br /> <span style="font-size: 10pt;"> (MathZeroTest(&amp;lpdsF42UI11-&gt;zdrkit) == 0)))</span><br /> <span style="font-size: 10pt;"> {</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> dsD4201270.cPurgeToHistory = _J('1');</span><br /> <span style="font-size: 10pt;"> }</span><br />&nbsp;</p>
+<p>For ship confirmation - N4200790<br /> <br /> <span style="font-size: 10pt;">LoadOrUnloadShipConfirmCache (B4200810, Load Or Unload Ship Confirm Cache)</span></p>
+<p>&lt;/Internal_Only&gt;</p>
+<p>&nbsp;</p>
+<p>&lt;Internal_Only&gt;</p>
+<p><br /> <span style="font-size: 10pt;">/* bug 14163706 - If Sales Order is ship confirmed, get the Invoice quantity from F49211 table */</span><br /> <span style="font-size: 10pt;"> if(lpdsF42UI11-&gt;zdalph[2] == _J('1'))</span><br /> <span style="font-size: 10pt;"> {</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> idReturnValue = I4200310_GetF49211Record(lpBhvrCom, lpVoid,</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> &amp;dsD4201270, </span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> &amp;mnInvoiceQty);</span><br /> <span style="font-size: 10pt;"> }</span></p>
+<p>&nbsp;</p>
+<p>&lt;/Internal_Only&gt;</p>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

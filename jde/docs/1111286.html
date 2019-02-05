@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Frequently Asked Questions on X00500C - Convert Numeric Value To Words</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Frequently Asked Questions on X00500C - Convert Numeric Value To Words</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+
+<p>This document is to address frequently asked questions on the business function X00500C - <em>ConvertNumericValueToWordsSingap </em>(Convert Numeric Value To Words Singapore). It explains how Business Function X00500C is functioning and what is the expected result. It also addresses why this business function sometimes fails to convert a certain numeric value to words.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+<p> </p>
+<p><big>Contents of Notes:</big></p>
+<ul>
+<li><a href="#q1" alt="Example of wrong output" title="Example of wrong output">Example of wrong output</a> (1,889,999.93)</li>
+<ul>
+<li><a href="#issue" alt="Issue" title="Issue">Issue</a></li>
+<li><a href="#resolution" alt="Resolution" title="Resolution">Resolution</a></li>
+</ul>
+<ul>
+<li><a href="#implementation" alt="Implementation" title="Implementation">Implemenation</a></li>
+<li><a href="#codeexample" alt="Code Example" title="Code Example">Code Example</a></li>
+</ul>
+<li><a href="#q2" alt="Max Value" title="Max Value">Maximum value in X00500C</a></li>
+<li><a href="#q3" alt="Data Structrure" title="Data Structrure">Data Structure of X00500C</a></li>
+<li><a href="#q4" alt="Negative value" title="Negative value">Others</a></li>
+</ul>
+<p><br /> <br /> <br /> <big><big><a name="q1"></a>Why X00500C is unable to convert certain value to words and how to overcome this issue?</big></big><br /> <big><a name="issue"></a>Issue</big>: X00500C is not able to convert the input value 1,889,999.93 but able to convert 1,889,999.94</p>
+<div style="margin-left: 40px;"><span style="text-decoration: underline;"><strong>Example 1</strong></span><br />
+<div style="margin-left: 40px;">* Input: 1,889,999.94<br /> * Output: ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND NINE HUNDRED NINETY NINE AND NINETY FOUR CENTS ******</div>
+<br /> <span style="text-decoration: underline;"><strong>Example 2</strong></span><br />
+<div style="margin-left: 40px;">* Input: 1,889,999.93<br /> * Output: $1,889,999.93***************************************************************************************</div>
+</div>
+<p><br /> For "Example 2", though ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND NINE HUNDRED NINETY NINE AND NINETY THREE CENTS ***** is smaller than 100 characters in size, X00500C is still not able to convert it to words.<br /> <br /> <big><a name="resolution"></a>Resolution</big>: To overcome this issue, set value '3' for item #<em>3. 'Literal Amount Lines</em>' of Print Format tab for the Processing Option of R04572SG.</p>
+<div class="kmnotebox">Note: The processing option value change should be done only on ZJDE0001 version of R04572SG. This is because X00500C is hard-coded to read the ZJDE0001 version data of R04572SG only.</div>
+<p><br /> <br /> Below table is to show the output for two input values 1,889,999.93 and 1,889,999.94:-<br /> In printing words for input numeric value 1,889,999.93</p>
+<table class="km" style="width: 970px; height: 178px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; color: white;">Item#3 PO<br /> Value Set to</th>
+<th class="km" style="background-color: #009900; color: white;">Words Output</th>
+<th class="km" style="background-color: #009900; color: white;">Ln</th>
+</tr>
+<tr>
+<td class="km" align="center">3</td>
+<td class="km">1st Row: ONE MILLION EIGHT HUNDRED EIGHTY NIGHT THOUSAND<br /> 2nd Row: NINE HUNDRED NINETY NINE AND NINETY THREE<br /> 3rd Row: CENTS********************************************* <br /> <span style="text-decoration: underline;"><strong>One Line</strong></span>: ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND NINE HUNDRED NINETY NINE AND NINETY THREE CENTS *****</td>
+<td class="km">46<br /> 41<br /> 50<br /> 100</td>
+</tr>
+<tr>
+<td class="km" align="center">2</td>
+<td class="km">1st row: $1,889,999.93*************************************<br /> <span style="text-decoration: underline;"><strong>One Line</strong></span>: $1,889,999.93*************************************</td>
+<td class="km">50<br /> 50</td>
+</tr>
+</tbody>
+</table>
+<p><br /> Input Numeric Value 1,889,999.94</p>
+<table class="km" style="width: 972px; height: 198px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; color: white;">Item#3 PO<br /> Value Set to</th>
+<th class="km" style="background-color: #009900; color: white;">Words Output</th>
+<th class="km" style="background-color: #009900; color: white;">Ln</th>
+</tr>
+<tr>
+<td class="km" align="center">3</td>
+<td class="km">1st Row: ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND<br /> 2nd Row: NINE HUNDRED NINETY NINE AND NINETY FOUR CENTS****<br /> 3rd Row: **************************************************<br /> <span style="text-decoration: underline;"><strong>One Line</strong></span>: ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND NINE HUNDRED NINETY NINE AND NINETY FOUR CENTS ******</td>
+<td class="km">46<br /> 50<br /> 50<br /> 100</td>
+</tr>
+<tr>
+<td class="km" align="center">2</td>
+<td class="km">1st Row: ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND<br /> 2nd Row: NINE HUNDRED NINETY NINE AND NINETY FOUR CENTS****<br /> <span style="text-decoration: underline;"><strong>One Line</strong></span>: ONE MILLION EIGHT HUNDRED EIGHTY NINE THOUSAND NINE HUNDRED NINETY NINE AND NINETY FOUR CENTS ******</td>
+<td class="km">46<br /> 50<br /> 100</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>If Processing Option value is 3 for parameter 'item #3. Literal Amount Lines', it will split words output into 3 lines</li>
+<li>If Processing Option value is 2 for parameter 'item #3. Literal Amount Lines', it will split words result into 2 lines</li>
+<li>Ln/Length: The size of string or character array</li>
+<li>One Line: szOneLineCompleteString[101] which is fifth parameter of BSFN X00500C</li>
+</ul>
+</div>
+<p><br /> <big><a name="implementaion"></a>Implementation</big>: Value 1,889,999.93 is handled as below,</p>
+<div class="kmnotebox" style="margin-left: 40px;">1,889,999.93 = (1 * MILLION) + (889*THOUSAND) + (999) + and CENTS (93)<br /> <br /> <span style="text-decoration: underline;"><strong>1st Part:</strong></span><br /> 1 MILLION = ONE + MILLION<br /> <span style="text-decoration: underline;"><strong>2nd Part:</strong></span><br /> 889 THOUSAND = (8*100 + 80 + 9) THOUSAND = EIGHT + HUNDRED + EIGHTY + NINE + THOUSAND<br /> <span style="text-decoration: underline;"><strong>3rd Part:</strong></span><br /> 999 = 9*100 + 90 + 9 = NINE + HUNDRED + NINETY + NINE<br /> <strong>AND </strong>if there is Decimal Value<br /> <span style="text-decoration: underline;"><strong>4th Decimal Part:</strong></span><br /> 93 = 90 + 3 = NINETY + THREE<br /> <strong>CENTS</strong></div>
+<p><br /> <img src="../images/check01.png" border="0" alt="Explanation on each 100th" hspace="0" align="bottom"/></p>
+<p>For each 100th position of the input value, it is handled in the following manner:</p>
+<ul>
+<li>All the value can be described within two categories: szWordArray10[10] and szWordArray19[20]</li>
+<li>szWordArray10[10] = {ZERO, TEN, TWENTY, ..., NINETY}</li>
+<li>szWordArray19[20] = {ZERO, ONE, TWO, THREE, ..., NINETEEN}</li>
+</ul>
+<p>The reason X00500C handles (Example #1) "NINE HUNDRED NINETY NINE AND NINETY FOUR " but not (Example #2) "NINE HUNDRED NINETY NINE AND NINETY THREE " is that</p>
+<ul>
+<ul>
+<li>Example #2 ("NINE HUNDRED NINETY NINE AND NINETY THREE ") is 42 characters and will not fix in a line of 50 long because there will be a case where possible value is "NINE HUNDRED NINETY NINE AND NINETY THREE THOUSAND" - 51 characters</li>
+<li>Whereas Example #1 ("NINE HUNDRED NINETY NINE AND NINETY FOUR ") is 41 long so the longest possible value "NINE HUNDRED NINETY NINE AND NINETY FOUR THOUSAND" - 50 characters fits in allocated size</li>
+<li>MAX_SIZEOF_SINGLE_WORD can be as big as 9 (e.g., THOUSAND)</li>
+<li>42 + 9 = 51 which is longer than acceptable value of 50</li>
+<li>So to print out to a specific line, concat() result is to be smaller than or equal to 41</li>
+<li>But this is not a bug as this function has to deal with max value of NINE HUNDRED NINETY NINE BILLION ...</li>
+</ul>
+</ul>
+<p><big><strong><a name="codeexample"></a>Code Example:</strong></big></p>
+<p style="margin-left: 80px;">else if(nWorkFieldLength &gt; (MIDDLE_LINE_LENGTH - MAX_SIZEOF_SINGLE_WORD) &amp;&amp;<br /> (IsStringBlank(szMiddle) != 0) )<br /> {<br /> jdeStripTrailingBlanks(szWorkVar);<br /> jdeStrncpy(szMiddle, szWorkVar, MIDDLE_LINE_LENGTH);<br /> nTooLarge = jdeStrcmp(szWorkVar, szMiddle);<br /> memset ((void *)(szWorkVar), (int)(_J('\0')), sizeof(szWorkVar));<br /> }</p>
+<hr />
+<p> </p>
+<p><big><big><a name="q2"></a>What is maximum input value allowed?</big></big><br /> The maximum value is a Hundred Billion that is 999,999,999,999.99 with 3 lines printing</p>
+<hr />
+<p><br /> <big><big><a name="q3"></a>How to use Business Function X00500C?</big></big><br /> Below are simple explanation how X00500C is working,<br /> A. Data Structure - D0400555 Convert Numbers to Words - Singapore</p>
+<table class="km" style="width: 820px; height: 193px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; color: white;">Parameter</th>
+<th class="km" style="background-color: #009900; color: white;">IN<br /> OUT</th>
+<th class="km" style="background-color: #009900; color: white;">DD<br /> Alias</th>
+<th class="km" style="background-color: #009900; color: white;">Others</th>
+</tr>
+<tr>
+<td class="km">mnAmountField</td>
+<td class="km">IN</td>
+<td class="km">AA</td>
+<td class="km">Dollar Value</td>
+</tr>
+<tr>
+<td class="km">szTopLine[51]</td>
+<td class="km">OUT</td>
+<td class="km">DL010</td>
+<td class="km"> </td>
+</tr>
+<tr>
+<td valign="top">szMiddleLine[51]</td>
+<td valign="top">OUT</td>
+<td valign="top">DL010</td>
+<td valign="top"> </td>
+</tr>
+<tr>
+<td valign="top">szBottomLine[51]</td>
+<td valign="top">OUT</td>
+<td valign="top">DL010</td>
+<td valign="top"> </td>
+</tr>
+<tr>
+<td valign="top">szOneLineCompleteString[101]</td>
+<td valign="top">OUT</td>
+<td valign="top">DL011</td>
+<td valign="top">This value is the output of the complete string of all 3 lines of output (szTopLine[51] + szMiddleLine[51] + szBottomLine[51])</td>
+</tr>
+</tbody>
+</table>
+<p><br /> B. Global Variable Definition (for X00500C only)</p>
+<table class="km" style="width: 824px; height: 178px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; color: white;">Variable Name</th>
+<th class="km" style="background-color: #009900; color: white;">Size</th>
+<th class="km" style="background-color: #009900; color: white;">Detail</th>
+</tr>
+<tr>
+<td class="km">CONVERT_NUMBER_MAX_LENGTH_SINGAPORE</td>
+<td class="km">100</td>
+<td class="km">This value should match the one-line length -1</td>
+</tr>
+<tr>
+<td class="km">TOP_LINE_LENGTH</td>
+<td class="km">50</td>
+<td class="km">Length of top line</td>
+</tr>
+<tr>
+<td class="km">MIDDLE_LINE_LENGTH</td>
+<td class="km">50</td>
+<td class="km">Length of middle line</td>
+</tr>
+<tr>
+<td class="km">BOTTOM_LINE_LENGTH</td>
+<td class="km">50</td>
+<td class="km">Length of bottom line</td>
+</tr>
+<tr>
+<td class="km">WORK_VARIABLE_LENGTH</td>
+<td class="km">61</td>
+<td class="km">Used in the internal parse functions to prevent word truncation</td>
+</tr>
+<tr>
+<td valign="top">MAX_SIZEOF_SINGLE_WORD</td>
+<td valign="top">9</td>
+<td valign="top">Should be set no lower than 9 e.g., THOUSAND</td>
+</tr>
+</tbody>
+</table>
+<p><br /> In case the purpose of implementing this business function is not to print cheque but to describe dollar value in Words then make use of parameters mnAmountField (IN) and szOneLineCompleteString (OUT).</p>
+<hr />
+<p><br /> <br /> <big><big><a name="q4"></a>Does the Business Function X00500C handle Negative figures?</big></big><br /> No. Since this function is to support print check/cheque routine, which does not have negative figure/amount implementation. <br /> A possible workaround is that the calling program/report passes the absolute value of the amount to X00500C, then the word "MINUS" can be added in front of the output string</p>
+<hr />
+<p> </p>
+<p><big><big><a name="q5"></a>Is there possible way to print the output words in a single string for huge figure?</big></big><br /> In case you want to have the output words in a single string, then you may make use of the business function ConvertNumericValueToWords (X00500, Numeric Value, Convert to Words).</p>
+<p>From &lt;Bug 10918080&gt; : X00500 AND CHECKS OVER 1 MILLI - SAR: 8009325, it mentions that that this business function can handle a total output string length of 83 including "AND 99/100". If the string length of the amount that has been converted into words are exceeding the length of 83 characters, it will be printed as numeric values. If it is not exceeding the specific length the total amount will be converted properly into words and it will also be printed in the check.<br /> <br /> For instance,</p>
+<ul>
+<li>5,953,125.99 will be printed as : FIVE MILLION NINE HUNDRED FIFTY THREE THOUSAND ONE HUNDRED TWENTY FIVE AND 99/100*************</li>
+<li>55,953,125.99 will be printed as : $55,953,125.99 ********************************************************************************</li>
+</ul>
+<p> </p>
+<p> </p>
+<hr />
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

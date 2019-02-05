@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Filter Sales Order Detail Lines Using Customer Item Number (CITM) in Customer Service Inqury</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Filter Sales Order Detail Lines Using Customer Item Number (CITM) in Customer Service Inqury</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></big></big></h2>
+
+<p>&nbsp;</p>
+<p>The purpose of this document is to explain the limitation of search functionality in both P42101/W42101C [Manage Exiting Order] and P4210|W4210E [Customer Service Inquiry] to answer below inquiry,</p>
+<p>Is there way to filter sales order details using customer item number in P4210|W4210E [Customer Service Inquiry] with below configuration, <br /> 1. Set Symbol Customer/Supplier (F41001.SYM5) for the branch/plant 'M30' (F41001.MCU)<br /> 2. Add Cross Reference for the customer 74242 using P4104 (Cross Reference) as below, <br /> &nbsp;&nbsp;- Cross-Reference Code Type = 'C' (F4104.XRT)<br /> &nbsp;&nbsp;- Cross Reference Item Number = 'COFFEE' (F4104.CITM)<br /> &nbsp;&nbsp;- Address Number = 74242 (F4104.AN8)<br /> &nbsp;&nbsp;- Eff Date = Today's date<br /> &nbsp;&nbsp;- Expired Date = 12/31/Default Value of DD Alias DCYR (or CENTCHG)</p>
+<table style="border-collapse: collapse; width: 852px; height: 86px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 84pt;" width="112" /> <col style="width: 51pt;" width="68" /> <col style="width: 71pt;" width="95" /> <col style="width: 67pt;" width="89" /> <col style="width: 71pt;" width="95" /> <col style="width: 162pt;" width="216" /> <col style="width: 100pt;" width="133" /> <col style="width: 88pt;" width="117" /> <col style="width: 54pt;" width="72" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt; width: 84pt; color: white; background-color: #3366ff; text-align: center;">Address Number</td>
+<td class="xl65" style="width: 51pt; color: white; background-color: #3366ff; text-align: center;" width="68">Xref Type</td>
+<td class="xl65" style="width: 71pt; color: white; background-color: #3366ff; text-align: center;" width="95">Short Item No</td>
+<td class="xl65" style="width: 67pt; color: white; background-color: #3366ff; text-align: center;" width="89">Expired Date</td>
+<td class="xl65" style="width: 71pt; color: white; background-color: #3366ff; text-align: center;" width="95">Effective Date</td>
+<td class="xl65" style="width: 162pt; color: white; background-color: #3366ff; text-align: center;" width="216">Customer/Supplier Item Number</td>
+<td class="xl65" style="width: 100pt; color: white; background-color: #3366ff; text-align: center;" width="133">Description&nbsp;</td>
+<td class="xl65" style="width: 88pt; color: white; background-color: #3366ff; text-align: center;" width="117">2nd Item Number</td>
+<td class="xl65" style="width: 54pt; color: white; background-color: #3366ff; text-align: center;" width="72">...</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" align="right" height="20">74242</td>
+<td class="xl63">C</td>
+<td align="right">933290</td>
+<td class="xl64">12/31/25</td>
+<td class="xl64">03/23/18</td>
+<td class="xl63">COFFEE</td>
+<td class="xl63">Blank coffee - blend</td>
+<td class="xl63">KOPI-O</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>3. Set the processing option of P4210|Version as below, <br /> &nbsp;&nbsp;- (Tab) 12-Order Inquiry<br /> &nbsp;&nbsp;- 7. Customer Cross Reference Type = 'C'</p>
+<p>4. Enter customer's Item Number with symbol (= #COFFEE) in the column Item Number below, </p>
+<p><img src="../images/ctim.png" border="0" alt="Print Screen for Item Number in W4210E" title="Print Screen for Item Number in W4210E" hspace="0" vspace="0" /></p>
+<p>Note: the check box may show additional column in Grid to show the Customer Item Number when it is set properly.&nbsp; <br /> &nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></big></big></h2>
+
+
+<p>Currently, it is functioning as designed as exiting enhancement &lt;Bug 10991876&gt; - SEARCH IN P42101 FOR CUSTOMER - SAR: 8840258. As explained, it is very unlikely we implement this because of usability. <br /><br />There are three different behaviors in P4210/P42101, </p>
+<ul>
+<li>In P4210|W4210A, system parses customer item number to company's item number. So in exiting row with the value '#COFFEE', the value 'KOPI-O' will be returned in P4210|W4210A or P42101|S421002C form (In ADD Mode)&nbsp;</li>
+<li>The processing option parameter contributes the additional column in W4210E form. However, you can not make use of this column as QBE search because this column is not a business view column (i.e., Data Dictionary Item)</li>
+<li>Currently, the Item Number in the header of W4210E form does not have any functionality to parse customer item number to company's item number. System can read F4104 only when Branch/Plant (to resolve #) and Sold To (because each customers can have different item number). </li>
+</ul>
+<p><br />Example to parse customer item number to company's item number, <br /><strong>F4101 Get Item Master Row (X4101, VerifyAndGetItemMaster)</strong><br />&nbsp;&nbsp;GC Item Number -&gt; BF szPrimaryItemNumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>/* IN: example: #COFFEE which is customer item number */</em><br />&nbsp;&nbsp;VA evt_szBranchPlant_MCU -&gt; BF szBranchPlant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>/* IN: Detail Branch/Plant = M30 to resolve symbol # because this symbol can be different per branches */</em><br />&nbsp;&nbsp; -&gt; BF cSymbolidentifier&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>/* IN: To match symbol based on branch/plant - not only customer number but also any symbol */</em><br />&nbsp;&nbsp;VA evt_mnShortItemNumber_ITM &nbsp;&nbsp;FC Address Number -&gt; BF mnAddressnumber&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;<em>/* IN: Sold To Address to build WHERE clause */</em><br />&nbsp; "0" -&gt; BF cReturnPtr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em> /* IN: Not to return pointer - otherwise it can cause memory leak */</em><br />&nbsp;&nbsp;"1" -&gt; BF cSuppressErrorMsg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* IN: 1 - Suppress Error, 0 - Do not Suppress - show error and stop processing */<br />&nbsp;&nbsp;"1" -&gt; BF cCallType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>/* IN: Hard coded to control the routine */</em><br />&nbsp;&nbsp;"1" -&gt; BF cCrossRefMode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <em>/* IN: 0 or 1 to determine whether to read F4104 or not */</em><br />&nbsp;&nbsp;FC Order Date -&gt; BF jdExpirationDate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em> /* IN: Since there can be multiple rows for item number. F4101 : 4104 = 1 : many */</em></p>
+<p>Note: the example of code will be discussed in different document to explain the usage of X4101. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
