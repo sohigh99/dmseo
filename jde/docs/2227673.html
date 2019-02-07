@@ -109,58 +109,69 @@ function topFunction() {
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
 
-<p><span style="font-size: 10pt;">This document is a guide to populate F49211 (Sales Order Detail File - Tag File) based on F4211 (Sales Order Detail File) when open sales order data are from World Software. This is a necessary routine because F49211 is used as optional in World Software whereas same table is used tightly in EnterpriseOne.</span>&nbsp;</p>
+<p>This document is a guide to populate F49211 (Sales Order Detail File - Tag File) based on F4211 (Sales Order Detail File) when open sales order data are from World Software. This is a necessary routine because F49211 is used as optional in World Software whereas same table is used tightly in EnterpriseOne.</span>&nbsp;</p>
 
-
+<h4><span style="text-decoration: underline;">Table of Contents</span></h4>
+<ul>
+  <li><a href="#q1">Difference Between World Software and EnterpriseOne Software</a></li>
+  <li><a href="#q2">Example of Data Migration </a></li>
+  <li><a href="#q3">Error in Sales Order Entry (P42101) When F49211 Missing</a></li>
+  <li><a href="#q4">Workaround to Overcome Record Invalid Error</a></li>
+  <li><a href="#q5">Why the Error is Specific to P42101 and not P4210</a></li>
+  <li><a href="#q6">When F49211 Records Are Created in EnterpriseOne</a></li>
+  <li><a href="#q7">How to Implement F49211 Based on Migrated Data</a></li>
+</ul>
 <!-- ======================================== Body Starts Here =================================== -->
 
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
 
-<h3 class="km">Difference Between World Software and EnterpriseOne Software</h3>
-<p><span style="font-size: 10pt;">In JD Edwards World, the transportation module (SY49) does not exist and the closest functionality existing is the ECS module. Since Transportation was completely redone (even in later releases of E1) there never has been any migration programs developed between ECS (Energy and Chemical System in World) and Transportation (E1). So in case you have implemented or are implementing the Transportation Module, it is very likely that you may hit the same error/problem through multiple applications in Sales.</span></p>
+<h3 class="km"><a name="q1"></a>Difference Between World Software and EnterpriseOne Software</h3>
+<p>In JD Edwards World, the transportation module (SY49) does not exist and the closest functionality existing is the ECS module. Since Transportation was completely redone (even in later releases of E1) there never has been any migration programs developed between ECS (Energy and Chemical System in World) and Transportation (E1). So in case you have implemented or are implementing the Transportation Module, it is very likely that you may hit the same error/problem through multiple applications in Sales.</span></p>
 <hr />
-<h3 class="km">Example of Data Migration&nbsp;</h3>
-<p><span style="font-size: 10pt;">Example of Data Migration from World Software to EnterpriseOne:</span></p>
-<p style="padding-left: 30px;"><span style="font-size: 10pt;">&bull; Pre-World migration: F4211: 2,754,430; F49211: 21,925.</span></p>
-<p style="padding-left: 30px;"><span style="font-size: 10pt;">&bull; Post-World/E1 migrations: F4211: 2,754,424; F49211: 21,925</span></p>
+<h3 class="km"><a name="q2"></a>Example of Data Migration&nbsp;</h3>
+<p>Example of Data Migration from World Software to EnterpriseOne:</span></p>
+<p style="padding-left: 30px;">&bull; Pre-World migration: F4211: 2,754,430; F49211: 21,925.</span></p>
+<p style="padding-left: 30px;">&bull; Post-World/E1 migrations: F4211: 2,754,424; F49211: 21,925</span></p>
 <hr />
-<h3 class="km">Error in Sales Order Entry (P42101) When F49211 Missing</h3>
-<p><span style="font-size: 10pt;">When the F49211 records are missing, an error is displayed managing open sales order through P42101 (Sales Order Entry)</span></p>
-<p style="padding-left: 60px;"><span style="font-size: 10pt;">Sales Order Detail (S421002C)<br /> <br /> <em>Error Record Invalid</em><br /> A form level error has occurred.<br /> CAUSE: The record being processed either already exists for an 'ADD'<br /> function or does not exist for an 'INQUIRY', 'CHANGE' or<br /> 'DELETE' function.<br /> RESOLUTION: If you are attempting to inquire, change or delete a record you<br /> previously added, there may be data base problems in your<br /> production library. You should notify your data processing<br /> department.<br /> <br /> ER Details:<br /> Form P421002_S421002C<br /> Control Id 20<br /> Control Title SOLines<br /> Event Get Custom Tree Node<br /> Line No 16<br /> <br /> BSFN Details:<br /> Source File \DNVMGSC51\E910\PD910\package\ESU910A\source\<strong>B4201270</strong>.c<br /> Source Line 654<br /> Error ID 0002<br /> </span></p>
+<h3 class="km"><a name="q3"></a>Error in Sales Order Entry (P42101) When F49211 Missing</h3>
+<p>When the F49211 records are missing, an error is displayed managing open sales order through P42101 (Sales Order Entry)</span></p>
+<p style="padding-left: 60px;">Sales Order Detail (S421002C)<br /> <br /> <em>Error Record Invalid</em><br /> A form level error has occurred.<br /> CAUSE: The record being processed either already exists for an 'ADD'<br /> function or does not exist for an 'INQUIRY', 'CHANGE' or<br /> 'DELETE' function.<br /> RESOLUTION: If you are attempting to inquire, change or delete a record you<br /> previously added, there may be data base problems in your<br /> production library. You should notify your data processing<br /> department.<br /> <br /> ER Details:<br /> Form P421002_S421002C<br /> Control Id 20<br /> Control Title SOLines<br /> Event Get Custom Tree Node<br /> Line No 16<br /> <br /> BSFN Details:<br /> Source File \DNVMGSC51\E910\PD910\package\ESU910A\source\<strong>B4201270</strong>.c<br /> Source Line 654<br /> Error ID 0002<br /> </span></p>
 <p>&nbsp;</p>
-<p><span style="font-size: 10pt;">This document will guide the user to populate F49211 as a temporary resolution to overcome this error and roughly explain the simplified routine of B4201270.&nbsp;</span></p>
+<p>This document will guide the user to populate F49211 as a temporary resolution to overcome this error and roughly explain the simplified routine of B4201270.&nbsp;</span></p>
 <hr />
-<h3 class="km">Workaround to Overcome Record Invalid Error</h3>
-<p><span style="font-size: 10pt;">Error '0002' via F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table) can be avoided if you turn off the Transportation Module as below, </span></p>
+<h3 class="km"><a name="q4"></a>Workaround to Overcome Record Invalid Error</h3>
+<p>Error '0002' via F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table) can be avoided if you turn off the Transportation Module as below, </span></p>
 <ol>
-<li><span style="font-size: 10pt;">Go to P99410 (EnterpriseOne System Control)<br /> </span></li>
-<li><span style="font-size: 10pt;">Look for Entry 'SY49' and Select it</span></li>
-<li><span style="font-size: 10pt;">Select 'No' to disable it</span></li>
-<li><span style="font-size: 10pt;">Reset database Cache</span></li>
+<li>Go to P99410 (EnterpriseOne System Control)<br /> </span></li>
+<li>Look for Entry 'SY49' and Select it</span></li>
+<li>Select 'No' to disable it</span></li>
+<li>Reset database Cache</span></li>
 </ol>
-<p><span style="font-size: 10pt;"> This workaround can be implemented only when the issue is specific to P42101 because B4201270 is called from B4210030 only when SY49 is active.</span></p>
+<p> This workaround can be implemented only when the issue is specific to P42101 because B4201270 is called from B4210030 only when SY49 is active.</span></p>
 <hr />
-<p>Why the Error is Specific to P42101 and not P4210</p>
-<p><span style="font-size: 10pt;">Currently the way it checks the existence of F49211 in P42101 is different from that of P4210 because P42101 is written through MVC Architecture routine which handles data as below,</span></p>
-<p style="padding-left: 30px;"><span style="font-size: 10pt;">S421002C for user interface<br /> |--- (View) B4210620 - S421002C_SOLineViewController<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- (Controller) B4210900- SalesOrderApplCtrlEX<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- (Model) B4210000, B4210030<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table)<br /> </span></p>
-<p><span style="font-size: 10pt;">The validation routine is specific to P42101</span></p>
+
+
+<h3><a name="q5"></a>Why the Error is Specific to P42101 and not P4210</h3>
+<p>Currently the way it checks the existence of F49211 in P42101 is different from that of P4210 because P42101 is written through MVC Architecture routine which handles data as below,</span></p>
+<p style="padding-left: 30px;">S421002C for user interface<br /> |--- (View) B4210620 - S421002C_SOLineViewController<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- (Controller) B4210900- SalesOrderApplCtrlEX<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- (Model) B4210000, B4210030<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table)<br /> </span></p>
+<p>The validation routine is specific to P42101</span></p>
 <hr />
-<h3 class="km">When F49211 Records Are Created in EnterpriseOne</h3>
-<p><span style="font-size: 10pt;">When any sales order meets any of below condition, which calls business function F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table) which writes F49211 (Tag File),<br /> </span></p>
+<h3 class="km"><a name="q6"></a>When F49211 Records Are Created in EnterpriseOne</h3>
+<p>When any sales order meets any of below condition, which calls business function F49211MaintainSalesDetailTable (B4201270, F49211 Maintain Sales Detail Table) which writes F49211 (Tag File),<br /> </span></p>
 <ul>
-<li><span style="font-size: 10pt;">Transportation Module is Active (SY49 is Active in P99410) *or OTM (Oracle Transportation Management) is in Use with E1 Transportation)<br /> </span></li>
-<li><span style="font-size: 10pt;">Bulk System is Active (SY41B is Active in P99410)</span></li>
-<li><span style="font-size: 10pt;">Intercompany Order (F4211.SO01 = 2 or 4, or ALPHA[INTERBRANCH_SO_ALPH01] = 2 or 4)</span></li>
-<li><span style="font-size: 10pt;">Order Promising is in Use (OPYN) (refer to &lt;Bug 12496751&gt; : OP2 INTEGRATION - B9 - SAR: 5814943)<br /> </span></li>
-<li><span style="font-size: 10pt;">Production Allocation is in Use</span>
+<li>Transportation Module is Active (SY49 is Active in P99410) *or OTM (Oracle Transportation Management) is in Use with E1 Transportation)<br /> </span></li>
+<li>Bulk System is Active (SY41B is Active in P99410)</span></li>
+<li>Intercompany Order (F4211.SO01 = 2 or 4, or ALPHA[INTERBRANCH_SO_ALPH01] = 2 or 4)</span></li>
+<li>Order Promising is in Use (OPYN) (refer to &lt;Bug 12496751&gt; : OP2 INTEGRATION - B9 - SAR: 5814943)<br /> </span></li>
+<li>Production Allocation is in Use</span>
 <ul>
-<li><span style="font-size: 10pt;">And (any of above condition met) not a Mobile Sales</span></li>
+<li>And (any of above condition met) not a Mobile Sales</span></li>
 </ul>
 </li>
 </ul>
 <hr />
-<h3 class="km">How to Implement F49211 Based on Migrated Data</h3>
-<p><span style="font-size: 10pt;">When any of above conditions met, then the relationship between F4211 and F49211 has to be 1 to 1. So populate it manually by mapping some columns as below,</span></p>
+<h3 class="km"><a name="q7"></a>How to Implement F49211 Based on Migrated Data</h3>
+<p>When any of above conditions met, then the relationship between F4211 and F49211 has to be 1 to 1. So populate it manually by mapping some columns as below,</span></p>
 <table style="border-collapse: collapse; width: 1229px; height: 4099px;" border="2" cellspacing="2" cellpadding="1">
 <tbody>
 <tr style="height: 15.75pt;">
@@ -1481,41 +1492,43 @@ function topFunction() {
 </table>
 <p>&nbsp;</p>
 <div class="kmnotebox">
-<p><span style="font-size: 10pt;">Note </span></p>
+<p>Note </span></p>
 <ul>
-<li><span style="font-size: 10pt;">The primary purpose of above table is help user to create F49211 based on F4201/F4211 for exiting data</span></li>
-<li><span style="font-size: 10pt;">The columns to be mapped during ship confirmation and other routine (e.g., cycle billing, order promising etc.) is to be implemented soon</span></li>
-</ul>
-<p>&nbsp;</p>
-</div>
-<p><span style="font-size: 10pt;">&nbsp;</span></p>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-<p><span style="font-size: 10pt;">&nbsp;</span></p>
-<p>&lt;Internal_Only&gt;</p>
-<p><span style="font-size: 10pt;">SR Notes: </span><br /> <span style="font-size: 10pt;">F4211.OMCU is an unused field in XE vanilla. Some customers may have been using this field within their customizations. </span><br /> <span style="font-size: 10pt;">The F49211 is predominantly used in ECS for bulk products and loads etc. It is however also borrowed by other modules, for example, container management and cycle billing functionality and Intercompany orders within Enterprise One. </span><br /> <span style="font-size: 10pt;">F49211 file contains additional information about the sales order and it is updated during Sales Order entry and Shipment Confirmation. For standard sales orders not using bulk items, transportation, or cycle billing, then F49211 will not be updated.</span><br /> <span style="font-size: 10pt;">...</span><br /> <br /> <br /> <span style="font-size: 10pt;">F49211MaintainSalesDetailTable</span><br /> <span style="font-size: 10pt;">F49211MaintainSalesDetailTable (B4201270,&nbsp; F49211 Maintain Sales Detail Table)</span></p>
-<p><strong><span style="font-size: 10pt;"><span style="text-decoration: underline;">cActionCode</span> </span></strong></p>
-<ul>
-<li><span style="font-size: 10pt;">ADD MODE : A, 1</span></li>
-<li><span style="font-size: 10pt;">UPDATE MODE: C, 2</span></li>
-<li><span style="font-size: 10pt;">DELETE MODE: D, P, 3</span></li>
-<li><span style="font-size: 10pt;">INQUIRE MODE: I, 4</span></li>
-<li><span style="font-size: 10pt;">COPY MODE: X, 5 </span></li>
-<li><span style="font-size: 10pt;">UPDATE OR INSERT A RECORD: Y, 6 (or, R, 7)</span><br /> <span style="font-size: 10pt;"> </span></li>
-<li><span style="font-size: 10pt;"></span><span style="font-size: 10pt;">COPY ORIGINAL AND UPDATE SPLIT MODE: Z, 8</span></li>
-</ul>
-<p>&nbsp;</p>
-<p><span style="font-size: 10pt;">if ((lpdsF42UI11-&gt;zdactn == _J('D')) ||</span><br /> <span style="font-size: 10pt;"> ((lpdsF42UI11-&gt;zdactn == _J('P')) &amp;&amp; </span><br /> <span style="font-size: 10pt;"> (MathZeroTest(&amp;lpdsF42UI11-&gt;zdrkit) == 0)))</span><br /> <span style="font-size: 10pt;"> {</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> dsD4201270.cPurgeToHistory = _J('1');</span><br /> <span style="font-size: 10pt;"> }</span><br />&nbsp;</p>
-<p>For ship confirmation - N4200790<br /> <br /> <span style="font-size: 10pt;">LoadOrUnloadShipConfirmCache (B4200810, Load Or Unload Ship Confirm Cache)</span></p>
-<p>&lt;/Internal_Only&gt;</p>
-<p>&nbsp;</p>
-<p>&lt;Internal_Only&gt;</p>
-<p><br /> <span style="font-size: 10pt;">/* bug 14163706 - If Sales Order is ship confirmed, get the Invoice quantity from F49211 table */</span><br /> <span style="font-size: 10pt;"> if(lpdsF42UI11-&gt;zdalph[2] == _J('1'))</span><br /> <span style="font-size: 10pt;"> {</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> idReturnValue = I4200310_GetF49211Record(lpBhvrCom, lpVoid,</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> &amp;dsD4201270, </span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 10pt;"> &amp;mnInvoiceQty);</span><br /> <span style="font-size: 10pt;"> }</span></p>
-<p>&nbsp;</p>
-<p>&lt;/Internal_Only&gt;</p>
-<p>&nbsp;</p>
+<li>The primary purpose of above table is help user to create F49211 based on F4201/F4211 for exiting data</span></li>
+<li>The columns to be mapped during ship confirmation and other routine (e.g., cycle billing, order promising etc.) is to be implemented soon</span></li>
 
+    <li>F4211.OMCU is an unused field in XE vanilla. Some customers may have been using this field within their customizations.</li>
+    <li>The F49211 is predominantly used in ECS for bulk products and loads etc. It is however also borrowed by other modules, for example, container management and cycle billing functionality and Intercompany orders within Enterprise One.</li>
+    <li>F49211 file contains additional information about the sales order and it is updated during Sales Order entry and Shipment Confirmation. For standard sales orders not using bulk items, transportation, or cycle billing, then F49211 will not be updated.</li>
+  </ul>
+</div>
+
+
+<p><strong>F49211MaintainSalesDetailTable (B4201270,&nbsp; F49211 Maintain Sales Detail Table)</strong></p>
+
+<p><strong><span style="text-decoration: underline;">cActionCode</span> </span></strong></p>
+<ul>
+<li>ADD MODE : A, 1</span></li>
+<li>UPDATE MODE: C, 2</span></li>
+<li>DELETE MODE: D, P, 3</span></li>
+<li>INQUIRE MODE: I, 4</span></li>
+<li>COPY MODE: X, 5 </span></li>
+<li>UPDATE OR INSERT A RECORD: Y, 6 (or, R, 7)</span><br />  </span></li>
+<li></span>COPY ORIGINAL AND UPDATE SPLIT MODE: Z, 8</span></li>
+</ul>
 <p>&nbsp;</p>
+<div class="kmcodeblock">
+<p>if ((lpdsF42UI11-&gt;zdactn == _J('D')) ||</span><br />  ((lpdsF42UI11-&gt;zdactn == _J('P')) &amp;&amp; </span><br />  (MathZeroTest(&amp;lpdsF42UI11-&gt;zdrkit) == 0)))</span><br />  {</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  dsD4201270.cPurgeToHistory = _J('1');</span><br />  }</span><br />&nbsp;</p>
+</div>
+
+<p>For ship confirmation - N4200790<br /> <br /> <strong>LoadOrUnloadShipConfirmCache (B4200810, Load Or Unload Ship Confirm Cache)</strong></span></p>
+
+
+<div class="kmcodeblock">
+<p><br /> /* bug 14163706 - If Sales Order is ship confirmed, get the Invoice quantity from F49211 table */</span><br />  if(lpdsF42UI11-&gt;zdalph[2] == _J('1'))</span><br />  {</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  idReturnValue = I4200310_GetF49211Record(lpBhvrCom, lpVoid,</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &amp;dsD4201270, </span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &amp;mnInvoiceQty);</span><br />  }</span>
+</div>
+
+
 <p>&nbsp;</p>
 
 
