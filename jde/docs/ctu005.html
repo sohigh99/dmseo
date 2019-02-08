@@ -51,6 +51,19 @@
       background-color: #B0C4DE; 
     }
 
+    .kmnotebox {
+      background-color: #FFFFE0;
+      border-left: 10px;
+        /*border-style: dotted;*/
+    }
+
+    .kmcodeblock {
+      background-color: #B0E0E6;
+      border-left: 30px;
+      font-size: 0.9em;
+        /*border-style: dotted;*/
+    }
+
     </style>
 
   </head>
@@ -831,9 +844,9 @@ CHAR (2)
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="313">
-<strong>itemMater</strong><strong> (F4101)</strong>
-</td>
+  <th colspan="3" width="313">
+    <strong>itemMater</strong><strong> (F4101)</strong>
+  </th>
 </tr>
 <tr>
 <td width="30">
@@ -940,9 +953,7 @@ VARCHAR (30)
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="313">
-<strong>itemBranch (F4102)</strong>
-</td>
+  <th colspan="3" width="313"> itemBranch (F4102)</th>
 </tr>
 <tr>
 <td width="30">
@@ -1115,9 +1126,7 @@ VARCHAR (30)
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="311">
-<strong>itemLoction (F41021)</strong>
-</td>
+  <th colspan="3" width="311"> itemLoction (F41021)</th>
 </tr>
 <tr>
 <td width="30">
@@ -1182,9 +1191,7 @@ NUM (15,4)
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="309">
-<strong>itemCost (F4105)</strong>
-</td>
+  <th colspan="3" width="309"> itemCost (F4105)</th>
 </tr>
 <tr>
 <td width="33">
@@ -1236,9 +1243,7 @@ NUM (15,4)
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="312">
-<strong>itemPrice (F4106)</strong>
-</td>
+  <th colspan="3" width="312"> itemPrice (F4106)</th>
 </tr>
 <tr>
 <td width="30">
@@ -1316,9 +1321,7 @@ Above master tables suffice to enter sales order which comprises,
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="315">
-<strong>salesOrderHeader</strong><strong> (F4201)</strong>
-</td>
+  <th colspan="3" width="315">salesOrderHeader (F4201)</th>
 </tr>
 <tr>
 <td width="30">
@@ -1491,9 +1494,7 @@ VARCHAR (25)
 <table width="0">
 <tbody>
 <tr>
-<td colspan="3" width="315">
-<strong>salesOrderDetail (F4211)</strong>
-</td>
+  <th colspan="3" width="315">salesOrderDetail (F4211)</th>
 </tr>
 <tr>
 <td width="30">
@@ -1888,6 +1889,7 @@ Transaction tables comprises header and detail
 <h2><a name="_Toc497926967"></a>Database Definition Language (DDL)</h2>
 <p>The DDL is used to specify the database schema, or it is the language to create data for data where we call the overall description of the database as database schema including controlling access the data (Connolly &amp; Begg, 2015). Currently, PT Matahari does not have any Relational Database Management System (RDBMS) because most of the daily job is done using Microsoft Excel and manual creation of invoice. However to make the business as a sustainable and competitive, here we are implementing RDBMS based on entity relationship we have reviewed earlier.</p>
 <p>It is proper to have multiple schemas to have reasonable software development cycle. For instance, it starts with pttestdata to create the schema in a testing environment then Conference Room Pilot (CRP), User Acceptance (UA), Quality Assurance (QA), and Production (e.g., ptproddta schema for this). Below represents some of the execution of testing environment,</p>
+<div class="kmcodeblock">
 <p>-- CHECK THE EXISTENCE OF DATABASE pttestdta OR EXPAND OBJECT EXPLORER FOR THE SAME</p>
 <p>IF EXISTS(SELECT name FROM sys.databases</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHERE name = 'pttestdta')</p>
@@ -1927,6 +1929,7 @@ Transaction tables comprises header and detail
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LegalName VARCHAR (45),</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; SearchType CHAR (1)</p>
 <p>);</p>
+</div>
 
 
 <p>To enable Sales Order Entry, companyConstant, businessUnitMaster, addressBook, customerMaster, itemMaster, itemBranch, itemLocation, itemPrice, itemCost, salesOrderHeader, and salesOrderDetail tables are created in pttestdta (Refer DDL.sql for full list). &nbsp;</p>
@@ -1934,6 +1937,8 @@ Transaction tables comprises header and detail
 <h2><a name="_Toc497926968"></a>Database Manipulation Language (DML)</h2>
 <p>Now it is time to populate rows in tables created above using DML statements to manipulate (insert/add, update/change, delete, and select/view). The purpose of DML is to retrieve and update data where update comprises insert, update and delete. Basic report in the following section describes detail statements for select query.</p>
 <p>Firstly, populate the data meant for the organization PT Matahari as below,</p>
+
+<div class="kmcodeblock">
 <p>-- Insert company master (this table is future extension)</p>
 <p>INSERT INTO companyConstant VALUES ('00001','PT Matahari', 'IDR', '2017-01-01', 2017)</p>
 
@@ -1954,23 +1959,33 @@ Transaction tables comprises header and detail
 <p>UPDATE customerMaster</p>
 <p>SET CreditLimit = 2000</p>
 <p>WHERE AddressNumber IN (4242, 4244)</p>
+</div>
+
+
 <p>At once itemPrice data are populated, update UnitOfMeasure column value based on itemMaster.UnitOfMeasure as below,</p>
-<p>-- update unit of measure based on itemMaster</p>
-<p>UPDATE itemPrice</p>
-<p>&nbsp;&nbsp; SET UnitOfMeasure = t1.UnitOfMeasure</p>
-<p>&nbsp;&nbsp; FROM itemPrice t0, itemMaster t1</p>
-<p>&nbsp;&nbsp; WHERE t0.ItemShort = t1.ItemShort</p>
+
+<div class="kmcodeblock">
+  <p>-- update unit of measure based on itemMaster</p>
+  <p>UPDATE itemPrice</p>
+  <p>&nbsp;&nbsp; SET UnitOfMeasure = t1.UnitOfMeasure</p>
+  <p>&nbsp;&nbsp; FROM itemPrice t0, itemMaster t1</p>
+  <p>&nbsp;&nbsp; WHERE t0.ItemShort = t1.ItemShort</p>
+</div>
+
 <p>Then update PaymentInstrument and PaymentTerms of salesOrderHeader and salesOrderDetail file based on customerMaster data as below,</p>
-<p>-- update payment terms and instrument from customerMaster</p>
-<p>UPDATE salesOrderHeader</p>
-<p>&nbsp;&nbsp; SET</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PaymentInstrument = t1.PaymentInstrument, PaymentTerms = t1.PaymentTerms</p>
-<p>&nbsp;&nbsp; FROM</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salesOrderHeader t0</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INNER JOIN customerMaster t1</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ON t0.SoldTo = t1.AddressNumber and t0.PaymentTerms = t1.PaymentTerms</p>
+<div class="kmcodeblock">
+  <p>-- update payment terms and instrument from customerMaster</p>
+  <p>UPDATE salesOrderHeader</p>
+  <p>&nbsp;&nbsp; SET</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PaymentInstrument = t1.PaymentInstrument, PaymentTerms = t1.PaymentTerms</p>
+  <p>&nbsp;&nbsp; FROM</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; salesOrderHeader t0</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INNER JOIN customerMaster t1</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ON t0.SoldTo = t1.AddressNumber and t0.PaymentTerms = t1.PaymentTerms</p>
+</div>
 
 <p>Update certain column values based on referencing tables and delete unnecessary data. To maintain higher integrity implement Transaction Processing using BEGIN TRAN, ROLLBACK TRAN, and COMMIT TRAN,</p>
+<div class="kmcodeblock">
 <p>-- Delete data from itemLocation table which is a child for ItemBranch</p>
 <p>-- 1. Verify existing data from itemLocationFile</p>
 <p>SELECT * FROM itemLocation;</p>
@@ -1990,8 +2005,12 @@ Transaction tables comprises header and detail
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ROLLBACK TRAN</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END</p>
 <p>COMMIT TRAN</p>
+</div>
+
+
 
 <p>Then manipulate salesOrderDetail.OrderDate to create Crosstab report in the following section. Some functions from standard library is used as below,</p>
+<div class="kmcodeblock">
 <p>-- 1. Update salesOrderDetail.UnitPrice based on itemPrice.UnitPrice</p>
 <p>UPDATE salesOrderDetail</p>
 <p>&nbsp;&nbsp; SET</p>
@@ -2016,9 +2035,13 @@ Transaction tables comprises header and detail
 
 <p>-- 4. Check whether data got updated correctly</p>
 <p>SELECT OrderNumber, LineNumber, SecondItemNumber, OrderQuantity, ExtendedCost, ExtendedPrice from salesOrderDetail</p>
+</div>
+
 <p>A full list of table population is attached (Refer to DML.sql for detail).</p>
 <h2><a name="_Toc497926969"></a>Reports/Queries</h2>
 <p>Here we review possible reports which help daily operation for PT Matahari. This report starts with Crosstab report. Crosstab queries let you store your data in a normalized manner but also let you produce pivoted, the de-normalized output from that data. In other words, crosstab queries let you rotate rows to columns to see different summaries of the source data (Ben-Gan, 2000).</p>
+
+<div class="kmcodeblock">
 <p>-- Crosstab01 - Sales Order Count by Month and Year</p>
 <p>SELECT</p>
 <p>&nbsp; MONTH(OrderDate) AS OrderMonth,</p>
@@ -2037,24 +2060,19 @@ Transaction tables comprises header and detail
 <p>FROM salesOrderDetail</p>
 <p>GROUP BY MONTH(OrderDate)</p>
 <p>ORDER BY MONTH(OrderDate)</p>
+</div>
+
+
 <p>Which yields output below,</p>
 
 
 <table>
 <tbody>
 <tr>
-<td width="94">
-OrderMonth
-</td>
-<td width="69">
-YR2015
-</td>
-<td width="69">
-YR2016
-</td>
-<td width="69">
-YR2017
-</td>
+  <th width="94">OrderMonth</th>
+  <th width="69">YR2015</th>
+  <th width="69">YR2016</th>
+  <th width="69">YR2017</th>
 </tr>
 <tr>
 <td width="94">
@@ -2131,40 +2149,35 @@ YR2017
 
 
 <p>Sales Order Detail file can generate another Crosstab reports using,</p>
-<p>-- 2. Crosstab Total Amount per customer</p>
-<p>SELECT</p>
-<p>&nbsp; SoldTo,</p>
-<p>&nbsp; SUM(CASE YEAR(OrderDate)</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN 2015 THEN ExtendedPrice</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE 0</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END) AS Yr2015,</p>
-<p>&nbsp; SUM(CASE YEAR(OrderDate)</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN 2016 THEN ExtendedPrice</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE 0</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END) AS Yr2016,</p>
-<p>&nbsp; SUM(CASE YEAR(OrderDate)</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN 2017 THEN ExtendedPrice</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE 0</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END) AS Yr2017</p>
-<p>FROM salesOrderDetail</p>
-<p>GROUP BY SoldTo</p>
-<p>ORDER BY SoldTo</p>
+<div class="kmcodeblock">
+  <p>-- 2. Crosstab Total Amount per customer</p>
+  <p>SELECT</p>
+  <p>&nbsp; SoldTo,</p>
+  <p>&nbsp; SUM(CASE YEAR(OrderDate)</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN 2015 THEN ExtendedPrice</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE 0</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END) AS Yr2015,</p>
+  <p>&nbsp; SUM(CASE YEAR(OrderDate)</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN 2016 THEN ExtendedPrice</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE 0</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END) AS Yr2016,</p>
+  <p>&nbsp; SUM(CASE YEAR(OrderDate)</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; WHEN 2017 THEN ExtendedPrice</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ELSE 0</p>
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; END) AS Yr2017</p>
+  <p>FROM salesOrderDetail</p>
+  <p>GROUP BY SoldTo</p>
+  <p>ORDER BY SoldTo</p>
+</div>
+
 <p>Which yields output below,</p>
 <table>
 <tbody>
 <tr>
-<td width="94">
-SoldTo
-</td>
-<td width="82">
-Yr2015
-</td>
-<td width="82">
-Yr2016
-</td>
-<td width="82">
-Yr2017
-</td>
+  <th width="94">SoldTo</th>
+  <th width="82">Yr2015</th>
+  <th width="82">Yr2016</th>
+  <th width="82">Yr2017</th>
 </tr>
 <tr>
 <td width="94">
@@ -2212,6 +2225,8 @@ Yr2017
 </table>
 
 <p>Same can generate multiple reports based on data populated,</p>
+
+<div class="kmcodeblock">
 <p>-- Select All Business Unit and Customer</p>
 <p>SELECT t0.BusinessUnit, t1.AddressNumber, t2.LegalName</p>
 <p>FROM businessUnit t0, customerMaster t1, addressBookMaster t2</p>
@@ -2228,19 +2243,16 @@ Yr2017
 <p>SELECT SoldTo, COUNT (*) AS OrderCount, SUM (ExtendedPrice) AS OrderTotal</p>
 <p>FROM salesOrderDetail</p>
 <p>GROUP BY SoldTo ORDER BY SoldTo</p>
+</div>
+
+
 <p>The last example returns report as below,</p>
 <table>
 <tbody>
 <tr>
-<td width="96">
-SoldTo
-</td>
-<td width="96">
-OrderCount
-</td>
-<td width="96">
-OrderTotal
-</td>
+  <th width="96">SoldTo</th>
+  <th width="96">OrderCount</th>
+  <th width="96">OrderTotal</th>
 </tr>
 <tr>
 <td width="96">
@@ -2377,7 +2389,7 @@ Most of the patches are related to performance and security so timely apply the 
 <th width="150">
 <strong>Area</strong>
 </th>
-<th width="321">
+<th width="500">
 <strong>Procedure</strong>
 </th>
 </tr>

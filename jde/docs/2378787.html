@@ -110,7 +110,9 @@ function topFunction() {
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></big></big></h2>
 
 <p>The purpose of this document is to guide how to parse Customer Item Number or Supplier Item Number (F4101.CITM) into Company Item Number (F4101.LITM) using the business function VerifyAndGetItemMaster (X4101, F4101 Get Item Master Row). For detail usage, refer to &lt;Document 2378772.1&gt; - E1: 42: How to Filter Sales Order Detail Lines Using Customer Item Number (CITM) in Customer Service Inqury (F4211E) Delete Reference</p>
-<p><strong>Prerequisite:</strong><br />1. Set Symbol Customer/Supplier (F41001.SYM5) for the branch/plant 'M30' (F41001.MCU)<br />2. Add Cross Reference for the customer 74242 using P4104 (Cross Reference) as below, <br />&nbsp;&nbsp;- Cross-Reference Code Type = 'C' (F4104.XRT)<br />&nbsp;&nbsp;- Cross Reference Item Number = 'COFFEE' (F4104.CITM)<br />&nbsp;&nbsp;- Address Number = 74242 (F4104.AN8)<br />&nbsp;&nbsp;- Eff Date = Today's date<br />&nbsp;&nbsp;- Expired Date = 12/31/Default Value of DD Alias DCYR (or CENTCHG)<br />3. Set the processing option of P4210|Version as below, <br />&nbsp;&nbsp;- (Tab) 12-Order Inquiry<br />&nbsp;&nbsp;- 7. Customer Cross Reference Type = 'C'<br />&nbsp;</p>
+
+<h4>Prerequisite:</h4>
+  <p>1. Set Symbol Customer/Supplier (F41001.SYM5) for the branch/plant 'M30' (F41001.MCU)<br />2. Add Cross Reference for the customer 74242 using P4104 (Cross Reference) as below, <br />&nbsp;&nbsp;- Cross-Reference Code Type = 'C' (F4104.XRT)<br />&nbsp;&nbsp;- Cross Reference Item Number = 'COFFEE' (F4104.CITM)<br />&nbsp;&nbsp;- Address Number = 74242 (F4104.AN8)<br />&nbsp;&nbsp;- Eff Date = Today's date<br />&nbsp;&nbsp;- Expired Date = 12/31/Default Value of DD Alias DCYR (or CENTCHG)<br />3. Set the processing option of P4210|Version as below, <br />&nbsp;&nbsp;- (Tab) 12-Order Inquiry<br />&nbsp;&nbsp;- 7. Customer Cross Reference Type = 'C'<br />&nbsp;</p>
 
 
 <!-- ======================================== Body Starts Here =================================== -->
@@ -118,8 +120,7 @@ function topFunction() {
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></big></big></h2>
 
 
-<p>&nbsp;</p>
-<p><strong>Business Function: VerifyAndGetItemMaster (X4101, F4101 Get Item Master Row)</strong></p>
+<h3>Business Function: VerifyAndGetItemMaster (X4101, F4101 Get Item Master Row)</h3>
 <ul>
 <li><strong>Purpose</strong>: This function is to verify and return an item number against Item Master Table (F4101). If item is not found then it issues error and exit the routine. If the input item number is valid, then the system will retrieve and return two descriptions (DSC1 and DSC2). If requested, same returns primary item number.&nbsp;</li>
 <li><strong>Parameters</strong>:
@@ -128,7 +129,8 @@ function topFunction() {
 </ul>
 </li>
 </ul>
-<p>&nbsp;</p>
+
+
 <table style="border-collapse: collapse; width: 946px; height: 1057px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 194pt;" width="259" /><col style="width: 48pt;" width="64" /><col style="width: 86pt;" width="114" /><col style="width: 48pt;" span="2" width="64" /><col style="width: 159pt;" width="212" /></colgroup>
 <tbody>
 <tr style="height: 30pt;">
@@ -450,7 +452,10 @@ function topFunction() {
 <ul>
 <li><strong>Detail routine</strong>:</li>
 </ul>
+<div class="kmnotebox">
 <p>Note that X4101 can be used for other purpose. Above mapping is minimum input values to return customer item number or supplier item number (F4104.CITM) using symbol (F41001.SYM5), F4104.AN8 (Customer/Supplier Number), and date.</p>
+</div>
+
 <p>Query example when, </p>
 <ul>
 <li>XRT (Type - Cross-Reference Type Code) = 1 for customer. Commonly, actual value is coming from the processing option of program you choose (e.g., P4210 and so on). </li>
@@ -458,7 +463,9 @@ function topFunction() {
 <li>The first character of szItemNoUnknownFormat is # (= F41001.SYM5). For this example,&nbsp;szItemNoUnknownFormat is "#COFFEE"</li>
 <li>jdExpirationDate = SL DateToday (3/26/2018)</li>
 </ul>
+<div class="kmcodeblock">
 <p>Sql&gt; SELECT IVAN8, IVXRT, IVITM, IVEXDJ, IVEFTJ, IVCITM, IVDSC1, IVDSC2 FROM PRODDTA.F4104 WHERE ( IVCITM = 'COFFEE' AND IVXRT = 'C ' AND IVAN8 = 74242.000000 ) AND ( IVEXDJ &gt;= 118085 AND IVEFTJ &lt;= 118085 ) ORDER BY IVCITM ASC,IVXRT ASC,IVAN8 ASC</p>
+</div>
 
 
 <p>&nbsp;</p>
