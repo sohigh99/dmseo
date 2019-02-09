@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>General Accountings AAIs</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>General Accounting AAIs</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview Understanding AAIs</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>General Purpose Accounts (GLGxx)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">Special Consideration for Retained Earnings Accounts (GLG4)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33"><strong>Financial Statement Totals (FSxx)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Overview</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Setup FSxx AAIs</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">FS99 AAI</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Making the Subtotals/Totals Stand Out</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Financial Reports with Subtotals</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39"><strong><strong>Account</strong> Summarization (GLSMxx)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310"><strong>Reconcilable Ranges (GLRCxx)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Prior Year Account <strong>Purges </strong>(GLPRxx)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong><strong>Speed Codes</strong> (SPx)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313"><strong>AAIs for MultiCurrency</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Unrealized Gains and Losses on Monetary Bank Accounts (GVxxx, GWxxx, GRxxx)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Posting Balances by Currency (PBCxx)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Intercompany Settlements (ICCC and ICH)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">Detailed Currency Restatement (CRxx, CR)</a></td></tr></table>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview Understanding AAIs</strong></h3>
+<p>AAIs are rules that define the relationships between your day-to-day accounting functions and your chart of accounts. In the General Accounting system, AAIs determine how to distribute general ledger entries that the system generates. The AAIs in the EnterpriseOne General Accounting system do the following:</p>
+<ul>
+<li>Describe the structure of your chart of accounts in the EnterpriseOne system.</li>
+<li>Used by financial reporting, annual close procedures and other programs.</li>
+<li>Define special interim total levels that the system uses in financial reports.</li>
+<li>Define intercompany settlements.</li>
+<li>Define the account ranges that are eligible for reconciliation.</li>
+<li>Define the account ranges to exclude from being summarized or purged.</li>
+<li>Define the accounts that the system uses for gain and loss recognition if you work with multiple currencies.</li>
+</ul>
+<p>The name of an automatic accounting instructions (AAI) item, for example, GLG is hard coded. Each AAI is associated with a specific general ledger account that consists of a business unit, an object, and optionally, a subsidiary and is mapped to your chart of accounts. Information about AAI items is setup by P0012 application and is stored in the Automatic Accounting Instructions Master table (F0012).</p>
+<div class="kmnotebox">Note: Depending on the operating system, (example iSeries) ending subsidiary code will be obj.ZZZZZZZZ.<span style="background-color: #ffffff;"> </span></div>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for Finance Functional users who will be involved in setting up of Automatic Accounting Instructions in the General Accounting system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p> </p>
+<a name="aref_section31"></a><h3 class="km"><strong>General Purpose Accounts (GLGxx)</strong></h3>
+<p>The AAIs for GLGxx define account ranges for the different categories in your chart of accounts. For example, the account range for assets (GLG2) might begin with object account 1000, the account range for liabilities (GLG3) might begin with object account 2000, and so on. AAI items GLGx are used primarily for financial reporting. In absence of these AAIs, any custom financial reports using Smart fields may not print the statistical data even though it may continue to print column headings and descriptions.</p>
+<div class="kmnotebox">NOTE: You set up AAI items GLGx for company 00000 only since the system assumes that your account structure is consistent across all companies. The exception is AAI item GLG4, which you must set up for each company because it defines the retained earnings account.</div>
+<p><br />The following table contains the setup considerations for AAI items GLGxx:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI<br />Item</th>
+<th class="km">Purpose</th>
+<th class="km">Setup</th>
+<th class="km">Special Considerations</th>
+</tr>
+<tr>
+<td class="km">GLG2</td>
+<td class="km">The beginning account range for assets.</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km" align="center"> </td>
+</tr>
+<tr>
+<td class="km">GLG3</td>
+<td class="km">
+<ul>
+<li>The beginning account range for liabilities and equities.</li>
+<li>You can use this AAI item to reverse the sign on financial reports.</li>
+</ul>
+</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km" align="center"> </td>
+</tr>
+<tr>
+<td class="km">GLG4</td>
+<td class="km">The account number for retained earnings.</td>
+<td class="km">
+<ul>
+<li>Enter the business unit and object account.</li>
+<li>If the business unit is the same as the company number for all companies, enter only the object account for company 00000. Otherwise, set up GLG4 for each company and specify the business unit and object account.</li>
+</ul>
+</td>
+<td class="km">The GLG4 account number must be greater than the account number for GLG1 and less than the account number for GLG5.</td>
+</tr>
+<tr>
+<td class="km">GLG5</td>
+<td class="km">
+<ul>
+<li>The ending account number for year-to-date income and loss.</li>
+<li>The system uses this AAI item in the balance sheet to ensure that assets are equal to liabilities plus equity (a calculated figure).</li>
+</ul>
+</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km">This account number should indicate the last balance sheet account, which must be a non posting account.</td>
+</tr>
+<tr>
+<td class="km">GLG6</td>
+<td class="km">
+<ul>
+<li>The beginning account range for revenue.</li>
+<li>Used for Automatic sign reversal on reports.</li>
+<li>Used to calculate</li>
+<ul>
+<li>The percentage of revenue on some reports</li>
+<li>The retained earnings for the general ledger annual close.</li>
+</ul>
+</ul>
+</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km" align="center"> </td>
+</tr>
+<tr>
+<td class="km">GLG7</td>
+<td class="km">
+<ul>
+<li>The ending account range for revenue.</li>
+<li>Used for Automatic sign reversal on reports.</li>
+<li>Used to calculate the percentage of revenue on some reports.</li>
+</ul>
+</td>
+<td class="km" align="left">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km" align="center"> </td>
+</tr>
+<tr>
+<td class="km">GLG8</td>
+<td class="km">
+<ul>
+<li>The beginning account range for cost of goods.</li>
+<li>Used to reverse the sign of expense accounts on some financial reports.</li>
+</ul>
+</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km" align="center"> </td>
+</tr>
+<tr>
+<td class="km">GLG9</td>
+<td class="km">The ending account range for cost of goods.</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km" align="center"> </td>
+</tr>
+<tr>
+<td class="km">GLG11</td>
+<td class="km">
+<ul>
+<li>The beginning account range for other income.</li>
+<li>Used to reverse the sign of income accounts on some financial reports.</li>
+</ul>
+</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km">Do not leave the beginning range for GLG11 (other income) blank. If you do not want to enter an account, enter the same account number as the beginning range for GLG13 (other expenses).</td>
+</tr>
+<tr>
+<td class="km">GLG12</td>
+<td class="km">
+<ul>
+<li>The account for ending profit and loss (income statement), which is used to calculate retained earnings for the general ledger annual close.</li>
+<li>This is the last account that appears on an income statement. Any accounts that are greater than this account number will not appear on an income statement nor will the accounts be closed to the retained earnings account.</li>
+</ul>
+</td>
+<td class="km">
+<ul>
+<li>Enter the object account and, if applicable, the subsidiary.</li>
+<li>If you do not enter an object account, the system uses account 999999.</li>
+</ul>
+</td>
+<td class="km">Revenues (GLG6) + Expenses (GLG12) = Retained Earnings (GLG4)</td>
+</tr>
+<tr>
+<td class="km">GLG13</td>
+<td class="km">
+<ul>
+<li>The beginning account range for other expenses.</li>
+<li>You can use this AAI item to reverse the sign of other expense accounts on some financial reports.</li>
+</ul>
+</td>
+<td class="km">Enter the object account and, if applicable, the subsidiary.</td>
+<td class="km">If you do not want to enter an account number for the beginning range, enter the same account number as the beginning range for GLG12 (ending profit and loss accounts).</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section32"></a><h4 class="km">Special Consideration for Retained Earnings Accounts (GLG4)</h4>
+<ul>
+<li>AAI item GLG4 defines the account that the Annual Close (R098201) uses to update the retained earnings of  each company. The account must be a posting account that allows machine-generated entries. During the general ledger annual close, the system posts retained earnings to the account assigned to AAI item GLG4. For more information on Annual Close Report, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664682.1&id=664688.1'>Document 664688.1</a>.</li>
+<li>Typically, the business unit and company number for balance sheet accounts is the same. For example, 100 would be the business unit for company 00100. If your companies and business units are set up this way and all companies use the same retained earnings object account, you need to set up only one GLG4 item for company 00000 and assign an object account.</li>
+<li>If your business unit and company number is different for balance sheet accounts, you must set up AAI item GLG4 for each company and specify the balance sheet business unit and object account.</li>
+<li>If you have multiple balance sheet business units for one company, you must set up AAI item GLG4 for the company and specify one balance sheet account. Then, for year-end processing, you must allocate all of the balance sheet business units to the balance sheet business unit specified in GLG4 for the company. If you do not do this, your company will be out of balance because the offset amount for net income would reflect the accounts for one balance sheet business unit (specified in GLG4 for the company) and not all balance sheet business units.</li>
+</ul>
+<div class="kmnotebox">NOTE: GLG4 is the only AAI item for general purpose accounts that you can set up by company. All other general purpose items are set up only for company 00000.</div>
+<hr />
+<a name="aref_section33"></a><h3 class="km"><strong>Financial Statement Totals (FSxx)</strong></h3>
+<a name="aref_section34"></a><h4 class="km">Overview</h4>
+<p>When you produce financial statements, the system creates report subtotals based on AAI items FSxx. These AAI items, which are used for profit and loss accounts only, are optional. Do not use AAI items FSxx for accounts other than profit and loss accounts or your financial statement results will be unpredictable. Your chart of accounts must be consistent across all companies for your reports to be meaningful.</p>
+<p>The subtotal for each AAI item (FS01 - FS98) prints after the specified account range on your financial statement. While FS01 - FS98 AAIs are available for use, along with FS99, using a small number of FSxx AAIs makes reports easier to read. Following are some of the typical subtotals that might appear on an income statement:</p>
+<ul>
+<li>GrossMargin</li>
+<li>Operating Income</li>
+<li>Net Profit Before Taxes</li>
+<li>Net Income (Loss)</li>
+</ul>
+<p>You can customize the text that you want to appear for each subtotal in the first description line under the heading Account Use Description on the Set Up Single AAI Item form (P0012).</p>
+<div class="kmnotebox">NOTE: FSxx AAI Subtotaling can also be utilized in RDA Financial Reports. It can be located as follows: RDA Financial Report  Section: Properties &gt; Financial Report Tab &gt; Perform AAI Subtotaling.</div>
+<a name="aref_section35"></a><h4 class="km">Setup FSxx AAIs</h4>
+<p>It is recommended to follow below mentioned guidelines when setting up AAI item FSxx:</p>
+<ul>
+<li>Set up FSxx AAIs only for base company 00000.</li>
+<li>Do not enter a business unit.</li>
+<li>To avoid unpredictable results, do not enter an object account to which the system posts transactions.</li>
+<li>Use GLG AAIs to help determine the account ranges for balance sheet and income statement accounts.</li>
+<li>Do not set up AAI item FSxx for balance sheet accounts.</li>
+<li>Adjust the subtotal ranges based on individual needs.</li>
+</ul>
+<p>To define FSxx AAIs, run Automatic Accounting Instructions (P0012) application or enter AAI in Fast Path. This table shows the information needed to set up AAI item FS01:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Description</th>
+<th class="km">Business<br />Unit</th>
+<th class="km">Object</th>
+<th class="km">Subsidiary</th>
+<th class="km">Sequence<br />Number</th>
+</tr>
+<tr>
+<td class="km" align="center">FSxx</td>
+<td class="km" align="center">Financial Statement Totals</td>
+<td class="km" align="center">Not used</td>
+<td class="km" align="center">Required</td>
+<td class="km" align="center">Optional</td>
+<td class="km" align="center">1.130</td>
+</tr>
+</tbody>
+</table>
+<p class="km"><strong>Example:</strong></p>
+<ul>
+<li>FS01 - If FS01 is defined as Object Account 2000, reports will subtotal balance sheet accounts 0000 through 1999.99999999, excluding 2000. The subtotals will appear on the report after object account 1999.99999999 along with the wording used on the first line of the AAI Account Use Description.</li>
+<li>FS02 - If FS02 is defined as Object Account 3000, reports will subtotal balance sheet accounts through 2999, including the previous subtotal.</li>
+<li>FS03 - If FS03 is defined as Object Account 4000, reports will subtotal balance sheet accounts through 3999, including the previous two subtotals.</li>
+<li>FS04 - If FS04 is defined as Object Account 4999, reports will subtotal balance sheet accounts through 4998, including the previous three subtotals.</li>
+<li>FS05 - If FS05 is defined as Object Account 6000, reports will subtotal income statement accounts through 5999.</li>
+<li>FS06 - If FS06 is defined as Object Account 7000, reports will subtotal income statement accounts through 6999.</li>
+<li>The subsequent AAIs will follow the above examples.</li>
+</ul>
+<a name="aref_section36"></a><h4 class="km">FS99 AAI</h4>
+<ul>
+<li>AAI item FS99 provides the net income wording for all AAI subtotal versions of your financial statements.</li>
+<li>It specifies whether to print a single or double line before or after the report totals.</li>
+<li>It prints the text being entered on the first line under Account Use Description on the Set Up Single AAI Item form (P0012) as the description on the last line of your financial statement.</li>
+<li>Unlike most other AAIs, AAI item FS99 does not require account information.</li>
+</ul>
+<p class="km"><strong>Example: FS99 AAI</strong></p>
+<p>In the below shown example, the R10211B Simple Income Statement report shows an additional line of Net Income (Loss) totals corresponding to the FS99 AAI setup.</p>
+<p><img src="../images/ga01.png"/></p>
+<div class="kmnotebox">
+<p>NOTE: Financial statements provide a processing option that allows you to specify whether the system calculates net income. If you calculate net income and you also set up AAI item FS99, the system prints two net income lines on the financial statement. To prevent two net income lines from printing on the financial statement, either do not set up AAI item FS99 or do not specify to calculate net income in the processing option.</p>
+</div>
+<a name="aref_section37"></a><h4 class="km">Making the Subtotals/Totals Stand Out</h4>
+<p>To print single or double lines before or after the report totals, enter the appropriate text on the fourth or fifth line under the Account Use Description heading on the Set Up Single AAI Item form (P0012):</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">Value</th>
+<th class="km">Description</th>
+</tr>
+<tr>
+<td class="km" align="center">*BEFORE(-)</td>
+<td class="km" align="center">Prints a single line before the totals.</td>
+</tr>
+<tr>
+<td class="km" align="center">*BEFORE(=)</td>
+<td class="km" align="center">Prints a double line before the totals.</td>
+</tr>
+<tr>
+<td class="km" align="center">*AFTER(-)</td>
+<td class="km" align="center">Prints a single line after the totals.</td>
+</tr>
+<tr>
+<td class="km" align="center">*AFTER(=)</td>
+<td class="km" align="center">Prints a double line after the totals.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../images/ga02.png"/></p>
+<div class="kmnotebox">NOTE: Only the first Account Use Description line will be printed by default on the report. The remaining lines provide opportunities to further describe the AAI's purpose.</div>
+<a name="aref_section38"></a><h4 class="km">Financial Reports with Subtotals</h4>
+<p>For each financial statement report, except Consolidated Balance Sheet (R10150) report, the EnterpriseOne General Accounting system provides a report version with subtotals based on AAI items FSxx as shown below. You must select the report version that contains the subtotals. For example, to print subtotals for AAI items FSxx on the Simple Income Statement report (R10211B), select the report version Income Statement by Branch with AAI Subtotals instead of Income Statement by Branch. Further, its suggested to use the processing options and data selection to achieve the desired output.</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">Report Id</th>
+<th class="km">Report Version</th>
+<th class="km">Report Name</th>
+<th class="km">Version Title</th>
+</tr>
+<tr>
+<td class="km" align="center">R10111B</td>
+<td class="km" align="center">XJDE0007</td>
+<td class="km" align="center">Balance Sheet</td>
+<td class="km" align="center">By Branch with AAI Subtotals</td>
+</tr>
+<tr>
+<td class="km" align="center">R10211B</td>
+<td class="km" align="center">XJDE0009</td>
+<td class="km" align="center">Income Statement</td>
+<td class="km" align="center">Income Statement by Branch w/AAI Subtotals</td>
+</tr>
+<tr>
+<td class="km" align="center">R10412A</td>
+<td class="km" align="center">XJDE0006</td>
+<td class="km" align="center">Monthly Spreadsheet</td>
+<td class="km" align="center">By Business Unit w/AAI Subtotals</td>
+</tr>
+<tr>
+<td class="km" align="center">R103121A</td>
+<td class="km" align="center">XJDE0003</td>
+<td class="km" align="center">Consolidated Income Statement</td>
+<td class="km" align="center">Business Unit Consolidation with AAI Subtotals</td>
+</tr>
+<tr>
+<td class="km" align="center">R10212A</td>
+<td class="km" align="center">XJDE0007</td>
+<td class="km" align="center">Variance Analysis</td>
+<td class="km" align="center">Variance Analysis All Branches w/AAI Subtotals</td>
+</tr>
+<tr>
+<td class="km" align="center">R10411A</td>
+<td class="km" align="center">XJDE0007</td>
+<td class="km" align="center">Variance Analysis With 5 Months</td>
+<td class="km" align="center">Var. Ana. w/5 months By Branch w/AAI Subtotaling</td>
+</tr>
+</tbody>
+</table>
+<p class="km"> </p>
+<div class="kmnotebox">NOTE: Accounts should be consistent across all companies. Inconsistent account structures can yield unpredictable results if reports are run for more than one company or business unit.</div>
+<hr />
+<a name="aref_section39"></a><h3 class="km"><strong><strong>Account</strong> Summarization (GLSMxx)</strong></h3>
+<p>The AAI items GLSMxx define account ranges that you do not want to summarize. For example, if you do not want liquid asset accounts summarized, you might set up this account range. You must define complete ranges, consisting of a beginning and an ending AAI item. The first range must begin with GLSM01. We recommend that you end the first range with GLSM02, which is the next consecutive number. Define the next range, if needed, to begin with GLSM03 and end with GLSM04, and so on. This table shows the information needed to set up AAI item GLSMxx:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Description</th>
+<th class="km">Business Unit<br />(Not used)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+<th class="km">Sequence Number</th>
+</tr>
+<tr>
+<td class="km" align="center">GLSM01</td>
+<td class="km" align="center">Bypass<br />Summarization<br />Accounts</td>
+<td class="km" align="center">NA</td>
+<td class="km" align="center">1000</td>
+<td class="km" align="center">Blank</td>
+<td class="km" align="center">1.300</td>
+</tr>
+<tr>
+<td class="km" align="center">GLSM02</td>
+<td class="km" align="center">Bypass<br />Summarization<br />Accounts</td>
+<td class="km" align="center">NA</td>
+<td class="km" align="center">1199</td>
+<td class="km" align="center">99999999</td>
+<td class="km" align="center">1.300</td>
+</tr>
+</tbody>
+</table>
+<p class="km"> </p>
+<div class="kmnotebox">NOTE: For more information on an overview of the summarization of account ledger records (F0911) and the use of the GLSM AAIs, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664682.1&id=664797.1'>Document 664797.1</a>.</div>
+<hr />
+<a name="aref_section310"></a><h3 class="km"><strong>Reconcilable Ranges (GLRCxx)</strong></h3>
+<p>The AAI items GLRCxx define ranges of accounts that you want to reconcile as part of your account reconciliation process. You must reconcile these accounts before you can summarize them.The Reconciled field must have a value from user defined codes (09/RC) to allow summarization. The unreconciled accounts falling under GLRCxx AAI's will be left unprocessed for summarization. You must define complete ranges, consisting of a beginning and an ending AAI item. The first range must begin with GLRC01. We recommend that you end the first range with GLRC02, which is the next consecutive number. Define the next range, if needed, to start with GLRC03 and end with GLRC04, and so on. This table shows the information needed to set up AAI item GLRCxx: </p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Description</th>
+<th class="km">Business Unit<br />(Not used)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+<th class="km">Sequence Number</th>
+</tr>
+<tr>
+<td class="km">GLRC01</td>
+<td class="km">Reconcilable<br />Ranges</td>
+<td class="km">NA</td>
+<td class="km">2000</td>
+<td class="km">Blank</td>
+<td class="km">1.400</td>
+</tr>
+<tr>
+<td class="km">GLRC02</td>
+<td class="km">Reconcilable<br />Ranges</td>
+<td class="km">NA</td>
+<td class="km">2100</td>
+<td class="km">99999999</td>
+<td class="km">1.400</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">NOTE: Both GLSMxx and GLRCxx AAI's are optional to setup for summarization. Each AAI can be setup for specific company. If not setup for specific company, it will look for default company 00000.</div>
+<hr />
+<a name="aref_section311"></a><h3 class="km"><strong>Prior Year Account <strong>Purges </strong>(GLPRxx)</strong></h3>
+<p>The AAI items for GLPRxx define account ranges that you do not want to purge.You must define complete ranges, consisting of a beginning and an ending AAI item. The first range must begin with GLPR01. We recommend that you end the first range with GLPR02, which is the next consecutive number. Define the next range, if needed, to begin with GLPR03 and end with GLPR04, and so on. This table shows the information needed to set up AAI item GLPRxx:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Description</th>
+<th class="km">Business Unit<br />(Not used)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+<th class="km">Sequence Number</th>
+</tr>
+<tr>
+<td class="km">GLPR01</td>
+<td class="km">Bypass Purge<br />Accounts</td>
+<td class="km">NA</td>
+<td class="km">3000</td>
+<td class="km">Blank</td>
+<td class="km">1.440</td>
+</tr>
+<tr>
+<td class="km">GLPR02</td>
+<td class="km">Bypass Purge<br />Accounts</td>
+<td class="km">NA</td>
+<td class="km">3100</td>
+<td class="km">99999999</td>
+<td class="km">1.440</td>
+</tr>
+</tbody>
+</table>
+<p class="km"> </p>
+<div class="kmnotebox">NOTE: For more information on an overview of the Account Ledger Purge and the use of the GLPR AAIs, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664682.1&id=664786.1'>Document 664786.1</a>.</div>
+<hr />
+<a name="aref_section312"></a><h3 class="km"><strong><strong>Speed Codes</strong> (SPx)</strong></h3>
+<p>The AAI items for SPx define one-character speed codes that you can use instead of the standard combination of business unit.object.subsidiary for a general ledger account.</p>
+<p>You can use a speed code to replace the entire business unit.object.subsidiary, the object number and subsidiary, or the object number only. You cannot set up a speed code to replace only the subsidiary.</p>
+<p>Following table shows the information needed to set up AAI item SPx:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Description</th>
+<th class="km">Company</th>
+<th class="km">Business Unit<br />(Not used)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+<th class="km">Sequence Number</th>
+</tr>
+<tr>
+<td class="km" align="center">SPx</td>
+<td class="km" align="center">Speed Code</td>
+<td class="km" align="center">00001</td>
+<td class="km" align="center">Optional</td>
+<td class="km" align="center">Required</td>
+<td class="km" align="center">Optional</td>
+<td class="km" align="center">1.289</td>
+</tr>
+</tbody>
+</table>
+<p class="km"> </p>
+<div class="kmnotebox">Note: Speed codes can be company specific if you enter the business unit in the AAI item.</div>
+<p class="km">The 'x' character in the speed code item is a user-defined single character. We recommend that you use only alphabetic characters (letters A&ndash;Z) if your business units are numeric.</p>
+<p class="km">After you set up speed codes, you must exit and then restart your EnterpriseOne system before you can enter speed codes instead of account numbers.</p>
+<p class="km">If you use a flexible format for your chart of accounts, you cannot use speed codes.</p>
+<p class="km"><strong>Example:</strong> Assume that you set up AAI item SPB and define only the object account (1110) as a speed code. During data entry, you type a business unit and, if appropriate, a subsidiary. For example, if you enter 1.B, the system reads it as 1.1110.</p>
+<hr />
+<a name="aref_section313"></a><h3 class="km"><strong>AAIs for MultiCurrency</strong></h3>
+<p>You set up AAIs to define accounts for multicurrency processing in the EnterpriseOne General Accounting system for:</p>
+<ul>
+<li>Unrealized gains and losses on monetary accounts (revaluation).</li>
+<li>Posting balances by currency.</li>
+<li>Multicurrency intercompany settlements.</li>
+</ul>
+<p>When the system calculates unrealized gains and losses on monetary accounts, posts account balances by currency, and restates amounts in a different currency, it uses AAIs to distribute the amounts to the correct general ledger accounts.</p>
+<p>Some AAI items have a suffix of xxx to accommodate a three-character currency code. You use the xxx suffix to set up multiple currency-specific AAI items for each company. If you do not specify a currency code, the system uses the currency code of the company as the default.</p>
+<p>You can set up AAIs for company 00000, or you can set up specific AAIs for an individual company. Each AAI item in the EnterpriseOne system has a hierarchical order by which the system locates an account number. This is an example of a hierarchical order:</p>
+<ol>
+<li>AAI item with xxx (currency code). If not found, the system searches for 2.</li>
+<li>AAI item for a specific company. If not found, the system searches for 3.</li>
+<li>AAI item for company 00000. If not found, throws an error.</li>
+</ol>
+<a name="aref_section314"></a><h4 class="km">Unrealized Gains and Losses on Monetary Bank Accounts (GVxxx, GWxxx, GRxxx)</h4>
+<p>If you work with currency specific monetary bank accounts and foreign currencies, you need to periodically revalue the bank accounts to reflect current exchange rates. The system calculates the current domestic amount of a foreign currency balance to determine an unrealized gain or loss. In this way, it determines what the gain or loss would be if you converted the balance of the foreign currency bank account to the domestic currency. Following AAI items define the accounts that the system uses for unrealized gains and losses on monetary accounts:</p>
+<ul>
+<li>GVxxx: Designates which account to use for the unrealized gains.</li>
+<li>GWxxx: Designates which account to use for the unrealized losses.</li>
+<li>GRxxx: Designates which offset account to use for unrealized gain or loss. It is an optional AAI.</li>
+</ul>
+<p>where xxx represents the currency code and is optional.</p>
+<p><strong>Rules</strong></p>
+<p>The following rules apply to these AAI items GV, GW, and GR:</p>
+<ul>
+<li>The system uses the account number assigned to AAI items GV and GW to create unrealized gains and losses on monetary accounts.</li>
+<li>The system uses the account number assigned to AAI item GR to create unrealized gain/loss offsets. If the gain/loss offset is assigned to the monetary account, which is usually the case, you must delete AAI item GR. If you do not do this, the system will search for AAI item GR and use it if it is set up, or issue an error message if the AAI item exists but is not set up properly.</li>
+<li>The business unit is optional. If the business unit is not included, the system uses the business unit of the company associated with the monetary account.</li>
+<li>The offset xxx represents the currency code and is optional.</li>
+</ul>
+<p class="km"><strong>AAI Sequence</strong></p>
+<p>The sequence in which the system searches for GV and GW is:</p>
+<ul>
+<li>The system searches for the AAI items GVxxx and GWxxx for the specific company, where xxx is the currency of the company assigned to the monetary account.</li>
+<li>If the system cannot locate these AAI items, the system searches for AAI items GVxxx and GWxxx for Company 00000.</li>
+<li>If the system cannot locate these AAI items, the system searches for AAI items GV and GW for specific Company.</li>
+<li>If the system cannot locate these AAI items, the system searches for AAI items GV and GW for Company 00000.</li>
+<li>If the system cannot locate these AAI items, the system returns an error message "AAI missing".</li>
+</ul>
+<hr />
+<a name="aref_section315"></a><h4 class="km">Posting Balances by Currency (PBCxx)</h4>
+<p>AAI item PBCxx defines the account ranges that the system uses to track and post balances by currency in the Account Balances table (F0902). If you post balances by currency for a company, you must set up AAI item PBCxx as well as select the Post Balance by Currency check box in the Company Names &amp; Numbers program (P0010).</p>
+<p class="km"><strong>Rules</strong></p>
+<p>Following rules apply to AAI item PBCxx:</p>
+<ul>
+<li>The system uses the account number ranges assigned to AAI items PBCxx to post balances by currency.</li>
+<li>The offset xx represents both the beginning and ending of a set of ranges, for example:</li>
+<ul>
+<li>PBC01 represents the first account in a range.</li>
+<li>PCB02 represents the last account in a range.</li>
+</ul>
+<li>Ranges cannot be skipped and must be in sequential order:</li>
+<ul>
+<li>01- 02 = first range of accounts</li>
+<li>03 - 04 = second range of accounts</li>
+</ul>
+<li>Set up ranges for each company as they must be company-specific.</li>
+</ul>
+<div class="kmnotebox">NOTE: When you set up account ranges for PBCxx, do not include the retained earnings account (AAI item GLG4) in any of the account ranges. If you include the retained earnings account, the Annual Close program (R098201) might create duplicate records for balance forward amounts in the F0902 table.</div>
+<p class="km"><strong>Example: PBCxx Setup</strong></p>
+<p>Company 00070 posts balances by currency for all accounts. The retained earnings object account is 4980. To exclude account 4980, set up four AAI items for PBCxx and two ranges as shown in this table:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Description</th>
+<th class="km">Business Unit<br />(Not Used)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+</tr>
+<tr>
+<td class="km" align="center">PBC01</td>
+<td class="km" align="center">Post Balances by Currency - Beginning<br />Account Range 1</td>
+<td class="km" align="center">NA</td>
+<td class="km" align="center">1000</td>
+<td class="km" align="center">Blank</td>
+</tr>
+<tr>
+<td class="km" align="center">PBC02</td>
+<td class="km" align="center">Post Balances by Currency - Ending<br />Account Range 1</td>
+<td class="km" align="center">NA</td>
+<td class="km" align="center">4979</td>
+<td class="km" align="center">99999999</td>
+</tr>
+<tr>
+<td class="km" align="center">PBC03</td>
+<td class="km" align="center">Post Balances by Currency - Beginning<br />Account Range 2</td>
+<td class="km" align="center">NA</td>
+<td class="km" align="center">4981</td>
+<td class="km" align="center">Blank</td>
+</tr>
+<tr>
+<td class="km" align="center">PBC04</td>
+<td class="km" align="center">Post Balances by Currency - Ending<br />Account Range 2</td>
+<td class="km" align="center">NA</td>
+<td class="km" align="center">9999</td>
+<td class="km" align="center">99999999</td>
+</tr>
+</tbody>
+</table>
+<p>Similarly you can define up to 49 ranges for Post Balances by Currency.</p>
+<hr />
+<a name="aref_section316"></a><h4 class="km">Intercompany Settlements (ICCC and ICH)</h4>
+<p>You create intercompany settlements to ensure that each company's net balance equals zero. You can choose from following methods of intercompany settlements:</p>
+<ul>
+<li>Hub method</li>
+<li>Detail method</li>
+<li>Configured hub method</li>
+</ul>
+<p>After you set up the intercompany settlement accounts for each company, you can reference these accounts in the intercompany AAIs. Thus, the system knows the accounts for which to create balancing entries during the post. The two AAI items for intercompany settlements are ICCC and ICH. You use ICCC for all intercompany settlements. Additionally, you use ICH for the hub method.</p>
+<div class="kmnotebox">NOTE: In a multi-currency environment, ICCC is the only AAI used for setting up intercompany settlement methods - Detail and Configured hub. For more information on intercompany settlement methods, please refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664682.1&id=1416193.1'>Document 1416193.1</a>.</div>
+<p class="km"><strong>Hub Method</strong></p>
+<p>For the hub method, you use both of the intercompany settlement AAIs - ICH and ICCC.</p>
+<p class="km"><strong>Detail and Configured Hub Methods</strong></p>
+<p>For the detail and configured hub methods, you use only AAI item ICCC.</p>
+<p class="km"><strong>ICH (Intercompany Hub)</strong></p>
+<p class="km">This item defines the hub company. Observe these guidelines when setting up AAI item the ICH:</p>
+<ul>
+<li>Only one AAI item ICH can exist.</li>
+<li>You must set up AAI item ICH for company 00000.</li>
+<li>You must enter a business unit and an object account.</li>
+<li>The subsidiary account is optional.</li>
+</ul>
+<p class="km"><strong>ICCC (Intercompany Business Unit)</strong></p>
+<p>This item defines the non-hub companies. Observe these guidelines when setting up AAI item the ICCC:</p>
+<ul>
+<li>You must set up a separate AAI item ICCC for each non-hub company that exists in the F0010 table, regardless of whether the company is involved in intercompany settlements.</li>
+<li>You do not need to set up an ICCC for the hub company.</li>
+<li>The company of the account must be the same as the company specified in the AAI.</li>
+<li>You must enter a business unit and an object account.</li>
+<li>The subsidiary account is optional.</li>
+</ul>
+<p class="km"><strong>Example: AAIs for the Hub Method</strong></p>
+<p>This example shows the AAI items ICH and ICCC with separate items for ICCC:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Company</th>
+<th class="km">Business<br />Unit (Required)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+</tr>
+<tr>
+<td class="km" align="center">ICH</td>
+<td class="km" align="center">00000</td>
+<td class="km" align="center">1</td>
+<td class="km" align="center">1291</td>
+<td class="km" align="center">Blank</td>
+</tr>
+<tr>
+<td class="km" align="center">ICCC</td>
+<td class="km" align="center">00200</td>
+<td class="km" align="center">200</td>
+<td class="km" align="center">1291</td>
+<td class="km" align="center">Blank</td>
+</tr>
+<tr>
+<td class="km" align="center">ICCC</td>
+<td class="km" align="center">00050</td>
+<td class="km" align="center">50</td>
+<td class="km" align="center">1291</td>
+<td class="km" align="center">Blank</td>
+</tr>
+</tbody>
+</table>
+<p class="km"><strong>Example: AAIs for the Detail and Configured Hub Methods</strong></p>
+<p>This example shows the recommended AAI setup:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">AAI Item</th>
+<th class="km">Company</th>
+<th class="km">Business<br />Unit (Required)</th>
+<th class="km">Object<br />(Required)</th>
+<th class="km">Subsidiary<br />(Optional)</th>
+</tr>
+<tr>
+<td class="km" align="center">ICCC</td>
+<td class="km" align="center">00001</td>
+<td class="km" align="center">1</td>
+<td class="km" align="center">1291</td>
+<td class="km" align="center">Blank</td>
+</tr>
+<tr>
+<td class="km" align="center">ICCC</td>
+<td class="km" align="center">00200</td>
+<td class="km" align="center">200</td>
+<td class="km" align="center">1291</td>
+<td class="km" align="center">Blank</td>
+</tr>
+<tr>
+<td class="km" align="center">ICCC</td>
+<td class="km" align="center">00050</td>
+<td class="km" align="center">50</td>
+<td class="km" align="center">1291</td>
+<td class="km" align="center">Blank</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<a name="aref_section317"></a><h4 class="km">Detailed Currency Restatement (CRxx, CR)</h4>
+<p>In case you have setup Detailed Currency Restatement (R11411) as the Restatement Method, setup the following AAI's:</p>
+<ul>
+<li>AAI item CRxx defines the account ranges that the system uses for detailed currency restatement.</li>
+<li>AAI item CR, which is optional, defines the balancing offset account.</li>
+</ul>
+<p><strong>AAI Item CRxx (Required)</strong></p>
+<p>Following rules apply to AAI items CRxx:</p>
+<ul>
+<li>
+<p>The system uses the account ranges assigned to AAI items CRxx to restate amounts in another currency.</p>
+</li>
+<li>
+<p>xx is used in pairs and represents the beginning and end of a range. For example, CR01 represents the first account in a range and CR02 represents the last account in that range.</p>
+</li>
+<li>
+<p>You can define up to 48 ranges.</p>
+</li>
+<li>
+<p>Ranges cannot be skipped and must be this sequential order:</p>
+<ul>
+<li>
+<p style="margin: 0pt;">01&ndash;02 = first range of accounts</p>
+</li>
+<li>
+<p style="margin: 0pt;">03&ndash;04 = second range of accounts</p>
+</li>
+</ul>
+</li>
+<li>
+<p>To restate the entire chart of accounts, use only one pair:</p>
+<ul>
+<li>
+<p style="margin: 0pt;">CR01 = Object account 1000</p>
+</li>
+<li>
+<p style="margin: 0pt;">CR02 = Object account 999999.99999999 or 999999.ZZZZZZZZ (depending on the operating system)</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The business unit is optional. If you leave the Business Unit field blank, the system uses the business unit of the account number on the transaction.</p>
+</li>
+<li>
+<p>The sequence numbers for AAI items CRxx are 11.620 and 11.630, and they do not fall within the sequence numbers for General Accounting.</p>
+</li>
+</ul>
+<p><strong>AAI Item CR (Optional)</strong></p>
+<p>Following rules apply to AAI item CR:</p>
+<ul>
+<li>
+<p>The system uses the account assigned to AAI item CR to create balancing entries that might be required due to rounding differences.</p>
+</li>
+<li>
+<p>You set up this AAI item only if you restate the entire chart of accounts into the XA ledger along with the YA and ZA ledgers, if applicable, and require the ledger to balance.</p>
+</li>
+<li>
+<p>The account assigned to this AAI item keeps track of the journal entries created to balance the currency restatement ledgers.</p>
+</li>
+<li>
+<p>Set up this AAI item only if you set a processing option to create balancing journal entries when you run the Detailed Currency Restatement program. If the processing option is set to create balancing entries and the AAI item does not exist, the system generates an error report when you run the Detailed Currency Restatement program.</p>
+</li>
+<li>
+<p>The business unit.object.subsidiary is required.</p>
+</li>
+<li>
+<p>The sequence number for AAI item CR is 11.610, and it does not fall within the sequence numbers for General Accounting.</p>
+</li>
+</ul>
+<div class="kmnotebox">
+<p>NOTE: To calculate gains and losses and restate the amounts in the alternate ledger (XA), the system uses these AAI items:</p>
+<ul>
+<li>RG: Realized gain on foreign currency receipts.</li>
+<li>RL: Realized loss on foreign currency receipts.</li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
