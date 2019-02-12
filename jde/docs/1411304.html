@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment Terms in E1</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Payment Terms in E1</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Payment Terms and Advanced Payment Terms</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section31">Commonly Used Payment Terms</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">Types of Payment Terms</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33"><strong>Understanding Standard Payment Terms (P0014)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Setting Up Standard Payment Terms</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Standard Payment Term Examples</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section36">Due Upon Receipt</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section37">Net Due Date&nbsp;</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section38">Proximate Date</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section39">Fixed Days</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section310">Split Payment Term</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section311">Net Due Date with Discount</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>Payment Terms Report (R0014)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313"><strong>Understanding Advanced Payment Terms (P0014, P00145, P00146)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Adding a Work Day Calendar</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Defining Due Date Rules</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Defining Date Ranges for Due Date Rules</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">Setting Up Multitiered Discounts for Due Date Rules</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section318">Updating Discounts with Multitiered Discount Payment Terms</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section319">Verifying Due Date Rules</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section320">Defining Advanced Payment Term Codes</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section321">Defining Installments for Payment Term Codes</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section322">Advanced Payment Term Examples</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section323">Calendar: Work Day Rule</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section324">Calendar: Annual Payment</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section325">Calendar: Payments Due on a Specific Day of the Week</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section326">Calendar: Payments Due Last Day of the Month, 45 Days After the Invoice Date</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section327">Date Range</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section328">Date Range:&nbsp;<span style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-style: italic; font-weight: bold;">Payments Due Last Day of the Month, 45 Days After the Invoice Date</span></a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section329">Fixed Date Range</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section330">Multitiered Discount&nbsp;</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section331">Installments</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section332"><strong>Understanding Due Date versus Net Due Date Fields</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section333"><strong>Payment Terms in Accounts Payable</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section334">Create Payment Control Groups (R04570)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section335">T Accounts for Vouchers with Discounts</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section336"><strong>Payment Terms in Accounts Receivable</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section337">Manual Receipt Entry (P03B102)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section338">T Accounts for Invoice with Discounts</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section339"><strong>Understanding Tax Rules (P0022) and Discounts</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section340">Examples of Tax Rules (P0022) On Discounts</a></td></tr></table>
+
+
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Payment Terms and Advanced Payment Terms</strong></h3>
+<p class="km">Payment terms are used by the JD Edwards EnterpriseOne Accounts Payable and Accounts Receivable systems to specify a payment due date and, optionally, a discount percent and discount due date. The system uses Payment Terms to calculate the due dates and discounts on vouchers and invoices for efficient transaction entry.</p>
+<p class="km">Each customer and supplier may have a default Payment Term defined that are used automatically when creating a voucher or invoice. The default value can be accepted or overridden with a different Payment Term.</p>
+<p class="km">Payment Term Codes can range from simple to complex, depending on your organization's policies.Payment Terms can be defined by using a one-, two-, or three-character combination of these types of characters:</p>
+<ul>
+<li>Alphabetic (A-ZZZ)</li>
+<li>Numeric (0-999)</li>
+<li>Special characters (including blank)</li>
+</ul>
+<p class="km">For example, you might use A1%, which combines all three types of characters, for a percentage Payment Term Code. The JD Edwards EnterpriseOne Accounts Payable and Accounts Receivable modules use the same payment terms.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are setting up and revising Payment Terms to be used in the Accounts Payable and Accounts Receivable modules.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h4 class="km">Commonly Used Payment Terms</h4>
+<p class="km">It is recommended that a blank Payment Term Code be configured for the most commonly used Payment Term. However, there should also be an identical Payment Term that has a code other than blank to be used as an override during voucher and invoice entry. If a non-blank Payment Term is the default on the customer or supplier record, changing the Payment Term to blank during entry does not replace the default Payment Term. For example, if the supplier master record is set up to use 001 as the payment term code, and you want to override it on the voucher to the blank payment term code, the system will continue to supply the default (001) from the supplier record every time the field is cleared.</p>
+<p class="km">Blank Payment Term</p>
+<p class="km"><img src="../images/pt01.png" border="0" hspace="0" vspace="0" align="bottom" /></p>
+<p class="km">Corresponding Override Payment Term</p>
+<p class="km"><img src="../images/pt02.png" border="0" hspace="0" vspace="0" align="bottom" /></p>
+<a name="aref_section32"></a><h4 class="km">Types of Payment Terms</h4>
+<p class="km">Two types of payment terms are available Standard and Advanced.</p>
+<p class="km">&nbsp;</p>
+<p>&nbsp;</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr><th class="km" style="width: 50%; padding: 4px;">Standard Payment Terms</th><th class="km" style="width: 50%; padding: 4px;">Advanced Payment Terms</th></tr>
+<tr>
+<td class="km" style="width: 50%; padding: 4px;">
+<p>Define Due Dates by:</p>
+<ul>
+<li>Entering a specific date.</li>
+<li>Specifying the number of days to add to the Invoice Date.</li>
+<li>Specifying the number of months to add to the invoice date and the date in the month.</li>
+<li>Define Discounts as a percent of the gross amount for each invoice, voucher, or pay item.</li>
+</ul>
+</td>
+<td class="km" style="width: 50%; padding: 4px;">
+<p>&nbsp;Define Due Dates by:</p>
+<ul>
+<li>Defining a calendar and Work Day Rule to use in conjunction with the Due Date. For example, if the Due Date falls on a weekend day, the system can automatically change it to the previous Friday or following Monday.</li>
+<li>Defining a based-on date other than the Invoice Date, such as the GL Date or Service/Tax Date.</li>
+<li>Setting up date ranges that allow you to add days and months, specify a fixed date, or use a combination of the two.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%; padding: 4px;">
+<ul>
+<li>Define Discounts as a percent of the gross amount for each invoice, voucher, or pay item.</li>
+<li>Discount Due Date is determined based on Invoice Date.</li>
+</ul>
+</td>
+<td class="km" style="width: 50%; padding: 4px;">
+<ul>
+<li>Specify varying discount percentages for multiple payments. For example, the percentage of a discount for the first payment might be 10% and the remaining payments might be 20% each.</li>
+<li>Specify varying discount percentages based on the Due Date. For example, you might grant a 5% discount to customers who pay within 10 days and a 2% discount to customers who pay between 11 and 30 days.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%; padding: 4px;">&nbsp;Payments can be split&nbsp;into multiple payments. You can specify a Due Date for the first payment and the number of days to add to each remaining payment.</td>
+<td class="km" style="width: 50%; padding: 4px;">&nbsp;Payments can be divided based on percentage.&nbsp;For example, the amount of the first payment might be 20% of the total amount and the amount of the second and third payments might each be 40% of the total.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<a name="aref_section33"></a><h3 class="km"><strong>Understanding Standard Payment Terms (P0014)</strong></h3>
+<p><br /><img src="../images/pt03.png" border="0" alt="Standard Flow" title="Standard Flow" hspace="0" vspace="0" /></p>
+<p>&nbsp;</p>
+<a name="aref_section34"></a><h4 class="km">Setting Up Standard Payment Terms</h4>
+<p>To begin setting up Standard Payment Terms, select Payment Term Revisions from the Payment Term Revisions (G00141) menu. From Work with Payment Terms (P0014) form, you can create a new payment term or revise an existing payment term.&nbsp; <br /><br />When entering a new Payment Term, you must enter a unique code that specifies the terms of payment in the Payment Term Code (data dictionary item PTC field). Examples of payment terms include:</p>
+<ul>
+<li>001: 1/10 net 30. (1% discount if paid within 10 days or next due date is 30 days)</li>
+<li>002: 2/10 net 30. (2% discount if paid within 10 days or next due data is 30 days)</li>
+<li>003: Due on the 10th day of every month. (Proximate date and month example)</li>
+</ul>
+<p><br />The following is a description of the rest of the fields available on Standard Payment Terms:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Due Date (DDJ)</td>
+<td class="km" style="width: 50%;">If the Payment Term is to be used in the JD Edwards EnterpriseOne Accounts Receivable module, enter the date that the net payment is due. Conversely, if the Payment Term is to be used in the Accounts Payable module, enter the date that the payment is due to receive a discount. If no discount is offered, enter the net due date.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Net Days To Pay (NDTP)</td>
+<td class="km" style="width: 50%;">Enter the number of days that the system adds to the invoice date to calculate the due date on the invoice or voucher. If you use split payment terms, the system uses the value from this field to calculate the due date for the first split payment.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Discount % (DCP)</td>
+<td class="km" style="width: 50%;">Enter the percent of the total invoice or voucher that you will allow a discount if it is paid within the discount period. Enter the discount percent as a decimal, for example, a 2 percent discount is .02.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Discount Days (DCD)</td>
+<td class="km" style="width: 50%;">Enter the number of days after the invoice date that an invoice or voucher must be paid to receive the discount. The system adds the number of days specified to the invoice due date to calculate the discount due date.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Prox Date Month (PXDM)</td>
+<td class="km" style="width: 50%;">Enter the number of months that the system adds to the invoice date to calculate the due date. The system uses this field in conjunction with the value specified in the Proximate Day field (PXDD) to calculate the due date. <br />
+<ul>
+<li>For example, if the proximate month is 1 and proximate day is 15, the system calculates the due date as the 15th of the next month.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Day (PXDD)</td>
+<td class="km" style="width: 50%;">Enter the day that the invoice or voucher is due. The system uses this field in conjunction with the value in the Proximate Month field (PXDX) to calculate the due date. For example, if the proximate month is 1 and proximate day is 15, the system calculates the due date as the 15th of the next month.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Number of Split Payments (NSP)</td>
+<td class="km" style="width: 50%;">Enter the number of equal, consecutive payments into which you want the system to divide the invoice or voucher. For example, if the number of split payments is 3, the system divides the invoice or voucher into three equal payments. You can use split payments only if the number of days between payments is a constant number, such as 30.&nbsp;&nbsp; For amounts that are not equally divisible, the system uses soft rounding.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Days To Pay Aging (DTPA)</td>
+<td class="km" style="width: 50%;">Enter the number of days that the system uses to calculate the due date for each subsequent payment if you use split payments. For example, if the number of split payments is 4 and the days to pay aging is 30, the system adds thirty to the due date calculated for the first payment to obtain the due date for the second payment. The system adds 30 to the second payment to obtain the due date for the third payment, and so on.<br /><br />The system uses the value from the Net Days to Pay field to calculate the due date for the first payment.</td>
+</tr>
+</tbody>
+</table>
+<p><br /><img src="../images/pt04.png" border="0" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">Note: The information defined on a Payment Term is used to calculate Due Dates on Invoices and Vouchers as they are entered. However, negative invoices or vouchers (debit or credit) might use the GL Date (data dictionary item DGJ) as the Due Date regardless of the payment term entered. A processing option in the master business function (P0400047 for vouchers and P03B0011 for invoices) controls how the system calculates the Due Date for debit and credit memos.</div>
+<a name="aref_section35"></a><h4 class="km">Standard Payment Term Examples</h4>
+<a name="aref_section36"></a><h5 class="km">Due Upon Receipt</h5>
+<p>A Due Upon Receipt Payment term is when the payment is due upon the receipt of goods and services. In terms of EnterpriseOne Standard Payment Terms, a Due Upon Receipt payment term creates a Due Date the same day as the Invoice Date. This payment term is set up with blank fields so no calculation is made.</p>
+<p><img src="../images/pt05.png" border="0" alt="Due Upon Receipt" title="Due Upon Receipt" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt06.png" border="0" alt="Due Upon Receipt Example" title="Due Upon Receipt Example" hspace="0" vspace="0" /></p>
+<a name="aref_section37"></a><h5 class="km">Net Due Date&nbsp;</h5>
+<p>A Net Due Date payment term is where the payment is due a set number of days after the invoice date. For example, if you want a due date that is 30 days after the invoice date, a Standard Payment Term would be set up with a Days to Add value of 30.</p>
+<p><img src="../images/pt07.png" border="0" alt="Net Due Date" title="Net Due Date" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt08.png" border="0" alt="Net Due Date Example" title="Net Due Date Example" hspace="0" vspace="0" /></p>
+<a name="aref_section08"></a><h5 class="km">Proximate Date</h5>
+<p>A Proximate Due Date rule calculates a payment due date a set number of months after the invoice datea nd on a specific date in that month. For example, if a payment needs to be due on the 10th day of a month, 2 months after the invoice date, the Payment Term can be set up as follows:</p>
+<p><img src="../images/pt09.png" border="0" alt="Proximate Date" title="Proximate Date" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt10.png" border="0" alt="Proximate Date Example" title="Proximate Date Example" hspace="0" vspace="0" /></p>
+
+
+
+<a name="aref_section39"></a><h5 class="km">Fixed Days</h5>
+<p>A Fixed Days payment term is where a due date is a specific day regardless of the invoice date.</p>
+<p><img src="../images/pt11.png" border="0" alt="Fixed Days" title="Fixed Days" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt12.png" border="0" alt="Fixed Days Example" title="Fixed Days Example" hspace="0" vspace="0" /></p>
+
+<a name="aref_section310"></a><h5 class="km">Split Payment Term</h5>
+<p>A Split Payment Term calculates multiple pay items on an invoice or voucher with separate due dates. Standard Payment Terms provides the ability to split into multiple pay items of the same amount.&nbsp;</p>
+<p><img src="../images/pt13.png" border="0" alt="Split Term" title="Split Term" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt14.png" border="0" alt="Split Term Example" title="Split Term Example" hspace="0" vspace="0" /></p>
+<a name="aref_section311"></a><h5 class="km">Net Due Date with Discount</h5>
+<p>This example illustrates how a Standard Payment Term (P0014) would look like if it was for a Net Due Date with a Discount Percentage.</p>
+<p><img src="../images/pt15.png" border="0" alt="Net Due Date with Payment Terms" title="Net Due Date with Payment Terms" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt16.png" border="0" alt="Net Due Date with Discount Example" title="Net Due Date with Discount Example" hspace="0" vspace="0" /></p>
+<a name="aref_section312"></a><h3 class="km"><strong>Payment Terms Report (R0014)</strong></h3>
+<p>To get a printed list of Standard Payment Terms that are currently defined, run the Payment Terms Report (R0014). This report is helpful for users who may be entering vouchers or invoices or updating default payment terms in customer or suppliers.</p>
+<p><img src="../images/pt17.png" border="0" alt="R0014" title="R0014" hspace="0" vspace="0" /></p>
+<a name="aref_section313"></a><h3 class="km"><strong>Understanding Advanced Payment Terms (P0014, P00145, P00146)</strong></h3>
+<p>Advanced Payment Terms provide further customization options for Payment Due Dates with the addition of Due Date Rules. Due Date Rules provide the following functionality:</p>
+<ul>
+<li>Ability to use a workday calendar and workday rule to indicate which days of the month are workdays and which are weekends and holidays. Additionally, if due dates fall on a weekend or holiday, you can specify whether to use that date or have the system automatically change the due date to the previous or following working day.</li>
+<li>Ability to specify the based-on date. Unlike the due dates for standard payment terms, which are always based on the invoice date, advanced payment terms allow you to specify whether to use the invoice date, GL date, or service/tax date.</li>
+<li>Ability to specify the number of days and months to add to or subtract from the based-on date using a range of transaction dates, or specify the months to add and a fixed date using a date range.</li>
+<li>Ability to specify unique rules for net and discount due dates. You could have net due dates that use a date range and are based on the GL Date, and discount due dates that have a fixed date based on the Invoice Date.</li>
+</ul>
+<p>The system stores advanced payment term information in the following tables:</p>
+<ul>
+<li>Advanced Payment Terms (F00141)</li>
+<li>Due Date Rules (F00142)</li>
+<li>Due Date Rules Day Range (F00143)</li>
+<li>Installment Payment Terms (F00144)</li>
+<li>Multitiered Payment Terms (F00147)</li>
+</ul>
+<p>The programs used to set up Advanced Payment terms can be accessed from the Payment Terms Revisions (G00141) menu.</p>
+<p><img src="../images/pt18.png" border="0" alt="Advanced Flow" title="Advanced Flow" hspace="0" vspace="0" /></p>
+<a name="aref_section314"></a><h4 class="km">Adding a Work Day Calendar</h4>
+<p>The first step in adding a Work Day Calendar, is defining the Calendar Type in UDC table 42/WD (Work Day Calendar Type). The Description (data dictionary item DL01) field should be used to specify the calendar's use. For example, it might be specific to an industry such as banking.&nbsp; After the desired calendar types are defined, the Work with Workday Calendar program (P00071) can be used to add a new calendar.</p>
+<div class="kmnotebox">Note: If you use the default value of * for Calendar Type (data dictionary item WDCT) in the Work with Workday Calendar program (P00071), the system updates the value to blank even if this code does not exist in UDC table 42/WD (Work Day Calendar Type).</div>
+<p><br />Important Fields:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Calendar Type (WDCT)</td>
+<td class="km" style="width: 50%;">For calendars that are going to be used in the Accounts Payable and Accounts Receivable modules, this field should be left blank.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Calendar Month (MT)</td>
+<td class="km" style="width: 50%;">Enter a number that corresponds to the month in a calendar year.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Calendar Year (YR)</td>
+<td class="km" style="width: 50%;">Enter the calendar year.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Shift Code (SHFT)</td>
+<td class="km" style="width: 50%;">This field is for Payroll and Time Entry and does not apply to payment terms. A code from UDC table 00/SH (Shift Codes) that identifies daily work shifts is entered here. In payroll systems, a shift code can be used to add a percentage or amount to the hourly rate on a timecard.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">S, M, T, W, T, F, S</td>
+<td class="km" style="width: 50%;">Enter a value from UDC table 00/TD (Type of Day) that specifies the type of work day for each date. Examples of valid values include:
+<ul>
+<li>W: Work Day</li>
+<li>E: Weekend</li>
+<li>H: Holiday</li>
+<li>S: Shut-down</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><img src="../images/pt19.png" border="0" hspace="0" vspace="0" /></p>
+<a name="aref_section315"></a><h4 class="km">Defining Due Date Rules</h4>
+<p>Due Date Rules are defined using the Work with Due Date Rules (P00146) application.&nbsp; The following fields are used for contracts only:</p>
+<ul>
+<li>Advance Payment (data dictionary item ADVPMNT).</li>
+<li>Distribution Date (data dictionary item DSTRDTE).</li>
+<li>Deliver Percent (data dictionary item DLVPRC).</li>
+<li>Based On (data dictionary item BSDON).</li>
+<li>Distribution Amount (data dictionary item DSTRPAMT).</li>
+</ul>
+<p>Important Fields:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Due Date Rule (DDRL)</td>
+<td class="km" style="width: 50%;">Enter a code that specifies the name of the new Due Date Rule.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Based on Date (DABS)</td>
+<td class="km" style="width: 50%;">Enter the date the system uses to calculate the net due date and discount due date. Valid values are:
+<ul>
+<li>Blank or 1: Invoice date.</li>
+<li>2: GL date.</li>
+<li>3: Service/tax date.</li>
+</ul>
+For installment or multitiered payment terms, the Based on Date (data dictionary item DABS) applies to the first installment only. Each subsequent installment uses the previous installment's net due date calculated as the basis for calculating the next due date.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Days to Add (DADD)</td>
+<td class="km" style="width: 50%;">Enter the number of days the system adds to or subtracts from the date specified in the Based on Date (data dictionary item DABS) to calculate the discount due date or the net due date. If subtracting days from this date is desired, specify a negative number in this field.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Fixed Days (DYFX)</td>
+<td class="km" style="width: 50%;">Enter the day that a payment is due. The system uses this field in conjunction with the value in the Months to Add (data dictionary item MADD) field to calculate the discount due date or the net due date. For example, if this field has a value of 20 there is a 1 in the Months to Add (data dictionary item MADD) field, and the Based on Date field is 1 (invoice date), the system calculates the due date as the 20th day of the month following the Invoice Date.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Months to Add (MADD)</td>
+<td class="km" style="width: 50%;">Enter the number of months to add to or subtract from the date specified in the Based on Date (data dictionary item DABS) to determine the discount due date or the net due date. The system uses this field in conjunction with the Fixed Days (data dictionary item DYFX) field and Days to Add (data dictionary item DADD) field to calculate the due date. For example, if the Fixed Days (data dictionary item DYFX) is 20, the Months to Add (data dictionary item MADD) field is 1 and the Based on Date (data dictionary item DABS) field is 1 (invoice date), the system calculates the due date 20th day of the month following the Invoice Date.If the Fixed Days (data dictionary item DYFX) field is used in conjunction with a date range and lies outside the range, the Months to Add (data dictionary item MADD) is not necessary. The system automatically uses the fixed date of the next month. For example, if the date range is 21-31 and the Fixed Days (data dictionary item DYFX) is the 10th, the system uses the 10th day of the following month.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Calendar (CALN)</td>
+<td class="km" style="width: 50%;">Enter the name of the calendar that differentiates between working days, holidays, weekends, and so forth. This value must exist in the Workday Calendar table (F0007). The system uses this field in conjunction with the Work Day Rule (data dictionary item WKDY) field to determine final due dates if the system calculates a due date on a weekend or holiday.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Work Day Rule (WKDY)</td>
+<td class="km" style="width: 50%;">Enter a code that specifies if non-working days should be included in the due date calculation. Valid values are:
+<ul>
+<li>Blank: Use the due date that the system calculates regardless of whether it is a non-working day.</li>
+<li>1: Do not include non-working days in the due date calculation. For example, if the system adds 15 days to the invoice date to calculate the due date, and weekend days are specified as non-working days, the system does not count them when it adds the 15 days.</li>
+<li>2: Include non-working days in the due date calculation unless the due date is on a non-working day. If the due date is on a non-working day, the system changes it to the next working day.</li>
+<li>3: Include non-working days in the due date calculation unless the due date is on a non-working day. If the due date is on a non-working day, change it to the previous working day.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../images/pt20.png" border="0" hspace="0" vspace="0" /></p>
+<a name="aref_section316"></a><h4 class="km">Defining Date Ranges for Due Date Rules</h4>
+<p>Date Ranges are defined by selecting the Date Range option from the Form exit in the Due Date Rules Revision (P00146) application.<br /><br />Important Fields</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">From Day (FMDY)</td>
+<td class="km" style="width: 50%;">Enter the beginning number for the range of days. The system uses this field in conjunction with the To Day (data dictionary item TODY) field to establish the range of days.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">To Day (TODY)</td>
+<td class="km" style="width: 50%;">Enter the ending number for the range of days. The system uses this field in conjunction with the From Day (data dictionary item FMDY) field to establish the range of days.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../images/pt21.png" border="0" hspace="0" vspace="0" /></p>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note: <span id="form1:panelPage1">When using a date range, the system always uses the last day of the date range to apply the rule. For example, if you specify a range of 1&ndash;15 and a rule that adds 3 days, the system calculates the due date on the 18th if the based-on date is between 1 and 15. The system does not add 3 days to each day specified in the date range; it adds three days to the ending date of the range</span></p>
+</div>
+<p>&nbsp;</p>
+<a name="aref_section317"></a><h4 class="km">Setting Up Multitiered Discounts for Due Date Rules</h4>
+<p>Multitiered discounts are defined by selecting the Multitiered option from the Form exit in the Due Date Rules Revision (P00146) application.<br /><br />Important Fields</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Discount Percentage (DCP1)</td>
+<td class="km" style="width: 50%;">Enter the percent of the total invoice or voucher that you will discount if it is paid within the discount period. This value should be written as a decimal.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../images/pt22.png" border="0" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">Note: If using multitiered discounts, do not enter a value into the Fixed Days (data dictionary item DYFX) and Months to Add (data dictionary item MADD) fields. Furthermore, the Days to Add (data dictionary item DADD) value should equal the value that is entered in the To field of the first tier.</div>
+<a name="aref_section318"></a><h4 class="km">Updating Discounts with Multitiered Discount Payment Terms</h4>
+<p>To calculate new discount percentages and discount due dates on invoices or vouchers that are assigned a multitiered discount payment term, the Update A/R Invoices program (R005142) or the Update A/P Vouchers program (R005141) can be run. The reports work similar in both Accounts Payable and Accounts Receivable. They use the date defined in Processing Option 1: As Of Date to determine what transactions are eligible for update and what tier should be used. For&nbsp; example, a payment term is set up with the following:</p>
+<ul>
+<li>Based-on date = invoice date</li>
+<li>Days to add = 10</li>
+<li>First tier 1&ndash;10 with a 10 percent discount.</li>
+<li>Second tier = 11&ndash;20 with a 5 percent discount.</li>
+<li>Third tier = 21&ndash;29 with a 1 percent discount.</li>
+</ul>
+<p>If an invoice exists with an Invoice Date of June 1 and the Processing Option 1: As Of Date is set to June 12, the system recalculates the discount amount as 5% per the second tier.</p>
+<a name="aref_section319"></a><h4 class="km">Verifying Due Date Rules</h4>
+<p>From Due Date Rule Revisions (P00146), the Simulator program can be accessed either through the Row exit and provides a validating tool for hypothetical due dates.</p>
+
+
+<a name="aref_section320"></a><h4 class="km">Defining Advanced Payment Term Codes</h4>
+<p>Advanced Payment Terms are configured in the Work with Advanced Payment Terms (P00145) application.<br /><br />Important Fields</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Payment Term (PTC)</td>
+<td class="km" style="width: 50%;">Enter a code that identifies the terms of payment. Use a blank code to indicate the most frequently used payment term. Examples of valid payment terms include:
+<ul>
+<li>Blank: Net 15.</li>
+<li>001: 1/10 net 30.</li>
+<li>002: 2/10 net 30.</li>
+<li>003: Due on the 10th day of every month.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Discount % (DCP)</td>
+<td class="km" style="width: 50%;">Enter the percent of the total invoice or voucher that is discounted if paid within the discount period. This value needs to be entered as a decimal. The system ignores a value entered in this field if using installment or multitiered discounts.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Discount Due Date Rule (DDDR)</td>
+<td class="km" style="width: 50%;">Enter the rule that the system uses to calculate the discount due date of an invoice or a voucher. Leave this field blank if there is no value in the Discount % (data dictionary item DCP) field.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Net Due Date Rule (NDDR)</td>
+<td class="km" style="width: 50%;">Enter the rule that the system uses to calculate the net due date of an invoice or a voucher.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../images/pt23.png" border="0" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">Note: The system does not process transactions with discounts if the tax rules for the company specified(see Understanding Tax Rules(P0022) and Discounts section) are set up with the Tax on Gross Excluding Discount option selected on the Tax Rules form. This applies to standard payment terms with discounts as well as advanced payment terms with multitiered discounts.</div>
+<p>&nbsp;</p>
+<a name="aref_section321"></a><h4 class="km">Defining Installments for Payment Term Codes</h4>
+<p>Installments are configured by selecting the Installments option from the Row exit in the Work with Advanced Payment Terms (P00145).<br /><br />Important Fields</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Fields</th><th class="km" style="width: 50%;">Field Description</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Number of Equal Payments (NTRN)</td>
+<td class="km" style="width: 50%;">Enter the number of transactions to be processed. The system calculates the percentage of the installment based on the number in this field. For example, if the value is 5, the system generates 5 installments for 20 percent. If the value in this field does not divide equally into 100, the system assigns the unequal percent to the last installment.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Percent of Installment (PSPL)</td>
+<td class="km" style="width: 50%;">Enter a percentage of the invoice that the system will use to generate one installment payment. The installments do not have to be equal but the sum must be equal to 100 percent. This field does not need to be entered as decimals.</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../images/pt24.png" border="0" hspace="0" vspace="0" /></p>
+<p>Note: For more information on how to set up work day calendars, and on their use in other modules, refer to these additional knowledge documents below:</p>
+<ul>
+<li><a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1411304.1&id=631138.1" alt="631138.1" title="631138.1" target="_blank">631138.1</a></li>
+<li><a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1411304.1&id=1129994.1" alt="1129994.1" title="1129994.1" target="_blank">1129994.1</a></li>
+<li><a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1411304.1&id=1169386.1" alt="1169386.1" title="1169386.1" target="_blank">1169386.1</a></li>
+</ul>
+<a name="aref_section322"></a><h4 class="km">Advanced Payment Term Examples</h4>
+<a name="aref_section323"></a><h5 class="km">Calendar: Work Day Rule</h5>
+<p>The following set up illustrates a Due Date Rule that utilizes a work day calendar to determine working days so that the due date is calculated only using working days.</p>
+<p><img src="../images/pt25.png" border="0" alt="Calendar Work Day Rule" title="Calendar Work Day Rule" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt26.png" border="0" alt="Calendar Work Day Rule Results" title="Calendar Work Day Rule Results" hspace="0" vspace="0" /></p>
+<a name="aref_section324"></a><h5 class="km">Calendar: Annual Payment</h5>
+<p>This example illustrates how the Work Day Calendar can be used to create an annual due date rule. Annual due date rules are when the due date is always on the same day every year, this is usually used for things like magazine subscriptions. For this, the work day calendar is set up to have that specific date each year as the only working day for the year. This example shows it as May 14. The down side to this set up is that a work day calendar must be set up for every month of every year.</p>
+<p><img src="../images/pt27.png" border="0" alt="Calendar: Annual Payment" title="Calendar: Annual Payment&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<a name="aref_section325"></a><h5 class="km">Calendar: Payments Due on a Specific Day of the Week</h5>
+<p>This example illustrates how the Work Day Calendar (P00071) can be used to create a Due Date Rule that requires a payment due date to be on a specific day of the week. This example uses Wednesday as the required day of the week, but it can be set up for any day of the week. The payment term with this set up calculates due dates on a Wednesday, 15 days after the invoice date.</p>
+<p><img src="../images/pt28.png" border="0" alt="Calendar: Payments Due on a Specific Day of the Week" title="Calendar: Payments Due on a Specific Day of the Week&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<p>Example results:</p>
+<p><img src="../images/pt29.png" border="0" alt="Calendar: Payments Due on Specific Day of the Week" title="Calendar: Payments Due on Specific Day of the Week&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<a name="aref_section326"></a><h5 class="km">Calendar: Payments Due Last Day of the Month, 45 Days After the Invoice Date</h5>
+<p>This set up can be used to calculate the due date of an invoice or voucher as the last day of the month, 45 days after the invoice.</p>
+<p><img src="../images/pt30.png" border="0" alt="Calendar: Payments Due Last Day of the Month, 45 Days After the Invoice Date" title="Calendar: Payments Due Last Day of the Month, 45 Days After the Invoice Date&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<p>Example Results:</p>
+<p><img src="../images/pt31.png" border="0" alt="Calendar: Payments Due Last Day of the month, 45 days after the invoice date" title="Calendar: Payments Due Last Day of the month, 45 days after the invoice date&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<a name="aref_section327"></a><h5 class="km">Date Range</h5>
+<p>This example illustrates the set up for a Due Date rule using a Due Date Range.</p>
+<p><img src="../images/pt32.png" border="0" alt="Date Range Example" title="Date Range Example" hspace="0" vspace="0" /></p>
+<p>Example Results:</p>
+<p><img src="../images/pt33.png" border="0" alt="Date Range Results" title="Date Range Results" hspace="0" vspace="0" /></p>
+<a name="aref_section328"></a><h5 class="km">Date Range:&nbsp;<span style="color: #666666; font-family: Arial, Helvetica, sans-serif; font-style: italic; font-weight: bold;">Payments Due Last Day of the Month, 45 Days After the Invoice Date</span></h5>
+<p>The Date Range functionality can also be used to calculate due dates as the last day of the month, 45 days after the invoice date. This can be used instead of the work day calendar option as shown previously. To do so, use the set up as shown in the following screenshots.</p>
+<p><img src="../images/pt34.png" border="0" alt="Date Range: Payments Due Last Day of the Month, 45 Days After the Invoice Date" title="Date Range: Payments Due Last Day of the Month, 45 Days After the Invoice Date&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<p>Example Results:</p>
+<p><img src="../images/pt35.png" border="0" alt="Date Range: Payments Due Last Day of the Month, 45 Days After the Invoice Date" title="Date Range: Payments Due Last Day of the Month, 45 Days After the Invoice Date&amp;clickstream=no" hspace="0" vspace="0" /></p>
+<a name="aref_section329"></a><h5 class="km">Fixed Date Range</h5>
+<p>Date Ranges can also be used to determine the due date based on when the invoice date was in the month. This example shows transactions entered prior to or on the 10th of the month are due 20 days from the 10th and transactions entered after the 10th of the month are due date 20 days from the 10th of the following month.</p>
+<p><img src="../images/pt36.png" border="0" alt="Fixed Date Range" title="Fixed Date Range" hspace="0" vspace="0" /></p>
+<p>Example Results:</p>
+<p><img src="../images/pt37.png" border="0" alt="Fixed Date Range Table" title="Fixed Date Range Table" hspace="0" vspace="0" /></p>
+<a name="aref_section330"></a><h5 class="km">Multitiered Discount&nbsp;</h5>
+<p>With Advanced Payment Terms, you can set up multitiered discounts as well. This example set up shows how you can have a multitiered discount that is 10% of the invoice amount up until 10 days after the Invoice Date. After the 10th, the Date Update AP Vouchers (R005141) or the Date Update AR Invoices (R005142) can be run and the discount amount changes to 5%.</p>
+<p><img src="../images/pt38.png" border="0" alt="Multitiered Discounts" title="Multitiered Discounts" hspace="0" vspace="0" /></p>
+<p>Example Results:</p>
+<p><img src="../images/pt39.png" border="0" alt="Multitiered Discounts" title="Multitiered Discounts" hspace="0" vspace="0" /></p>
+<a name="aref_section331"></a><h5 class="km">Installments</h5>
+<p>Advanced Payment Terms can also be used to create installments, which can break up a transaction into multiple pay items. Each pay item can be set up with different due date rules, so they can have very individual due dates. In this example, any voucher or invoice created using this payment term is split into three pay items. All three pay items are using the same due date rule. Two of them are for 25% of the original total and the last one is for 50%. Each pay item also can have a different discount percentage.</p>
+<p><img src="../images/pt40.png" border="0" alt="Installments" title="Installments" hspace="0" vspace="0" /></p>
+<p>Example Results:</p>
+<p><img src="../images/pt41.png" border="0" alt="Installments" title="Installments" hspace="0" vspace="0" /></p>
+<a name="aref_section332"></a><h3 class="km"><strong>Understanding Due Date versus Net Due Date Fields</strong></h3>
+<p>When a voucher is entered, the system automatically calculates the Net Due Date and the Discount Due Date based on the Payment Terms. The Payment Terms default from the Supplier Master (P04012) or Customer Master (P03013) but can be manually overridden at the time of voucher entry. Furthermore, the Voucher and Invoice entry programs allow for the system calculated Due Date to be changed manually. The Due Date is the date that the pay item is due and payable (for example, 30 days from the invoice date). The Discount Due Date is the final date that the pay item must be paid to receive a discount from the supplier.</p>
+<div class="kmnotebox">Note: The value of the Discount Due Date is stored and displayed in a field for the Net Due Date (DDJ), while the value of the Net Due Date is stored in the field for the Discount Due Date (DDNJ). <a href='/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1411304.1&id=10719044' target='_blank' >Bug 10719044</a> has been entered for this issue and may be addressed in a future release. At this time, the modifications cannot be made due to the vast impact the modification has on several applications and UBEs. The current EnterpriseOne solution has been designed to take this issue into account. As a result, the system will correctly handle Net Due Date and Discount Due Date processing.</div>
+<a name="aref_section333"></a><h3 class="km"><strong>Payment Terms in Accounts Payable</strong></h3>
+<p>After defining payment terms, in either Advanced or Standard functionality, they can then be used in Accounts Payable by:</p>
+<ol>
+<li>Setting up a Default Value in the Supplier Master (P04012).</li>
+<li>Overwriting the Default directly in the Voucher Entry itself, either in the header or the grid for each pay item (P0411).</li>
+</ol>
+<div><img src="../images/pt42.png" border="0" alt="Accounts Payable" title="Accounts Payable" hspace="0" vspace="0" /></div>
+<div></div>
+<div>Debit Memos do not necessarily have to follow Payment Terms to determine their Due Date. This is determined by the Voucher Master Business Function (P0400047), Processing Option 6 on the Defaults tab:</div>
+<div><img src="../images/pt43.png" border="0" alt="P0400047" title="P0400047" hspace="0" vspace="0" /></div>
+<a name="aref_section334"></a><h4 class="km">Create Payment Control Groups (R04570)</h4>
+<p>When using Automatic Payment Processing, the Create Payment Control Groups (R04570) has four Processing Options on the Dates tab that determines how vouchers are selected based on their due dates.</p>
+<p><img src="../images/pt44.png" border="0" alt="R04570" title="R04570" hspace="0" vspace="0" /></p>
+<p><strong>Processing Option 1: Pay Through Date</strong> - Include vouchers with a Due Date on or before the Pay Through Date. If the value in Pay Through Date is greater than or equal to Due Date, then the voucher is included in the payment group.</p>
+<p><strong>Processing Option 2: Displacement Days</strong> - The number of days to add to today's date to include vouchers with a Due Date on or before that date.</p>
+<p><strong>Processing Option 3: Discount Cutoff Date</strong> - The final date that a discount is allowed to be taken. Vouchers with a Discount Due Date after this date are eligible. If the Discount Due Date is greater than or equal to the Discount Cut Off Date, then the Discount is applied to the payment.</p>
+<p><strong>Processing Option 3: Prohibit Payment Before Due Date</strong> - Specify to include or exclude a voucher if the Discount Due Date has passed, but the Net Due Date has not. If this is set to 1, then the payment is prohibited prior to the Net Due Date.&nbsp;</p>
+<p>For more information on Create Payment Control Groups (R04570), please see&nbsp;<a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1411304.1&id=1300877.1" alt="1300877.1" title="1300877.1">E1: 04: How To Create Automatic Payment Control Groups (R04570, P040047, P0030G, P0417, P0415) (Doc ID 1300877.1)</a>.</p>
+<a name="aref_section335"></a><h4 class="km">T Accounts for Vouchers with Discounts</h4>
+<p>Please note that Discount Available table indicates the account related to PKD AAI and the Discount Lost table indicates the account related to PKL.</p>
+<p><img src="../images/pt45.png" border="0" alt="AP T Accounts" title="AP T Accounts" hspace="0" vspace="0" /></p>
+<a name="aref_section336"></a><h3 class="km"><strong>Payment Terms in Accounts Receivable</strong></h3>
+<p>After defining payment terms, in either Advanced or Standard functionality, they can then be used in Accounts Receivable by:</p>
+<div><ol>
+<li>Setting up a Default Value in the Customer Master (P03013).</li>
+<li>Overwriting the Default directly in the Voucher Entry itself, either in the header or the grid for each pay item (P03B2002).</li>
+</ol></div>
+<div><img src="../images/pt46.png" border="0" alt="Accounts Receivable" title="Accounts Receivable" hspace="0" vspace="0" /></div>
+<div></div>
+<div>Credit&nbsp;Memos do not necessarily have to follow Payment Terms to determine their Due Date. This is determined by the Invoice Master Business Function (P0B0011), Processing Option 5 on the Defaults tab:</div>
+<div></div>
+<div><img src="../images/pt47.png" border="0" alt="P03B0011" title="P03B0011" hspace="0" vspace="0" /></div>
+<a name="aref_section337"></a><h4 class="km">Manual Receipt Entry (P03B102)</h4>
+<p>The Processing Options on the Discount tab of Manual Receipt Entry (P03B102) are used to determine how discounts can be taken when using this application to enter receipts.&nbsp;</p>
+<p><img src="../images/pt48.png" border="0" alt="P03B102" title="P03B102" hspace="0" vspace="0" /></p>
+<p><strong>Processing Option 1: Discount Available</strong> - This processing option determines if a discount can be taken if the amount entered is greater than the Discount Available amount on the invoice.</p>
+<p><strong>Processing Option 2: Discount Applied</strong> - This processing determines if a discount amount can be taken on a receipt if the amount taken is greater than the actual payment amount toward the invoice.&nbsp;</p>
+<p><strong>Processing Option 3: Grace Period Days</strong> - The number of days to add to the discount Due Date to extend the period during which a discount can be taken.</p>
+<p><strong>Processing Option 4: Discount Reason Code</strong> - This value is pulled from UDC 00/DE and determines the default reason code for when discounts are taken. Please note that a corresponding AAI RKDxxx (where xxx is the Reason Code) must also exist.</p>
+<p>For more information on Manual Receipt Entry (P03B102), please see&nbsp;<a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1411304.1&id=1451219.1" alt="1451219.1" title="1451219.1">E1: 03B: How To Create Manual Receipts In EnterpriseOne Accounts Receivable (P03B102, P03B0001) (Doc ID 1451219.1)</a>.</p>
+<a name="aref_section338"></a><h4 class="km">T Accounts for Invoice with Discounts</h4>
+<p><img src="../images/pt49.png" border="0" alt="AR T Accounts" title="AR T Accounts" hspace="0" vspace="0" /></p>
+<a name="aref_section339"></a><h3 class="km"><strong>Understanding Tax Rules (P0022) and Discounts</strong></h3>
+<p>Tax Rules (P0022) are important in how Discounts are calculated, whether using Advanced or Standard Payment Terms. The fields important in Tax Rule Revisions (P0022) are highlighted in the following screenshot.</p>
+<p><img src="../images/pt50.png" border="0" alt="Tax Rules P0022" title="Tax Rules P0022" hspace="0" vspace="0" /></p>
+<p>&nbsp;For more information on Tax Rule Revisions (P0022) and Set up, please see&nbsp;<a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1411304.1&id=1413283.1" alt="1413283.1" title="1413283.1">E1: FIN: How To Understand Tax Set Up Within JD Edwards EnterpriseOne Financial Management (P0022, P4008, P0004A, R0018P, P73GE0) (Doc ID 1413283.1)</a>.</p>
+<a name="aref_section340"></a><h4 class="km">Examples of Tax Rules (P0022) On Discounts</h4>
+<p>Example 1:</p>
+<ul>
+<li>Calculate Tax on Gross (Incl. Discount) = Y</li>
+<li>Calculate Discount on Gross (Incl. Tax) = Y</li>
+<li>Tax Rate: 20 %</li>
+<li>Discount: 10 %</li>
+<li>Calculation is: Discount = Gross x Discount %</li>
+<li>Discount = 120 x 0.10 = 12</li>
+</ul>
+<div><img src="../images/pt51.png" border="0" alt="Rules Example 1" title="Rules Example 1" hspace="0" vspace="0" /></div>
+<div></div>
+<div>Example 2:</div>
+<div>
+<ul>
+<li>Calculate Tax on Gross (Incl. Discount) = Y</li>
+<li>Calculate Discount on Gross (Incl. Tax) = N</li>
+<li>Tax Rate: 20 %</li>
+<li>Discount: 10 %</li>
+<li>Calculation is: Discount = Taxable x Discount %</li>
+<li>Discount = 100 x 0.10 = 10</li>
+</ul>
+<p><img src="../images/pt52.png" border="0" alt="Tax Rules Example 2" title="Tax Rules Example 2" hspace="0" vspace="0" /></p>
+<p>Example 3:&nbsp;</p>
+<ul>
+<li>Calculate Tax on Gross (Incl. Discount) = N</li>
+<li>Calculate Discount on Gross (Incl. Tax) = Y</li>
+<li>Tax Rate: 20 %</li>
+<li>Discount: 10 %</li>
+<li>Calculation is: Discount =&nbsp;(Taxable + Tax) x Discount %/(1-Discount %)</li>
+<li>Discount = (100 + 20) x 0.10 / (1 &ndash; 0.10) = 13.33</li>
+</ul>
+<div><img src="../images/pt53.png" border="0" alt="Tax Rules Example 3" title="Tax Rules Example 3" hspace="0" vspace="0" /></div>
+<div></div>
+<div>Example 4:</div>
+<div>
+<ul>
+<li>Calculate Tax on Gross (Incl. Discount) = N</li>
+<li>Calculate Discount on Gross (Incl. Tax) = N</li>
+<li>Tax Rate: 20 %</li>
+<li>Discount: 10 %</li>
+<li>Calculation is: Taxable x Discount %/((1-Discount %) x Tax Rate %)</li>
+<li>Discount = (20 x 0.10) / ((1 &ndash; 0.10) x 0.20) = 11.11</li>
+</ul>
+</div>
+<div><img src="../images/pt54.png" border="0" alt="Tax Rules Example 4" title="Tax Rules Example 4" hspace="0" vspace="0" /></div>
+<div></div>
+</div>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

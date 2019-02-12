@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R07500 Update Tax Area Table</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R07500 Update Tax Area Table</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#GOAL">Goal</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="GOAL"></A>Goal</H2>
+<p>How the R07500 Update Tax Area Table is setup and run. What does it do?<br /><br /><br /></p>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<p>Vertex, Inc. periodically provides updates to ensure the accuracy of your organization's payroll calculations. You can automatically update the tax area information that is stored in the F069016 table with the tax information that is included in the updates that you receive from Vertex, Inc.<br /><br />Access HRM Common Display Settings (P05004)</p>
+<ol>
+<li>Search for Data Item HRGEO</li>
+<li>If set to No, set to Yes</li>
+<li>If HRGEO is not listed, add it</li>
+</ol>
+<p><img style="max-width: 100%; max-height: 100%;" src="../images/hr03.png" class="kmsmartresize" alt="P05004 setup enabling HRGEO (Use GeoCoder)" title="P05004 setup enabling HRGEO (Use GeoCoder)" width="371"/><br />Access Tax Area Table Setup (P07500) on the Taxes and Insurance Setup menu (G07BPTI4)</p>
+<ol>
+<li>Select the Show All radio button</li>
+<li>Select the states and/or CN for Canada to process by clicking in the attachments column to place a green check mark</li>
+<li>Click OK</li>
+</ol>
+<p>This acts as data selection for the R07500<br />Federal tax area will always be updated.  There is no selection for this tax area.<br /><br />Select Update Tax Area Table (R07500) on the Taxes and Insurance Setup menu (G07BPTI4)</p>
+<ol>
+<li>Review the processing option and set as desired.  The F069016 referenced on the processing option is the Payroll Tax Area Profile a.k.a. Tax Area Information</li>
+<li>Submit the R07500 - A pdf file will be generated listing the state, the geocode and the number of records updated for that state along with a total record count.  This record count will not match the number of state records in the Tax Area Information table as the record count includes, but does not display separately, the Federal records.</li>
+</ol>
+<p><br />This report updates the Tax Area Information application/Payroll Tax Area Profile table (P069012/F069016) and the Compensation Overrides application/table (P0701731/F0701731).<br /><br />The R07500 will only create/update tax areas/tax types that generate a tax.<br />This job can take a very long time to process depending on the number and/or size of the states selected.<br />If the geocoder functionality is not being used or the HRGEO was set to no initially, return to the HRM Common Display Settings (P05004) and set the data item back to "No".</p>
+<p> </p>
+<p>NOTE:  The Geocode Databases must be updated on the Vertex Install in order for the R07500 to run correctly.<br /><br /></p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

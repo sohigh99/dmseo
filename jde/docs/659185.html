@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Set Up Supplemental Data (P00091/P00092)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How To Set Up Supplemental Data (P00091/P00092)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Supplemental Data<br /></strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Supplemental Data Type Codes and Formats</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Setting Up Supplemental Data Types</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">To set up a supplemental database code</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">To set up a supplemental data type code using the narrative format</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">To set up a supplemental data type code using the code format</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">To set up a supplemental data type code using the program format</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">To set up a language override</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Entering Supplemental Data</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">To enter supplemental data in the narrative format</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310"> To enter supplemental data in the code format</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">To access supplemental data in the program format</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>Copying Supplemental Data Types</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313"><strong>Reviewing Supplemental Data</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Supplemental Data<br /></strong></h3>
+<p>You can use Supplemental Data to track and store information that is not included in the standard master tables in JD Edwards EnterpriseOne software.  <br /><br />JD Edwards EnterpriseOne provides one supplemental database for each of the following systems:</p>
+<ul>
+<li>Address Book</li>
+<li>General Accounting</li>
+<li>Job Cost</li>
+<li>Fixed Assets</li>
+<li>Human Capital Management</li>
+<li>Payroll</li>
+<li>Equipment/Plant Management</li>
+<li>Work Orders</li>
+<li>Inventory Management</li>
+</ul>
+<p><br />You can set up databases in addition to those provided by JD Edwards EnterpriseOne. For each supplemental database, you can create one or more data types to organize your information. After you set up your database and data types, you can enter and use supplemental data.<br /><br />Information for supplemental database codes is stored in the following tables:</p>
+<ul>
+<li>Supplemental Database Setup (F00090)</li>
+<li>Supplemental Database Data Types (F00091)</li>
+<li>Supplemental Data (F00092)</li>
+</ul>
+<p> </p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> This document is intended for users setting up supplemental data in EnterpriseOne.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Supplemental Data Type Codes and Formats</strong></h3>
+<p>Depending on your requirements, you can set up supplemental data type codes using any of the<br />following formats:</p>
+<ul>
+<li><strong>Narrative Format</strong> - Enables you to enter information in free-form text.</li>
+<li><strong>Message Format </strong>- Similar to narrative format, plus allows you to exit directly to a form and enter narrative information about the data type.</li>
+<li><strong>Code Format</strong> -  Allows you to customize the form on which you enter supplemental data.  You can customize column headings that appear on the data entry form.   You can attach a User Defined Code (UDC) table to each supplemental data type that uses the code format. You can use existing UDC tables or create new ones. When you create new tables, you must use system codes ranging from 55 to 59, inclusive, to protect the table from being overwritten during a reinstall process. To enter text, you can add an attachment to data types that use the code format.</li>
+<li><strong>Program format </strong>- Allows you to access a specific program and version number from the Supplemental Data program (P00092). Instead of customizing menus, set up supplemental data types that use program formats to access the forms that you use most often. You can then access the forms from a single menu selection, which saves time and streamlines data entry tasks.</li>
+</ul>
+<div class="kmnotebox">Note - The system stores supplemental data type codes in the Supplemental Data table (F00092). The system stores supplemental narrative text as generic text attachments.</div>
+<p class="km"> </p>
+<a name="aref_section32"></a><h3 class="km"><strong>Setting Up Supplemental Data Types</strong></h3>
+<p>To use the supplemental database, you must set up data type code tables before you set up data types so that the system can validate code information. You use the Supplemental Data Setup program (P00091) to set up data types as follows:</p>
+<ol>
+<li>Set up the address book database. Set up the data types and specify the format for each data type. Formats can be narrative, code, or program. You can set up six data types in code format, two in narrative format, and one in program format.</li>
+<li>Specify key fields and customize column headings for your data types.</li>
+<li>Set up additional supplemental databases for the Address Book system. If you do not organize your data by data types, you can set up additional supplemental databases. For each supplemental database, you can create one or more data types to organize your information.</li>
+</ol>
+<p>After you set up your database and data types, you can use the Supplemental Data program (P00092) to enter supplemental information.<br /><br /></p>
+<a name="aref_section33"></a><h4 class="km">To set up a supplemental database code</h4>
+<p><img src="../images/sd01.png" border="0" alt="Supplemental Database set up" title="Supplemental Database set up" hspace="0" vspace="0"/></p>
+<ol>
+<li>Navigate to Supplemental Data Setup (P00091).</li>
+<li>On Work With Supplemental Database Setup, click Add.</li>
+<li>On Supplemental Database Setup, complete the following fields:
+<ul>
+<li>Supplemental Database Code</li>
+<li>Description</li>
+</ul>
+</li>
+<li>
+<p>Key fields limit the data that you can search on when you enter supplemental data using the Supplemental Data program (P00092). To specify a key field, turn on one or more of the following options:</p>
+<ul>
+<li>Business Unit</li>
+<li>Company</li>
+<li>Generic Alphanumeric Key 1</li>
+<li>Generic Alphanumeric Key 2</li>
+<li>Generic Numeric Key 1</li>
+<li>Generic Numeric Key 2</li>
+</ul>
+</li>
+<li>Complete the following fields for each key field you turn on:
+<ul>
+<li>DD Alias</li>
+<li>Row Description - To override the data dictionary name for a DD alias, enter a value in the Row Description field that corresponds with the key field. The name that you enter in this field appears in the Supplemental Data program as a key field.</li>
+</ul>
+</li>
+<li>Click OK. The system updates the UDC table (00/SD) with the new database code.</li>
+</ol>
+<p> </p>
+<a name="aref_section34"></a><h4 class="km">To set up a supplemental data type code using the narrative format</h4>
+<ol>
+<li>Navigate to Supplemental Database Setup (P00091).</li>
+<li>On Work With Supplemental Database Setup, click Find to display existing database codes.</li>
+<li>Choose the database code for which you want to define a narrative data type, and then choose Work With Data Typ (Work with Data Types) from the Row menu.</li>
+<li>On Work With Data Types, click Add.</li>
+<li>On Data Type Revisions, type N (narrative) in the following field:
+<ul>
+<li>Display Mode</li>
+</ul>
+</li>
+<li>Complete the following fields:
+<ul>
+<li>Type Data</li>
+<li>Description</li>
+</ul>
+</li>
+<li>Complete the following optional fields:
+<ul>
+<li>Data Class</li>
+<li>Display Sequence</li>
+<li>Search Type</li>
+</ul>
+</li>
+<li>Leave the remaining fields blank for narrative supplemental data types.</li>
+<li>Click OK.</li>
+</ol>
+<p><strong> </strong></p>
+<a name="aref_section35"></a><h4 class="km">To set up a supplemental data type code using the code format</h4>
+<p><img src="../images/sd02.png" border="0" alt="Data Type Revisions" title="Data Type Revisions" hspace="0" vspace="0"/></p>
+<ol>
+<li>Navigate to Supplemental Database Setup (P00091).</li>
+<li>On Work With Supplemental Database Setup, click Find to display existing database codes.</li>
+<li>Choose the database code for which you want to define a code data type, and then choose Work With Data Typ (Work with Data Types) from the Row menu.</li>
+<li>On Work With Data Types, click Add.</li>
+<li>On Data Type Revisions, type C (code) in the following field:
+<ul>
+<li>Display Mode</li>
+</ul>
+</li>
+<li>Complete the following fields:
+<ul>
+<li>Type Data</li>
+<li>Description</li>
+</ul>
+</li>
+<li>Complete the following optional fields:
+<ul>
+<li>Display Sequence</li>
+<li>Data Class</li>
+<li>Search Type</li>
+</ul>
+</li>
+<li>To customize the column heading for user defined codes that appears on the General Description Entry form, complete the following field in the UDC Headings/Validation group box:
+<ul>
+<li>UDC</li>
+</ul>
+</li>
+<li>To attach a user defined code table to the UDC field, complete the following fields:
+<ul>
+<li>Product Code</li>
+<li>Record Type</li>
+</ul>
+</li>
+<li>To customize the column headings for remarks that appear on the General Description Entry form, complete the following fields in the Remark Headings/Validation group box:
+<ul>
+<li>Remark 1</li>
+<li>Remark 2</li>
+<li>The Remark 3 field is used by the Demand Scheduling system only.</li>
+</ul>
+</li>
+<li>To attach the Remark fields to a record type, complete the following corresponding fields:
+<ul>
+<li>System Code</li>
+<li>Record Type</li>
+</ul>
+</li>
+<li>To customize the column headings that appear on the General Description Entry form, complete the following fields in the Column Headings group box:
+<ul>
+<li>Amount 1</li>
+<li>Amount 2</li>
+<li>Quantity</li>
+<li>Effective From</li>
+<li>Effective Thru</li>
+<li>User Date</li>
+<li>User Days</li>
+<li>User Address</li>
+<li>User Document</li>
+<li>The User Time field is used by the Demand Scheduling system only.</li>
+</ul>
+</li>
+<li>Click OK.</li>
+</ol>
+<p> </p>
+<a name="aref_section36"></a><h4 class="km">To set up a supplemental data type code using the program format</h4>
+<p><img src="../images/sd03.png" border="0" alt="Data Type Revisions P" title="Data Type Revisions P" hspace="0" vspace="0"/></p>
+<ol>
+<li>Navigate to Supplemental Database Setup (P00091).</li>
+<li>On Work With Supplemental Database Setup, click Find to display existing database codes.</li>
+<li>Choose the database code for which you want to define a program data type, and then choose Work With Data Typ (Work With Data Types) from the Row menu.</li>
+<li>On Work With Data Types, click Add.</li>
+<li>On Data Type Revisions, enter P (program) in the following field:
+<ul>
+<li>Display Mode</li>
+</ul>
+</li>
+<li>Complete the following field:
+<ul>
+<li>Type Data</li>
+</ul>
+</li>
+<li>Complete the following optional fields:
+<ul>
+<li>Data Class</li>
+<li>Display Sequence</li>
+<li>Search Type</li>
+<li>Description</li>
+</ul>
+</li>
+<li>Click OK to display the fields described in the next step.</li>
+<li>To specify the program that you want this data type to access, complete the following fields in the Display Mode &ldquo;P&rdquo; Only group box:
+<ul>
+<li>Application Name</li>
+<li>Form Name</li>
+<li>Version</li>
+</ul>
+</li>
+<li>Click OK.</li>
+</ol>
+<p> </p>
+<a name="aref_section37"></a><h4 class="km">To set up a language override</h4>
+<p><img src="../images/sd04.png" border="0" alt="Language Overrides" title="Language Overrides" hspace="0" vspace="0"/></p>
+<ol>
+<li>Navigate to Supplemental Database Setup (P00091).</li>
+<li>On Work With Supplemental Database Setup, choose Work With Language Preferences from the Form menu.</li>
+<li>On Work With Language Overrides, click Add.</li>
+<li>On Supplemental Database Language Overrides, complete the following fields:
+<ul>
+<li>Supplemental Database Code</li>
+<li>Language</li>
+</ul>
+</li>
+<li>Complete any of the following optional fields:
+<ul>
+<li>Business Unit Row Description</li>
+<li>Company Row Description</li>
+<li>Alpha Key 1 Row Description</li>
+<li>Alpha Key 2 Row Description</li>
+<li>Numeric Key 1 Row Description</li>
+<li>Numeric Key 2 Row Description</li>
+</ul>
+</li>
+<li>Click OK.</li>
+</ol>
+<p> </p>
+<p class="km"><strong> </strong></p>
+<a name="aref_section38"></a><h3 class="km"><strong>Entering Supplemental Data</strong></h3>
+<p>After you set up the supplemental database and data types for your system, you can enter supplemental data. Supplemental data is used to track information that is not included in the EnterpriseOne standard master tables. It can include detailed information about job sites (business units), such as legal descriptions, ground conditions, and so on.</p>
+<ul>
+<li>Emergency contacts</li>
+<li>Employees</li>
+<li>Job skills</li>
+<li>Work history</li>
+</ul>
+<p>When you set up your system, you set up the types of supplemental data that you want to track. For each data type, you specify the narrative, code, or program format in which you want to track information.  </p>
+<p class="km"><strong> </strong></p>
+<p class="km"><strong>Prerequisites</strong></p>
+<p>For the Address Book system data types to appear on the CIF Supplemental Data menu (G01312), enter AB in the Supplemental Database Code processing option for the Supplemental Data program (P00092). Be sure to specify whether you are using effective dates in the processing option for the Supplemental Data program.</p>
+<p><strong> </strong></p>
+<a name="aref_section39"></a><h4 class="km">To enter supplemental data in the narrative format</h4>
+<ol>
+<li>Navigate to Supplemental Data (P00092)</li>
+<li>On Work With Supplemental Data, review the following field to verify that you are using the correct code:
+<ul>
+<li>Supplemental Database Code - The system updates this field and displays key fields based on the database code that you specified in the processing option for the Supplemental Data program (P00092). The system displays the available types of supplemental data. The value N in the Data Mode column indicates that the data type is in narrative format. The system displays a paper clip icon to the left of each row that contains narrative text.</li>
+</ul>
+</li>
+<li>Depending on the supplemental database code that you are using, complete one of the following fields and click Find:
+<ul>
+<li>Address Number</li>
+<li>Item Number</li>
+<li>Branch/Plant</li>
+<li>Business Unit</li>
+</ul>
+</li>
+<li>Choose a record in the detail area that contains N (narrative) in the Data Mode column and click Select.</li>
+<li>On Media Objects, choose New and then Text from the File menu.</li>
+<li>Enter the text.</li>
+<li>From the File menu, choose Save &amp; Exit.</li>
+</ol>
+<p> </p>
+<a name="aref_section310"></a><h4 class="km"> To enter supplemental data in the code format</h4>
+<p><img src="../images/sd05.png" border="0" alt="work with supplemental data entry" title="work with supplemental data entry" hspace="0" vspace="0"/></p>
+<ol>
+<li>Navigate to Supplemental Data (P00092)</li>
+<li>On Work With Supplemental Data, review the following field to verify that you are using the correct code:
+<ul>
+<li>Supplemental Database Code - The system updates this field and displays key fields based on the database code that you specified in the processing option for the Supplemental Data program (P00092). The system displays the available types of supplemental data. C in the Data Mode column indicates that the data type is in code format. A check mark in the row header of a data type indicates that a code format exists for that data type.</li>
+</ul>
+</li>
+<li>Depending on the supplemental database code that you are using, complete one of the following fields and click Find:
+<ul>
+<li>Address Number</li>
+<li>Item Number</li>
+<li>Branch/Plant</li>
+<li>Business Unit</li>
+</ul>
+</li>
+<li>Choose a record in the detail area that contains C (code) in the Data Mode column and click Select. The column headings and fields in the detail area vary, based on the setup for each data type.</li>
+<li>On General Description Entry, complete the following fields if your data type is associated with a user defined code table:
+<ul>
+<li>User Def Code</li>
+<li>Effective Date</li>
+</ul>
+</li>
+<li>Complete the fields that apply to the data type, which might include the following:
+<ul>
+<li>User Defined Amount</li>
+<li>Remark</li>
+<li>Remarks Line 2</li>
+<li>User Defined Amount #2</li>
+<li>Addl Date</li>
+<li>Ending Date - If you leave the Ending Date field blank and you specified in a processing option for the Supplemental Data program that the system assign an ending date when you leave this field blank, the system uses the ending effective date from the Address by Date table (F0116).</li>
+<li>User Def Days</li>
+</ul>
+</li>
+<li>Click OK.</li>
+</ol>
+<p><img src="../images/sd06.png" border="0" alt="general description entry" title="general description entry" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">Note: Oracle recommends that you use the Supplemental Data Setup program (P00091) to add or change information that is associated with the fields in the UDC Headings/Validation and Remark Headings/Validation areas of the Data Type Revisions form. If you change information using the Supplemental Data program (P00092) instead, the next time that you view the record, the system will issue an error because it is using another UDC table to validate the data.</div>
+<p> </p>
+<a name="aref_section311"></a><h4 class="km">To access supplemental data in the program format</h4>
+<ol>
+<li>Navigate to Supplemental Data (P00092)</li>
+<li>On Work With Supplemental Data, review the following field to verify that you are using the correct code:
+<ul>
+<li>Supplemental Database Code - The system populates this field and displays key fields based on the database code specified in the processing option for the Supplemental Data program (P00092).The system displays the available types of supplemental data. P in the Data Mode column indicates that the data type is in program format.</li>
+</ul>
+</li>
+<li>Choose a row in the detail area that contains P (program) in the Data Mode column and click Select. The system displays the program and form that you identified when you set up the program format for the data type.</li>
+</ol>
+<p> </p>
+<p> </p>
+<a name="aref_section312"></a><h3 class="km"><strong>Copying Supplemental Data Types</strong></h3>
+<p>To save time and reduce data entry errors, you can copy supplemental data to other records. For example, to enter supplemental data for an Address Book number that is similar to an existing Address Book number, you can copy information from one record to another record. After you copy the data, you can revise it as necessary. When you copy supplemental data, follow these guidelines:</p>
+<ol>
+<li>Copy supplemental data that is in code format only. You cannot copy narrative text.</li>
+<li>Copy information from one data type to another data type in code format. For example, if you have a data type in code format for skills and another data type in code format for professional licenses, you can copy one employee's skills information into another employee's professional licenses data type.</li>
+<li>Copy supplemental data only within the same supplemental database code. For example, suppose that you have two Address Book supplemental database codes: AB and SU. Within database code AB, you can copy information from one data type to another data type.</li>
+</ol>
+<p>However, if you have information in database AB that you also want in database SU, you must manually enter the information in both databases.<br /><br />To copy a supplemental data type navigate to Supplemental Data (P00092)</p>
+<ol>
+<li>On Work With Supplemental Data, review the following field to verify that you are using the correct code:Supplemental Database Code. The system updates this field and displays key fields based on the database code that you specified in the processing option for the Supplemental Data program (P00092).</li>
+<li>Complete one or more of the following applicable fields and click Find:
+<ul>
+<li>Item Number</li>
+<li>Branch/Plant</li>
+<li>Business Unit</li>
+<li>Address Number</li>
+</ul>
+</li>
+<li>In the detail area, choose the record that contains the supplemental data type that you want to copy and click Copy.</li>
+<li>On General Description Entry, complete one of the following applicable fields and click OK:
+<ul>
+<li>Item Number</li>
+<li>Branch/Plant</li>
+<li>Business Unit</li>
+<li>Address Number</li>
+</ul>
+</li>
+</ol>
+<p> </p>
+<a name="aref_section313"></a><h3 class="km"><strong>Reviewing Supplemental Data</strong></h3>
+<p>You can review supplemental data in various formats. For example, you can review supplemental<br />data by data type to review a specific type of supplemental data for multiple business units such as job sites in the Western region of the United States. You can also review supplemental data by item to review the master information about an item and the supplemental information with which it is associated, such as the information for a work order. Two tabs appear on the Work With Supplemental Data Profiles (Key1) and Work With Supplemental Data Profiles (MCU/Key1) forms. Each of the following tabs represents a different order in which the system sorts and displays the columns in the detail area of the form:</p>
+<ul>
+<li>Data Type Sort first by data type, and then by short item number.</li>
+<li>Item Number Sort by short item number, and then by data type.</li>
+</ul>
+<p><br />You can rearrange the order in which the system displays the columns in the detail area. You can also save your changes as a new format. As you add formats to the form, the system adds tabs with the names that you assign the formats.<br /><br />To review supplemental data navigate to Work with Supplemental Data Profiles (P00620)</p>
+<ol>
+<li>On Work With Supplemental Data, Work With Supplemental Data Profiles (Key 1), or Work With Supplemental Data Profiles (MCU/Key1), complete one of the following fields:
+<ul>
+<li>Item Number</li>
+<li>Type Data</li>
+</ul>
+</li>
+<li>To further limit your search, complete any of the fields in the Query By Example (QBE) row.</li>
+<li>Click Find.</li>
+</ol>
+<p>&nbsp; </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

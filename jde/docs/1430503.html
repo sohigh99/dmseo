@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ledger Type Constant - P0025</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Leddger Type Constant - P0025</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section12">Example</a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Setting up Ledger Types (P0025)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Multicurrency Ledger Types</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Ledger Types for Detailed Currency Restatement</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Ledger Types for Balance Currency Restatement</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Ledger Types for "As If" Restatement</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview</strong></h3>
+<p>Your general ledger includes different types of ledgers that contain management and control information used:</p>
+<ul>
+<li>For Statistical purposes.</li>
+<li>To Track units.</li>
+<li>To Maintain budgets and forecasts.</li>
+<li>To Control the annual close.</li>
+<li>To Track Accrual and Cash basis amounts.</li>
+</ul>
+<p>You can set up multiple concurrent accounting ledgers in the EnterpriseOne General Accounting system to establish an audit trail for all transactions. Multiple ledgers provide flexibility without requiring you to enter unnecessary and redundant data. Multiple ledgers allow you to:</p>
+<ul>
+<li>Define any number of unit or monetary ledger types, such as actual, budgeted, or non-domestic currency.</li>
+<li>Retrieve data about anything, from global revenue by product to an individual employee's expenses, without creating separate account numbers.</li>
+<li>Maintain transactions in the appropriate ledger and post to the general ledger by summary or detailed transaction.</li>
+<li>View two ledgers simultaneously. For example, you can view the domestic and reporting currency ledgers, or the budget and actual ledgers, with the variance calculated online.</li>
+</ul>
+<a name="aref_section12"></a><h4 class="km">Example</h4>
+<p>Some of the common ledger types in the EnterpriseOne General Accounting system include:</p>
+<ul>
+<li>AA (Actual Amounts)</li>
+<li>AU (Actual Units)</li>
+<li>BA (Budget Amounts)</li>
+<li>BU (Budget Units)</li>
+<li>CA (Foreign Currency Amounts)</li>
+<li>XA (Alternate Currency)</li>
+<li>AC (Consolidations Amount)</li>
+</ul>
+<div class="kmnotebox">NOTE: You can also create additional ledger types. Ledger types U1 - U9 and UA - UZ are provided for your business needs. These ledger types are for your use only and will not be overwritten or used for other purposes in future releases of EnterpriseOne software.</div>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for Finance Functional users who will be involved in setting up the General Accounting system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p> </p>
+<a name="aref_section31"></a><h3 class="km"><strong>Setting up Ledger Types (P0025)</strong></h3>
+<ul>
+<li>You must set up each ledger type in the User Defined Code table 09/LT..</li>
+<li>The rules that you set up are consolidated on one form which you access from Ledger Type Master Setup (P0025).</li>
+<li>The financial rules for ledger types are stored in the Ledger Type Master File (F0025).</li>
+</ul>
+<p>Access the Ledger Type Rules Setup form.</p>
+<p><img src="../images/lt01.png" border="0" hspace="0" align="bottom"/></p>
+<p class="km"><strong>Units Ledger Type</strong></p>
+<ul>
+<li>Enter a value for Units Ledger Type.</li>
+<li>The system associates a units ledger with each primary amount ledger.</li>
+<li>The first character in both ledgers is the same. The second character in the units ledger is a U. For example, the AU ledger is the units ledger that is associated with the AA ledger and the BU ledger is the units ledger that is associated with the BA ledger.</li>
+<li>You can set up a units ledger to be used with any of the ledgers that you set up in UDC 09/LT. However, unit ledger types FU, HU, and IU can be used only with the FA, HA, and IA ledgers, respectively. For example, you cannot set up an FX ledger for actual amounts and use it with the FU ledger for units.</li>
+</ul>
+<div class="kmnotebox">NOTE: The one exception to this is the AZ (Cash Basis) amount ledger. If you do not fill in a units ledger for the AZ amount ledger, a default units ledger of ZU will be used by the G/L Post. The units ledger must be a valid ledger type.</div>
+<p>When you enter a journal entry that has units, the system does not create an additional record in the F0911 table, it merely stores the units in a separate field. However, when you post a journal entry that has units, the system creates a separate F0902 record that it uses to record the units in the units ledger that is associated with the amount ledger. For example, the system posts the amounts to the AA ledger and posts units to the AU ledger.<br /><br />Following graphic illustrates how the F0902 table separates ledger types for actual amounts (AA) and actual units (AU) for each fiscal year:<br /><br /><img src="../images/lt02.png"/></p>
+<p class="km"><strong>Close to Retained Earnings Account</strong></p>
+<ul>
+<li>Select this option to denote that retained earnings should be calculated for this ledger during the Annual Close.</li>
+<li>This flag must be selected for the AA and AZ ledgers.</li>
+<li>This option specifies whether the Annual Close program (R098201) &lt;Document  664688.1&gt; closes accounts in this ledger to a retained earnings account.</li>
+</ul>
+<p class="km"><strong>Ledger is Required to Balance</strong></p>
+<ul>
+<li>Select this option if entries for this ledger must be in balance (net to zero).</li>
+<li>This flag must be selected for the AA, CA and AZ ledgers.</li>
+<li>Do not turn this on for the XA, YA and ZA ledgers. The G/L Post program will not check that these ledgers are in balance. The ledgers should be in balance by batch but not necessarily by document.</li>
+<li>Unlike the Create Intercompany Settlements check box, this check box does not ensure that companies within this ledger are in balance. This check box ensures only that entries for this ledger are in balance.</li>
+</ul>
+<p class="km"><strong>Create Intercompany Settlements</strong></p>
+<ul>
+<li>Select this check box if you want the system to create balancing entries when a transaction that involves multiple companies is entered for this ledger.</li>
+<li>If you select this option, you must also select "Ledger is Required to Balance" option.</li>
+<li>This check box works in conjunction with the intercompany settlement method <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1430503.1&id=1416193.1'>Document 1416193.1</a> on the General Accounting Constants (P0000) form:</li>
+<ul>
+<li>If this check box is selected, the system validates that entries for this ledger are in balance by company when posted. If companies are out of balance, the system uses the intercompany settlement method to bring them into balance.</li>
+<li>If this check box is selected and the intercompany settlement method is set to N i.e. no intercompany transactions, the system will not post a transaction that involves multiple companies if those companies are out of balance.</li>
+</ul>
+<li>If this check box is not selected, the system will not validate that companies within this ledger are in balance.</li>
+<li>You must select this flag for the AA, CA and AZ ledgers.</li>
+<li>Do not select this for the XA, YA and ZA ledgers.</li>
+</ul>
+<p class="km"><strong>Prevent Direct Balance Update</strong></p>
+<ul>
+<li>Select this check box to prevent users from entering amounts directly in the Account Balances table (F0902) for this ledger.</li>
+<li>You must select this check box for ledger types AA, CA, and AZ ledgers, otherwise the system displays an error message.</li>
+<li>If an amount ledger has a unit ledger associated with it, the check box value for the unit ledger type must be the same as the amount ledger.</li>
+<li>If you turn off this option, you can update account balances in the F0902 table. For example, if you are entering amounts for ledger type BA, you will turn off this option  so that you can enter amounts using the budget programs and then when finished, you  might turn on this option to prevent future updates to the F0902 table.</li>
+<li>You must select this check box for the AA ledger type so that users cannot access a budget program to update account balances, for example, change the ledger type, and change the account balances. However, you might not want to select this check box for the AC ledger because the Compute Restated Balances program (R11414A) directly updates this ledger.</li>
+</ul>
+<p class="km"><strong>Roll Original Budget to Next Year</strong></p>
+<ul>
+<li>For budget ledger types, select this check box to designate that the original budget can be rolled forward in the Annual Close program.</li>
+<li>The Job Cost system also uses this functionality</li>
+<li>For more information, you may refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1430503.1&id=664688.1'>Document 664688.1</a> Overview of Annual Close Report (R098201)</li>
+</ul>
+<p class="km"><strong>Override Budget "Do Not Spread" Code</strong></p>
+<ul>
+<li>For budget ledger types, select this check box for the Spread Annual to Periods program (R14801) to override the Do Not Spread (DNS) code and evenly distribute annual budget amounts among the periods for accounts that are assigned the DNS code.</li>
+<li>If this check box is not selected, the R14801 program does not distribute annual budget amounts for accounts that are assigned the DNS code. You must distribute the amounts manually.</li>
+</ul>
+<p class="km"><strong>Use as Restatement "To" Ledger</strong></p>
+<ul>
+<li>A flag to denote that this ledger can be used as a restatement 'To' ledger.</li>
+<li>This flag can not be selected for AA, CA, and AZ ledgers.</li>
+</ul>
+<p class="km"><strong>Prevent Creation of Journal Entry</strong></p>
+<ul>
+<li>Select this check box to specify whether the system should prevent journal entries from being created for this ledger.</li>
+<li>If you turn on this option and try to create a journal entry for this ledger type, the system issues the error message "Cannot create JE for Ledger Type".</li>
+</ul>
+<p class="km"><strong>Ledger Comparison Column Titles Upper</strong></p>
+<ul>
+<li>Enter the first line of description used in column headings on a report or form.</li>
+<li>This description should be no larger than the data item size of column heading, if possible.</li>
+<li>If the column heading is only one line, it should be placed in this column.</li>
+<li>Use the second line of the Column Title when one is not sufficient.</li>
+</ul>
+<p class="km"><strong>Ledger Comparison Column Titles Lower</strong></p>
+<ul>
+<li>Enter the second line of description used in column headings on a report or form.</li>
+<li>This description should be no larger than the data item size of column heading, if possible.</li>
+<li>If the column heading is only one line, it should be placed in the first column.</li>
+</ul>
+<p class="km"><strong>Denominated Currency Code</strong></p>
+<ul>
+<li>Specify the code that indicates the currency in which an amount is denominated.</li>
+<li>The currency code in this field applies to all companies that use the ledger.</li>
+<li>Applications like R09110Z and P0911 will not allow transactions in foreign currency other than Denominated Currency Code.</li>
+<li>Ledger types AC, AD, XA, and ZA require a currency code to ensure that amounts are restated only in the designated currency and that the amounts have the correct number of decimal places.</li>
+</ul>
+<div class="kmnotebox">NOTE: To maintain the integrity of the ledgers, do not change the currency code that you assign to them after you begin using detailed currency restatement.</div>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><strong>Multicurrency Ledger Types</strong></h3>
+<p>When you work with multiple currencies, the system uses ledger types AA (actual amounts) and CA (foreign currency amounts) and, optionally the following restatement ledger types:</p>
+<ul>
+<li>XA: Detailed currency restatement</li>
+<li>YA: Detailed currency restatement</li>
+<li>ZA: Detailed currency restatement</li>
+<li>AC: Balance restatement</li>
+<li>AD: As if restatement</li>
+</ul>
+<a name="aref_section33"></a><h4 class="km">Ledger Types for Detailed Currency Restatement</h4>
+<p>To perform Detailed Currency Restatement, the system uses the XA, YA, and ZA ledger types. You must set up the alternate currency (XA) ledger for Detailed Currency Restatement and, optionally, the domestic origin (YA) and foreign origin (ZA) ledgers. The Detailed Currency Restatement program is designed to use only these ledgers.</p>
+<p><strong>Prerequisites</strong></p>
+<ul>
+<li>Ensure that the XA, YA, and ZA ledger types are set up in UDC table 09/LT.</li>
+<li>The ledgers can be currency specific by entering the currency code as left justified and capitalized in the Special Handling Code column:
+<ul>
+<li>XA: Assign the alternate currency code to this ledger</li>
+<li>ZA: Assign the alternate currency code to this ledger</li>
+<li>YA: Do not assign a currency code</li>
+</ul>
+</li>
+</ul>
+<p>The XA, YA, and ZA ledgers, which are hard coded, are described in the following table:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">Ledger Type</th>
+<th class="km">Description</th>
+</tr>
+<tr>
+<td class="km">XA (alternate currency)</td>
+<td class="km">
+<ul>
+<li>This ledger is required and contains a partial or complete chart of accounts with transactions in the alternate currency. The alternate currency of the XA ledger is typically a currency that does not fluctuate as compared with the domestic currency of a company. Each transaction in the AA ledger is restated into its alternate currency (XA) equivalent by using the exchange rate that is effective on the date of the transaction. The exception to this is when amounts in the foreign currency ledger (CA) are in the same currency as the XA ledger. In this case, the program copies the CA ledger amounts to the XA ledger; it does not restate the AA amounts.</li>
+<li>Assign the currency code of the alternate (stable) currency to ledger type XA. This must be the same currency code as company 00000.</li>
+<li>If you do not set up this ledger and run the Detailed Currency Restatement program (R11411), the system exits the program without processing records.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km">YA (domestic origin)</td>
+<td class="km">
+<ul>
+<li>This ledger is optional and contains a partial chart of accounts with transactions that originated in the domestic currency (AA ledger), restated into the alternate ledger (XA).</li>
+<li>Do not assign a currency code to this ledger type. The system uses the domestic currency of the company on the transaction.</li>
+<li>This ledger is typically used for analysis purposes and shows the amount of the XA ledger that was created by original domestic transactions.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km">ZA (foreign origin)</td>
+<td class="km">
+<ul>
+<li>This ledger is optional and contains a partial chart of accounts with transactions that originated in the foreign currency (CA ledger), restated into the alternate ledger (XA).</li>
+<li>Assign the currency code of the alternate currency to ledger type ZA. (This must be the same currency code assigned to the XA ledger.)</li>
+<li>This ledger is typically used for analysis purposes and displays the amount of the XA ledger that was created by original foreign transactions.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br /><img src="../images/lt03.png"/></p>
+<p class="km"><strong>Close to Retained Earnings and Account and Ledger is Required to Balance</strong></p>
+<p>Select these check boxes for ledger type XA, YA, and ZA only if you restate the entire chart of accounts.</p>
+<p class="km"><strong>Use as Restatement To Ledger</strong></p>
+<p>This check box does not apply to ledger types XA, YA, and ZA. The detailed currency restatement program is hard-coded for ledger types XA, YA, and ZA; therefore, this option is ignored by the system.</p>
+<p class="km"><strong>Denominated Currency Code</strong></p>
+<ul>
+<li>Enter the currency code in which to restate the domestic AA ledger. Complete this field for ledger types XA and ZA only. A currency code designation for a ledger type applies to all companies using that ledger</li>
+<li>If you use ledger type ZA, you must assign it the same currency code as ledger type XA. Ledger type ZA contains the foreign entries that were restated into the XA ledger; therefore the currency code must be the same.</li>
+<li>Ledger type YA does not use this field because amounts are restated in the currency of the domestic AA ledger.</li>
+</ul>
+<div class="kmnotebox">NOTE: To maintain the integrity of your ledgers, do not change the currency code that you assign to them after you begin using detailed currency restatement (R11411). For more information on R11411, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1430503.1&id=664750.1'>Document 664750.1</a> Overview of Detailed Currency Restatement Method.</div>
+<hr />
+<a name="aref_section34"></a><h4 class="km">Ledger Types for Balance Currency Restatement</h4>
+<p>You can set up ledger type AC or any user-specified ledger type for balance restatement (R11414A). You cannot use ledger type AC for detailed currency restatement or &ldquo;as if&rdquo; currency repost.</p>
+<p>This ledger contains a partial or complete chart of accounts with transactions in the reporting currency. Assign the currency code of the consolidated reporting currency to ledger type AC. Although ledger type AC is commonly used, the  consolidation ledger type can be any user-specified ledger type.</p>
+<div class="kmnotebox">NOTE: Ensure that ledger type AC (consolidation ledger) or other user-specified ledger type for balance restatement exists in both UDC 09/LT and UDC 11/TL.</div>
+<p><img src="../images/lt04.png" border="0" hspace="0" align="bottom"/></p>
+<p class="km"><strong>Close to Retained Earnings Account</strong></p>
+<p>Select this check box if you restate the entire chart of accounts for ledger type AC.</p>
+<p class="km"><strong>Use as Restatement To Ledger</strong></p>
+<p>Select this check box.</p>
+<p class="km"><strong>Prevent Creation of Journal Entry</strong></p>
+<p>Clear this check box.</p>
+<p class="km"><strong>Denominated Currency Code</strong></p>
+<ul>
+<li>Enter the code of the currency in which you restate amounts in this field. A currency code designation for a ledger type applies to all companies using that ledger.</li>
+<li>Ledger type AC requires a currency code to ensure that amounts are restated only in the designated currency and that the amounts have the correct number of decimal places.</li>
+<li>To maintain the integrity of the AC ledger, do not change the currency code that you assign to the ledger after you begin using balance restatement.</li>
+</ul>
+<div class="kmnotebox">NOTE: For more information on R11414A, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1430503.1&id=664911.1'>Document 664911.1</a> Overview of Balance Restatement Method.</div>
+<hr />
+<a name="aref_section35"></a><h4 class="km">Ledger Types for "As If" Restatement</h4>
+<p>You must set up the ledger type AD for &ldquo;as if&rdquo; restatement. You cannot use this ledger type for detailed currency restatement or balance restatement.<br /><br />This ledger contains a complete chart of accounts with domestic transactions (AA ledger) that have been restated to foreign amounts using exchange rates as of a specific date.</p>
+<div class="kmnotebox">NOTE: Ensure that ledger type AD (as if restatement ledger) exists in both UDC table 09/LT and UDC table 11/TL.</div>
+<p><br /><img src="../images/lt05.png"/></p>
+<p class="km"><strong>Use as Restatement To Ledger</strong></p>
+<p>Select this check box.</p>
+<p class="km"><strong>Prevent Creation of Journal Entry</strong></p>
+<p>Clear this check box.</p>
+<p class="km"><strong>Denominated Currency Code</strong></p>
+<ul>
+<li>Enter the currency in which you restate amounts in this field. A currency code designation for a ledger type applies to all companies using that ledger.</li>
+<li>Ledger type AD requires a currency code to ensure that amounts are restated only in the designated currency and that the amounts have the correct number of decimal places.</li>
+<li>To maintain the integrity of the ledger, do not change the currency code that you assign to the AD ledger after you begin using as if restatement.</li>
+</ul>
+<hr />
+<a name="aref_section36"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<p class="km"><strong>Question 1: What are the best practices recommended for creating custom ledger types?</strong></p>
+<p><strong>Answer 1: </strong>Please consider the following recommendations while creating custom ledger types:</p>
+<ul>
+<li>You must first set up each ledger type in the UDC 09/LT.</li>
+<li>After you have added a ledger type in the UDC 09/LT, it will be required to add the ledger type in Work with Ledgers (P0025) application.</li>
+<li>You can use ledger types U1 - U9 and UA - UZ which have been provided for your business needs. These ledger types are for your use only and will not be overwritten or used for other purposes in future releases of EnterpriseOne software.</li>
+<li>Avoid setting up ledger types starting with 'B' or 'J' as these are reserved for budgeting in general ledger and jobcost modules and can be misunderstood as budgeted and jobcost amounts.</li>
+</ul>
+<hr />
+<p class="km"><strong>Question 2: When I try to change "Prevent Direct Balance Update" option on a ledger type, why does it throw "Invalid Value" error?</strong></p>
+<p><strong>Answer 2:</strong> This error could be thrown for following possible reasons:</p>
+<ul>
+<li>It is mandatory to select this option for ledger types AA, CA, and AZ ledgers. In case the option is unchecked, the system displays an error message. </li>
+<li>If an amount ledger has a unit ledger associated with it, the option for the unit ledger type must match the setting for the amount ledger. For instance, HA is the Amount ledger type and HU is the associated Unit Ledger type. If you select the option for &ldquo;Prevent Direct Balance Update&rdquo; on the HA ledger, it will be required to first select the same option on the HU unit ledger type. Similarly, if you decide to uncheck this option for HA ledger type, it will be required to first uncheck the option on the HU ledger type.</li>
+</ul>
+<hr />
+<p class="km"><strong>Question 3: When I try to check "Create Intercompany Settlements" option on a ledger type, why does it throw "Invalid Value" error?</strong></p>
+<p><strong>Answer 3:</strong> If you select this option, you must also select "Ledger is Required to Balance" option. If this is not selected, it will throw "Invalid Value" error.</p>
+<hr />
+<p class="km"><strong>Question 4: When posting a foreign transaction between two companies with different currencies, what amounts are posted to the AA and the CA ledgers by the Post?</strong></p>
+<p><strong>Answer 4:</strong> The AA ledger will always be posted in the currency of the companies and the CA ledger will be posted in the currency of the transaction.</p>
+<hr />
+<p class="km"><strong>Question 5: After adding the ledger type in P0025, the ledger description had been updated in UDC 09/LT. How to re-update the ledger description in F0025?</strong></p>
+<p><strong>Answer 5:</strong>  To update the ledger description in F0025:</p>
+<ol>
+<li>Open P0025 application and select the ledger type in update mode.</li>
+<li>Click OK to re-save. This will update the Ledger Description in F0025 based on the setup in UDC 09/LT.</li>
+</ol>
+<hr />
+<p><strong>Question 6: Why is the "Ledger Type invalid" error thrown when trying to add a custom ledger type with custom Units Ledger Type?</strong></p>
+<p><strong>Answer 6:</strong> Units Ledger Type must be a valid value in the F0025 table so prior to adding custom ledger type, make sure the associated units ledger type is added to the F0025 and if not, use P0025 for input and flag Prevent Direct Balance Update for the custom unit ledger type.</p>
+<hr />
+<p><strong>Question 7: If I make an update to an existing ledger or add a new ledger to the Ledger Type Master (P0025), will the change be effected immediately?</strong></p>
+<p><strong>Answer 7: </strong>The Ledger Type Rules (F0025) are cached values stored in both Database Caching and Service Cache. So it will be required to refresh the cache for the changes to take effect:</p>
+<ul>
+<li>On fat client, signing off and signing back in will help to reset the cache.</li>
+<li>On web client, it will be required to explicitly reset the cache apart from signing off and signing back in.</li>
+</ul>
+<p>For more details on how to reset Database Caching and Service Cache, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1430503.1&id=944015.1'>Document 944015.1</a> E1: ENV: Frequently Asked Questions on Caching in EnterpriseOne.</p>
+<hr />
+<p> </p>
+<p><strong>Question 8: Receiving the following error when trying to set the BA ledger to prevent direct balance update in P0025.<br /></strong></p>
+<p><strong>Answer 8: </strong>When user try to change the &ldquo;Prevent Direct Balance Update&rdquo; flag for BA ledger then system will check if Units ledger is entered, the flag for Units Ledger &ldquo;Direct Balance update&rdquo; must be set the same as for this BA amount ledger. System will display an error if flag &ldquo;Prevent Direct Balance Update&rdquo; is different in BA ledger and Units ledger.</p>
+<p>By selecting the &ldquo;Prevent Direct Balance Update&rdquo; flag for BU units ledger I could able to change the &ldquo;Prevent Direct Balance Update&rdquo; flag for BA ledger type.</p>
+<p><strong>Question 9: Why "Ledger is Required to Balance" option is not mandatory for the XA ledger?<br /></strong></p>
+<p><strong>Answer 9: </strong>The XA ledger is set to not allow "ledger is required to balance" because detail currency restatement uses the CR01-CR02 etc AAI's. If an entry is made to an account that is not in the range then it will be out of balance and this is incorrect.</p>
+<p>Per the current design, the Work with Ledger Types (P0025) application checks all CR01 and CR02 account ranges against the GLG2 and GLG12 account ranges. If they are the same, the "Ledger is Required to Balance" checkbox can be turned on for XA, YA, and ZA ledgers. If they are not the same, then an error will be reported. Simulatenously, Work with AAIs (P0012) application checks the flag being checked/unchecked in Ledger Types Master (F0025) table for XA, YA, and ZA ledger types. If it is checked for one of those ledger types, and a user is adding or changing a CR01 or CR02 AAI, the account ranges for CR01 and CR02 will be checked against the GLG2 and GLG12 AAI account range.</p>
+<p><strong>Question 10: <span>Can settings in P0025 be company specific or is it a global setting? </span></strong></p>
+<p><strong><span>Answer 10: </span></strong>Per the current design <span> this is a global setting in P0025 and cannot be per company</span></p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
