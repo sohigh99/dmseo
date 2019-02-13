@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Quick Hire (P060116Q)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Employee Quick Hire (P060116Q)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Overview of Employee Quick Hire</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Understanding New Employee Information Tasks</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33"><strong>Understanding the Relationship Between Quick Hire and New Hire</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34"><strong>Setting Up Default Information for Employee Records</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Adding Employee Records for Applicants, Rehires, and New Hires</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Setting Processing Options for Employee Quick Hire (P060116Q)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Running the Process Pending Employees Report (R060116P)<br /></strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Setting Processing Options for Process Pending Employees (R060116P)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39"><strong>Revising New Employee Records</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310"><strong>Purging Pending Employee Information</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document explains the use of the Quick Hire application (P060016Q) to add multiple employees, applicants, new hires and rehires.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>&nbsp;This document is intended for EnterpriseOne users who are setting up the Human Resources and Payroll modules for use by their organization.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Overview of Employee Quick Hire</strong></h3>
+<p>You can use Employee Quick Hire (P060116Q) to add multiple employee records when you hire groups of individuals that have common job information.&nbsp; Using Employee Quick Hire reduces typing errors and data entry time.&nbsp; You can define the common job information as default information that the system supplies for each employee record that you add.&nbsp; You must also set the processing options to define certain default information and processes related to Employee Quick Hire.</p>
+<p>Employee Quick Hire offers a robust capability to track various types of user-defined information.&nbsp; Thirty category code fields are available for tracking address book codes that can be assigned to addresses in the JD Edwards EnterpriseOne Address Book system.&nbsp; Twenty category codes are available for tracking JD Edwards EnterpriseOne Payroll system information.&nbsp; Ten category codes are available that can be used to specify employee eligibility for participation in various user-defined plans or activities.</p>
+<a name="aref_section32"></a><h3 class="km"><strong>Understanding New Employee Information Tasks</strong></h3>
+<p>When you hire a new employee into an organization, you need to perform many tasks to prepare for the new employee and to ensure that any preliminary employment activities are completed.&nbsp; These tasks might vary depending on the employee's location and job duties.&nbsp; For example, an administrative assistant might need to have a telephone, computer, network sign-on, ID badge, parking sticker, and building key to start working.&nbsp; A hospital nurse might need to have an ID badge, parking sticker, and locker assignment, and to have completed a blood test and attended safety orientation prior to starting work.&nbsp; Most new employee setup tasks require management approval, and these approvals might have been accomplished by routing a paper approval form.&nbsp; The new hire employee setup program automates and streamlines the initiation of these tasks by sending E-mail messages through workflow to the individuals responsible for completing these tasks.</p>
+<p>When you add employee records using Employee Quick Hire (P060116Q), you can set an Employee Quick Hire processing option to specify whether the new employee information updates the Employee Master Information (F060116), Address Book Master (F0101), Requisition Activity (F08105), and Applicant Master (F08401) tables as you complete the process.&nbsp; Or you can set the processing option to store the new employee information in the Unedited Quick Hire Transaction File table (F060116Z).&nbsp; Storing the information in this table allows you to review and revise the information before running the Process Pending Employees report (R060116P) to update the other tables.&nbsp; Please note that if you are allowing Address Book Numbers to generate, the address book number will not generate until you run the R060116P Process Pending Employees.</p>
+<p>If the Employee Quick Hire processing option is set to update the F060116Z table, you must complete one or more of these tasks after you add the employee records:</p>
+<ul>
+<li>Run the Process Pending Employees report.</li>
+<li>Revise new employee records.</li>
+<li>Purge pending employee information.</li>
+</ul>
+<p>The Process Pending Employees report updates the F060116 and F0101 tables after you review and revise the new employee records.</p>
+<p>You can add, change, or delete the new employee records from the F060116Z table.&nbsp; Revising new employee records is mandatory if you find errors in the R060116P report.&nbsp; You must correct the errors and rerun the report to update the Employee Master and Address Book Master tables with the new employee information.</p>
+<a name="aref_section33"></a><h3 class="km"><strong>Understanding the Relationship Between Quick Hire and New Hire</strong></h3>
+<p>The Employee Quick Hire program (P060116Q) integrates with the Employee Setup Workbench program (P08710) by automatically generating the setup record and initiating a workflow process.&nbsp; For the two programs to integrate, you must set the processing options appropriately on Employee Quick Hire.&nbsp; These steps are performed when you integrate the Employee Quick Hire program with the Employee Setup Workbench program to initiate the new hire setup workflow process:</p>
+<ol>
+<li>When an employee record is added to the Employee Master Information table (F060116) through Employee Quick Hire, the system automatically creates the new Hire Employee setup record.</li>
+<li>The system automatically sends an E-mail message to the employee's supervisor, requesting the supervisor to identify the setup tasks necessary for the employee.&nbsp;&nbsp; The system determines which supervisor to E-mail based on the entry in the Supervisor field in the Employee Quick Hire program.&nbsp; If the new hire option is activated the supervisor field is required.</li>
+<li>Using Manager Self-Service, the new employee's manager uses the Employee Setup Workbench program to enter the setup tasks that are necessary for the employee.&nbsp; The setup tasks can also be supplied automatically based on the employee's job type.&nbsp; In Quick Hire, job type is required when the new hire option is activated.</li>
+<li>When the tasks are identified for the new employee and the employee setup record is approved, the system initiates the new hire setup workflow process, which send an E-mail message to the individuals in your organization who are responsible for completing the necessary tasks.&nbsp; For example, if the manager indicates that the new employee needs a network signon, security badge, and building key, the workflow process sends E-mail to the IT Manager, Security Manager, and Facilities Manager, respectively.</li>
+</ol>
+<p>You can customize the new hire setup Workflow process to meet the needs of your organization.&nbsp; Processing options for the Employee Setup Workbench program enable you to easily customize the process.&nbsp; For example, your organization might choose to require approval at the process level or at the task level.&nbsp; Or, you might choose to escalate certain tasks if the designated individuals do not complete the tasks in an appropriate time frame.</p>
+<a name="aref_section34"></a><h3 class="km"><strong>Setting Up Default Information for Employee Records</strong></h3>
+<p>Before you add employee records for individuals with similar job information, you set up the job information as default information to reduce data entry time.&nbsp; Then when you add employee records, Employee Quick Hire supplies the default information.&nbsp; For example, if you are hiring 50 production employees for the same business unit who have the same supervisor, you set up the Job Type, Business Unit, and Supervisor fields as default information.&nbsp;&nbsp; You can change the default information for each group of employees for whom you are going to enter records.</p>
+<p>From the Employee Quick Hire application (P060116Q), access the Pending Employee Defaults form by selecting Defaults from the form option menu.</p>
+<p><img src="../images/hr020.png" border="0" alt="Pending Employee Defaults" title="Pending Employee Defaults" hspace="0" vspace="0" /></p>
+<ul>
+<li><strong>Security Business Unit</strong> - Enter an alphanumeric code that identifies a separate entity within a business for which you want to track costs.&nbsp; For example, a business unit might be a warehouse location, job, project, work center, branch, or plant.&nbsp; You can assign a business unit to a document, entity, or person for purposes of responsibility reporting.&nbsp; For example, the system provides reports of open accounts payable and accounts receivable by business unit to track equipment by responsible department.&nbsp; Business unit security might prevent you from viewing information about business units for which you have no authority.</li>
+<li><strong>Home Business Unit</strong> - The number of the business unit in which the employee generally works.<br /><strong></strong></li>
+<li><strong>Home Company</strong> - Enter the company number where the employee records generally reside.</li>
+<li><strong>Date Pay Starts</strong> - Enter the date that an employee may begin participating in the company's benefit plans or may be included in payroll processing.&nbsp; You can also use this field to provide a beginning date for seasonal employees or for employees who work only part of the year (such as a teacher who works only nine months of the year).</li>
+<li><strong>Date Started</strong> - Enter the first day the employee started working at your company.&nbsp; If you do not enter a date, the system uses the value in the Original Hire Date field.</li>
+<li><strong>Date of Original Employment</strong> - Enter the date on which the employee was originally hired by the company.&nbsp; If the employee was terminated and subsequently rehired, the data in the Date Started (DST) field represents the new start date.</li>
+<li><strong>Job Type</strong> - A user defined code (06|G) that defines the jobs within your organization.</li>
+<li><strong>Job Step -&nbsp; </strong>A user-defined code (06/GS) that indicates a specific level within a particular job type.<strong><br /></strong></li>
+<li><strong>Supervisor</strong> - Enter the address book number of the supervisor.</li>
+<li><strong>Check Route Code</strong> - A user defined code (07/CR) that specifies the check routing or mail-stop code. Use this code to sequence the printing of payroll checks to facilitate their handling and delivery.<br /><strong></strong></li>
+<li><strong>Locality</strong> - Enter a code from UDC 07/SL that defines the different salary localities within an organization.&nbsp; For example, you can compare salaries for employees on the East Coast with employees in the Midwest.</li>
+<li><strong>Participation Date</strong> - Enter the date the employee began participating in the company deferred income or stock option plan.&nbsp; This date must be later than the date in the Date Started field.</li>
+</ul>
+<p>Selecting the option next to each field that you completed and clicking OK activates the field and allows the system to recognize the field as a default value.&nbsp; If you activate a blank field, the system overwrites the field for each record that is entered in the Employee Quick Hire form.</p>
+<a name="aref_section35"></a><h3 class="km"><strong>Adding Employee Records for Applicants, Rehires, and New Hires</strong></h3>
+<p>After you offer employment to individuals who have common job information, you can use Employee Quick Hire (P060116Q) to add multiple employee records to the Employee Master Information table (F060116) with minimal data entry.&nbsp; You can add employee records for applicants, rehires, and new hires.&nbsp; To add employee records for applicants, you select the applicants from the Applicant Master table (F08401).&nbsp; Employee Quick Hire automatically copies the applicant's information to the Employee Quick Hire form.&nbsp;&nbsp; You can add employee records for rehires or groups of terminated employees. &nbsp;When you select the record in Employee Quick Hire, the system searches the individual's information in the Employee Master Information table for a termination date with the associated Tax ID, Employee Number, or Alternate Number.&nbsp; When the system finds the search criteria it copies the information from the record to the Employee Quick Hire form.</p>
+<p>The system also searches for a duplicate employee number.&nbsp; This process prevents the system from duplicating employees and employee numbers in the database.&nbsp; To add employee records for new hires, you enter employee information in the required fields on the Employee Quick Hire form.&nbsp; The default information and processing options that you already defined minimize the number of fields that you need to enter.&nbsp; Also, if the processing options are set appropriately, a new hire record is created automatically in the Employee Setup Workbench program (P08710) for self-service.</p>
+<p>These scenarios are examples of situations in which you might use Employee Quick Hire:</p>
+<ul>
+<li>Your company has acquired another company and you need to enter the newly acquired employees into JD Edwards EnterpriseOne.&nbsp; Using Employee Quick Hire, you can enter the new employees in groups based on their supervisor.&nbsp; You might decide to specify the start date, supervisor, business unit, home company, and locality as default information.</li>
+<li>Your company uses seasonal employees and rehires many of the same employees each year.&nbsp; Using Employee Quick Hire, you can select the employees that are eligible for rehire from the terminated employee database and activate their employee records.&nbsp; In addition, you might choose to specify the pay start date and the supervisor as default information.</li>
+</ul>
+<p>When you add employee records with Employee Quick Hire, you can set an Employee Quick Hire processing option to specify whether the new employee information updates the Employee Master Information, Address Book Master (F0101), Requisition Activity (F08105), and Applicant Master (F08401) tables as you complete the process.&nbsp; Or you can set the processing option to store the new employee information in the Unedited Quick Hire Transaction File table (F060116Z).&nbsp; Storing the information in this table allows you to review and revise the employee records before running the Process Pending Employees program (R060116P) to update the tables.</p>
+<p>If you set the processing option to directly update the Employee Master Information and other tables, the system also updates the HR History table (F08042).&nbsp; If you set the processing option to use the Unedited Quick Hire Transaction File table, the system does not update the HR History table until you run the Process Pending Employees program.</p>
+<p>You can also set a processing option to activate the new hire process.&nbsp; This process automatically updates the Address Book table and the Employee Setup Master table (F08710).</p>
+<p>You can set processing options to automatically supply various types of information that will reduce the time required to use the Employee Quick Hire process.&nbsp; For example, you can set a processing option so that the system supplies all the job information related to a specific job type when you enter the job type on Employee Quick Hire.</p>
+<p>You can also set an Employee Quick Hire processing option so that the system copies the applicant's supplemental data to the new employee record.&nbsp; If you do this, you also need to set the Transfer Supplemental Data processing option in the XJDE0001 version of the Applicant Entry program (P08401).&nbsp;&nbsp;</p>
+<p>Prerequisites</p>
+<ul>
+<li>Set up default information for every new group of individuals that you hire with similar job information.</li>
+<li>If you need to initiate the employee setup process after you add employee records, set the processing option for Employee Quick Hire on the Action tab to activate the new hire process.</li>
+<li>If you want the system to automatically supply a range of information for job type, job category codes, business unit, or supplemental data, set the applicable processing options for Employee Quick Hire on the Defaults and Versions tabs.</li>
+</ul>
+<a name="aref_section36"></a><h4 class="km">Setting Processing Options for Employee Quick Hire (P060116Q)</h4>
+<p><em>Defaults - </em>These processing options specify the default values that are applied during employee quick hire.</p>
+<p style="margin-left: 30px;">1.&nbsp; Security Business Unit - Specify whether the system automatically supplies the security business unit from the Address Book Master table (F0101).&nbsp; Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>0 or blank:&nbsp; Do not supply (default).</li>
+<li>1:&nbsp; Supply.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 60px;">If you have completed the Security Business Unit field on the Pending Employee Defaults form (W060116QB), and this processing option is set to 1, the system uses the value from the Pending Employee Defaults form when you add an employee record.&nbsp; If you enter 0, you must manually enter the security business unit when you add an employee record.</p>
+<p style="margin-left: 30px;">2.&nbsp; Tax Areas - Specify whether the Residence Tax Area and Work Tax Area fields are required when you add or change an employee record.&nbsp; The JD Edwards EnterpriseOne Payroll system uses the tax area fields to calculate payroll taxes for employees.&nbsp; Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>1:&nbsp; Not required.&nbsp; Enter this value only if you are not using the JD Edwards EnterpriseOne Payroll system to process payroll for employees.</li>
+<li>0:&nbsp; Required.&nbsp; Enter this value if you are using the JD Edwards EnterpriseOne Payroll system.&nbsp; Blank means the same as 0.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;3.&nbsp; Job information - Specify whether the system automatically supplies the Employee Quick Hire form (W060116QA) with certain job information when you complete the Job Type field.&nbsp; The system retrieves information in these job information fields from the Job Information table (F08001):&nbsp; Pay Type, Pay Frequency, WCI Code (Workers Comp Insurance Code), SC (Sub Class-Workers Comp), Benefit Group, and Union Code.&nbsp; Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>1:&nbsp; Supply.</li>
+<li>0:&nbsp; Do not supply.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;4.&nbsp; Job Category Codes - Specify whether the system automatically supplies values for job category codes.&nbsp; Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>1:&nbsp; Supply.</li>
+<li>0:&nbsp; Do not supply.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;5.&nbsp; Emergency Contact Type - Specify the UDC for a contact type in the Address Book Who's Who table (F0111).&nbsp; The system uses the contact name and phone number that you enter on the Quick Hire form (W060116QA) to update the Employee Master and Address Book tables with the type of contact you specify.&nbsp; If you leave this processing option blank, the system uses E (emergency contact) as the default.</p>
+<p style="margin-left: 30px;">&nbsp;6.&nbsp; Business Unit/Job ID Cross Reference - Specify whether the system automatically supplies values for the business unit/job ID information for the new employee.&nbsp; Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>&nbsp;1:&nbsp; Use default business unit/job ID information.</li>
+<li>0:&nbsp; Do not use default business unit/job ID information.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;7.&nbsp; Home Phone Number Type &nbsp;-Specify the UDC for a home phone type in the Contact Phone table (F0115).&nbsp; The system uses the phone number that you enter on the Quick Hire form (W060116QA) to update the Employee Master and Address Book tables with the type of home phone number you specified with the code.</p>
+<p style="margin-left: 30px;">8.&nbsp; Work Phone Number Type - Specify the UDC for a work phone type in the Contact Phone table (F0115).&nbsp; The system uses the phone number that you enter on the Quick Hire form (W060116QA) to updates the Employee Master and Address Book tables with the type of work phone number you specified with the code.</p>
+<p style="margin-left: 30px;">9.&nbsp; Change Reason for New Hire - Specify the UDC for the Change Reason code that the system uses as a default value when you enter a new hire into the Quick Hire grid directly.</p>
+<p style="margin-left: 30px;">10.&nbsp; Change Reason Rehire - Specify the UDC for the Change Reason code that the system uses as a default value when you add former employees to the Quick Hire grid by taking the Rehire form exit.</p>
+<p style="margin-left: 30px;">11.&nbsp; Change Reason for Applicant Hire - Specify the UDC for the Change Reason code that the system uses as a default value for existing applicants that you add to the Quick Hire grid by taking the Applicant form exit.</p>
+<p><em>Versions - </em>These processing options specify the versions that are used during employee quick hire.</p>
+<p style="margin-left: 30px;">1.&nbsp; Applicant Information Version - Specify the version of the Applicant Entry program (P08401) that the system should use for transferring applicant information.&nbsp; If the applicant records that you are adding include supplemental data, you can specify a program version that the system uses to transfer the supplemental data along with the applicant information to the new employee records.&nbsp; If you leave this processing option blank, the system uses the default version, ZJDE0001, which does not transfer supplemental data.</p>
+<div class="kmnotebox" style="margin-left: 30px;">Note:&nbsp; &nbsp;For the system to transfer an applicant's supplemental data, you must also set a processing option to transfer supplemental data in the processing options for the Applicant Entry program (P08401).</div>
+<p style="margin-left: 30px;">&nbsp;2.&nbsp; Address Book MBF Version (address book master business function version) - Specify the version of the Address Book Master Business Function (MBF) that the system uses.&nbsp; If you are using interoperability transactions, you might want to specify a version that updates the Address Book table (F0101).&nbsp; If you leave this processing option blank, the system uses the default version, ZJDE0001.</p>
+<div class="kmnotebox" style="margin-left: 30px;">
+<p>Note:&nbsp; &nbsp;If you specify an Address Book MBF version, you must also set a processing option to indicate the interoperability outbound transaction in the processing options for the Address Book Master Business Function (P0100041).</p>
+</div>
+<p style="margin-left: 30px;">3.&nbsp; Address Book Search Form Version - Specify the version to use for the Address Book Search form.&nbsp; If you leave this processing option blank, the system uses the default version, ZJDE0001.</p>
+<p><em>Action - </em>These processing options specify whether to update the master files and whether to activate the new hire process during employee quick hire.</p>
+<p style="margin-left: 30px;">1.&nbsp; Update Master Files - Specify the tables that the system updates when you use Employee Quick Hire to add employee records.&nbsp; When you enter 0 (Blank), the system updates only the Unedited Quick Hire Transaction File table (F060116Z).&nbsp; When you enter 1, the system also updates these tables in addition to the F060116Z table:</p>
+<ul>
+<li>Employee Master Information (F060116)</li>
+<li>Employee Master Additional Information (F060120)</li>
+<li>Employee Master International (F060117/F060117A)</li>
+<li>Requisition Activity (F08105)</li>
+<li>Applicant Master (F08401)</li>
+<li>Address Book (F0101)</li>
+<li>HR History (F08042)</li>
+</ul>
+<p style="margin-left: 30px;">Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>&nbsp;0:&nbsp; Update only the Unedited Quick Hire Transaction File table.</li>
+<li>&nbsp;1:&nbsp; Update all of the linked tables.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">If you set the processing option to 0, you can review and revise the employee information before the system updates the tables.&nbsp; After you review and revise information, you need to run the Process Pending Employees program (R060116P) to update the tables.</p>
+<p style="margin-left: 30px;">2.&nbsp; New Hire - Specify whether to activate the new hire process.&nbsp; Values are:</p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>1:&nbsp; Activate.</li>
+<li>0:&nbsp; Do not activate.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">When the new hire process is activated (the processing option is set to 1), these fields are required:</p>
+<ul>
+<li>Alpha Name</li>
+<li>Supervisor</li>
+<li>Start Date (Effective Date)</li>
+<li>Job Type and Step</li>
+</ul>
+<p style="margin-left: 30px;">In addition, the system:</p>
+<ul>
+<li>&nbsp;Adds a record to the Address Book table (F0101) for each record that is added to the Unedited Quick Hire Transaction table (F060116Z).&nbsp; The address book records are added with a search type of N.</li>
+<li>&nbsp;Adds a record to the Employee Setup Master table (F08710) for each record that is added to the Unedited Quick Hire Transaction table (F060116Z).&nbsp;</li>
+<li>&nbsp;Uses workflow to notify the supervisor with an E-mail.</li>
+</ul>
+<p>Access the Employee Quick Hire application (P060116Q), and complete the grid.&nbsp; All fields are not mandatory.&nbsp; Required fields will vary depending on type of record being entered.</p>
+<p><strong><img src="../images/hr021.png" border="0" alt="Quick Hire" title="Quick Hire" hspace="0" vspace="0" /></strong></p>
+<p>All fields are not shown in the screenshot.<strong>&nbsp; </strong>Because there are many fields listed in the grid, an upload tool (using a spreadsheet) is available for adding the data.&nbsp; 
+
+  <!-- For more information on the process see <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1511961.1&id=625896.1" alt="Quick Hire Import" title="Quick Hire Import">E1: 08: Employee Quick Hire Import document 625896.1</a>.</p> -->
+<ul>
+<li><strong>Employee Number</strong> - Enter a number that identifies an entry in the JD Edwards EnterpriseOne Address Book system, such as employee, applicant, participant, customer, supplier, tenant, or location.</li>
+<li><strong>Search Type</strong><strong> - </strong>A user defined code (01/ST) that specifies the kind of address book record to search for. Examples include:
+<ul>
+<li>E:&nbsp; Employees</li>
+<li>X:&nbsp; Ex-employees</li>
+<li>A:&nbsp; Applicants</li>
+</ul>
+</li>
+<li><strong>Alpha Name</strong> - Enter the text that names or describes an address.&nbsp; This 40-character alphabetic field appears on a number of forms and reports.&nbsp; You can enter dashes, commas, and other special characters, but the system cannot search on them when you use this field to search for a name.</li>
+<li><strong>Employee Tax ID</strong> - Enter a number that indicates the tax ID.&nbsp; In the United States, the tax ID is the social security number.&nbsp; In Canada, it is the social insurance number.&nbsp; If you add employee information for a non-US or non-Canadian company, you can leave this field blank.&nbsp; However, if the international code is set to Y and the default company is non-Canadian and non-United States, you can enter a 16-character number for the tax ID.&nbsp; The system does not permit duplicate tax ID numbers.&nbsp; Also, the number cannot include dashes.</li>
+<li><strong>Alternate Employee ID</strong> - An alternate employee number, typically the number from the employee tracking system that your organization used prior to converting to the J.D. Edwards system.&nbsp; To search using this number, preface the number with a slash (/).</li>
+<li><strong>Pay Freq </strong>- Enter a code from UDC 07/PF that indicates how often an employee is paid.&nbsp; Values are:
+<ul>
+<li>B:&nbsp; Biweekly</li>
+<li>W:&nbsp; Weekly</li>
+<li>S:&nbsp; Semimonthly</li>
+<li>M:&nbsp; Monthly</li>
+<li>A:&nbsp; Annually</li>
+<li>C:&nbsp; European Annualized</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;The system uses the value in the Description-2 field from the UDC to calculate the amount per pay period for a salaried employee.</p>
+<ul>
+<li>&nbsp;<strong>Pay Cl</strong>- Enter a code that specifies how an employee is paid.&nbsp; Values are:
+<ul>
+<li>H:&nbsp; Hourly</li>
+<li>S:&nbsp; Salaried</li>
+<li>P:&nbsp; Piecework</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><strong>Annual Salary </strong>- Enter the amount that an employee is paid in one year, assuming that the employee is paid every pay period of the year.&nbsp; Depending on how the value that is entered in the Salary Display (SALD) field in the HR History Constants table (F08040), this field displays: <br />
+<ul>
+<li>Annual salary - For salaried employees who are not linked with a contract calendar, the user enters the amount or the system retrieves the amount from the Pay Grade/Salary Range Table (F082001).&nbsp; For employees who are linked with a contract calendar, the system calculates this amount using this formula:&nbsp; [(current salary - salary paid before change) &divide; number of periods to pay] &times; pay frequency.</li>
+<li>Effective salary - For employees whose jobs are linked with a contract calendar, the system recalculates the effective salary when you enter a mid-calendar salary adjustment.&nbsp; After you enter a mid-calendar adjustment, the effective salary equals the salary that is paid to the employee from the time of the adjustment through the end of the contract.&nbsp; The system calculates this amount using this formula:&nbsp; (annual salary &divide; pay frequency) &times; periods to pay.</li>
+</ul>
+</li>
+<li><strong>Supervisor</strong> - Enter the address book number of the supervisor.</li>
+<li><strong>Date Started</strong> - Enter a future date when all changes will take effect or the date when the changes went into effect.&nbsp; If you do not enter a date in this field, the system uses the current date as the effective date.</li>
+<li><strong>Job Typ</strong> - Enter a code from UDC 07/G that defines the jobs within your organization.&nbsp; You can associate pay and benefit information with a job type and apply that information to the employees who are linked to that job type.</li>
+<li><strong>Hourly Rate</strong> - Enter the employee's hourly rate, which is retrieved during time entry.&nbsp; If you enter a rate in this field on any other form, that rate can override the value in the Employee Master table.&nbsp; In the Employee Master table, this number is the employee's base hourly rate.&nbsp; In the Union Rates table, it is the straight time rate.</li>
+</ul>
+<div class="kmnotebox" style="margin-left: 30px;">Note:&nbsp; If you change the number of the data display decimal digits for this field, you must also change the Rate - Base Hourly (BHRT) and Rate - Hourly (SHRT) fields so that they have exactly the same number of data display decimal digits.</div>
+<ul>
+<li><strong>Security Business Unit</strong> - Enter an alphanumeric code that identifies a separate entity within a business for which you want to track costs.&nbsp;</li>
+</ul>
+<div class="kmnotebox" style="margin-left: 30px;">Note:&nbsp; Business unit security might prevent you from viewing information about business units for which you have no authority.</div>
+<ul>
+<li><strong> Co</strong> - Enter the company number where the employee records generally reside.</li>
+<li><strong>Country of Employment</strong> - Enter a value from UDC 00/CN that indicates the country in which the employee resides.</li>
+<li><strong>EEO Job</strong> - Enter a code from UDC 07/J that specifies classifications established by the U.S.&nbsp; Equal Employment Opportunity Commission (EEOC) or the Canadian Employment Equity Occupational Group (EEOG) for use in reporting levels of minority employment.&nbsp; Do not change any of the codes provided by the JD Edwards EnterpriseOne system.&nbsp; You can add codes if needed.</li>
+<li><strong>Ethnic Code</strong> - Enter a code from UDC 07/M that designates minority classifications according to U.S.&nbsp; Equal Employment Opportunity Commission (EEOC) and Canadian Employment Equity Occupational Group (EEOG) standards.&nbsp; The predefined codes are hardcoded.&nbsp; The system uses these codes to generate EEO reports and to compile Canadian Employment Equity information.&nbsp; Do not change these predefined codes.&nbsp; You can add codes, if necessary.&nbsp;</li>
+<li><strong>Gender </strong>- Enter a value that specifies the employee's gender.&nbsp; Values are:
+<ul>
+<li>M:&nbsp; Male</li>
+<li>F:&nbsp; Female</li>
+</ul>
+</li>
+<li><strong>Res. Tax Area</strong> - Enter a code that identifies both the geographical location and the tax authorities for the employee's residence.&nbsp; Authorities include employee and employer statutory requirements.&nbsp; This code is synonymous with GeoCode.&nbsp; Refer to Vertex System's Master GeoCode File for values for your locations.</li>
+<li><strong>Work Tax Area</strong> - Enter a code that identifies a geographical location and the tax authorities for an employee work site, including employee and employer statutory requirements.&nbsp; In the Vertex payroll tax calculation software, the tax area code is synonymous with GeoCode.&nbsp; To determine the values for your location, refer to the documentation for the tax calculation software that you are using.</li>
+<li><strong>Original Hire Date</strong> - Enter the date on which the employee was originally hired by the company.&nbsp; If the employee was terminated and subsequently rehired, the new start date will be represented by the date in the Date Started (DST) field.</li>
+<li><strong>Date Started</strong> - Enter a future date when all changes will take effect or the date when the changes went into effect.&nbsp; If you do not enter a date in this field, the system uses the current date as the effective date.</li>
+<li><strong>Date Pay Starts</strong> - Enter the date that an employee may begin participating in the company's benefit plans or may be included in payroll processing.&nbsp; You can also use this field to provide a beginning date for seasonal employees or for employees who work only part of the year (such as a teacher who works only nine months of the year).</li>
+<li><strong>S h</strong> - Enter a code from UDC 00/SH that identifies daily work shifts.&nbsp; In payroll systems, you can use a shift code to add a percentage or amount to the hourly rate on a timecard.&nbsp; For payroll and time entry:&nbsp; If an employee always works a shift for which a shift rate differential is applicable, enter that shift code on the employee's master record.&nbsp; When you enter the shift on the employee's master record, you do not need to enter the code on the timecard when you enter time.&nbsp; If an employee occasionally works a different shift, you enter the shift code on each applicable timecard to override the default value.</li>
+<li><strong>Loc</strong> - Enter a code from UDC 07/SL that specifies the employee's salary locality within an organization.&nbsp;</li>
+<li><strong>Emp St</strong>- Enter a code from UDC 07/ES that specifies an employee's status within the company.&nbsp; You can change the default codes or set up new codes to meet the needs of your company.&nbsp; Sample values include:
+<ul>
+<li>Blank:&nbsp; Full-time regular.</li>
+<li>1:&nbsp; Full-time temporary</li>
+<li>2:&nbsp; Part-time temporary</li>
+<li>3:&nbsp; Part-time regular</li>
+<li>4:&nbsp; Seasonal</li>
+<li>5:&nbsp; Casual</li>
+</ul>
+</li>
+<li><strong>R C</strong>- Enter a code that identifies whether the employee is to be handled through the Recharge processing option for the Payroll Journal Entry program.&nbsp; Values are:
+<ul>
+<li>1:&nbsp; Payroll Processing Only</li>
+<li>2:&nbsp; Payroll and Recharge Processing</li>
+<li>3:&nbsp; Recharge Processing Only</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 60px;">After a timecard has been added, you cannot change its record type.</p>
+<ul>
+<li><strong>Part. Date</strong> - Enter the date the employee began participating in the company deferred income or stock option plan.&nbsp; This date must be later than the date in the Date Started field.</li>
+<li><strong>B S</strong> - Enter a code from UDC 06/EA that specifies the employee's status, such as new hire or rehire.&nbsp; The system uses this value as it searches and tests for benefits eligibility.&nbsp; Do not change the codes that are hard-coded, such as A (Active) and X (Terminated). These codes are required in the system.</li>
+<li><strong>Pay Grade </strong>- Enter a code that designates a category for grouping employees according to pay ranges.&nbsp; For each pay grade, you enter a pay range that includes a minimum, a midpoint, and a maximum pay rate.&nbsp; The system uses these pay ranges to calculate compa-ratios for the employees that you assign to pay grades.&nbsp; After you enter a pay grade for an employee, the system displays either an error or a warning message if you enter a rate for the employee that is not within the pay range for the employee's pay grade.&nbsp; To set up pay grades, use the Pay Grades by Class program (P082001).&nbsp; If you have set up the system to use rates in the Pay Grade Step table as the default pay rates for employees, changing an employee's pay grade step causes the system to automatically update these fields:
+<ul>
+<li>Salary</li>
+<li>Hourly Rate</li>
+<li>Hours per day</li>
+<li>Hours per year</li>
+<li>Days per year</li>
+</ul>
+</li>
+<li><strong>Grade Step </strong>- Enter a code that identifies a pay grade and pay step.&nbsp; You can use this code to determine an employee's pay rate.&nbsp; If you have set up the system to use rates in the Pay Grade Step table as the default pay rates for employees, changing an employee's pay grade step causes the system to automatically update:
+<ul>
+<li>Salary</li>
+<li>Hourly Rate</li>
+<li>Hours per day</li>
+<li>Hours per year</li>
+<li>Days per year</li>
+</ul>
+</li>
+<li><strong>F L </strong>- Enter a code that indicates whether the employee fits the rules of the Fair Labor Standards Act (FLSA) and thus does not have to be paid for working overtime.&nbsp; Values are:
+<ul>
+<li>Y:&nbsp; Yes.</li>
+<li>N:&nbsp; No.</li>
+</ul>
+</li>
+<li><strong>WCI Code</strong> - Enter a code from UDC 00/W that represents a workers' compensation insurance code.&nbsp; This code should correspond to the classifications on the periodic workers' compensation insurance reports.</li>
+<li><strong>Benefit Group</strong> - Enter the benefit group to which the employee is assigned.&nbsp; Benefit groups facilitate employee enrollment by categorizing benefit plans and allowing enrollment rules for those categories.</li>
+<li><strong>S C </strong>- Enter a code that specifies any special circumstances associated with the workers compensation insurance (WCI) code, resulting in multiple rates for the same WCI code due to location or risk, for example.&nbsp; The subclass should remain blank if multiple rates do not exist.&nbsp; Default codes are:
+<ul>
+<li>Blank:&nbsp; There are no special circumstances associated with this code.</li>
+<li>F:&nbsp; There are special circumstances associated with this code.</li>
+<li>I9 - Enter a code indicating the method used to verify that this employee is eligible to work in the United States.&nbsp; Values are:</li>
+<li>Y:&nbsp; I9 form on file.</li>
+<li>P:&nbsp; Passport used for verification.</li>
+<li>L:&nbsp; Driver's license and Social Security card.</li>
+<li>V:&nbsp; Visa (worker's permit).</li>
+<li>B:&nbsp; Birth certificate.</li>
+<li>N:&nbsp; Waiting for verification.</li>
+</ul>
+</li>
+<li><strong>MS TX</strong> - Enter a code from UDC 06/MS that specifies the employees' federal marital status code as retrieved from the W-4 form.&nbsp; This code is used in the computation of all federal income tax.&nbsp; You can add codes if needed.</li>
+<li><strong>MS Res Status</strong> - Enter a code from UDC06/MS that specifies the marital status code for the state of residence.&nbsp; It is used for tax computations.&nbsp; This code is related to specific Vertex system codes (see the Vertex Tax Manual for their explanation).&nbsp; Also, two special codes have been provided:&nbsp; one designates single for federal and married for state, and the other designates married for federal and single for state.</li>
+<li><strong>MS State Tax</strong> - Enter the employee's work state marital status code as retrieved from the state W-4.&nbsp; This code is used in the computation of all state payroll taxes associated with the state in which the employee performed work.&nbsp; If you leave this field blank, the federal status is used.</li>
+<li><strong>Pay St </strong>- Enter the code used to indicate whether an employee's pay status is active or inactive.&nbsp; Codes for active pay status employees are numeric, and codes for inactive pay status employees are alphabetic.&nbsp; The system omits all employees with alphabetic pay status codes from the payroll run.&nbsp; Also refer to these data items:
+<ul>
+<li>EST:&nbsp; Employment Status</li>
+<li>TRS:&nbsp; Change Reason</li>
+</ul>
+</li>
+<li><strong>R S</strong>- Enter a value that identifies out-of-state employees for whom an employer must withhold tax for the state of residence.&nbsp; Values are:
+<ul>
+<li>N (Default):&nbsp; The system uses the employee residence state to calculate taxes.&nbsp; Because the work state has a reciprocal agreement with the employee state of residence, the system uses the employee residence state from the Employee Master Information table (F060116).</li>
+<li>W:&nbsp; The system uses only the work state to calculate taxes.</li>
+<li>T S - Enter a value that specifies the source for obtaining the tax area code for the employee's work location.</li>
+<li>N:&nbsp; Use time entry, job master, employee labor rules or employee master to determine Tax Area.</li>
+<li>E:&nbsp; Always use the Work Tax Area from the employee master on time record.</li>
+</ul>
+</li>
+<li><strong>SUI/SDI Rpt </strong>- Enter a value that specifies the work tax area that is used for SUI reporting.&nbsp; You can specify that the system use either the resident state or the work state, regardless of where the employee worked.&nbsp; FUI is calculated in the same state where SUI is calculated.&nbsp; Weeks Worked are the number of weeks the employee worked in the taxed state.&nbsp; Values are:
+<ul>
+<li>N:&nbsp; Use the work tax area in the time entry record to determine SUI.&nbsp; This is the default value.</li>
+<li>R:&nbsp; Always use residence tax area from Employee Master table even if the time entry record is different.</li>
+<li>W:&nbsp; Always use work tax area from Employee Master table even if the time entry record is different.</li>
+</ul>
+</li>
+<li><strong>T M</strong> - Enter a code from UDC 07/TM that specifies the tax method that the Vertex payroll-tax calculation system uses to calculate certain taxes.&nbsp; This code can also determine the form that the employee receives for year-end tax reporting.&nbsp; For example, when you enter C, a contract employee receives IRS Form 1099-M rather than IRS Form W-2.&nbsp; If a form is not specified in the Description 2 field of the UDC, the system generates IRS Form W-2.&nbsp; For employees who are paid multiple times within one pay period, the system should review previous payments within the same pay period and then adjust tax amounts.&nbsp; To specify this function, enter S.&nbsp; If a tax method exists for an employee in addition to the normal tax method that is set up in the Employee Master Information table (F060116), the system can use the alternative tax method to interactively process interim payments.&nbsp; To specify this function, enter Z.&nbsp; Some values, such as S and Z, might require additional setup in the UDC table.</li>
+<li><strong>Stat.&nbsp; Code</strong>- Enter a code that allows you to override supplemental taxes for federal and state taxes and to add additional local residence taxes.&nbsp; Values are:
+<ul>
+<li>F:&nbsp; Override the federal supplemental tax for this employee.</li>
+<li>S:&nbsp; Override the state supplemental tax for this employee.</li>
+<li>R:&nbsp; Add additional local residence tax.</li>
+</ul>
+</li>
+</ul>
+<div class="kmnotebox" style="margin-left: 30px;">Note:&nbsp; When you override supplemental taxes, you must leave the Tax Area and Tax Type fields blank.</div>
+<ul>
+<li><strong>Lc St</strong> - Enter the employee's local marital status code as retrieved from the locality's W-4.&nbsp; This code is used in the computation of all local (city, county) payroll taxes associated with the state in which the employee performed work.&nbsp; If you leave this field blank, the federal status is used.</li>
+<li><strong>Vet</strong>- Enter a code that indicates the veteran status of the employee for EEO reporting purposes.&nbsp; Values are:
+<ul>
+<li>N:&nbsp; No, this employee is not a veteran.</li>
+<li>Y:&nbsp; Yes, this employee is a veteran.</li>
+<li>V:&nbsp; This employee is a Vietnam veteran.</li>
+<li>O:&nbsp; This employee is a veteran, classified as Other, as defined by the U.S.&nbsp; Department of Labor.</li>
+</ul>
+</li>
+<li><strong>Dis Vet </strong>- Enter a code indicating whether this employee is a disabled veteran.&nbsp; Values are:
+<ul>
+<li>Y:&nbsp; Yes.</li>
+<li>N:&nbsp; No.</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 60px;">This field is used to generate the Veterans Employee (VETS-100) report.<strong></strong></p>
+<ul>
+<li><strong>Disb</strong>- Enter a code indicating whether this employee has a mental or physical disability.&nbsp; Values are:
+<ul>
+<li>Y:&nbsp; Yes.</li>
+<li>N:&nbsp; No.</li>
+<li>U:&nbsp; Unknown.</li>
+</ul>
+</li>
+<li><strong>Birth Date</strong> - Enter the employee's date of birth.</li>
+<li><strong>ST</strong> - Enter a code from UDC 00/S that specifies the state or province.&nbsp; This code is usually a postal service abbreviation.</li>
+<li><strong>County</strong> - Enter the name of a county, parish, or other political district that is necessary for the address or for tax purposes.</li>
+<li><strong>Prefix Phone-Work</strong> - Enter the first segment of a telephone number.&nbsp; In the United States, the prefix is the three-digit area code.</li>
+<li><strong>Phone Number-Work</strong> - Enter a number without the prefix or special characters, such as hyphens or periods, that makes up the telephone number for an entity.&nbsp; You can use any applicable telephone number format for a country.&nbsp; This field is used in conjunction with the</li>
+<li><strong>Prefix Phone-Home</strong> - Enter the prefix for telephone number 3.&nbsp; The default format for the Phone Prefix data dictionary item is set to the United States prefix (area code).&nbsp; This format is three characters enclosed in parentheses.</li>
+<li><strong>Phone Number-Home</strong> - Enter the telephone number.&nbsp; This field has been established in free form to allow incorporation of extension numbers and local telephone oddities.&nbsp; For example,</li>
+<li><strong>Salu</strong> - Enter a code for the salutation that is used to identify the proper title for a given employee.&nbsp; Some examples of salutations are Mr., Ms., Dr., and so on.</li>
+<li><strong>Suff</strong> - Enter the suffix code is used to identify the credentials for a given employee.&nbsp; Some examples are Phd, MD, CPA, and so on.</li>
+<li><strong>Contact Name</strong> - Enter the alpha name of the contact.</li>
+<li><strong>Contact Prefix</strong> - Enter the prefix for telephone number 4.&nbsp; The default format for the Phone Prefix data dictionary item is set to the United States prefix (area code).</li>
+<li><strong>Contact Phone Number</strong> - Enter the telephone number has been established in free form to allow incorporation of extension numbers and local telephone oddities.</li>
+<li><strong>Check Route Code</strong> - Enter a code from UDC 07/CR that specifies the check routing or mail-stop code.&nbsp; Use this code to sequence the printing of payroll checks to facilitate their handling and delivery.</li>
+<li><strong>P C</strong> - Enter a code that lets you test the deposit instructions for one pay period before actually processing a deposit.&nbsp; Adding an employee to this form automatically activates this person in the automated deposit system.&nbsp; The system prenotes this employee in the next applicable payroll run to test the auto deposit instructions you have set up before actually depositing a check.&nbsp; In the prenote test, the system creates a no-dollar entry for this employee and sends it to the employee's bank account.&nbsp; In addition, the employee receives a check for this amount.&nbsp; After the test, the system changes this field to N.&nbsp; To repeat this test, enter P in this field.&nbsp; If you leave this field blank, the system uses the default value of P.&nbsp; If you change an employee's automatic deposit instructions, the system creates a prenote.&nbsp; If you do not want a prenote, you must change the value in the Prenote Flag field to N.&nbsp; You cannot use this field for Canadian employees.</li>
+<li><strong>Req No.</strong> - Enter the number that identifies the position requisition.&nbsp; This number must be unique.&nbsp; The next number program assigns this number if no other number is provided when the requisition is initially entered.</li>
+<li><strong>Candidate Req. Status </strong>- Enter the code from UDC 08/CN to indicate the current activity level of a candidate record that is attached to a requisition.&nbsp; You can group candidate requisition status codes based on the hard-coded special handling code values in the table.&nbsp; These hard-coded values are:
+<ul>
+<li>CAN:&nbsp; Any candidate code.</li>
+<li>DET:&nbsp; Any code indicating that the position is detached or no longer filled.</li>
+<li>FIL:&nbsp; Any code indicating that the position has been filled.</li>
+<li>REJ:&nbsp; Rejected</li>
+<li>TMP:&nbsp; Temporarily filled.</li>
+</ul>
+</li>
+<li><strong>E M</strong> - Enter Y to indicate that the address number represents an employee.&nbsp; This code is for information only.&nbsp; It has no predetermined use in the JD Edwards EnterpriseOne Address Book system.</li>
+<li><strong>Remark 1</strong> - Enter as many as 40 characters of text.</li>
+<li><strong>Days/ Year</strong> - Enter the number of workdays in a year.&nbsp; The number of standard days per year multiplied by the number of hours per day equals the standard hours per year.&nbsp; When you set up the human resources system options and you use the pay grade step table as the default source for the pay rate, the system calculates the salary for an employee by multiplying the standard days per year by the employee's hourly rate.</li>
+<li><strong>AB Cat 01-20</strong>- Enter one of thirty reporting codes that you can assign to an address in the JD Edwards EnterpriseOne Address Book system.&nbsp; Use these codes to group address book records for reports, mailings, and so on.&nbsp; Category codes are user-defined (system 01, types 01 through 30).&nbsp; Examples of category codes include:
+<ul>
+<li>Category code 01:&nbsp; Location or Branch</li>
+<li>Category code 02:&nbsp; Salesperson</li>
+<li>Category code 03:&nbsp; Product</li>
+<li>Category code 04:&nbsp; Credit officer</li>
+</ul>
+</li>
+<li><strong>P/R 001-020</strong> - Enter a category code that defines payroll system needs (system code 06, types 001-020).&nbsp; You can define the use and description of this code to fit your organization.&nbsp; For example, you can set up a category code for information such as division, supervisor, branch office, health insurance plan, stock plan, and so on.</li>
+<li><strong>Elig 1-10</strong>- Enter a code to specify an employee's eligibility for or participation in various user-defined plans or programs.&nbsp; For example, these codes (05/YB) can be used to designate:
+<ul>
+<li>Voluntary Accidental Death/Dismemberment Insurance (Y/N).</li>
+<li>Overtime Call Up (Y/N).</li>
+<li>Profit Sharing (Y/N).</li>
+<li>Political Action Committee (Y/N).</li>
+<li>Coffee Fund (Y/N).</li>
+<li>U.S.&nbsp; Citizen (Y/N).</li>
+</ul>
+</li>
+</ul>
+<div class="kmnotebox">Note:&nbsp; If you use the GeoCoder, the system uses the employee's address information to determine the GeoCode for the Tax Area (Residence) field, and uses the GeoCode from the employee's home business unit to determine the GeoCode for the Tax Area (Work) field.&nbsp; The system automatically populates these fields if there is only one possible GeoCode available for the field.&nbsp; For more information on using the GeoCoder functionality see document E1: 07/77: R07500 Update Tax Area Table  <a href="../docs/1058092.html" alt="R07500 Update Tax Area Table" title="R07500 Update Tax Area Table">R07500 Update Tax Area Table</a></div>
+<p>&nbsp;</p>
+<a name="aref_section37"></a><h3 class="km"><strong>Running the Process Pending Employees Report (R060116P)<br /></strong></h3>
+<p>The Process Pending Employees report (R060116P) updates the Employee Master Information table (F060116) and the Address Book Master table (F0101) with information from the Unedited Quick Hire Transaction File table (F060116Z).</p>
+<p>The R060116P report generates an error report in all cases.&nbsp; If the system finds errors or incomplete employee records, error messages are printed and the databases are not updated with the new employee information.&nbsp; If no errors are found, the report indicates that none occurred.&nbsp; This report compares all new information to the data in the F060116 file before any of the new information is transferred.&nbsp; If you receive error messages, you can use the Employee Work File Revisions program (P060116P) to correct employee records and then rerun the report to update the F060116 and F0101 tables with the new employee records.&nbsp; The system processes each record individually.&nbsp; The system records a completed status for each record when updates to the F060116 and F0101 tables are successful.</p>
+<a name="aref_section38"></a><h4 class="km">Setting Processing Options for Process Pending Employees (R060116P)</h4>
+<p><em>Defaults</em> - Use these processing options to specify the values that the system automatically provides and values that must be supplied by entering a UDC code.</p>
+<p>1.&nbsp; Security Business Unit - Specify whether the system automatically supplies the security business unit from the Address Book table (F0101).&nbsp; Values are:</p>
+<ul style="list-style-type: circle;">
+<li>0 or blank:&nbsp; Do not supply (default).</li>
+<li>1:&nbsp; Supply.</li>
+</ul>
+<p>If you complete the Security Business Unit field on the Pending Employee Defaults form (W060116QB) and this processing option is set to 1, the system uses the value from the Pending Employee Defaults form when you add an employee record.&nbsp; If you enter 0, you must manually enter the security business unit when you add an employee record.</p>
+<p>2.&nbsp; Tax Areas - Specify whether the Residence Tax Area and Work Tax Area fields are required when you add or change an employee record.&nbsp; The JD Edwards EnterpriseOne Payroll system uses the tax area fields to calculate payroll taxes for employees.&nbsp; Values are:</p>
+<ul style="list-style-type: circle;">
+<li>1:&nbsp; Tax area fields are not required.&nbsp; Enter this value only if you are not using the JD Edwards EnterpriseOne Payroll system to process payroll for employees.</li>
+<li>0:&nbsp; Tax area fields are required.&nbsp; Enter this value if you are using the JD Edwards EnterpriseOne Payroll system.&nbsp; Blank means the same as 0.</li>
+</ul>
+<p>3.&nbsp; Job Information - Specify whether the system automatically supplies the Employee Quick Hire form (W060116QA) with certain job information when you complete the Job Type field.&nbsp; The system retrieves information in these job information fields from the Job Information table (F08001):&nbsp; Pay Type, Pay Frequency, WCI Code, SC , Benefit Group, and Union Code.&nbsp; Values are:</p>
+<ul style="list-style-type: circle;">
+<li>1:&nbsp; Supply.</li>
+<li>0:&nbsp; Do not supply.</li>
+</ul>
+<p>4.&nbsp; Job Category Codes - Specify whether the system automatically supplies values for job category codes.&nbsp; Values are:</p>
+<ul style="list-style-type: circle;">
+<li>1:&nbsp; Supply.</li>
+<li>0:&nbsp; Do not supply.</li>
+</ul>
+<p>5.&nbsp; Country Code - Specify the country code.</p>
+<p>6.&nbsp; Contact Type - Specify the UDC (01/CT) for a contact type in the Address Book Who's Who table (F0111).&nbsp; The system uses the contact name and phone number that you enter on the Quick Hire form (W060116QA) to update the Employee Master and Address Book tables with the type of contact you specify.&nbsp; If you leave this processing option blank, the system uses E (emergency contact) as the default.</p>
+<p>7.&nbsp; Home Phone Type - Specify the UDC (01/PH)&nbsp; for a home phone type in the Contact Phone table (F0115).&nbsp; The system uses the phone number that you enter on the Quick Hire form (W060116QA) to update the Employee Master and Address Book tables with the type of home phone number you specified with the code.</p>
+<p>8.&nbsp; Work Phone Type - Specify the UDC (01/PH) for a work phone type in the Contact Phone table (F0115).&nbsp; The system uses the phone number that you enter on the Quick Hire form (W060116QA) to update the Employee Master and Address Book tables with the type of work phone number you specified with the code.</p>
+<p>9.&nbsp; Business Unit/Job ID Cross Reference - Specify whether the system automatically supplies values for the business unit/job ID information for the new employee.&nbsp; Values are:</p>
+<ul style="list-style-type: circle;">
+<li>1:&nbsp; Use default business unit/job ID information.</li>
+<li>0:&nbsp; Do not use default business unit/job ID information.</li>
+</ul>
+<p><em>Versions</em> - Use these processing options to specify program versions that you want the Process Pending Employees program to use.</p>
+<p>1.&nbsp; Applicant Information - Specify the version of the Applicant Entry program (P08401) that the system uses for transferring applicant information.&nbsp; If the applicant records that you are adding include supplemental data, you can specify a program version that the system uses to transfer the supplemental data along with the applicant information to the new employee records.&nbsp; If you leave this processing option blank, the system uses the default version, ZJDE0001, which does not transfer supplemental data.</p>
+<div class="kmnotebox">Note:&nbsp; For the system to transfer an applicant's supplemental data, you must also set a processing option to transfer supplemental data in the processing options for the Applicant Entry program (P08401).</div>
+<p>2.&nbsp; Address Book MBF - Specify the version if the Address Book Master Business Function (MBF) that the system uses.&nbsp; If you are using interoperability transactions, you might want to specify a version that updates the Address Book table (F0101).&nbsp; If you leave this processing option blank, the system uses the default version, ZJDE0001.</p>
+<div class="kmnotebox">Note:&nbsp; If you specify an Address Book MBF version, you must also set a processing option to indicate the interoperability outbound transaction in the processing options for the Address Book Master Business Function (P0100041).</div>
+<p><em>Action</em> - Use these processing options to specify to specify whether you want to run this report in final mode so that master files are updated and processed records are deleted.</p>
+<p>1.&nbsp; Update Master Files - Specify the tables that the system updates when you use Employee Quick Hire to add employee records.&nbsp; When you enter 0 (Blank), the system updates only the Unedited Quick Hire Transaction File table (F060116Z).&nbsp; When you enter 1, the system also updates these tables in addition to the F060116Z table:</p>
+<ul style="list-style-type: circle;">
+<li>Employee Master Information (F060116)</li>
+<li>Requisition Activity (F08105)</li>
+<li>Applicant Master (F08401)</li>
+<li>Address Book (F0101)</li>
+<li>HR History (F08042)</li>
+</ul>
+<p style="margin-left: 30px;">Values are:</p>
+<ul style="list-style-type: circle;">
+<li>0:&nbsp; Update only the Unedited Quick Hire Transaction File table.</li>
+<li>1:&nbsp; Update all of the linked tables.</li>
+</ul>
+<p style="margin-left: 30px;">If you set the processing option to 0, you can review and revise the employee information before the system updates the databases.&nbsp; After you review and revise information, you need to run the Process Pending Employees program (R060116P) to update the databases.</p>
+<p>2.&nbsp; Purge Processed Records - Specify whether to allow the system to delete records automatically after they have been successfully updated in the master tables.&nbsp; If you do not have the records deleted automatically, you can delete them later by running the Purge Pending Employees program (P060116PP).&nbsp; Values are:</p>
+<ul style="list-style-type: circle;">
+<li>1:&nbsp; Delete.</li>
+<li>0:&nbsp; Do not delete.</li>
+</ul>
+<a name="aref_section39"></a><h3 class="km"><strong>Revising New Employee Records</strong></h3>
+<p>To ensure accuracy of your new employee records, you can add, change, or delete records from the Unedited Quick Hire Transaction File table (F060116Z) before or after running the Process Pending Employees report (R060116P).&nbsp; If you need to correct errors that display in the Process Pending Employees report (R060116P), you can use the Employee Work File Revisions program (P060116P) to make changes that the system saves in the Unedited Quick Hire Transaction File (F060116Z).&nbsp; You need to correct the errors and then rerun the report to update the Employee Master Information (F060116) and Address Book Master (F0101) tables.&nbsp; The system saves the entire batch of records in the Employee Master Information and Address Book Master tables only when the report runs successfully.</p>
+<p>Access the Work With Pending Employees (P060116P) - Complete any or all fields shown below, Click Find.&nbsp; Select an employee to be revised.</p>
+<!-- <p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1511961.1&attachid=1511961.1:A&amp;clickstream=no" border="0" alt="Work With Pending Employees" title="Work With Pending Employees" hspace="0" vspace="0" /></p> -->
+<p><strong>User ID</strong> - Enter the source of the transaction.&nbsp; This can be a user ID, a workstation, the address of an external system, a node on a network, and so on.&nbsp; This field helps identify both the transaction and its point of origin.</p>
+<p><strong>Transaction Number</strong> - Enter the number that an Electronic Data Interchange (EDI) transmitter assigns to a transaction.&nbsp; In a non-EDI environment, you can assign any number that is meaningful to you to identify a transaction within a batch.&nbsp; It can be the same as a JD Edwards EnterpriseOne document number.</p>
+<p><strong>Batch Number -&nbsp;</strong>Enter the batch number of the records you want to review.</p>
+<p>You can select to view 'All' records or just 'Unprocessed' records.</p>
+<a name="aref_section310"></a><h3 class="km"><strong>Purging Pending Employee Information</strong></h3>
+<p>After you update the Employee Master Information (F060116) and Address Book Master (F0101) tables with batches of new employee records, you need to purge the information from the Unedited Quick Hire Transaction File table (F060116Z) occasionally to free up space in the table.&nbsp; Purging the table removes the information so that you can continue to add new employee records.&nbsp; You can run this process if you are experiencing performance problems with Employee Quick Hire or if you want to avoid scrolling through many processed employee records to view the ones for which you are looking.&nbsp; Purge Pending Employees (R060116PP) is run from the Employee Quick Hire Menu, or from Batch Versions.</p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
