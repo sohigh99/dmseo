@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Batch Approval and Post Security Setup (P00241/P0000)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Batch Approval and Post Security Setup (P00241/P0000)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Functionality</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Setting up Manager Approval of Batches</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Setting Up Batch Security</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33"><strong>Setting up Approved by/Secured Users</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Add Approved by users</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Add Secured Users</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Printing Approved By/Secured Users</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Setting Up Workflow for Batch Approval and Post</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Workflow Functionality</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Setup</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Functionality</strong></h3>
+<p>Batch Approval and Post Security (P00241) restricts the approval and posting of batches to certain users. You may also want to restrict unauthorized users from viewing batches other than their own in the General Journal Review program (P0011). The Batch Approval/Post Security Constants establishes User Group Authority to be implemented for the Accounts Receivable, Accounts Payable and General Ledger modules. Each system can be set independently of the other systems. Additionally, batch approval and post security is not strictly limited to financial batches. The system security also applies to batches that feed into the financial systems, such as inventory and manufacturing.</p>
+<p>This functionality utilizes two lists of users that are defined by management to help secure the posting process:</p>
+<ul>
+<li>Secured Users: users included on this list are restricted from approving and posting batches.</li>
+<li>Approved by Users: users on this list can approve and post batches on behalf of secured users.</li>
+</ul>
+<div class="kmnotebox">NOTE: If a Secured User makes changes to an Approved batch, the batch is returned to a Pending Status (F0011.IST - Blank) and must be reapproved.</div>
+<p> </p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for both Technical and Finance Functional users who will be involved in setting up of security for reviewing and posting batches in General Accounting system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Setting up Manager Approval of Batches</strong></h3>
+<p>You can choose whether to have management approve each batch of transactions before the batch can be posted. Open P0000 application (fast path 9K) to access the General Accounting Constants form as shown below. <br /><br /><img src="../images/ba01.png"/><br /><br /><strong>* </strong>Manager Approval of Input</p>
+<ul>
+<li>Select this check box if manager approval is required for batches. The system assigns a Pending status to the batch and a manager must approve it before it can be posted.</li>
+<li>If you do not select this check box, the system assigns an Approved status to the batch and the batch does not require that a manager approve it before it can be posted.</li>
+</ul>
+<p>Similarly you could set up Manager Approval of Batches for Accounts Receivable and Accounts Payable modules using the respective Constants form.</p>
+<div class="kmnotebox">NOTE: You set up management approval for AR, AP, and GL modules and not for specific companies. For more information on setting up General Accounting Constants, refer to <a href='../docs/1434211.html'>Overview of General Accounting Constants (P0000)</a>.</div>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><strong>Setting Up Batch Security</strong></h3>
+<p>Open the Batch Approval / Post Security Constants application (P00241).<br /><br /><img src="../images/ba02.png"/><br /><br /><strong>*1</strong> G/L Batch Security, A/P Batch Security, and A/R Batch Security<br />Select the corresponding check box to activate batch security editing in the EnterpriseOne General Accounting, EnterpriseOne Accounts Payable, or EnterpriseOne Accounts Receivable system. The system performs this editing when you approve and post batches for a particular system. After you activate batch security editing, you must set up authority for secured users and approved users.<br /><br /><strong>*2</strong> Batch Review Security<br />Select this check box to restrict unauthorized users from viewing batches other than their own using the General Journal Review program (P0011).</p>
+<div class="kmnotebox">NOTE: <br />
+<ul>
+<li>Any changes made to the Batch Security setup will be reflected only after resetting the cache.</li>
+<li>Setting up Approved by/Secured users is a mandatory step to achieve the Batch Approval and Post Security functionality.</li>
+<li>Any changes made to the Batch Security setup will be reflected only after resetting the cache. (See <a href="../docs/944015.html">Frequently Asked Questions on Caching in EnterpriseOne</a>.)</li>
+</ul>
+</div>
+<hr />
+<a name="aref_section33"></a><h3 class="km"><strong>Setting up Approved by/Secured Users</strong></h3>
+<p>After you decide the systems to secure, you must set up the relationship between the secured users and the approvers based on the types of batches that you approve and post. You can choose to set up each secured user and add the authorized users or set up the authorized user and add the secured users.</p>
+<a name="aref_section34"></a><h4 class="km">Add Approved by users</h4>
+<ol>
+<li>Open the Batch Approval/Post Security Constants (P00241).</li>
+<li>Select the Approved by Users option from the Form Exit menu.</li>
+<li>On the Work With Approved by Users form, click Add.</li>
+<li>Enter the User Id of a person who is authorized to approve and post batches for a group of secured users.</li>
+<li>Enter the User Id(s) of the Secured Users that this user can approve batches for. Secured users are restricted from approving and posting batches.</li>
+</ol>
+<p><img src="../images/ba03.png" border="0" hspace="0" align="bottom"/></p>
+<p>In this example, MANAGER is authorized to approve and post batches for all the secured users - FINUSER1, FINUSER2 and FINUSER3.</p>
+<div class="kmnotebox">NOTE: <br />
+<ul>
+<li>After setting up MANAGER as an Approved By user MANAGER will not be able to approve and post their own batches. It will be required to include MANAGER in the Secured Users list under the Approved By record to have the authority to approve and post their own batches.</li>
+<li>If the person has authority to approve and post all user batches, enter *ALL in the Secured User field instead of identifying each user individually.</li>
+</ul>
+</div>
+<hr />
+<a name="aref_section35"></a><h4 class="km">Add Secured Users</h4>
+<p>Conversely, if you inquire in Secured Users application, it will show the records for each Secured user tying back to the Approved By user added above.</p>
+<p><img src="../images/ba04.png"/><br /><img src="../images/ba05.png"/><br /><br />In case you may have to add a Secured User, consider the following steps:</p>
+<ul>
+<li>Select the Secured Users option from the Form Exit menu.</li>
+<li>On the Work With Secured Users form, click Add.</li>
+<li>Enter the Secured User of a user who is restricted from approving and posting batches.</li>
+<li>Enter the User ID(s) of the person who is authorized to approve and post batches for the secured user in the Approved by User field.</li>
+</ul>
+<div class="kmnotebox">NOTE: Using *PUBLIC as a user ID is not allowed in this program, nor are roles.</div>
+<hr />
+<a name="aref_section36"></a><h3 class="km"><strong>Printing Approved By/Secured Users</strong></h3>
+<p>You can print a listing of the secured users or approved-by users by choosing Batch Security report (R0024P) from the Form Exits menu of any of the following forms and then running either of the batch versions (either by Approved User or by Secured User):</p>
+<ul>
+<li>Batch Approval / Post Security Constants form</li>
+<li>Approved by Users form</li>
+<li>Secured Users form</li>
+</ul>
+<p><img src="../images/ba08.png"/></p>
+<hr />
+<a name="aref_section37"></a><h3 class="km"><strong>Setting Up Workflow for Batch Approval and Post</strong></h3>
+<a name="aref_section38"></a><h4 class="km">Workflow Functionality</h4>
+<p>You can implement Batch Approval workflow to approve outstanding batches using the Employee Work Center (P012503). From the Work Center, an approver receives notification messages, can review and approve the batches, and if necessary, post the batches.<br /><br />To approve batches or approve and post batches from the work center, you must first identify the approving manager in the appropriate workflow process. After each transaction batch is entered, the approver receives a workflow notification that the batch is ready for approval. Depending on the workflow process that you select, batches are either approved or approved and automatically submitted to post directly from the work center. Additionally, the employee who entered the batch receives notification that the batch was approved.<br /><br />Following workflow processes are available for approving batches:</p>
+<ul>
+<li>JDEBCHAPPR: Approve journal entry batches (batch type G).</li>
+<li>JDEVBCHAPR: Approve voucher batches (batch type V).</li>
+</ul>
+<p>Each workflow process has two versions:</p>
+<ul>
+<li>Version 1: Approve batches only.</li>
+<li>Version 2: Approve and post batches.</li>
+</ul>
+<div class="kmnotebox">Note: The Batch Approval and Post Security (P00241) and Workflow JDEBCHAPPR or JDEVBCHAPR Version 2 (Batch Approval Process - G/L Auto Post) cannot be used together. The Workflow will launch R09801 with the original user's ID but since Batch Approval and Post Security (P00241) allows only the approver to approve the batch and post the batch both setup is not available.</div>
+<p> </p>
+<a name="aref_section39"></a><h4 class="km">Setup</h4>
+<ol>
+<li>Make sure that the manager and employee are set up in the address book.</li>
+<li>Open Work with User/Role Profiles (P0092). Verify that each User Id has the correct address book number (AB#) associated with it.</li>
+<ul>
+<li>Example: MANAGER user id with AB#5639006 and FINUSER1 user id with AB#5639005.</li>
+</ul>
+<li>Check the flag for Management Approval of Input in General Accounting Constants (P0000).</li>
+<li>Check the G/L Batch Security flag in Batch Approval/Post Securities Constants (P00241).</li>
+<li>Set up Secured and Approved user in Batch Approval/Post Securities Constants (P00241).</li>
+<li>Open Process Master (P98800) application and inquire for JDEBCHAPPR value in the Process field. You will notice two separate versions of the JDEBCHAPPR workflow process:</li>
+<ul>
+<li>The first version is used if you want the manager to approve batches only.</li>
+<li>The second version is used if you want the manager to approve and post batches.</li>
+</ul>
+<li>Select the version of JDEBCHAPPR you will like to activate. Under the Design Tools tab, select Start Workflow Modeler option to open the workflow in design mode. Please ensure that the version of workflow is not active when workflow is opened in design mode.</li>
+<li>In the Workflow Modeler, select the "REVIEW" node and right click to select Recipient Rules.</li>
+<li>In the Workflow Recipient Rule Revisions, delete the default address number of 6002 and specify the manager's address book number. Click ok to save the Recipient Rules.</li>
+<li>Click save to save the changes made to the Workflow Modeler.</li>
+<li>Activate the version being modified by selecting Change Workflow Status under the Design Tools tab.</li>
+<li>Under the Workflow Operations, select Process Task Monitor. Inquire by JDEBCHAPPR in the Process field. If anything is in the folder for JDEBCHAPPR, highlight it and click Terminate on the row exit bar.</li>
+</ol>
+<div class="kmnotebox">NOTE:<br />
+<ul>
+<li>Per the current design, JDEBCHAPPR workflow in General Accounting has a limited functionality. The current workflow logic neither ties back to P00241 Batch Approval/Post Security setup nor refers to the Approved User setup to determine the manager's user id. The "REVIEW" uses Send Message to the specified Address Number entered in Workflow Modeler. The "APPROVED" uses Send Message to sends the message back to the batch originator that this batch number is approved. Since JDEBCHAPPR works only with one hard coded address number, it is not very helpful unless all your Approved By Users have the same Address Number.</li>
+<li>The Financial group in Oracle Software Support (OSS) does not support customization of a workflow process. The Tools group in OSS will only help with a general understanding of the Workflow Modeler, but cannot help with the customization of the standard workflow process. For assistance with customizing a workflow process, contact Oracle Field Services. This would be a billable activity.</li>
+</ul>
+</div>
+<a name="aref_section310"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<p>For frequently asked questions, please refer to <a href='../docs/664702.html'>Frequently Asked Questions on the Batch Approval and Post Security Setup (P00241)</a>.</p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

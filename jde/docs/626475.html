@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Display Decimals Update for Data Item Class QTYINV and Data Dictionary Item QNTY</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -80,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThisAgain</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Display Decimals Update for Data Item Class QTYINV and Data Dictionary Item QNTY</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -108,13 +108,102 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11">Display Decimals Definition</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section12">How Data is Stored and Displayed</a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Data Item Class/Data Dictionary Item Supported</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Procedures for Updating Display Decimals</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Update Display Decimals UBE R9200100</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">QNTY Decimal Conversion UBE R30QNTY</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35">Deploy Data Dictionary Items Changes</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36">Verify Data Conversion and Default value for QNTY</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37">How to Identify all EnterpriseOne Tables Affected by Display Decimals Update of QTYINV Class</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38">Known Issues</a></td></tr></table>
+
+<hr size=1><p>
 
 
-
-<!-- ======================================== Body Starts Here =================================== -->
-
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>The following explains the functionality of the Display Decimals Update for Data Dictionary items belonging to data item class QTYINV (Inventory Quantities) and for Data Dictionary item QNTY (Bill of Materials).</p>
+<a name="aref_section11"></a><h3 class="km">Display Decimals Definition</h3>
+<p>Display decimals define how many decimal places are placed to the right of the decimal point when a numeric variable is displayed or used in a calculation. It is defined for numeric data dictionary items and can be set from zero (0) to eight (8).</p>
+<a name="aref_section12"></a><h3 class="km">How Data is Stored and Displayed</h3>
+<p>How data is stored and displayed is best explained in the screen-print example below for the input number 1.2345.</p>
+<p>&nbsp;<img src="../images/dd01.png" border="0" alt="Display Decimals Store and Display" title="Display Decimals Store and Display" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">NOTE: The decimal shifting occurs provided the Decimal Shift flag in the database data source definition is turned ON. It should be turned ON for EnterpriseOne tables residing in SQL, Oracle and DB2/400 databases, (all databases except for Microsoft Access databases)</div>
+<p><br /> This document details how to update the display decimals for Data Dictionary items belonging to data item class QTYINV (Inventory Quantities) and for Data Dictionary item QNTY (Bill of Materials).</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for the EnterpriseOne Data Dictionary administrator who will be responsible for making these type of data dictionary display decimal changes.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Data Item Class/Data Dictionary Item Supported</h3>
+<p class="km"><em><span style="color: navy;"><strong>Data Item Class QTYINV</strong><span style="color: black;"></span></span></em></p>
+<p>QTYINV (Inventory Quantities for Manufacturing/Distribution) is the only data item class that is supported for this type of decimal change.&nbsp; JD Edwards EnterpriseOne has researched and grouped all Quantity data dictionary items used in Inventory, Sales, Purchasing and Manufacturing systems under this data item class.</p>
+<div class="kmnotebox">NOTE:&nbsp; All data dictionary items belonging to the QTYINV data item class must be defined with the same display decimal setting as the QTYINV class. The Data Dictionary application also validates that the display decimals of a data item matches the display decimals of the data item class to which it belongs. However, it does not prevent users from modifying which data dictionary items reside in a particular data item class. For this reason, customers must not exclude or include existing EnterpriseOne data dictionary items from the QTYINV class. If customers choose to do so, this modification will not be supported by the Oracle Support. The customers must research and test how this modification impacts the processing in the Manufacturing and Distribution suite; otherwise they will most likely experience unexpected results and data integrity issues. This change is strongly not recommended.</div>
+<p class="km"><em><span style="color: navy;"><strong>Data Dictionary Item QNTY</strong><span style="color: black;"></span></span></em></p>
+<p>QNTY is a data item (quantity-per) used in Bill of Materials (BOM) and it is the only data dictionary item identified by EnterpriseOne that can have its display decimals changed in order to provide better accuracy in costing. It must be changed independently of the QTYINV class.</p>
+<div class="kmnotebox">NOTE:&nbsp; The QNTY data dictionary item does not fall into the QTYINV data item class. Therefore, the QNTY data item display decimal does Not have to be the same as all the data dictionary items within the QTYINV Class. The recommendation is the display decimals value of data item QNTY should not be less than the display decimals value of class data item QTYINV&nbsp;and data items belonging to class data itemQTYINV to avoid rounding.</div>
+<p class="km"><span style="color: navy;"><strong><em>Default Display Decimal Setting Shipped with EnterpriseOne Software</em></strong><span style="color: black;"></span></span></p>
+<p>The default display decimal setting is <strong>ZERO</strong> for the QTYINV data item class (including all data dictionary items residing in the QTYINV class) and data dictionary item QNTY.</p>
+<a name="aref_section32"></a><h3 class="km">Procedures for Updating Display Decimals</h3>
+<p class="km"><span style="color: navy;"><em><strong>Caution</strong></em><span style="color: black;"></span></span></p>
+<p>Since <strong>one</strong> Data Dictionary is recommended for <strong>All </strong>EnterpriseOne environments, changing the display decimals in one environment, e.g. Development also affects other environments such as Production, Prototype, etc.</p>
+<p>If data dictionary is <span style="text-decoration: underline;">implemented by Environment</span>, it must be <span style="text-decoration: underline;">implemented by Pathcode</span> because data dictionary specs is created per pathcode. For example, if customer has more than one data dictionary data source, the environment(s) that connect to that data source <span style="text-decoration: underline;"><strong>must</strong></span> have its own path code. In scenario where environments share the same path code with each environment having its own data dictionary data source and display decimals is modified in only one environment, inconsistent Display Decimals will display across the environments that share the same pathcode, regardless of the data dictionary associated to each environment.</p>
+<div class="kmnotebox">NOTE:&nbsp; Changing Display Decimals must be done <strong>before </strong>any data is entered in the system. The EnterpriseOne software does not have a post-data conversion utility <em>except for the data dictionary item QNTY</em><strong>.</strong> For suggestions on how to update data entered before applying the display decimals change, review the section at the end of this document on how to identify the affected tables&nbsp;<SPAN><table class="docInternalContentBox" width="100%"><tr><td>as well as <a href='../docs/962481.html'>FAQ - How to Convert Business Data for QTYINV Class Data Items to Reflect Display Decimal Change</a> E1: 40: FAQ - How to Convert Business Data for QTYINV Class Data Items to Reflect Display Decimal Change.[This section is not visible to customers.]</td></tr></table></span></div>
+<p>If the display decimals are changed after data has been entered, the data entered before the change will be incorrectly displayed. For example, if the display decimal was changed from 0 to 2, a quantity of 1 entered before the change will now display as .01 (reduced by a factor of 100) unless a data conversion is run to multiply the data by a factor of 100.<br /><br />As with any Data Dictionary change, updating display decimals will replicate to the Data Dictionary Specs throughout the enterprise; therefore it is recommended that this process be run with no users logged into the EnterpriseOne software and no EnterpriseOne processes running on the server.</p>
+<a name="aref_section33"></a><h4 class="km">Update Display Decimals UBE R9200100</h4>
+<p>This UBE report can be run in either Proof or Final mode, depending on the value of the processing option. The Proof mode produces a report of the data dictionary changes with NO update to the data dictionary items. Final mode produces a report and updates the data dictionary items with the display decimals change.<br /><br />On the Processing Option tab|Update Info, enter QTYINV for the Data Item Class and specify a new value for the Data Display Decimals. Note that it is not necessary to change the Display Decimals for QTYINV in the Data Dictionary application.<br /><br />Verify that the Data Selection is set as follows:</p>
+<div class="kmcodeblock" style="width: 35%;">Where BC Data Item Class (F9210) is equal to POszDataItemClass</div>
+<p>Submit this UBE Locally. After the report finishes, go to the Data Dictionary application (P92001) and verify that the Display Decimals has changed for data item class QTYINV and some of the data dictionary items in this class, such as TRQT, UORG, PQOH, etc. Note that the data dictionary changes have been updated only to the data dictionary master tables and not the Replicated data dictionary specs.</p>
+<a name="aref_section34"></a><h4 class="km">QNTY Decimal Conversion UBE R30QNTY</h4>
+<p class="km">This UBE report converts data in the following tables : F3002, F3011, F3013, F3105, F3283, F3293, and F3296.</p>
+<p>From Data Dictionary Design menu, select Work with Data Dictionary Items and inquire and select data dictionary Alias QNTY. In the Display Decimals control, note down the current value; this value is required for the processing option - Number of display decimals converting FROM.<br /><br />This UBE report can be run in either Proof or Final mode. The Proof mode produces a report and does not convert the data. Final mode produces a report and also converts the data. <br /><br />On the Processing Option tab - Process, enter the number of display decimals for converting FROM and converting TO.<br /><br />Submit UBE <span style="text-decoration: underline;"><strong>Locally.</strong></span></p>
+<p>After the UBE has completed successfully, go to Data Dictionary application (P92001), find and select data dictionary Alias QNTY :-</p>
+<ul>
+<li>Item Specifications tab: in the Display Decimals control change the value to the number of display decimals that data was converted TO as specified in the UBE processing option</li>
+<li>Default Value tab: update default value 1 to reflect the number of display decimals. For example if display decimals is 6, default value should be 1.000000</li>
+</ul>
+<p>When running the UBE report Update Display Decimals for Data Item Class (R9200100) to update the Display Decimals in proof mode, Data Dictionary (DD) items may be duplicated on the report.&nbsp; The report is based on the business view V92001C, which is a join between the tables F9200, F9210 and F9203. The multiple rows of the same item are due to the corresponding multiple rows in the F9203 (Data Item Alpha Descriptions).&nbsp; When the decimal update is made, it will be made for each row returned by the business view, but the existence of the multiple rows for the same item will not affect the result.</p>
+<a name="aref_section35"></a><h3 class="km">Deploy Data Dictionary Items Changes</h3>
+<div class="kmnotebox">NOTE:&nbsp; If this step is not run, data inconsistency may be observed when entering and viewing data affected by the display decimal change.</div>
+<p>After making the display decimal changes, the data dictionary changes MUST be deployed throughout EnterpriseOne before entering data in the applications affected by the display decimal changes. The deployment procedures are described in <a href='../docs/626511.html'>Deploying Data Dictionary Changes</a> E1: DD: Deploying Data Dictionary Changes.</p>
+<a name="aref_section36"></a><h3 class="km">Verify Data Conversion and Default value for QNTY</h3>
+<p>Fastpath P30200. Inquire on a BOM item and the grid column Quantity should display the data correctly with the appropriate decimals.</p>
+<p>Fastpath P3002, select a BOM item, add a test record in the grid, do not populate Quantity, arrow down to next grid row. Quantity should display the data dictionary default value.</p>
+<a name="aref_section37"></a><h3 class="km">How to Identify all EnterpriseOne Tables Affected by Display Decimals Update of QTYINV Class</h3>
+<p>There is no conversion report to convert production data&nbsp;for the QTYINV class. The recommendation is to make this data dictionary decimal change prior to entering any data within the EnterpriseOne system.&nbsp; If existing data has been added in the tables, the data entered before the change will be incorrectly displayed.&nbsp; Therefore, the only option is to convert the data in all EnterpriseOne tables containing data items belonging to the QTYINV class outside of EnterpriseOne using the a Database utility.</p>
+<p>If data exists within the tables, to facilitate the data conversion after running the Display Decimals Update process in EnterpriseOne, create a report using the Report Design Aid tool to produce a CSV output file that lists all tables which have data dictionary item columns that belong to the QTYINV class.&nbsp; Then&nbsp;use this CSV output file as input to a SQL script to update the tables.</p>
+<p>The following are the high-level design specs of this type of report.&nbsp; Viewing the tables F9210 and F98711 in the Universal Table Browser (UTB) will help in understanding the design of the report.&nbsp;</p>
+<div class="kmnotebox">NOTE:&nbsp; Advanced knowledge of the EnterpriseOne Development Tools including Business View Design and Report Design is a prerequisite in creating this type of report.</div>
+<ol>
+<li>Create a business view simple join between F9210 (Data Field Specifications) and F98711 (Table Columns)
+<ul>
+<li>Join F9210.DTAI to F98711.OBND</li>
+<li>Include columns: F9210 (DTAI, CLAS), F98711(OBNM, OBND, PSEQ, SQLC)</li>
+</ul>
+</li>
+<li>Create a UBE report with a columnar section over the business view join between F9210 and F98711
+<ul>
+<li>On the section layout, add columns F9210.DTAI, F9210.CLAS, F98711.OBNM, F98711.PSEQ, F98711.SQLC</li>
+<li>Add data selection on F9210.CLAS = QTYINV</li>
+<li>Run the UBE Locally with Output to CSV</li>
+<li>Open the CSV Output and change the data sort to F98711.OBNM, F98711.PSEQ, F98711.SQLC so that the output displays all the QTYINV columns by Table.</li>
+</ul>
+</li>
+</ol>
+<div class="kmnotebox">NOTE:<br />
+<ul>
+<li>As always, when modifying data outside of EnterpriseOne, it is Strongly advised to take a back-up of the data prior to the modification.</li>
+<li>The creation of this type of custom report and conversion of the data is not supported by Oracle Software Support.&nbsp;</li>
+</ul>
+</div>
+<a name="aref_section38"></a><h3 class="km">Known Issues</h3>
+<p><strong> Issue 1:</strong> <span id="form1:panelPage1">Users experience issues in Production environment intermittently when some data items in the QTYINV class have zero display decimals instead of non-zero display decimals, due to users signed into both Pristine and Production environments sharing the same call object kernel. </span></p>
+<p>Resolution : Review Document 1903385.1 E1: DD: System Getting Display Decimals Settings of QTYINV Class Data Items from Pristine Data Dictionary Resulting in Incorrect Quantity and Amount Values.</p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
 
 
 

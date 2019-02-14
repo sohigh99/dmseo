@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Information on Business Function B0100067-Formatted Address With Who's Who</title>
+    <title>Address Book Setup - FAQ </title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -12,7 +12,7 @@
 
     <style>
       body {
-        font-family: Calibri, Arial, Helvetica, sans-serif;
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
 /*        background-color: #FFFAFA;*/
 /*        font-size: 14px;*/
       }
@@ -36,9 +36,24 @@
       #myBtn:hover {
         background-color: #555;
       }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
     </style>
 
   </head>
+
 
 
 <body>
@@ -94,23 +109,38 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
+<table><tr><td width='0'></td><td><A HREF="#section01">Purpose of Document</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#summary">Summary</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q1">Setup Considerations</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q2">D0100067 - Data Structure of BSFN B0100067</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q3">Tables accessed by business function to return formatted address lines</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q4">How it determines szMailingSalutation which is to be used for 2nd portion of address lines?</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q5">Logic to get data from above listed tables?</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q6">Can Address Format ID be added?</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#q7">How it handles mailing address?</A></td></tr></table>
+
+
+
+
+
+
 <h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
 
 <p>This document explains in detail the usage of business function B0100067 &ndash; FormattedAddressWithWhosWho (Formatted Address With Who's Who) which can be used to return mailing address lines in applications. It provide detail information on the business function&nbsp;usage, its data structure&nbsp;input/output parameters, as well as the tables accessed by this function.</p>
-<p>&nbsp;</p>
+
 
 
 <!-- ======================================== Body Starts Here =================================== -->
 
 
-<h3 class="km">Summary</h3>
+<h3 class="km"><a name="summary"></a>Summary</h3>
 <p>Currently Address by Date (F0116) contains only 4 mailing address lines whereas a number of EnterpriseOne applications show Formatted Address Lines up to 9 lines including Who&rsquo;s who information. Depending on some settings made, the output is vary. <br /> <br /> EnterpriseOne enables you to print out country specific address format based on Address Format ID (F0070.ADID) which can be accessed through 'Address Book Constant &gt; Country Constants'</p>
 <div class="kmnotebox">
 <p>Note: <br /> The output of this business function consists of 2 parts mainly:</p>
 <p>&bull; 1st part - output of&nbsp; "Name Mailing" through "AddressLine05". This is the first 5 address lines outputted.&nbsp;<br /> &bull; 2nd part - output of the "AddressLine06" and "AddressLine07".</p>
 </div>
-<p>&nbsp;</p>
-<h3 class="km">Set Up Considerations</h3>
+
+<h3 class="km"><a name="q1"></a>Set Up Considerations</h3>
 <p class="km">The following are some set up to take note of before using the B0100067.</p>
 <ul>
 <li>F0009.EFS (<em>Date Effective Addresses 0/1</em>): Through <em>Address Book Constants</em> (P0000) Mailing Address can be maintained per effective date. At once you turn on this parameter, F0101.EFTB (<em>Date - Beginning Effective</em>) is to be populated which can retrieve data from Address By Date (F0116) based on this date.</li>
@@ -132,11 +162,11 @@ function topFunction() {
 <li>T: 1099 Legal Name</li>
 </ul>
 </ul>
-<p>&nbsp;</p>
+
 <div class="kmnotebox">Note: Type Code is to get valid information from F0111. If needed you can define your own code.</div>
 <hr />
-<p>&nbsp;</p>
-<h3 class="km">D0100067 - Data Structure of BSFN B0100067</h3>
+
+<h3 class="km"><a name="q2"></a>D0100067 - Data Structure of BSFN B0100067</h3>
 <p>Input and output parameters for the business function data structure.</p>
 <table class="km" style="width: 712px; height: 252px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -269,7 +299,7 @@ function topFunction() {
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
+
 <div class="kmnotebox">Note:<br />
 <ul>
 <li>If mnAddressNumber is specified then MLNM, ADD1, ADD2, ADD3, ADD4, CTY1, ADDS, ADDZ, CTR and COUN not used. But if this value is not specified then columns MLNM, ADD1, ADD2, ADD3, ADD4, CTY1, ADDS, ADDZ, CTR and COUN will be used for formatting.</li>
@@ -278,8 +308,8 @@ function topFunction() {
 </ul>
 </div>
 <hr />
-<p>&nbsp;</p>
-<h3 class="km">Tables&nbsp;accessed by business function&nbsp;to return formatted address lines</h3>
+
+<h3 class="km"><a name="q3"></a>Tables&nbsp;accessed by business function&nbsp;to return formatted address lines</h3>
 <ul>
 <li>F0101 (<em>Address Book Master</em>): ALPH (Name &ndash; Alpha), EFTB (Date - Beginning Effective)</li>
 <li>F0116 (<em>Address by Date</em>)</li>
@@ -347,7 +377,7 @@ function topFunction() {
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
+
 <div class="kmnotebox">Note: This table is to be read only when mnAddressNumber is specified otherwise same columns ADD1 through COUN have to be specified as input parameter.</div>
 <p><br /> <br /> &bull; F0111 &ndash; Address Book &ndash; Who&rsquo;s Who</p>
 <table class="km" style="width: 728px; height: 75px;" border="1" cellspacing="1" cellpadding="1">
@@ -390,7 +420,7 @@ function topFunction() {
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
+
 <div class="kmnotebox">Note: To get MailingName and other Who&rsquo;s Who information<br /><ol>
 <li>mnWhosWhoLineID is not specified and cTypeCode is Blank: szNameAlpha = F0101.ALPH then exit from routine</li>
 <li>mnWhosWhoLineID is specified and cTypeCode is Blank: Get data from F0111 where F0111.IDLN = Input mnWhosWhoLineID with zero and szNameAlpha = F0111.MLNM</li>
@@ -449,8 +479,8 @@ function topFunction() {
 </tbody>
 </table>
 <hr />
-<p>&nbsp;</p>
-<h3 class="km">How it determines szMailingSalutation which is to be used for 2nd portion of address lines?</h3>
+
+<h3 class="km"><a name="q4"></a>How it determines szMailingSalutation which is to be used for 2nd portion of address lines?</h3>
 <table class="km" style="width: 735px; height: 137px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
 <tr><th class="km" style="background-color: #009900; color: white;">SSPL</th><th class="km" style="background-color: #009900; color: white;">TPL</th><th class="km" style="background-color: #009900; color: white;">SSAL<br /> (Blank?)</th><th class="km" style="background-color: #009900; color: white;">szMailingSalutation</th></tr>
@@ -556,10 +586,10 @@ function topFunction() {
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
+
 <hr />
-<p>&nbsp;</p>
-<h3 class="km">Logic&nbsp;to get data from above listed tables?</h3>
+
+<h3 class="km"><a name="q5"></a>Logic&nbsp;to get data from above listed tables?</h3>
 <div class="kmnotebox">1. ENTER: <span style="text-decoration: underline;"><em><strong>FormattedAddressWithWhosWho</strong></em></span> (B0100067 - Formatted Address With Who's Who)<br />
 <blockquote>2. ENTER: <strong><em>GetABEffectiveDate </em></strong>(B0100019 - F0101 Get Effective Date, to get F0101.EFTB)<br />
 <blockquote><em>sql&gt; SELECT ABAN8, <strong>ABEFTB </strong>FROM PRODDTA.F0101 WHERE ( ABAN8 = 4242.000000 ) ORDER BY ABAN8 ASC </em></blockquote>
@@ -570,10 +600,10 @@ function topFunction() {
 2. ENTER: <strong><em>GetUserLanguagePreference </em></strong>(B0000148 - Get User Language Preference, this is to translate Country to specific language)<br /> <br /> <em>sql&gt; SELECT CKCTR, CKADID, CKCTRP,CKPOSC, CKSSAL, CKATTN, CKATTP, CKSSPL, CKTPL FROM PRODDTA.F0070 WHERE ( CKCTR = 'CA' ) </em><br /> <br /> 2. ENTER: <em><strong>GetUDC </strong></em>(X0005 - Get UDC, to get description for country code)</blockquote>
 1. Exit: FormattedAddressWithWhosWho</div>
 <hr />
-<p>&nbsp;</p>
-<h3 class="km">Can Address Format ID be added?</h3>
+
+<h3 class="km"><a name="q6"></a>Can Address Format ID be added?</h3>
 <p>No, all the formats are hard coded. You can change Address Format to meet your business requirement.</p>
-<h3 class="km">How it handles mailing address?</h3>
+<h3 class="km"><a name="q7"></a>How it handles mailing address?</h3>
 <p>If F0070 does not contain your own country code, Format ID &lsquo;04&rsquo; will be used. Below are a list of Format ID available:</p>
 <table class="km" style="width: 737px; height: 1113px;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -741,7 +771,7 @@ function topFunction() {
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
+
 <div class="kmnotebox">Note:<br />
 <ul>
 <li>Shift Up one by one after checking whether above sequenced address format is missing any address line. For example, if MNLN is blank then ADD1 is to be located at MLNM position and so on.</li>
@@ -758,9 +788,9 @@ function topFunction() {
 <li>Print Invoice (R42565) - FormattedAddressWithWhosWho (B0100067, Formatted Address With Who's Who). Refer to &lt;Document 1157643.1&gt; - E1: 40: Labeling/Formatting Mailing Address in EnterpriseOne (R42520/R42565/R43500/R47011)</li>
 <li>Print Purchase Order (R43500) - F0116GetMailingAddressFormatLang (B4305231, F0116 Get Mailing Address Format - Langauge)</li>
 </ul>
-<p>&nbsp;</p>
+
 <hr />
-<p>&nbsp;</p>
+
 
 
 <!-- ======================================== End of Body ==================================== -->

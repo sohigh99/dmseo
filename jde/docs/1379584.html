@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Batches Out of Balance Report (R007032) in 8.9 and above</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Batches Out of Balance Report (R007032) in 8.9 and above</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Overview</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Program Functionality</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Setup</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Processing Options</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section35">Date Range Tab</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section36">Ledger Type Tab</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Data Selection</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38">Reviewing the Report</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39">Resolving the Integrity</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+
+<p>This document provides an overview of the Batches Out of Balance report (R007032) in 8.9 release and above, including the overview, program functionality, setup, and information on reviewing and resolving the integrity report.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for Finance Functional users who will be running and troubleshooting the General Accounting Integrity reports.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Overview</h3>
+<p>The Batches Out of Balance report (R007032) helps to locate batches in which the net amount of debits and credits for F0911 transactions does not equal zero.<br /><br /></p>
+<div class="kmnotebox">NOTE: In 8.9 release and subsequent, the R007032 Batches Out of Balance report has replaced the Post out-of-balance verification function for R007031 Batch to Detail integrity report.<br />See <a href='../docs/1378537.html'>Overview of Batch to Detail Integrity Report (R007031) in 8.9 and above for additional information</a>.</div>
+<a name="aref_section32"></a><h3 class="km">Program Functionality</h3>
+<p>The Batches Out of Balance report (R007032) reviews the net amount for F0911 general ledger transactions in each batch. If the net amount is not zero, it would calculate the net difference and prints the batch details on the report. If the amounts net to zero, the batch is in balance and does not print.</p>
+<a name="aref_section33"></a><h3 class="km">Setup</h3>
+<a name="aref_section34"></a><h4 class="km">Processing Options</h4>
+<a name="aref_section35"></a><h5 class="km">Date Range Tab</h5>
+<p>1. From Date and 2. Thru Date</p>
+<ul>
+<li>Enter a date range (From and Thru) to limit the records the system selects for processing.</li>
+<li>A default of blank will run over the entire table unless a value for Prior Days is entered below.</li>
+</ul>
+<p>2. Prior Days</p>
+<ul>
+<li>Enter the number of prior days (to the current date) to limit the records the system selects for processing. For example, if you specify 30 for this processing option the system selects records starting 30 days ago through today.</li>
+<li>A default of blank will run over the entire table unless a value is specified for From and Thru Dates.</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">NOTE: Since R007032 is a batch level report, the system uses the batch date, not the general ledger transaction date, when selecting records.</div>
+<a name="aref_section36"></a><h5 class="km">Ledger Type Tab</h5>
+<p>1. Ledger Types</p>
+<ul>
+<li>Specify an additional ledger type for the system to include in the integrity check.</li>
+<li>A default of blank will select only records for ledger type AA.</li>
+</ul>
+<a name="aref_section37"></a><h4 class="km">Data Selection</h4>
+<p>You may specify a batch number, batch type, and company number in data selection. This would help to improve processing time for the report.</p>
+<a name="aref_section38"></a><h3 class="km">Reviewing the Report</h3>
+<p><img src="../images/int030.png" /><br /><br /><strong>1*</strong> It will print the error message - <em>Batch is out of balance</em>, if the net amount of debits and credits from F0911 does not equal zero.<strong><br /><br />2*</strong> It also prints the net difference of amount calculated from F0911 transactions for the batch out of balance.<br /><br /></p>
+<a name="aref_section39"></a><h3 class="km">Resolving the Integrity</h3>
+<p>To analyze the further detail records for a batch, run the General Journal by Batch report (R09301).<br /><br /><img src="../images/int031.png" /><br /><br />For instance, in the Batch Number 271601 (Batch type M), R09301 shows the net total of debits (142.13) &amp; credits (-142.14) differ by 0.01, causing the batch to go out of balance. <br /><br />Some typical discrepancies, causes, and possible resolutions of similar scenarios are listed as follows:<br /><br /></p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Discrepancies</th><th class="km">Reason</th><th class="km">Resolution</th></tr>
+<tr>
+<td valign="top">Batch posted out of balance</td>
+<td valign="top">The batch was purposely posted out-of-balance.</td>
+<td valign="top">Select the Exclude Batch from Integrity Report field on the Batch Overrides form to remove the batch from the report. Maintain documentation for this batch.</td>
+</tr>
+<tr>
+<td class="km">Batch posted out of balance</td>
+<td class="km">Intercompany settlement constant is set to '*'.</td>
+<td class="km">
+<ul>
+<li>Enter journal entries manually if intercompany settlements are necessary.</li>
+<li>Post the batch.</li>
+<li>Change the intercompany settlement constant to 1 or 2 so that the system automatically creates intercompany settlements.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top">Batch is partially <br />posted</td>
+<td valign="top">A computer failure or job cancellation.</td>
+<td valign="top">
+<ul>
+<li>Select the Allow Batch to Post Out of Balance field on Batch Overrides.</li>
+<li>Post the partially posted batch again.</li>
+<li>Enter journal entries manually if intercompany settlements are necessary.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br /><br /></p>
+<div class="kmnotebox">NOTE: To prevent future out-of-balance postings, consider:<br />
+<ul>
+<li>Assigning security to the Work With Batch Versions - Available Versions form to prevent improper changes.</li>
+<li>Assigning responsibility for out-of-balance posting to one user.</li>
+</ul>
+</div>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

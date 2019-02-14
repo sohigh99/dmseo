@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Post Balances by Currency</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Post Balances by Currency</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Overview <br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Setup</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Activate Post Balances by Currency</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">PBCxx AAIs</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Balances by Currency Versus Summarized Balances</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Currency Fields F0911/F0902 Tables</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Changing from Summarized Balances to Balances by Currency</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides an overview of multicurrency Post Balances by Currency versus Summarized Balances functionality and discusses how the system updates currency fields in the Account Balances (F0902) table.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for Finance Functional users who will be involved in the multicurrency processing in the General Accounting system</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Overview <br /></strong></h3>
+<p>Post Balances by Currency (PBC) allows Account Balances (F0902) transactions to separate transaction amounts for the transaction currency in both the CA (foreign currency) and AA (actual amounts) ledgers. This will give additional meaning to the AA (domestic transactions) and CA (foreign transactions) ledgers. Depending on business needs, this setup could be critical to have meaningful data for these ledger types.</p>
+<p>The Post Balances by Currency (PBC) feature will update the Currency Code - From (CRCD) field in the records of the Account Balances (F0902) table and balances will be stored by currency. This allows viewing online inquiries and reporting by a specific currency. This can be set up for the entire Chart of Accounts or only certain specific accounts.</p>
+<div class="kmnotebox">NOTE: Post Balances by Currency will create additional records in the F0902 table leading to large size of F0902 table.</div>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><strong>Setup</strong></h3>
+<p>To post account balances by currency:</p>
+<ul>
+<li>Activate Post Balances by Currency.</li>
+<li>Setup PBCxx AAI's specifying account range.</li>
+</ul>
+<a name="aref_section33"></a><h4 class="km">Activate Post Balances by Currency</h4>
+<p>You activate the Post Balances by Currency feature in Company Setup program (P0010) under the Currency tab.</p>
+<p><img src="../images/pb01.png" border="0" alt="P0010_Company_Setup" title="P0010_Company_Setup" hspace="0" /></p>
+<p>Select the Post Account Balances by Currency check box for each company in which you want to post balances by currency in the Account Balances table (F0902).</p>
+<p>If unchecked, it implies that the Summarized Balances method is applicable during posting of multi-currency transactions. Summarized Balances is also referred to as the Simple Method occasionally.</p>
+<p><img src="../images/pb02.png" border="0" alt="Confirmation_PBCxx_AAI_Setup_Form" title="Confirmation_PBCxx_AAI_Setup_Form" hspace="0" /></p>
+<p>The Confirmation - AAI Setup form appears if you have not set up the required account ranges for AAI item PBCxx for the company or for default company 00000. If this form appears, click Yes to display the Set Up Multiple AAI Items form and add the ranges for PBCxx. Then click OK to return to the Company Setup form.</p>
+<p>If you click No and do not set up the required AAI item ranges, be aware that the general ledger post program posts journal entries for the company as summarized balances with mixed currencies instead of detailed balances by currency. The post program sends a warning to the work center that the balances were not posted by currency because AAI item PBC was not found.</p>
+<a name="aref_section34"></a><h4 class="km">PBCxx AAIs</h4>
+<p>You can choose to set up AAI items PBCxx later to specify the beginning and ending account ranges to track and post balances by currency in the Account Balances table (F0902).</p>
+<p>Following rules apply to AAI item PBCxx:</p>
+<ul>
+<li>The system uses the account number ranges assigned to AAI items PBCxx to post balances by currency.</li>
+<li>xx represents both the beginning and ending of a set of ranges. For example, PBC01 represents the first account in a range and PCB02 represents the last account in a range.</li>
+<li>Ranges cannot be skipped and must be in sequential order:
+<ul>
+<li style="margin-top: 0pt; margin-right: 0pt; margin-bottom: 0pt;">&nbsp;01&ndash;02 = first range of accounts</li>
+<li style="margin-top: 0pt; margin-right: 0pt; margin-bottom: 0pt;">&nbsp;03&ndash;04 = second range of accounts</li>
+</ul>
+</li>
+<li>PBCxx can be set up for for either 00000 company or for individual companies.</li>
+</ul>
+<div class="kmnotebox">NOTE: When you set up account ranges for PBCxx, do not include the retained earnings account (AAI item GLG4) in any of the account ranges. If you include the retained earnings account, the Annual Close program (R098201) might create duplicate records for balance forward amounts in the F0902 table.</div>
+<p><strong>Example: PBCxx Setup</strong></p>
+<p>Company 00070 posts balances by currency for all accounts. The retained earnings object account is 4980. To exclude account 4980, set up four AAI items for PBCxx and two ranges as shown in this table:</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr align="center" valign="center"><th class="km" style="width: 20%;">AAI Item</th><th class="km" style="width: 20%;">Description</th><th class="km" style="width: 20%;">
+<p>Business Unit</p>
+<p>(Not Used)</p>
+</th><th class="km" style="width: 20%;">
+<p>Object</p>
+<p>(Required)</p>
+</th><th class="km" style="width: 20%;">
+<p>Subsidiary</p>
+<p>(Optional)</p>
+</th></tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 20%;">PBC01</td>
+<td class="km" style="width: 20%;">Post Balances by Currency - Beginning Account Range 1</td>
+<td class="km" style="width: 20%;">NA</td>
+<td class="km" style="width: 20%;">1000</td>
+<td class="km" style="width: 20%;">Blank</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 20%;">PBC02</td>
+<td class="km" style="width: 20%;">Post Balances by Currency - Ending Account Range 1</td>
+<td class="km" style="width: 20%;">NA</td>
+<td class="km" style="width: 20%;">4979</td>
+<td class="km" style="width: 20%;">99999999</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 20%;">PBC03</td>
+<td class="km" style="width: 20%;">Post Balances by Currency - Beginning<br />Account Range 2</td>
+<td class="km" style="width: 20%;">NA</td>
+<td class="km" style="width: 20%;">4981</td>
+<td class="km" style="width: 20%;">Blank</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 20%;">PBC04</td>
+<td class="km" style="width: 20%;">Post Balances by Currency - Ending Account Range 2</td>
+<td class="km" style="width: 20%;">NA</td>
+<td class="km" style="width: 20%;">9999</td>
+<td class="km" style="width: 20%;">99999999</td>
+</tr>
+</tbody>
+</table>
+<p>Similarly you can define up to 49 ranges for Post Balances by Currency.</p>
+<hr />
+<a name="aref_section35"></a><h3 class="km"><strong>Balances by Currency Versus Summarized Balances</strong></h3>
+<p>The ability to review balance amounts in different currencies depends on whether you post amounts in the F0902 table by currency. If you post balances by currency, you can review account balance amounts by currency in the F0902 table instead of reviewing summarized totals, which are meaningless because of the different currencies.</p>
+<p>For each company, you choose whether to select the Post Balances by Currency check box under the Currency tab in the Company Setup program (P0010). If you do not select this check box, the system summarizes all currency amounts in one total amount. The total amount is a hash total and is meaningless because of the different currencies.</p>
+<p>The differences between posting balances by currency and not posting them by currency (summarized balances) are described in this table:</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr><th class="km" style="width: 50%;">Post Balances by Currency</th><th class="km" style="width: 50%;">Summarized Balances</th></tr>
+<tr>
+<td class="km" style="width: 50%;">
+<p>Separates transaction amounts for the transaction currency in both the CA (foreign currency) and AA (actual amounts) ledgers. To review balances according to the currency in which transactions occurred, set up the system to post balances by currency.</p>
+</td>
+<td class="km" style="width: 50%;">
+<p>Does not separate transaction amounts by currency in the CA ledger in Account Balances (F0902) table. If you do not post balances by currency, the CA ledger contains numerous currencies (possibly with different decimal places), making the totals for CA ledger meaningless.</p>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">
+<p>The advantage of this method is that it keeps track of the amounts by currency. For example, posting balances by currency enables you to review amounts that are posted to sales accounts in Canadian dollars, U.S. dollars, and British pounds and, by extension, to review the amounts sold in each country without using subsidiary accounts.</p>
+</td>
+<td class="km" style="width: 50%;">
+<p>You cannot keep track of the amounts by currency while posting summarized balances.</p>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">
+<p>The disadvantage of this method is that it increases the number of records in the F0902 table, using more disk space.</p>
+</td>
+<td class="km" style="width: 50%;">
+<p>The advantage of this method is that posting summarized balances creates fewer records in the F0902 table than posting balances by currency, and therefore requires less disk space. The system uses the transaction detail to calculate currency totals for most reports.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>&nbsp;</strong></p>
+<a name="aref_section36"></a><h3 class="km"><strong>Currency Fields F0911/F0902 Tables</strong></h3>
+<p>When you post transactions in a multicurrency environment, the system updates two currency fields in the Account Balances table (F0902) for reporting purposes:</p>
+<ul>
+<li>CRCD - The code in this field represents the transaction currency, the currency in which the transaction was entered.</li>
+<li>CRCX - The code in this field represents the company's base currency, the currency assigned to the company entered on the transaction.</li>
+</ul>
+<p>Depending on whether you have the check box selected to post account balances by currency, the system updates the CRCD and CRCX fields with different values. This table shows which fields the system updates based on the whether the check box is selected:</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr align="center" valign="center"><th class="km" style="width: 25%; text-align: center;">Post Account<br />Balances by Currency<br />Check Box</th><th class="km" style="width: 25%; text-align: center;">Ledger Type</th><th class="km" style="width: 25%;">
+<p>Transaction Currency</p>
+<p style="text-align: center;">(CRCD)</p>
+</th><th class="km" style="width: 25%;">
+<p style="text-align: center;">Base Currency</p>
+<p style="text-align: center;">(CRCX)</p>
+</th></tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 25%;">Selected</td>
+<td class="km" style="width: 25%;">AA</td>
+<td class="km" style="width: 25%;">Transaction Currency</td>
+<td class="km" style="width: 25%;">Currency assigned to the company.</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 25%;">Selected</td>
+<td class="km" style="width: 25%;">CA</td>
+<td class="km" style="width: 25%;">Transaction Currency</td>
+<td class="km" style="width: 25%;">Transaction currency.</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 25%;">Cleared</td>
+<td class="km" style="width: 25%;">AA</td>
+<td class="km" style="width: 25%;">Blank</td>
+<td class="km" style="width: 25%;">Currency assigned to the company.</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 25%;">Cleared</td>
+<td class="km" style="width: 25%;">CA</td>
+<td class="km" style="width: 25%;">Blank</td>
+<td class="km" style="width: 25%;">Currency assigned to the company.</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 25%;">Cleared</td>
+<td class="km" style="width: 25%;">All other ledger types</td>
+<td class="km" style="width: 25%;">Blank</td>
+<td class="km" style="width: 25%;">Currency of ledger type, if specified; otherwise, currency assigned to the company.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>NOTE:</p>
+<p>In case of Post Balances by Currency Flag checked, both CRCD and CRCX fields will always have currency values populated for both AA and CA Ledger Types in F0902 table. In case of F0902 record having blank value of CRCD/CRCX fields for AA/CA Ledger type will imply erroneous F0902 records. Run Foreign Currency Account Balances Integrity Report (R09707) to review and correct integrity discrepancies. For more information, refer to <a href='../docs/664787.html'>Overview of Foreign Currency Account Balances Integrity Report (R09707) </a>.</p>
+</div>
+<p><strong>Example: </strong>A US Company with transactions in US Dollars (USD), Pound Sterling (GBP), Euro (EUR) and Canadian Dollars (CAD).</p>
+<ul>
+<li>Company Base Currency - USD</li>
+<li>Transaction Currency - USD, GBP, EUR, CAD</li>
+<li>AA Ledger Type - USD</li>
+</ul>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr align="center" valign="center"><th class="km" style="width: 33%; text-align: center;">Table</th><th class="km" style="width: 33%; text-align: center;">CRCD</th><th class="km" style="width: 33%; text-align: center;">CRCX</th></tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 33%;">Company Constants (F0010)</td>
+<td class="km" style="width: 33%;">USD</td>
+<td class="km" style="width: 33%;">NA</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 33%;">Account Master (F0901)</td>
+<td class="km" style="width: 33%;">Blank</td>
+<td class="km" style="width: 33%;">NA</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PBC Flag checked<br /></strong></p>
+<p><em><strong>Account Ledger (F0911)</strong></em></p>
+<ul>
+<li>The Account Ledger (F0911) would be populated the same as a regular multi-currency journal entry for both AA and CA Ledger Types:
+<ul>
+<li>CRCD - Transaction Currency.</li>
+<li>CRCX - Blank.</li>
+</ul>
+</li>
+<li>There is no effect on F0911 transactions with PBC Flag checked or unchecked in a multi-currency environment.</li>
+</ul>
+<p><em><strong>Account Balances (F0902) Tables</strong></em></p>
+<ul>
+<li>In case of base currency transaction i.e. USD in this case, there would only be an AA record in the F0902 with both the CRCD and CRCX fields populated with USD.</li>
+<li>In case of multi-currency transactions (GBP, EUR, CAD):
+<ul>
+<li>The CRCD field would always be populated with Transaction Currency i.e. GBP, EUR, CAD for both AA and CA Ledger Types.</li>
+<li>The CRCX field:
+<ul>
+<li>For AA Ledger Type, it would always be populated with Company Currency.</li>
+<li>For CA Ledger Type, it would always be populated with Transaction Currency.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr align="center" valign="center"><th class="km" style="width: 17%; text-align: center;">Transaction Currency</th><th class="km" style="width: 17%; text-align: center;">Ledger Type</th><th class="km" style="width: 17%;">
+<p style="text-align: center;">F0911</p>
+<p style="text-align: center;">CRCD</p>
+</th><th class="km" style="width: 17%;">
+<p>F0911</p>
+<p>CRCX</p>
+</th><th class="km" style="width: 17%;">
+<p style="text-align: center;">F0902</p>
+<p style="text-align: center;">CRCD</p>
+</th><th class="km" style="width: 17%;">
+<p style="text-align: center;">F0902</p>
+<p>CRCX</p>
+</th></tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction USD</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">USD</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">USD</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction GBP</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">GBP</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">GBP</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction GBP</td>
+<td class="km" style="width: 17%;">CA</td>
+<td class="km" style="width: 17%;">GBP</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">GBP</td>
+<td class="km" style="width: 17%;">GBP</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction EUR</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">EUR</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">EUR</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction EUR</td>
+<td class="km" style="width: 17%;">CA</td>
+<td class="km" style="width: 17%;">EUR</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">EUR</td>
+<td class="km" style="width: 17%;">EUR</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction CAD</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">CAD</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">CAD</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction CAD</td>
+<td class="km" style="width: 17%;">CA</td>
+<td class="km" style="width: 17%;">CAD</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">CAD</td>
+<td class="km" style="width: 17%;">CAD</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PBC Flag unchecked<br /></strong></p>
+<p><em><strong>Account Ledger (F0911)</strong></em></p>
+<ul>
+<li>The Account Ledger (F0911) would be populated the same as a regular multi-currency journal entry for both AA and CA Ledger Types:
+<ul>
+<li>CRCD - Transaction Currency.</li>
+<li>CRCX - Blank.</li>
+</ul>
+</li>
+<li>There is no effect on F0911 transactions with PBC Flag checked or unchecked in a multi-currency environment.</li>
+</ul>
+<p><em><strong>Account Balances (F0902) Tables</strong></em></p>
+<ul>
+<li>In case of PBC Flag unchecked (Summarized Balances), it will always have following for both AA and CA Ledger Types:
+<ul>
+<li>CRCD - Blank.</li>
+<li>CRCX - Base Currency of Company.</li>
+</ul>
+</li>
+</ul>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr align="center" valign="center"><th class="km" style="width: 17%; text-align: center;">Transaction Currency</th><th class="km" style="width: 17%; text-align: center;">LedgerType</th><th class="km" style="width: 17%;">
+<p style="text-align: center;">F0911</p>
+<p style="text-align: center;">CRCD</p>
+</th><th class="km" style="width: 17%;">
+<p style="text-align: center;">F0911</p>
+<p>CRCX</p>
+</th><th class="km" style="width: 17%;">
+<p>F0902</p>
+<p style="text-align: center;">CRCD</p>
+</th><th class="km" style="width: 17%;">
+<p style="text-align: center;">F0902</p>
+<p>CRCX</p>
+</th></tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction USD</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">USD</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction GBP</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">GBP</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction GBP</td>
+<td class="km" style="width: 17%;">CA</td>
+<td class="km" style="width: 17%;">GBP</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction EUR</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">EUR</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction EUR</td>
+<td class="km" style="width: 17%;">CA</td>
+<td class="km" style="width: 17%;">EUR</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction CAD</td>
+<td class="km" style="width: 17%;">AA</td>
+<td class="km" style="width: 17%;">CAD</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+<tr align="center" valign="center">
+<td class="km" style="width: 17%;">Transaction CAD</td>
+<td class="km" style="width: 17%;">CA</td>
+<td class="km" style="width: 17%;">CAD</td>
+<td class="km" style="width: 17%;">NA</td>
+<td class="km" style="width: 17%;">Blank</td>
+<td class="km" style="width: 17%;">USD</td>
+</tr>
+</tbody>
+</table>
+<p>If you compare the examples above, you will find that the record count in case of PBC Flag Checked is 7, whereas in case of PBC Flag Unchecked is only 2. This is when a single account in a particular fiscal year has multicurrency transactions in three currencies. If we extrapolate this further, where you have 100 accounts and each account having multicurrency transactions in 15 currencies in a particular fiscal year, the record count in case of PBC Flag Checked will be 3100, whereas in case of PBC Flag Unchecked will be around 200. The number will continue to grow with larger chart of accounts and more multicurrency transactions over the multiple fiscal years.</p>
+<div class="kmnotebox">
+<p>NOTE: The F0911 and F0902 tables will look similar in following scenarios:</p>
+<ul>
+<li>If PBC Flag is unchecked for a company (P0010)</li>
+<li>If PBC Flag is checked for a company (P0010) but an account does not fall under PBCxx AAI's range setup for that company.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<a name="aref_section37"></a><h3 class="km"><strong>Changing from Summarized Balances to Balances by Currency</strong></h3>
+<p>If you originally set up the EnterpriseOne system to not post balances by currency i.e. to post summarized balances and later decide to post balances by currency, you must complete following steps to update the change in the system. It is recommended to review and test these steps first in a test environment. Verify the accuracy of the results before completing the steps in the production environment:</p>
+<ol>
+<li>Select the Post Account Balances by Currency check box on the Currency tab of the Company Setup form (P0010).</li>
+<li>Set up AAI items PBCxx with account ranges to track balances by currency.</li>
+<li>Run R09707 in proof mode to print the discrepancies in F0902. Please refer to <a href='../docs/664787.html'>Overview of Foreign Currency Account Balances Integrity Report (R09707) </a> on R09707.</li>
+<li>Take backup of F0902 table.</li>
+<li>Clear the F0902 records with Account Balance Purge (R09912) <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=1404234.1'>Document 1404234.1</a>&nbsp;or via SQL with help of database administrator using the following selection criteria:
+<ul>
+<li>Company (GBCO), Ledger Type (GBLT), Century (GBCTRY), Fiscal Year (GBFY)</li>
+</ul>
+</li>
+<li>Rebuild the F0902 via Repost Account Ledger (R099102) report to create the correct CA and AA ledger type records with correct F0902 amounts. Please refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=1387474.1'>Document 1387474.1</a> on R099102.</li>
+<li class="km">Review the report to ensure that the currency code appears in the far right column.</li>
+<li class="km">Run Annual Close Report (R098201) for each fiscal year, one year at a time, for each company involved to update the balance forward amounts in F0902. Please refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=664688.1'>Document 664688.1</a> on R098201.</li>
+</ol>
+<div class="kmnotebox">NOTE: Once Post Balances by Currency functionality is activated, it should not be deactivated at later stage. Turning this feature on and off creates duplicate F0902 records and affects the integrity of the data. For example, the Repost Account Ledger Integrity (R099102) may display Account Balance Table (F0902) records that are duplicates: one with the CRCD and CRCX fields populated and the other one with the CRCD field not populated.</div>
+<hr />
+<a name="aref_section38"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<p><strong>Question 1: Do I enable Post Balances by Currency flag only for the base company 00000 or for each company?</strong></p>
+<p><strong>Answer 1: </strong>The Post Balances by Currency flag can be enabled for the base company 00000 or for individual companies depending upon how you set your PBC AAI's:</p>
+<ul>
+<li>If you want the system to use the post balance by currency functionality for the same account range in every company, it will be required to set up the PBC AAI items for company 00000 only and hence check the PBC flag for company 00000 only.</li>
+<li>If you want the system to post different accounts for different companies by currency, it will be required to setup PBC AAI items by each company and hence check the PBC flag for each company. In this case, there is no need to check the PBC flag for base company 00000.</li>
+</ul>
+<p><strong>Question 2: Can I use R09707 report to delete the erroneous F0902 records in case the PBC Flag is turned on and off?</strong></p>
+<p><strong>Answer 2:</strong> The R09707 report only deletes the CA Ledger type record and does not delete the AA Ledger Type record for the same account number and fiscal year. You can consider using</p>
+<ul>
+<li>R09912 report to delete F0902 records baseed on&nbsp; following selection criteria:
+<ul>
+<li>Company (GBCO), Ledger Type (GBLT), Century (GBCTRY), Fiscal Year (GBFY)</li>
+</ul>
+</li>
+<li>Or via SQL with the help of database administrator.</li>
+</ul>
+<p>For more information, refer to following documents:</p>
+<ul>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=664787.1'>Document 664787.1</a> Overview of Foreign Currency Account Balances Integrity Report (R09707).</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=1404234.1'>Document 1404234.1</a> Overview of Account Balance Purge (R09912/F0902/F0902P).</li>
+</ul>
+<p><strong>Question 3: What impact does it make if I keep toggling the Post Balances by Currency Flag in Company Constants?</strong></p>
+<p><strong>Answer 3:</strong> Oracle Software Support does not recommend toggling between Post Balances by Currency method and Summarized Balances method. Once Post Balances by Currency functionality is activated, it should not be deactivated at later stage. Turning this feature on and off creates duplicate F0902 records for the same fiscal year with different values of CRCX and affects the integrity of the data. Run R09707 report <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=664787.1'>Document 664787.1</a> to review and fix the discrepancies, if any.</p>
+<p><strong>Question 4: I enabled Post Balances by Currency for each of my companies. When I run the Annual Close (R098201) to update the individual companies&rsquo; Retained Earnings Account balance, it creates a record with the originating currency field (CRCD) left blank. I was expecting the CRCD field to be populated with a currency code. What is causing this to happen?</strong></p>
+<p>Answer 4: The Annual Close Program (R098201) is functioning as design. An enhancement Bug <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=664783.1&id=10812691">10812691</a> - RETAIN EARNING BY CURRENCY has been submitted to address this issue.</p>
+<p>&nbsp;</p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

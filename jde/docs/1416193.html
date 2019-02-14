@@ -145,7 +145,7 @@ function topFunction() {
 <li>Detail method</li>
 <li>Configured Hub method</li>
 </ul>
-<div class="kmnotebox">NOTE: Configured Hub method was initally introduced in 8.9 release as part of enhancement <a href='/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1416193.1&id=12477917' target='_blank' >Bug 12477917</a> but was incorporated in other releases of EnterpriseOne later on.</div>
+<div class="kmnotebox">NOTE: Configured Hub method was initally introduced in 8.9 release as part of enhancement Bug 12477917 but was incorporated in other releases of EnterpriseOne later on.</div>
 <p>When you post transactions using one of these methods, the system creates journal entries for intercompany settlements based on automatic accounting instructions (AAIs). The system tracks the transaction settlements through subledgers. Each company that is involved in an intercompany settlement has an automatic offset to the appropriate intercompany account with the subledger equal to the address book number of the offsetting company. The system uses the subledger field to record the other company that is involved in the transaction.<br /><br /><strong>Example:</strong> A typical intercompany transaction between Companies 00001 (1.1110) and 91009 (91009.1105) will look like as follows:</p>
 <table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
 <tbody>
@@ -195,8 +195,8 @@ function topFunction() {
 </ul>
 <div class="kmnotebox">NOTE: It is recommended to manually reconcile intercompany settlements on a periodic basis by running the following integrities:<br />
 <ul>
-<li>Companies in Balance (R097001) <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1416193.1&id=664778.1'>Document 664778.1</a></li>
-<li>Intercompany Accounts in Balance (R097011) <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1416193.1&id=1383141.1'>Document 1383141.1</a></li>
+<li>Companies in Balance (R097001) <a href='../docs/664778.html'>Companies in Balance (R097001)</a></li>
+<li>Intercompany Accounts in Balance (R097011) <a href='../docs/1383141.html'>Overview of Intercompany Accounts in Balance Integrity Report (R097011)</a></li>
 </ul>
 </div>
 <H2 class=km><A NAME="SCOPE"></A>Scope</H2>
@@ -206,7 +206,7 @@ function topFunction() {
 <a name="aref_section31"></a><h3 class="km"><strong>Setup</strong></h3>
 <a name="aref_section32"></a><h4 class="km">Intercompany Settlements Constant (P0000)</h4>
 <p>Setup the Intercompany Settlements field in the General Accounting Constants (P0000) to specify the method that the system uses to automatically create journal entries between companies within an organization.</p>
-<p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1416193.1&attachid=1416193.1:A&amp;clickstream=no" border="0" hspace="0" align="bottom" /></p>
+<p><img src="../images/ic01.png" border="0" hspace="0" align="bottom" /></p>
 <p><strong>* </strong>Valid values that can be setup for Intercompany Settlements are as follows:</p>
 <ul>
 <li>'1' Hub method</li>
@@ -430,16 +430,16 @@ function topFunction() {
 <li>If this check box is selected and the intercompany settlement method is set to 'N' , the system will not post a transaction that involves multiple companies if those companies are out of balance.</li>
 <li>If this check box is not selected, the system will not validate that companies within this ledger are in balance.</li>
 </ul>
-<div class="kmnotebox">NOTE: For more information on setting up Ledger Types, refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1416193.1&id=1430503.1'>Document 1430503.1</a> Overview of Ledger Types Setup.</div>
+<div class="kmnotebox">NOTE: For more information on setting up Ledger Types, refer to <a href='../docs/1430503.html'>Overview of Ledger Types Setup</a>.</div>
 <hr />
 <a name="aref_section38"></a><h4 class="km">Configured Hub Setup</h4>
 <p>Before you can use configured hubs to settle intercompany transactions, you must set up the configured hub relationships for your organization. The system uses these relationships to process intercompany settlements.</p>
 <p class="km"><strong>Setup UDC 09/HB</strong></p>
 <p>You must set up the name of each configured hub in UDC table 09/HB. Each name can be up to six characters in length. Configured hub names do not have to be actual company names in your organization. For example, set up UDC code AMER to represent a hub for companies in America. The description might be Hub Company Group - America.</p>
-<p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1416193.1&attachid=1416193.1:B&amp;clickstream=no" border="0" hspace="0" align="bottom" /></p>
+<p><img src="../images/ic02.png" border="0" hspace="0" align="bottom" /></p>
 <p class="km"><strong>Designate Hub/Member Companies (P09190)</strong></p>
 <p>For each company that exists in the Company Constants table (F0010), you must designate the company as either the hub company or a member company of the hub in the Configured Hub Companies program (P09190). The system maintains configured hub information in the F09190 table.</p>
-<p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1416193.1&attachid=1416193.1:C&amp;clickstream=no" border="0" hspace="0" align="bottom" /></p>
+<p><img src="../images/ic03.png" border="0" hspace="0" align="bottom" /></p>
 <p><strong>* </strong>Hub Designator - This flag indicates the status of a company in a user defined hub.</p>
 <ul>
 <li>Enter '1' to specify the hub, or central company of the user defined hub.</li>
