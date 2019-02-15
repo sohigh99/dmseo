@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview Of Invoice Post Process Within JD Edwards EnterpriseOne Accounts Receivable (R09801)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview Of Invoice Post Process Within JD Edwards EnterpriseOne Accounts Receivable (R09801)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section31">General Ledger Post (R09801) Processing Options</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Offset Method Options</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33"><strong>Understanding GL Date Warnings and Errors (PYEB, PBCO, PACO and WACO)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34"><strong>Posting AR Invoices (R09801)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Automatic Entries Created by the Invoice Post</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Understanding Revisions to Posted Invoices</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Understanding Invoice Voids</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Revising Posted Invoices</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Voiding a Posted Invoice</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Voiding a Posted Invoice Pay Item</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Posting to Prior Period (R09801)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312">Steps to Post to Prior Period</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313"><strong>Posting to Prior Year (R09801)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Steps to Post to a Prior Year</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Adjusting Amounts to Reflect in Current Period</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section316"><strong>Batch Approval and Post Security (P00241)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section317"><strong>Manually Create an Automatic Entry (P0911)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section318"><strong>Understanding Multi-Currency</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section319">Summary Of Domestic Versus Foreign Currency Transactions</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section320">Domestic Entry</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section321">Foreign Entry</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section322"><span style="font-weight: bold;">Tax Explanation Summary</span></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section323">Key Tax Programs</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section324">Tax Rules</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section325">Tax Query (P4008)</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section326">Tax Rate/Area Details (P4008)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section327"><strong>Training Videos Related To Post Process</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section328">1. Basic Post Overview [Video]</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section329">2. Basic Taxes Overview [Video]</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section330">3. Basic Multi Currency Overview [Video]</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section331">4. Basic Post Failure Overview [Video]</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section332"><strong>Support Resource</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview</strong></h3>
+<p>When you create an invoice batch, records are created in the AR Ledger table (F03B11) and General Ledger table (F0911). After you post the batch, the posted code for the AR ledger, if successful, should appear as D and the General Ledger posted code, if successful, should appear as P. An AE entry is created updating your AR trade account. AE entries may also be created to tax accounts. Note: When the General Ledger posts the invoice and creates the AE, the F0902 account ledger is also updated. If you void an invoice, it updates the AR ledger table (F03B11) and creates a revision record in the F03B112.</p>
+<p><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;"> </span></p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>N/A</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p> </p>
+<a name="aref_section31"></a><h4 class="km">General Ledger Post (R09801) Processing Options</h4>
+<table style="width: 1099px; height: 410px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="padding: 4px; width: 33%;">Processing Option Tab</th>
+<th class="km" style="padding: 4px; width: 33%;">Processing Option Choice(s)</th>
+<th class="km" style="padding: 4px; width: 33%;">Processing Option Explanation</th>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;">Print</td>
+<td class="km" style="padding: 4px; width: 33%;">1. Account Format</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Specifies the account format that is displayed on the General Ledger Post (R09801) PDF report.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">2. Print Error Messages</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines if error messages are printed on the General Ledger Post (R09801) PDF. If left blank, error messages are only sent to the Work Center (P012503).</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;">Version</td>
+<td class="km" style="padding: 4px; width: 33%;">1. Detail Currency Restatement Version</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines the version of the Detailed Currency Restatement (R11411) program that is used to create currency restatement entries. If left blank, the program does not run and detailed currency restatement entries are not created.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">2. Fixed Asset Post Version</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines the version of the Fixed Asset Post (R12800) program that is used to create fixed asset entries. If left blank, the program does not run and fixed asset entries are not created.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">3. 52 Period Post Version</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines the version of the 52 Period Accounting Post program (R098011) that the system uses to update the Account Balances (F0902) table and the Account Balances - 52 Period Accounting (F0902B) table. If left blank, the program does not run and these tables are not updated.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">4. Create Burdening Transactions Version (R52G11)</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>This option is not valid for AP and AR posting.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;">Edits</td>
+<td class="km" style="padding: 4px; width: 33%;">1. Update Transaction</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines if the Account ID (data dictionary item AID), Company (data dictionary item CO), Fiscal Year (data dictionary item FY), Period Number (data dictionary item PN), Century (data dictionary item CTRY), and Fiscal Quarter (data dictionary item FQ) are updated on unposted records in the General Ledger (F0911). The system updates these values as follows:
+<ul>
+<li>The Account ID (AID) and Company (CO) are updated using the value in the Account Number (data dictionary item ANI) field.</li>
+<li>The Fiscal Year (FY), Period Number (PN), and Century (CTRY) fields are updated using the value in the G/L Date (DJG).</li>
+<li>The Fiscal Quarter (FQ) field is set to blank.</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;">Taxes</td>
+<td class="km" style="padding: 4px; width: 33%;">1. Update Tax File</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines if the Taxes table (F0018) is updated when posting transactions with tax information.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">2. Update VAT Discounts</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines if any tax amount fields should be adjusted during posting. The system adjusts the tax amount fields only for transactions with tax explanation code V. To use this processing option, tax rules must be configured for tax on gross including discount and discount on gross including tax.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">3. Update VAT Receipts and Write Off</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Not used on Accounts Payable side.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;">Process</td>
+<td class="km" style="padding: 4px; width: 33%;">1. Explode parent item time</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>This option is not relevant for posting AP and AR batches, it only applies to posting T (Equipment Time Entry) batches.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;">Cash Basis</td>
+<td class="km" style="padding: 4px; width: 33%;">1. Units Ledger Type</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines the Units Ledger Type the system uses for cash basis entries. The value in this option must be a valid ledger type from the UDC table 09/LT (Ledger Types). If left blank, the system uses the default ledger type ZU.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 33%;"> </td>
+<td class="km" style="padding: 4px; width: 33%;">2. Create Cash Basis Entries Version</td>
+<td class="km" style="padding: 4px; width: 33%;">
+<ul>
+<li>Determines the version of the Create Cash Basis Entries (R11C850) program to run. This program is run after the post completes. If left blank, the program does not run and cash basis entries are not created.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section32"></a><h3 class="km"><strong>Offset Method Options</strong></h3>
+<ul>
+<li>Automatic Offset Method Y (Detailed)<em> - </em>If you use offset method Y, the posting process creates one offset for each document, even if the invoice document contains both positive and negative pay items.  Note. (FRA) Users in France should use offset method Y because it maintains the correct separate debit and credit balances, even if positive documents (invoices) and negative documents (credit memos) are included in the same batch.</li>
+<li>Automatic Offset Method S - If you use offset method S, the posting process creates one offset for each pay item, including discounts and tax. Method S creates multiple records in the General Ledger table, but maintains the correct debit and credit balances within the French legal system. This offset method creates a large number of automatic entries, which considerably increases the size of the General Ledger table. In this example, the batch includes an invoice with two items: one for 10,000, and one for 5,000. The batch also includes a credit memo with two items: one for 3,000, and one for 1,000. The posting process created four automatic entries: debits of 10,000 and 5,000 to offset both items on the invoice, and credits of 3,000 and 1,000 to offset both items on the credit memo.</li>
+<li>Automatic Offset Method B - When you use offset method B, the system creates a cumulative automatic entry that does not include separate debit and credit totals. Note. (FRA) If offset method B is used to post transactions in France, procedures should be established to control the entry of different types of transactions, such as invoices and debit notes, in the same batch for posting. Although it is a common business practice, businesses in France are not legally required to provide a detailed journal to justify the offset to the bank account for each payment or receipt. If multiple payments and receipts are made on the same bank account, printing one cumulative entry for the bank account is acceptable. If you use offset method B, you can use the Transaction Journal to justify the centralized automatic entries that the system creates when you run the General Journal Report. In this example, the batch includes an invoice with two items: one for 10,000, and one for 5,000. The batch also includes a credit memo with two items: one for 3,000, and one for 1,000. The posting process created one automatic entry: a debit of 11,000 to offset all items. The system uses the batch number as the document number of the automatic offset.</li>
+</ul>
+<p class="km"><strong>Key to Method Used</strong></p>
+<p>This table shows the type of journal entry that the system creates according to the settings in the General Accounting and Accounts Payable Constants (fast path 9K or 4K).</p>
+<table style="width: 551px; height: 542px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="padding: 4px; width: 126.667px; text-align: center;">Intercompany (G/A Constants</th>
+<th class="km" style="padding: 4px; width: 126.667px; text-align: center;">Offset Method</th>
+<th class="km" style="padding: 4px; width: 126.667px; text-align: center;">Journal Entry Creation Method (Summary or Detail)</th>
+<th class="km" style="padding: 4px; width: 126.667px; text-align: center;">Journal Entry Create (F0911)</th>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">1 (Hub)</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">B</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">
+<p>D</p>
+</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">1</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Y</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">1</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">2 (Detail)</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">B</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">2</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Y</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">2</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">3 (Configured Hub)</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">B</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Error (not allowed)</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">3</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Y</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">3</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">D</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">1</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">B</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Summary</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">1</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Y</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">1</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">2</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">B</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Summary</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">2</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Y</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">2</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">3</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">B</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Error (not allowed)</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">3</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Y</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+<tr>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">3</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">S</td>
+<td class="km" style="padding: 4px; width: 126.667px; text-align: center;">Detail</td>
+</tr>
+</tbody>
+</table>
+<p><br /> Offset Method:</p>
+<ul>
+<li>Y = One automatic entry offset per document, regardless of the number of line items</li>
+<li>S = One automatic entry per pay item</li>
+<li>B = One automatic entry per batch</li>
+</ul>
+<div class="kmnotebox">Note: For Accounts Receivable, the Offset method can only be set at the company 00000 level, because it regulates how transactions are created in the F0911. This in turn has an effect on intercompany settlements, and on reconciling transactions. For that reason, you can't have one company with batch offset and another with detail offset.</div>
+<a name="aref_section33"></a><h4 class="km"><strong>Understanding GL Date Warnings and Errors (PYEB, PBCO, PACO and WACO)</strong></h4>
+<p>When you enter a transaction, the system validates the G/L date against the open period in the company constants. If you enter a transaction with a G/L date that is not in the current or next accounting period, you get a warning or an error message. <br /> <br /> The following table lists the warning and error messages that the system returns when you enter a transaction outside of the two-period window.</p>
+<table class="km" style="width: 1096px; height: 357px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 213.067px;">Error Number and Message</th>
+<th class="km" style="width: 360.983px;">Reason</th>
+<th class="km" style="width: 488.083px;">Result</th>
+</tr>
+<tr>
+<td class="km" style="width: 213.067px;">0064 &ndash; Prior End Balance Forward Invalid <br /> <br /> PYEB = Prior Year End Balance</td>
+<td class="km" style="width: 360.983px;">You tried to enter or post a transaction to a prior fiscal year.</td>
+<td class="km" style="width: 488.083px;">The system returns an error message and does not accept the entry.</td>
+</tr>
+<tr>
+<td class="km" style="width: 213.067px;">
+<div align="left">0065 &ndash; Date is in the current fiscal year but prior month (PBCO).</div>
+<br /> PBCO = Post Before Cut Off</td>
+<td class="km" style="width: 360.983px;">You tried to enter or post a transaction with a G/L date that is in the current fiscal year, but before the current period.</td>
+<td class="km" style="width: 488.083px;">The system returns either a warning or error message, depending on the setting of the Allow PBCO Postings field in the General Accounting Constants (P000909):<br />
+<ul>
+<li>If you have Allow PBCO set to Y, the system returns a warning.</li>
+<li>If you have Allow PBCO set to N, the system returns an error.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 213.067px;">0066 &ndash; Date is in future month of the current fiscal year (PACO).<br /> <br /> PACO = Post After Cut Off</td>
+<td class="km" style="width: 360.983px;">You tried to enter or post a transaction with a G/L date that is after the two-period window, but in the current fiscal year.</td>
+<td class="km" style="width: 488.083px;">The system returns a warning message to alert you that the date is in a future period.</td>
+</tr>
+<tr>
+<td class="km" style="width: 213.067px;">0000 &ndash; Date is in future fiscal year.<br /> <br /> WACO &ndash; Way After Cut Off</td>
+<td class="km" style="width: 360.983px;">You tried to enter or post a transaction with a G/L date in a future fiscal year.</td>
+<td class="km" style="width: 488.083px;">The system returns a warning message to alert you that the date is in a future year.</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section34"></a><h3 class="km"><strong>Posting AR Invoices (R09801)</strong></h3>
+<p>When an invoice batch is posted, the system:</p>
+<ul>
+<li>Verifies that the batch has an Approved status.</li>
+<li>Verifies that the GL date is the SAME for one invoice in both the Customer Ledger (F03B11) and the General Ledger (F0911).</li>
+<li>Searches for invoices that do not have a posted code or that have a posted code of P.</li>
+<li>Verifies that a corresponding record exists in the F0911 table and that the amounts balance to the invoice amount.</li>
+<li>Creates automatic entries.</li>
+<li>Updates the Account Balances (F0902) table.</li>
+<li>Changes the posted code on invoices to D.</li>
+<li>Changes the posted code on corresponding records in the F0911 table to P.</li>
+<li>Changes the posted code on the batch control record to D.</li>
+</ul>
+<p>If the system detects an error on one invoice transaction, the entire batch is in error and the system does not post any records. The system sends a workflow message and produces an error report. This diagram illustrates the invoice post process:<br /> <br /> <img src="../images/post01.png"/></p>
+<a name="aref_section35"></a><h4 class="km">Automatic Entries Created by the Invoice Post</h4>
+<p>When you post invoice batches, the system creates automatic entries to the tax, intercompany settlement, and A/R trade accounts. The offset amount to the A/R trade account is controlled by the AAI item RC. The program uses the company number and the G/L offset from each invoice to locate the AAI item RC. This item contains the offset account to which you are posting. During the post process, the system retrieves this information for the automatic entry record based on the offset method that you specify in the A/R Constants:</p>
+<ul>
+<li>Automatic offset amounts.</li>
+<ul>
+<li>If the offset method is B, the system accumulates invoice amounts and creates one automatic entry for the entire batch of invoices.</li>
+<li>If the offset method is S, the system accumulates pay item amounts and creates one automatic entry for each invoice.</li>
+<li>If the offset method is Y, the system creates one automatic entry for each invoice pay item.</li>
+</ul>
+<li>Document number.</li>
+<ul>
+<li>If the offset method is B, the system assigns the batch number as the document number of the AE entry.</li>
+<li>If the offset method is Y or S, the system assigns the document number of the invoice as the document number of the automatic entry.</li>
+</ul>
+<li>Account number description.</li>
+<ul>
+<li>If the offset method is B, the system writes Accounts Receivable - Trade/Offset by Batch IB (invoice batch number).</li>
+<li>If the offset method is Y or S, the system writes Accounts Receivable - Trade/Offset by Document RI (invoice document number).</li>
+</ul>
+<li>G/L Date - The system always uses the G/L date of the invoice, regardless of the offset method.</li>
+</ul>
+<p>If the invoice includes taxes, the system generates an automatic offset with the same characteristics, except that the account description is from the AAI item RT (receivables tax). It records the tax amount in the Taxes table (F0018), based on a processing option.</p>
+<p>Invoices created by sales update (R42800) are created for the company on the sales order header.  The RC AAI corresponding to the company on the accounts receivable invoice is validated for the A/R trade account.</p>
+<div class="kmnotebox">Note: Although posting out-of-balance batches prevents the system from creating intercompany settlements, posting out-of-balance does create AE entries to the A/R trade account.</div>
+<a name="aref_section36"></a><h4 class="km">Understanding Revisions to Posted Invoices</h4>
+<p>After you post an invoice, but before it is paid, you can revise it. For example, after entering, you might need to revise the gross amount or G/L account information. When you revise or void a posted invoice, the system:</p>
+<ul>
+<li>Removes the posted code on the invoice.</li>
+<li>Adds a record to the Invoice Revisions table (F03B112).</li>
+<li>Updates the A/R Post Status field (ISTR) to 1 on the invoice record. The system displays this field in the Revisions Made column on the Work with Customer Ledger Inquiry form. Regardless of the number of revisions you make to an invoice, the Revisions Made column always displays 1.</li>
+</ul>
+<p>You can revise these fields on a posted, unpaid invoice:</p>
+<ul>
+<li>Gross Amount. The system automatically recalculates the open amount.</li>
+<li>Remark</li>
+<li>Discount Available. Note: If you clear this field, the system automatically recalculates the discount amount based on the payment term.</li>
+<li>Due Date</li>
+<li>Discount Due Date</li>
+<li>PS (Pay Status). Note: You cannot change the pay status if the value is P (paid).</li>
+</ul>
+<p>Any revision that you make to an invoice on the Standard Invoice Entry form changes the status of the batch from posted to unposted and requires you to repost it. To eliminate the necessity of reposting the batch, use Speed Status Change to revise information that does not affect the invoice gross amount or G/L account information. If you need to change information in any other field, you must void and re-enter the invoice.</p>
+<a name="aref_section37"></a><h4 class="km">Understanding Invoice Voids</h4>
+<p>To remove a posted invoice or invoice pay item from the general ledger, you must void it and then post the batch again; you cannot delete a posted invoice. When you void an invoice, you specify the G/L date to use to reverse the entries from the general ledger. You can void an invoice from either the Work with Customer Ledger Inquiry or Standard Invoice Entry form.<br /> <br /> If you void an invoice pay item only, you must use the Standard Invoice Entry form, and you cannot specify a void G/L date; the system always uses the G/L date on the invoice. When you void an invoice, the system:</p>
+<ul>
+<li>Updates the gross amount to zero.</li>
+<li>Removes the posted code from the invoice</li>
+<li> Updates the payment status code to P (paid).</li>
+<li>Creates a record in the F03B112 table as an audit trail for the change in gross amount.</li>
+<li>Updates the A/R Post Status field (ISTR) in the Customer Ledger record (F03B11) to 1.</li>
+</ul>
+<p>The system displays the value of this field in the Revisions Made column in Customer Ledger Inquiry. After you void an invoice, you must post the batch again. To void a paid or partially paid invoice, you must first void the customer's payment.</p>
+<div class="kmnotebox">Note: You cannot void invoices with these document types: R1, RU, RB, and R5. These types of invoices are generated from the receipt applications and have a batch type of RB, not IB. The system creates these documents with a posted code of D, regardless of whether the receipt batch is posted.</div>
+<a name="aref_section38"></a><h4 class="km">Revising Posted Invoices</h4>
+<p>Access the Work with Customer Ledger Inquiry form. To revise posted invoices:</p>
+<ol>
+<li>Locate the invoice that you want to revise, and then click Select.</li>
+<li>On Standard Invoice Entry, revise the information in any available field, and then click OK.<br /> If you change the gross amount, you might need to revise the discount amount. The system does not recalculate the discount when you change the gross amount. If you change the gross amount, the system displays the G/L Distribution form automatically.</li>
+<li>On the G/L Distribution form, complete the Account Number and Amount fields on a new grid line to create a balancing entry. Enter the amount as a credit.</li>
+<li>To revise general ledger information only, on Standard Invoice Entry, select G/L Distribution from the Form menu, revise the desired fields, and then click OK.</li>
+</ol>
+<a name="aref_section39"></a><h4 class="km">Voiding a Posted Invoice</h4>
+<p>Access the Work with Customer Ledger Inquiry form. To void a posted invoice:</p>
+<ol>
+<li>Locate the invoice that you want to void, and then click Delete. Important! If you select an invoice with multiple pay items, the system voids all pay items.</li>
+<li>On Confirm Delete, click OK.</li>
+<li>On Enter Void Information, complete the Void G/L Date and Invoice Revision Code fields, and then click OK.</li>
+<li>On Void Confirmation, click OK to confirm the void.</li>
+<li>To verify the void, locate the voided invoice on Work With Customer Ledger Inquiry, and click Select to access Standard Invoice Entry.</li>
+<li>To review the amounts that the system reversed in the Customer Ledger, select Invoice Revisions from the Row menu on Standard Invoice Entry.</li>
+<li>To review the reversing entries that the system creates in the F0911 table when you void an invoice, select G/L Distribution from the Form menu on Standard Invoice Entry. For Void G/L Date field enter the date to which the system posts voided transactions. Do not enter a G/L date for a previous or future period. For the Invoice Revision Code field enter the code that identifies the reason that an invoice pay item was voided.</li>
+</ol>
+<a name="aref_section310"></a><h4 class="km">Voiding a Posted Invoice Pay Item</h4>
+<p>Access the Standard Invoice Entry form. To void a posted invoice pay item:</p>
+<ol>
+<li>Select the invoice pay item that you want to void, and click Delete.</li>
+<li>On the Confirm Delete form, click OK.</li>
+<li>On the Enter Void Information form, complete the Invoice Revision Code field, and click OK.</li>
+<li>On the Void Confirmation form, click OK to confirm the void.</li>
+<li>On the G/L Distribution form, complete the Account Number and Amount fields on a new detail line to create a balancing entry. Enter the amount as a credit.</li>
+</ol>
+<a name="aref_section311"></a><h3 class="km"><strong>Posting to Prior Period (R09801)</strong></h3>
+<p>Occasionally, batches must be posted to a closed period that is several months back or even in a prior year without affecting financial statements or reports that have been processed for the closed period or year. This document provides steps to posting batches to a prior closed period or year. The process described has a zero dollar effect on the General Ledger balances for the prior period or year and updates the current period with the batch balances.</p>
+<div class="kmnotebox">Note: It is very important these steps are followed when all other users are out of the system because the current period for posting is affected. The Posting Edit Code (data dictionary item PEC) of the trade account may also be a factor.</div>
+<a name="aref_section312"></a><h4 class="km">Steps to Post to Prior Period</h4>
+<p>These steps take into account the following example, please adjust instructions to fit your specific case:<br /> <br /> Example: A invoice was created and posted with a GL Date (data dictionary item DGJ) of 10/01/2001. Using the fiscal date pattern of `R' for a regular calendar year this would be period 10. The business process requires that the entries be entered in November (period 11) instead of October. Because the GL Date (DGJ) of a invoice cannot be changed, the steps provided in this document must be followed.</p>
+<ol>
+<li>Open Work with Companies (P0010) on the Organization &amp; Account Setup (G09411) menu.</li>
+<li>Locate the company or companies involved in the batch that needs posting, including companies involved in the GL Distribution of the voucher or payment.</li>
+<li>Change the Current Period for General Accounting, Accounts Payable and Accounts Receivable modules for each of the companies found in step 2 back to period 10 (October).</li>
+<li>After modifying the Current Period, log out of the system. This step is necessary because the information in this application is cached.</li>
+<li>Log back in.</li>
+<li>Post the batch.</li>
+<li>Open Revise Single Account (P0901) on the Organization &amp; Account Setup menu (G09411) and verify that the Posting Edit Code (data dictionary item PEC) allows manual entry to the affected trade account. In the standard setup for a trade account, the Posting Edit Code (PEC) is typically set to `M' (machine-generated transactions only). If this is the case, change the value to blank. Changing this value will temporarily allow all postings to this account.</li>
+<li>In Standard Journal Entry (P0911) on the Journal Entry, Reports, Inquiries (G0911) menu, enter a reversing entry with an October GL Date (DGJ). This entry should offset the original entries posted for the original record. Verify that the Reverse radio button is checked. By marking the reverse radio button, the system automatically creates a reversing entry on the first day of the next period. In this case, the reversing entry will be created for 11/01/01. The net effect of these entries is $0. The journal entry should look have information in the F0911 as follows:</li>
+<ul>
+<li>AP Trade XX (Debit)</li>
+<li>Expense XX (Credit).</li>
+<li>Post the Journal Entries. Use data selection to specify the batch number.If the Posting Edit Code (PEC) was changed in Step 7, change it back to 'M' using Review and Revise Accounts (P0901).</li>
+</ul>
+<li>In Company Names and Numbers, set the Current Period back to 11 (November) for all Modules. Because this information is cached, remember to log off so the change takes effect.</li>
+</ol>
+<a name="aref_section313"></a><h3 class="km"><strong>Posting to Prior Year (R09801)</strong></h3>
+<p>Occasionally, batches must be posted to a closed period that is several months back or even in a prior year without affecting financial statements or reports that have been processed for the closed period or year. This document provides steps to posting batches to a prior closed period or year. The process described has a zero dollar effect on the General Ledger balances for the prior period or year and updates the current period with the batch balances.</p>
+<a name="aref_section314"></a><h4 class="km">Steps to Post to a Prior Year</h4>
+<ol>
+<li>Identify the GL Dates (data dictionary item DGJ) and Companies (data dictionary item CO) included in the unposted batch.</li>
+<li>Using Work with Companies (P0010), determine the fiscal period and fiscal year corresponding to the batch's GL Dates.</li>
+<li>Determine a time when either dates or constants may be changed to allow for prior period postings. This process should be run outside of business hours because it requires that no other batches are created or posted.</li>
+<li>Determine the best method to use for posting the problem batch and make necessary change. There are two possible options:</li>
+<ul>
+<li>In Work with Companies (P0010), change the affected companies' Accounts Payable, Accounts Receivable and General Ledger periods and fiscal year (if necessary) to the earliest periods and fiscal years identified in Step 2.</li>
+<li>If the unposted batch is in the current fiscal year, change the value of the Allow PBCO Postings (data dictionary item PBCO) field in the General Accounting Constants (P0000) to Y. This modification allows updates to prior periods without having to change the dates for each company.User must log out and back in for the change to take effect.</li>
+</ul>
+<li>Approve and post the batch. Retain the PDF of the General Ledger Post (R09801) generated during the post. It lists all journal entries created in the General Ledger (F0911) for the batch.</li>
+</ol>
+<a name="aref_section315"></a><h4 class="km">Adjusting Amounts to Reflect in Current Period</h4>
+<p>After a batch is posted to a prior period, these amounts need to be removed from the prior period and included in the current period. To do so, follow the steps below.</p>
+<ol>
+<li>Determine if any of the GL Accounts listed on the PDF need the Posting Edit Code (data dictionary item PEC) updated to allow manual journal entries:</li>
+<ul>
+<li>Using Review and Revise Accounts (P0901), inquire on the account(s).</li>
+<li>If the Posting Edit Code (PEC) is set to 'M' (machine-generated transactions only), temporarily change it to blank.</li>
+</ul>
+<li>Go to Standard Journal Entry (P0911).</li>
+<li>Create a Journal Entry with the amounts opposite of the original entry and the account numbers are the same as above, for the prior period in question.</li>
+<li>Repeat Step 3 for every entry created by the post report.</li>
+<li>Post the manual journal entries while the prior period is still open. The prior period should have a zero net change to the General Ledger and all batches should be posted.</li>
+<li>After the batch is posted, revert back to the current period by either of the two methods:</li>
+<ol>
+<li>In Work with Companies (P0010) change the affected companies' Accounts Payable, Accounts Receivable and General Ledger periods and fiscal year (if necessary) back to the current period and year.</li>
+<li>If the Allow PBCO Postings (PBCO) field in the General Accounting Constants (P0000) is Y, change it back to N. Log out and log back in for change to take effect. </li>
+</ol>
+<li>Go back into Standard Journal Entry (P0911) and inquire on the manual journal entries created in Step 3.</li>
+<li>Void all manual journal entries, using the current period.</li>
+<li>Approve and post the batch.</li>
+<li>Reverse Step 1 by changing the Posting Edit Code (PEC) for all affected accounts back to 'M' using Review and Revise Accounts (P0901).</li>
+<li>Run integrity reports, if desired, to ensure no other integrity issues exist.</li>
+</ol>
+<p>Example<br /> The example below is the General Ledger portion of an Accounts Payable payment to a prior period and year. Posting Journal entries would be:</p>
+<ul>
+<li>GL Date: 11/30/2003</li>
+<li>Cash in Bank: 100.1110.BEAR 100.00</li>
+<li>AP Trade Acct: 100.4110 &lt;100.00&gt;</li>
+</ul>
+<p>After posting the batch, create a manual journal entry using Standard Journal Entry (P0911) for the following:</p>
+<ul>
+<li>GL Date: 11/30/2003</li>
+<li>Cash in Bank: 100.1110.BEAR &lt;100.00&gt;</li>
+<li>AP Trade Acct: 100.4110 100.00</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">Note:  that the amounts are opposite of the original posting entry.</div>
+<p><br /> The final step to moving the amounts from the prior period and year to the current period and year. After the manual entry above is posted in the prior period, it must be voided in the current period. The following entry is created at the completion of Step 8:</p>
+<ul>
+<li>GL Date: 01/31/2004</li>
+<li>Cash in Bank: 100.1110.BEAR 100.00</li>
+<li>AP Trade Acct: 100.4110 &lt;100.00&gt;</li>
+</ul>
+<a name="aref_section316"></a><h3 class="km"><strong>Batch Approval and Post Security (P00241)</strong></h3>
+<p>Batch Approval allows management to control which users are permitted to post transaction batches. This functionality utilizes two lists of users that are defined by management to help secure the posting process:</p>
+<ul>
+<li>Secured Users: users included on this list are unauthorized to approve and post batches.</li>
+<li>Approved by Users: users on this list can approve and post batches on behalf of secured users.</li>
+</ul>
+<p>For full details on how to set up this feature, please refer to knowledge <a href="../docs/664703.html">Overview of Batch Approval and Post Security Setup (P00241/P0000).</a></p>
+<a name="aref_section317"></a><h3 class="km"><strong>Manually Create an Automatic Entry (P0911)</strong></h3>
+<p>Automatic Entries (AEs) should be system-generated by the General Ledger Post (R09801), however, it may be necessary to create an AE manually if the system fails to create it and the Account Ledger table (F0911) records have been posted. This is done by creating one-sided journal entries. To determine if the AE was created, run a General Journal by Batch (R09301) report by batch number only (Journal Entry, Reports, Inquiries menu (G0911)). This UBE displays which records were created and which records were posted.</p>
+<div class="kmnotebox">Caution: Only create AEs when there are posted F0911 records and the offsetting AE is missing.</div>
+<p><br /> How to create Manual AE(s) to get a posted batch in balance:</p>
+<ol>
+<li>During off peak hours when no one is posting batches go to menu G09411 (Organization Account Setup menu) select Revise Single Account (F0901). Inquire on the appropriate company's Accounts Payable or Accounts Receivable trade account. Temporarily remove the M (machine generated transactions only) from the Posting Edit field. This will allow the posting of the manual entry.</li>
+<li>On the Journal Entry, Reports, Inquiries menu (G0911), select Journal Entry (P0911). Click the Add button.</li>
+<li>Create the journal entry by populating these fields:</li>
+<ul>
+<li>Document Type - AE</li>
+<li>Document Number - Original batch number (if posting in summary) or original document number (if posting in detail)</li>
+<li>Document Company - Company number used on the records in the batch</li>
+<li>GL Date - Original GL date of the batch</li>
+<ul>
+<li><em><strong>Caution:</strong></em> If the offset method in the Accounts Receivable Constants is B (one offset per batch), then use the last date of that period. If the offset method is Y (one offset per record), then use the GL date of the corresponding record.</li>
+<li>Verify that this GL period is open or that the (allow PBCO posting) field in the GL constants (P0000) is checked so the record can be posted.</li>
+</ul>
+<li>Account Number - Appropriate trade account</li>
+<li>Amount - Amount for the missing AE. Refer to the General Journal by Batch report (R09301) to determine if it needs to be a debit or credit.</li>
+</ul>
+<li>Choose the Features form exit. Check the Out of Balance JE Mode box. Click OK twice.</li>
+<li>Note the batch number, then select General Journal Review (P0011). Inquire on the batch, highlight it, select the Revise row exit, choose the Overrides form exit, then check the Allow Batch to Post out of Balance box.</li>
+<li>Post the batch and verify that the entry is correct by reviewing the General Ledger Post Report (R09801).</li>
+<li>On the Organization Account Setup menu (G09411), select Revise Single Account (F0901). Inquire on the appropriate company's Accounts Payable or Accounts Receivable trade account. Enter M (machine generated transactions only) in the Posting Edit field.</li>
+<li>To add the new entry to the original batch, use a database tool, such as SQL, to change these F0911 fields:</li>
+<ul>
+<li>If the new AE is for a void entry and/or if another AE exists, change this new AE's Journal Entry LineNumber (JELN) to a unique number.</li>
+<li>Change Batch Number (ICU) to the original batch number.</li>
+<li>Change Batch Type (ICUT) from G to the appropriate batch type (IB for a invoice batch).</li>
+</ul>
+<li>Run the General Journal by Batch report for the original batch number again to confirm the batch contains the new AE and that the batch is in balance.</li>
+<li>Optional: Delete the batch header for the new journal entry since it is no longer needed. Running the Batch to Detail and Out of Balance integrity report (R007031) will automatically delete the empty batch header.</li>
+<li>Run A/R Invoices to GL by Batch Integrity (R03B701) or AR to Account Balance by Account ID (R03B707) on the Period End Processing menu (G03B21). If this batch is not displayed, the AE entry and the batch is correct.</li>
+</ol>
+<div>
+<div class="kmnotebox">
+<div>Note: If you select "Allow batch to post out of balance" checkbox in P0011 application but do not make the SQL updates, please ensure that you exclude the batch from integrity reports by checking the "Exclude batch from integrity report" option.</div>
+</div>
+</div>
+<div><span style="color: #333333; font-family: Arial,Helvetica,sans-serif; font-size: 11px; font-weight: bold;"> </span></div>
+<a name="aref_section318"></a><h3 class="km"><strong>Understanding Multi-Currency</strong></h3>
+<p>This document discusses JD Edwards EnterpriseOne records that involved multi-currency or an environment with multi currency turned on.  It is important to share important documentation that further explains how multi currency is setup. Please refer to the references below:</p>
+<ul>
+<li>For Multi-currency setup see knowledge &lt;Document 664684.1&gt; - E1: 11: Overview of Activating Currency in a Non-Currency Environment and/or</li>
+<li>To view all multi-currency setup see this link to online guide <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15123/toc.htm" target="_blank">"JD Edwards EnterpriseOne Applications Multicurrency Processing Implementation Guide Release 9.1.x"</a></li>
+<li>To view all multi-currency setup for JD Edwards EnterpriseOne Accounts Payable see section <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15123/setupapformultiprocessing.htm#g037ee99c9453fb39_ef90c_10a77f2c279__1d3b" target="_blank">"Setting Up Accounts Payable for Multicurrency Processing"</a> within the online guide above.</li>
+<li>To view how to enter in multi-currency foreign vouchers see section <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15123/enterforeigncurrvouchers.htm#g037ee99c9453fb39_ef90c_10a77f2c279__1d34" target="_blank">"Entering and Processing Foreign Currency Vouchers"</a> within the online guide above.</li>
+</ul>
+<a name="aref_section319"></a><h4 class="km">Summary Of Domestic Versus Foreign Currency Transactions</h4>
+<p>The relationship between the base currency of a company and the transaction currency of a voucher determines whether the voucher is a domestic currency transaction or a foreign currency transaction.  When you enter a voucher, the currency of the company determines the base (domestic) currency of a voucher, whereas the currency of the voucher determines the transaction currency.  To process vouchers in multiple currencies, you must assign a domestic currency code to every company in the Company Names &amp; Numbers program (P0010). The currency code of a company determines the base currency of the voucher during voucher entry.</p>
+<a name="aref_section320"></a><h5 class="km">Domestic Entry</h5>
+<p>A voucher is a domestic currency transaction when the transaction currency is the same as the base currency of the company that you enter on the voucher record. When you enter a domestic voucher, the system does not update or display foreign amount fields as there are no foreign amounts involved in the transaction.<br /> <br /> For example, assume that the base currency of a company is U.S. dollars (USD). You enter a voucher for that company and assign a transaction currency of USD. The base currency of the company is the same as the transaction currency of the voucher. Therefore, the voucher is domestic.</p>
+<a name="aref_section321"></a><h5 class="km">Foreign Entry</h5>
+<p>A voucher is a foreign currency transaction when the transaction currency is different from the base currency of the company that you enter on the voucher record. The voucher has a foreign amount (based on the currency of the transaction) and a domestic amount (based on the base currency of the company). The system calculates the domestic amount of a transaction using the exchange rate from Currency Exchange Rates (F0015) or the exchange rate defined on the voucher record.<br /> <br /> For example, assume that the base currency of a company is USD. You enter a voucher for that company and assign a transaction currency of Japanese yen (JPY). The base currency of the company is different from the transaction currency of the voucher. Therefore, the voucher is foreign.</p>
+<a name="aref_section322"></a><h3 class="km"><span style="font-weight: bold;">Tax Explanation Summary</span></h3>
+<p>You might be required to calculate, pay, collect, and track taxes on vouchers.  When this is necessary, you need to enter a tax explanation code on the transaction. You can enter the tax explanation code on the transaction entry form, or let the system use a default tax explanation code that you set up on the on the supplier master record. For full understanding on tax setup within JD Edwards EnterpriseOne, refer to our <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15153/understand_tax_explain.htm#EOATP00003." target="_blank">release 9.1 online guide</a>. </p>
+<a name="aref_section323"></a><h4 class="km">Key Tax Programs</h4>
+<p>Below are the key tax programs you may need to review to determine if the setup is the cause of the tax calculation and/or voucher batch (V) post failure. </p>
+<a name="aref_section324"></a><h5 class="km">Tax Rules</h5>
+<p><img src="../images/post02.png" border="0" alt="image1taxP0022" title="image1taxP0022" hspace="0" vspace="0"/></p>
+<a name="aref_section325"></a><h5 class="km">Tax Query (P4008)</h5>
+<p>This helps you see how many of the same tax/rate area you have and their effective dates, which should not overlap. </p>
+<p><img src="../images/post03.png" border="0" alt="image2taxP4008" title="image2taxP4008" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">Note - Your Tax/Rate Area should never be deleted as this will cause data integrity issues.   Your tax/rate area should be expired if you have a tax rate to use as of a specific date. </div>
+<a name="aref_section326"></a><h5 class="km">Tax Rate/Area Details (P4008)</h5>
+<p><img src="../images/post04.png" border="0" alt="image3taxratearea" title="image3taxratearea" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">Note - To troubleshoot tax related records, you will want to review the guide linked above so you know how each Tax Explanation code calculates the totals and what lines are created in the A/P Ledger (F0411) and in the General Ledger (F0911) before and after post. This troubleshooting document is using Sales Taxes in the out of balance post failure example.</div>
+<p class="km"><strong> </strong></p>
+<hr />
+<p> </p>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

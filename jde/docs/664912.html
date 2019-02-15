@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHere</title>
+    <title>Frequently Asked Questions on the Balance Restatement Method (R11414A)</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -80,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThisAgain</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Frequently Asked Questions on the Balance Restatement Method (R11414A)</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -108,13 +108,148 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Question 1: </strong>Can I enter manual journal entries in the Consolidation Ledger Type (AC)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 2: </strong>How can I calculate Retained Earnings for the Consolidation Ledger Type (AC)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 3: </strong>Why is R11414A report ending with PDFDocGen_Save error message in jde.log?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 4: </strong>Why is the translation adjustment account not absorbing the exchange rate differences which is causing the AC ledger to be out of balance?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Question 5: </strong>Is there any difference between the Translation Adjustment Account setup in header versus detail while setting up Computations (P1114)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 6: </strong>Why R11414A clears the amounts for all future periods when run for a particular period?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Question 7: </strong>Post upgrade, Balance Restatement (R11414A) is producing a larger number of pages for a particular company. What could have changed?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Question 8:</strong> Why doesn't the beginning balance (APYC) of AC ledger gets updated for balance sheet accounts when running Balance Restatement R11414A for the First time and in YTD mode?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Question 9:</strong> Why is the Beg Balance/ PYE Forward (F0902 APYC) for AC ledger record for current fiscal year not populated, when run by a specific period?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Question 10: </strong>If a journal entry is entered in one month and the R11414A is run with that month's exchange rate and then the journal entry is voided in another month and the R11414A is run with the new month's exchange rate, should the restatement ledger have an overall balance of zero for that transaction?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Question 11: </strong>Why would data selection on a single specific company value not limit the AC ledger records created by the R11414A process just to accounts on business units from the company specified in the data selection?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Question 12: </strong>What triggers an asterisk to be shown in between the TO Current Period Balance and the Cur fields on the R11414A PDF?</a></td></tr></table>
+
+<hr size=1><p>
 
 
 
-<!-- ======================================== Body Starts Here =================================== -->
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document contains answers to some frequently asked questions on the Balance Restatement Method (R11414A).</p>
+<div class="kmnotebox">NOTE: For additional information on the&nbsp;Balance Restatement Method (R098201), you may refer to <a href='../docs/664911.html'>Overview of Balance Restatement Method.</a></div>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<a name="aref_section21"></a><h4 class="km"><strong>Question 1: </strong>Can I enter manual journal entries in the Consolidation Ledger Type (AC)?</h4>
+<p><strong>Answer 1: </strong>Although the Compute Restated Balances program automatically creates Account Balance (F0902) entries for the consolidation ledger type (AC), you can manually enter journal entries as adjustments to the Account Ledger (F0911) table for ledger type AC on the Journal Entry form (P0911). For example:</p>
+<ul>
+<li>You might enter a journal entry to adjust for differences that can occur due to rounding issues between currencies.</li>
+<li>You might enter a journal entry to eliminate amounts that can occur when you consolidate company balances.</li>
+</ul>
+<p>Ensure the following, if you manually enter a journal entry for ledger type AC:</p>
+<ul>
+<li>Since Balance restatement does not recognize AC entries that are manually entered unless a record exists in the AA ledger. A record must exist in the AA ledger for the same period, fiscal year, and general ledger account as the AC Ledger type record. If necessary, enter a manual journal entry for ledger type AA for a penny.</li>
+<li>Do not enter manual journal entries for ledger type AC against the translation adjustment account specified in the Computations Setup form (P1114) or the retained earnings account setup corresponding to the GLG4 AAI for the specific company.</li>
+</ul>
+<p>When you run the Compute Restated Balances program (R11414A), you can use the Check for Adjustments processing option under the Adjustment tab to specify whether you want the program to check for adjustments in the F0911 table. If you do not enter manual journal entries in the AC ledger or you choose to bypass them, you can save valuable processing time by setting this processing option accordingly.</p>
+<p>You can rerun the Compute Restated Balances program for a period without losing the journal entries already entered for the AC ledger.</p>
+<a name="aref_section22"></a><h4 class="km"><strong>Question 2: </strong>How can I calculate Retained Earnings for the Consolidation Ledger Type (AC)?</h4>
+<p><strong>Answer 2: </strong>As part of year-end processing, you must calculate retained earnings for the consolidation ledger (AC), which is used for balance restatement.You should follow certain steps to ensure that the AC ledger is in balance and that the calculated amount for retained earnings is correct. During the currency restatement process, it is necessary to calculate retained earnings at a historical rate. By using the following method, the retained earnings for the restated ledger will always have a hybrid historical rate created by the Annual Close Program (R098201) instead of a manual calculation when it calculates retained earnings for the AC ledger.</p>
+<p>The method is outlined as follows:</p>
+<ol>
+<li>Set up the retained earnings account corresponding to the GLG4 AAI item. A different account may be established for each company whereas all companies can be closed to the same retained earnings account by establishing GLG4 for Company 00000 only. For more information on setting up GLG4 AAI, refer to <a href='../docs/664682.html'>Overview of Automatic Accounting Instructions (AAI) in General Accounting.</a></li>
+<li>Use Account Ledger Inquiry application (P09200) to verify that no journal entries had been made to the retained earnings account setup as above. This includes beginning balance entries and adjustments. To enter beginning balances and adjustments, the recommended procedure is to use a separate account, typically an account that follows the Retained Earnings Account and has the same, or a higher level of detail.</li>
+<li>You can skip this step and jump to step 4, if journal entries have not been entered for the GLG4 Retained Earnings Account:<ol>
+<li>Reverse all the identified journal entries made to the retained earnings account.</li>
+<li>Run the Restatement program (R11414A) for a particular year.</li>
+<li>Run the Annual Close (R098201) for the AA and restated ledger type.</li>
+<li>Repeat steps 2 and 3 for each fiscal year up to the current year.</li>
+</ol></li>
+<li>On the Revise Computation setup (P1114), create a separate line for the Retained Earnings Account with following values:
+<ul>
+<li>From Account and Thru Account - Retained Earnings Account as setup for GLG4 AAI.</li>
+<li>Explanation - Retained Earnings Account.</li>
+<li>Rate Type - Any valid Rate Type as setup in P1114.</li>
+<li>Calculation Method - 1</li>
+<li>From Ledger Type - AC</li>
+<li>Override Rate - 1.0000000</li>
+</ul>
+</li>
+<li>Run the Compute Restated Balances&nbsp;program (R11414A) for the above modified computation.</li>
+</ol>
+<div class="kmnotebox">NOTE: This is the recommended and supported method for calculating retained earnings for the Consolidation Ledger Type (AC). Any other method could result in the restated ledger being out of balance or in an incorrect calculated amount for retained earnings.</div>
+<a name="aref_section23"></a><h4 class="km"><strong>Question 3: </strong>Why is R11414A report ending with PDFDocGen_Save error message in jde.log?</h4>
+<div class="kmcodeblock"><span class="kmfixedwidthfont">UBE0000084 ERROR: Function: PDFDocGen_Save, Code: 1073938489</span></div>
+<p title="Back To Top"><strong>Answer 3:</strong>This error message can occur if the resulting pdf output file of a report reaches the size of 2GB. This is a limitation of Adobe Acrobat Reader, and there is nothing that can be done on the EnterpriseOne side to change this. To counter this, consider the following options:</p>
+<ul>
+<li title="Back To Top">In order to minimize the report data selection and reduce the size of resulting pdf file:
+<ul>
+<li title="Back To Top">Specify the Processing Option Suppress Zero Balance as '1' under the Zero Balance tab for R11414A report to suppress records for processing that do not have activity in the period being restated.</li>
+<li title="Back To Top">You may narrow the data selection for the number of companies being restated to produce a smaller report output.</li>
+</ul>
+</li>
+<li title="Back To Top">Run the R11414A with the processing option Process Mode - '2' under the Mode tab to run the report in final mode and not generate the output report.</li>
+<li title="Back To Top">Check the F986110 PrintQueue directory and see if there is enough space.&nbsp; Detailed instructions on how to run the R9861101 to purge job record information may be found&nbsp; in Document 784600.1 E1: UBE: How To Purge Records From A Batch Server's Job Control Table F986110.</li>
+</ul>
+<p title="Back To Top">For more information on this error message, refer to Document 640674.1 Receiving Error "UBE0000084 Error Function PDFDOCGEN_SAVE" When Running Report.</p>
+<a name="aref_section24"></a><h4 class="km"><strong>Question 4: </strong>Why is the translation adjustment account not absorbing the exchange rate differences which is causing the AC ledger to be out of balance?</h4>
+<p><strong>Answer 4:</strong> Using Account Ledger Inquiry application (P09200), verify that the user has not posted transactions against the Translation Adjustment Account. Just like the retained earnings account, the adjustment account should have a Posting Edit Code of 'M' and never have transactions posted directly to the account. The Adjustment account only receives balances in the AC ledger when R11414A restatement is run.</p>
+<p>If transactions are posted to the adjustment account, it is common to see a situation where the first fiscal year will balance. However, after running the annual close for the AC ledger, advancing to the next fiscal year and restating new amounts, you will see that the adjustment account is not plugging for the exchange rate differences correctly, causing the AC ledger to be out of balance.</p>
+<a name="aref_section25"></a><h4 class="km"><strong>Question 5: </strong>Is there any difference between the Translation Adjustment Account setup in header versus detail while setting up Computations (P1114)?</h4>
+<p><strong>Answer 5:</strong> The Translation Adjustment Account setup in Revised Computations (P1114) works differently depending on whether it is entered into the header portion of the screen versus the detail.</p>
+<p>In P1114 application, you can setup Translation Adjustment Accounts in both header and detail. Depending on the type of translation adjustment, you enter an account on the Revise Company Currency Conversions form (P1114) as follows:</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1" align="center">
+<tbody>
+<tr><th class="km" style="width: 50%;">Translation Adjustment Header Account</th><th class="km" style="width: 50%;">Translation Adjustment Detail Account</th></tr>
+<tr>
+<td class="km" style="width: 50%;">The header account is used to create translation gain and loss amounts due to different rate types, for example, for average and month-end rate types.</td>
+<td class="km" style="width: 50%;">The detail accounts are used to create translation gain and loss amounts due to a change in the exchange rate within a period.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">The system creates a balancing entry in Account Balance (F0902) table, which is necessary because of different rate types.</td>
+<td class="km" style="width: 50%;">This entry is used only for analysis and is not a balancing entry.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">The system totals debits and credits, then updates this account with the difference. The amount for the balancing entry is a plug to force the restated consolidated ledger to balance. A single balancing entry is made for the entire computation.</td>
+<td class="km" style="width: 50%;">
+<p>The system calculates this amount for each range of accounts that are assigned computation method 1 (cumulative balance). The system does not allow a translation adjustment account for computation method 0.</p>
+<p>For computation method 1, the translations gains and losses are calculated according to this formula:</p>
+<p>Translation adjustment amount = (prior period balance &times; prior period end rate) &minus; (prior period balance &times; current period end rate) + (current period posting &times; current month average rate) &minus; (current period posting &times; current month end rate)</p>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Translation adjustment calculations that are used to create balancing entries are allowed only on balance sheet accounts.</td>
+<td class="km" style="width: 50%;">It can be setup as any of the accounts in chart of accounts.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information on Translation Adjustment Accounts setup and consideration, refer to <a href='../docs/1481550.html'>Overview of Computations Balance Setup.</a></p>
+<a name="aref_section26"></a><h4 class="km"><strong>Question 6: </strong>Why R11414A clears the amounts for all future periods when run for a particular period?</h4>
+<p><strong>Answer 6:</strong> Balance Restatement (R11414A) report is designed to restate balances for the chosen period and clear all period amounts after the chosen one. For example, when running R11414A for period 10, it will reset amount balances to zero for period 11 (GBAN11) and period 12 (GBAN12) in Account Balances (F0902) table. Please refer to the Logic for Restatement section under the Program Functionality heading in <a href='../docs/664911.html'>Overview of Balance Restatement Method</a> for more details.</p>
+<a name="aref_section27"></a><h4 class="km"><strong>Question 7: </strong>Post upgrade, Balance Restatement (R11414A) is producing a larger number of pages for a particular company. What could have changed?</h4>
+<p><strong>Answer 7:</strong> You may like to check if there are any changes on how manufacturing and distribution transactions with subledgers are being processed. The change will create balances with detail subledgering. The increase of records in the F0902 will affect the amounts of records to be restated and the number of pages in the R11414A PDF will increase as well.</p>
+<a name="aref_section28"></a><h4 class="km"><strong>Question 8:</strong> Why doesn't the beginning balance (APYC) of AC ledger gets updated for balance sheet accounts when running Balance Restatement R11414A for the First time and in YTD mode?</h4>
+<p><strong>Answer 8:</strong> Please make sure currency restatement rate P1113 is setup for the last period of prior fiscal year. For example, you are running R11414A in FY 2014, you need to setup an exchange rate for Dec 2013 in order for system to compute the APYC balance for AC ledger.</p>
+<a name="aref_section29"></a><h4 class="km"><strong>Question 9:</strong> Why is the Beg Balance/ PYE Forward (F0902 APYC) for AC ledger record for current fiscal year not populated, when run by a specific period?</h4>
+<p><strong>Answer 9:</strong> When running restatement by period for a fiscal year over accounts that were not restated in prior fiscal years. The F0902 AC ledger record created for current fiscal year has a Beg Balance/ PYE Forward (F0902 APYC) of blank. But the report shows the "To" AC ledger Current Period Balance that includes a value that which is restatement of AA Beg Balance/ PYE Forward (F0902 APYC). The report makes it look like the F0902 APYC AC ledger is populated but it is not.</p>
+<p>To resolve, run the R11414A restatement in YTD mode and when there is no existing AC ledger record for the fiscal year. Then the F0902 APYC of the AC ledger will be populated from the AA ledger.</p>
+<p>Note: The periods in the AC record will be populated if there is a rate change and it will restate up to the current period setup for the company in P0010.</p>
+<p>The Final Disposition in Bug 13924104 explains the process suggested by development:</p>
+<p>The calculation done in YTD mode is the proper calculation for this process. As there is no AC ledger available to get the beginning balance, the YTD mode will calculate it based upon the AA ledger so that it is available for the period 1 calculation. The YTD mode will also ensure that the APYC value is updated properly in the newly created AC ledger record.</p>
+<p>1. The MTD mode should only be used when a proper AC ledger record exists.<br />2. The standard process would be:</p>
+<ul>
+<li>&nbsp; &nbsp; Use the annual close process for the AC ledger to ensure that the correct values are in the AC ledger records that are created.</li>
+<li>&nbsp; &nbsp; If the data has been converted from another system and the annual close has not been run, the YTD mode must be used the first time this process is run to ensure the correct values are in the AC ledger records that are created.</li>
+</ul>
+<p>Since the restatement hasn't been run from the beginning for this company there will be an out of balance for the AC initially. This could be resolved by:</p>
+<ul>
+<li>setting the company to period 1 in Company (P0010)</li>
+<li>run the restatement YTD which will create AC with APYC and period 1</li>
+<li>create a one sided journal entry in Journal Entry (P0911) to for period 1 to the AC ledger for a CTA sub-account to offset the CTA (a journal entry should not be made directly to the CTA account).</li>
+</ul>
+<p>This is a business decision for not restating all years.</p>
+<p>&nbsp;</p>
+<a name="aref_section210"></a><h4 class="km"><strong>Question 10: </strong>If a journal entry is entered in one month and the R11414A is run with that month's exchange rate and then the journal entry is voided in another month and the R11414A is run with the new month's exchange rate, should the restatement ledger have an overall balance of zero for that transaction?</h4>
+<p><strong>Answer 10:</strong> As the R11414A was run over the same AA ledger amount but with different exchange rates for the two months, the overall balance for the void will not be zero in the restatement ledger.&nbsp; The residual balance can be corrected with a journal entry directly to the restatement ledger if business needs require this.</p>
+<p>&nbsp;</p>
+<a name="aref_section211"></a><h4 class="km"><strong>Question 11: </strong>Why would data selection on a single specific company value not limit the AC ledger records created by the R11414A process just to accounts on business units from the company specified in the data selection?</h4>
+<p><strong>Answer 11:</strong> Check the F0901 and F0902 table for Account ID (AID) congruity.&nbsp; If there are account balance records in the F0902 table where, for example, the AID value is 12345678 and the Business Unit (MCO) value is 1000, if the corresponding AID value 12345678 record in the chart of accounts F0901 table has a different MCO value than 1000, the R11414A process will write the restated AC ledger records using the information from the F0901 record.&nbsp; The result would be that some records could be written to accounts with business unit values that are not tied to the company in question.&nbsp; Normally this outcome could not possibly occur as any records in the F0902 table should have the same account ID, business unit, object, and subsidiary values as the corresponding F0901 records, so if it does occur, investigate whether erroneous changes to the values in the F0901 and/or F0902 records have been made.</p>
+<a name="aref_section212"></a><h4 class="km"><strong>Question 12: </strong>What triggers an asterisk to be shown in between the TO Current Period Balance and the Cur fields on the R11414A PDF?</h4>
+<p><strong>Answer 12:</strong> This is triggered if there has been entries made directly to the associated account in the TO ledger.&nbsp; For example, if a journal entry was made to an account in the AC ledger then an asterisk would be shown if the R11414A is being run with the AC ledger as the TO ledger.</p>
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+
 
 
 

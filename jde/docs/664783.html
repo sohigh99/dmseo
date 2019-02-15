@@ -525,14 +525,14 @@ function topFunction() {
 <li>Set up AAI items PBCxx with account ranges to track balances by currency.</li>
 <li>Run R09707 in proof mode to print the discrepancies in F0902. Please refer to <a href='../docs/664787.html'>Overview of Foreign Currency Account Balances Integrity Report (R09707) </a> on R09707.</li>
 <li>Take backup of F0902 table.</li>
-<li>Clear the F0902 records with Account Balance Purge (R09912) <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=1404234.1'>Document 1404234.1</a>&nbsp;or via SQL with help of database administrator using the following selection criteria:
+<li>Clear the F0902 records with Account Balance Purge (R09912) <a href='../docs/1404234.html'>Overview of Account Balance Purge (R09912/F0902/F0902P)</a>&nbsp;or via SQL with help of database administrator using the following selection criteria:
 <ul>
 <li>Company (GBCO), Ledger Type (GBLT), Century (GBCTRY), Fiscal Year (GBFY)</li>
 </ul>
 </li>
-<li>Rebuild the F0902 via Repost Account Ledger (R099102) report to create the correct CA and AA ledger type records with correct F0902 amounts. Please refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=1387474.1'>Document 1387474.1</a> on R099102.</li>
+<li>Rebuild the F0902 via Repost Account Ledger (R099102) report to create the correct CA and AA ledger type records with correct F0902 amounts. Please refer to <a href='../docs/1387474.html'>Overview Repost Account Ledger Integrity Report (R099102)</a> on R099102.</li>
 <li class="km">Review the report to ensure that the currency code appears in the far right column.</li>
-<li class="km">Run Annual Close Report (R098201) for each fiscal year, one year at a time, for each company involved to update the balance forward amounts in F0902. Please refer to <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=664688.1'>Document 664688.1</a> on R098201.</li>
+<li class="km">Run Annual Close Report (R098201) for each fiscal year, one year at a time, for each company involved to update the balance forward amounts in F0902. Please refer to <a href='../docs/664688.html'>Overview of Annual Close Report (R098201)</a> on R098201.</li>
 </ol>
 <div class="kmnotebox">NOTE: Once Post Balances by Currency functionality is activated, it should not be deactivated at later stage. Turning this feature on and off creates duplicate F0902 records and affects the integrity of the data. For example, the Repost Account Ledger Integrity (R099102) may display Account Balance Table (F0902) records that are duplicates: one with the CRCD and CRCX fields populated and the other one with the CRCD field not populated.</div>
 <hr />
@@ -555,13 +555,13 @@ function topFunction() {
 </ul>
 <p>For more information, refer to following documents:</p>
 <ul>
-<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=664787.1'>Document 664787.1</a> Overview of Foreign Currency Account Balances Integrity Report (R09707).</li>
-<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=1404234.1'>Document 1404234.1</a> Overview of Account Balance Purge (R09912/F0902/F0902P).</li>
+<li><a href='../docs/664787.html'>Overview of Foreign Currency Account Balances Integrity Report (R09707).</a></li>
+<li><a href='../docs/1404234.html'>Overview of Account Balance Purge (R09912/F0902/F0902P).</a></li>
 </ul>
 <p><strong>Question 3: What impact does it make if I keep toggling the Post Balances by Currency Flag in Company Constants?</strong></p>
-<p><strong>Answer 3:</strong> Oracle Software Support does not recommend toggling between Post Balances by Currency method and Summarized Balances method. Once Post Balances by Currency functionality is activated, it should not be deactivated at later stage. Turning this feature on and off creates duplicate F0902 records for the same fiscal year with different values of CRCX and affects the integrity of the data. Run R09707 report <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=664783.1&id=664787.1'>Document 664787.1</a> to review and fix the discrepancies, if any.</p>
+<p><strong>Answer 3:</strong> Oracle Software Support does not recommend toggling between Post Balances by Currency method and Summarized Balances method. Once Post Balances by Currency functionality is activated, it should not be deactivated at later stage. Turning this feature on and off creates duplicate F0902 records for the same fiscal year with different values of CRCX and affects the integrity of the data. Run R09707 report <a href='../docs/664787.html'>Overview of Foreign Currency Account Balances Integrity Report (R09707)</a> to review and fix the discrepancies, if any.</p>
 <p><strong>Question 4: I enabled Post Balances by Currency for each of my companies. When I run the Annual Close (R098201) to update the individual companies&rsquo; Retained Earnings Account balance, it creates a record with the originating currency field (CRCD) left blank. I was expecting the CRCD field to be populated with a currency code. What is causing this to happen?</strong></p>
-<p>Answer 4: The Annual Close Program (R098201) is functioning as design. An enhancement Bug <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=664783.1&id=10812691">10812691</a> - RETAIN EARNING BY CURRENCY has been submitted to address this issue.</p>
+<p>Answer 4: The Annual Close Program (R098201) is functioning as design. An enhancement Bug 10812691 - RETAIN EARNING BY CURRENCY has been submitted to address this issue.</p>
 <p>&nbsp;</p>
 <hr />
 
