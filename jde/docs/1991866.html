@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHerARe</title>
+    <title>Troubleshooting Next Numbers Within EnterpriseOne Accounts Payable (P0002, P00022)</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -80,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThisAgain</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Next Numbers Within EnterpriseOne Accounts Payable (P0002, P00022)</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -108,13 +108,30 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#TRBLSHOOT">Troubleshooting Steps</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Error Message</strong> -  "<em>Insert to table F0414 failed</em>"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 1:</strong> During Standard Voucher Entry (P0411), the same voucher Document Number can be entered for different companies, even though next numbers by company is not activated, why?</a></td></tr></table>
+
+<hr size=1><p>
 
 
-
-<!-- ======================================== Body Starts Here =================================== -->
-
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document helps troubleshoot common errors with Next Numbers within EnterpriseOne Accounts Payable.</p>
+<H2 class=km><A NAME="TRBLSHOOT"></A>Troubleshooting Steps</H2>
+<p>Common Next Number Errors</p>
+<a name="aref_section21"></a><h4 class="km"><strong>Error Message</strong> -  "<em>Insert to table F0414 failed</em>"</h4>
+<p class="km"><strong>Scenario:</strong> The system triggers error <em>"Insert to table F0414 failed"</em> when updating an automatic payment or creating a manual payment, why?</p>
+<p><strong>Solution:</strong> This error may be caused if the system is unable to assign a Payment ID (data dictionary item PYID) for the new payment. To verify this may be the cause, check the following:</p>
+<ul>
+<li>The last used Payment ID (PYID) in the Accounts Payable Matching Document Detail (F0414) and Accounts Payable Matching Document (F0413) tables should be in sync.</li>
+<li>The next number for Payment ID (PYID) in the Unique Keys File (F00022) is higher than the highest Payment ID (PYID) used in the Accounts Payable Matching Document Detail (F0414) and Accounts Payable Matching Document (F0413) tables.</li>
+</ul>
+<div class="kmnotebox">Note:You can use the Next Unique Key Number application (P00022) to increment the next PYID number to a higher and unique number.</div>
+<p><strong>Common Next Number Issue(s)<br /></strong></p>
+<a name="aref_section22"></a><h4 class="km"><strong>Question 1:</strong> During Standard Voucher Entry (P0411), the same voucher Document Number can be entered for different companies, even though next numbers by company is not activated, why?</h4>
+<p><strong>Answer 1: </strong>On voucher records, the Document Number (data dictionary item DOC) is a key field only in conjunction with the Company Number (data dictionary item CO). Therefore, the system allows document numbers to be reused for different companies. Using Next Numbers (P0002) by Company just provides separate next number values that will be assigned automatically based on the Company Number (CO).</p>
+<hr />
 
 
 

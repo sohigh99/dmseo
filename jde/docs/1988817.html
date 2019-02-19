@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting Voucher Batch Processing Error(s) In EnterpriseOne (P0411Z1/R04110ZA)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Voucher Batch Processing Error(s) In EnterpriseOne (P0411Z1/R04110ZA)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#TRBLSHOOT">Troubleshooting Steps</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Errors in Processing</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section22"><strong>Troubleshooting Recommendations</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section23"><strong>Manual Testing Steps</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section24"><strong>Common Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Error ID: 0809</strong> "Document Type Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Error Message: </strong> "Fetch from table F0911Z1T failed"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Error ID 0082 or 1912:</strong> "Duplicate Supplier/Invoice Number"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Error ID "</strong><strong>The record being added already exists in cache I09UI003"<br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section29"><strong>General Troubleshooting Questions<br /></strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Question 1:</strong>  What issue can occur if the F0411Z1 and F0911Z1 records do not correspond?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Question 2:</strong>  After running the Batch Voucher Processing Report (R04110ZA), why is the Document Company field not the same as the value written in the F0411Z1 table?</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides troubleshooting suggestions regarding Voucher Batch Processing within EnterpriseOne.</p>
+<H2 class=km><A NAME="TRBLSHOOT"></A>Troubleshooting Steps</H2>
+<a name="aref_section21"></a><h3 class="km"><strong>Errors in Processing</strong></h3>
+<p>If any errors occur during processing, they are noted on the edit report. You can correct the errors and reprocess the batch. An error on one transaction does not stop the batch from processing. If a transaction in the batch is in error, that transaction is not processed with the rest of the batch. After the batch has been successfully processed, the field VLEDSP is updated from a value of 0 to 1. Successfully processed records remain in the Voucher Transactions - Batch Upload (F0411Z1) and Journal Entry Transactions - Batch File (F0911Z1) tables until they are purged.</p>
+<p><img src="../images/aap101.png" border="0" alt="processedrecord" title="processedrecord" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">Note - You can set a processing option to flag processed records to automatically be purged.</div>
+<a name="aref_section22"></a><h3 class="km"><strong>Troubleshooting Recommendations</strong></h3>
+<ul>
+<li>Initially process a small number of records in a batch. Most errors that occur on one record also occur on all records. Correct the errors on the smaller number of records, and then follow the same sequence of steps when you process a larger number of records in a batch.</li>
+<li>Only errors prevent a batch from processing. Warning messages alert you to nonstandard events, but do not prevent processing. You can disable warning messages by means of a processing option.</li>
+<li>You can run the batch in Proof Mode. However, this may not be necessary as even in Final Mode you can review the transactions before posting during which time they could be deleted. Any errors encountered with the records will prevent those records from being processed.</li>
+<li>Reading error messages in the Work Center helps identify the cause and the resolution of errors. All error messages are also located in the data dictionary, where you can locate the error number and review the glossary.</li>
+<li>If errors occur that you cannot resolve, enter a transaction manually using the Batch Supplier Master Revision program (P0401Z1), and process it successfully. Then compare the table entries of the F0411Z1 transaction that you entered manually with the entries from an F0411Z1 transaction entered using the Batch Voucher Processor Report program (R04110ZA). Comparing the differences helps you locate discrepancies and resolve the errors. See steps below for instructions.</li>
+</ul>
+<a name="aref_section23"></a><h3 class="km"><strong>Manual Testing Steps</strong></h3>
+<ol>
+<li>Go to menu G04311</li>
+<li>Select Batch Voucher Revisions (P0411Z1/ZJDE0001)</li>
+<li>Enter in a test voucher through this screen and click OK</li>
+<li>On same menu, select Batch Voucher Processor (R04110ZA/ZJDE0001) and try to process this test voucher batch you created above.</li>
+</ol>
+<p><img src="../images/aap102.png" border="0" alt="vhrbatchpath" title="vhrbatchpath" hspace="0" vspace="0"/></p>
+<p> </p>
+<p><img src="../images/aap103.png" border="0" alt="manualadd" title="manualadd" hspace="0" vspace="0"/></p>
+<p> </p>
+<p><img src="../images/aap104.png" border="0" alt="manualaddf0911z1" title="manualaddf0911z1" hspace="0" vspace="0"/></p>
+<p>If successful, you can use the F0411Z1 and F0911Z1 tables as a mapping guide for your custom upload program data.   Such as Compare F0411Z1 test record to your production F0411Z1 for alignment issues, fields populated versus not populated (i.e. required versus optional), compare F0911Z1 test record to your production F0911Z1 for alignment issues, fields populated versus not populated (i.e. required versus optional), check for NULL values versus Blank value.</p>
+<a name="aref_section24"></a><h3 class="km"><strong>Common Errors</strong></h3>
+<a name="aref_section25"></a><h4 class="km"><strong>Error ID: 0809</strong> "Document Type Invalid"</h4>
+<p class="km"><strong>Scenario:</strong> What causes the Batch Voucher Processor Report (R04110ZA) to trigger error "Document type for a manual check entry must be PM" when processing voucher information without payment details?</p>
+<p class="km">CAUSE . . . . Document type for a manual check entry must be 'PM'.</p>
+<p class="km">RESOLUTION. . Enter a valid document type.</p>
+<p><strong>Solution:  </strong>This error may be caused by incorrect settings in the Batch Voucher Revisions application (P0411Z1) Processing Options. When Processing Option 1: Manual Check on the Manual Checks tab is set to '1', the system attempts to create a voucher in a 'W' type batch (Manual Payment without Voucher Match) and requires a payment number to be stored in the Matching Document field (data dictionary item DOCM) in the Voucher Transactions Batch Upload table (F0411Z1).  If this field is blank, the system triggers an error. To correct this issue, follow the steps below:</p>
+<ol>
+<li>Remove the data from the Voucher Transactions Batch Upload (F0411Z1) and the Journal Entry Transactions Batch File (F0911Z1) table using Batch Voucher Entry (P0411Z1).</li>
+<li>Update Processing Option 1: Manual Check on the Manual Checks tab to blank. </li>
+<li>Enter the batch voucher information again into the worktables (F0411Z1 and F0911Z1). </li>
+<li>Run the Batch Voucher Processor Report (R04110ZA).</li>
+</ol>
+<hr />
+<a name="aref_section26"></a><h4 class="km"><strong>Error Message: </strong> "Fetch from table F0911Z1T failed"</h4>
+<p class="km"><strong>Scenario:</strong> Why does the Batch Voucher Processing Report (R04110ZA) run successfully, but send a "Fetch from table F0911Z1T failed" error message to the Work Center (P012503)?</p>
+<p><strong>Solution:  </strong>This error in the Work Center is caused by Cost Management being enabled in the Cost Management Constants (P1609). For more information, refer to <a href='../docs/625783.html'>How To Set Up and Map Data For Voucher Batch Processing In EnterpriseOne (P0411Z1/R04110ZA) [Video]"</a></p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong>Error ID 0082 or 1912:</strong> "Duplicate Supplier/Invoice Number"</h4>
+<p class="km"><strong>Scenario:</strong>  Why does the Batch Voucher Processing Report (R04110ZA) return the error message "Duplicate Supplier/Invoice Number"?</p>
+<p><strong>Solution: </strong> This Issue is caused by the setup in the Accounts Payable Constants (P0000). If the Duplicate Invoice Number Edit (data dictionary item DUIN) option is set to 'H', the system triggers this error when creating a voucher with a duplicate invoice number. To correct this error, either change the invoice number (data dictionary item VINV) to a unique value or alter the Duplicate Invoice Number Edit option.</p>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Error ID "</strong><strong>The record being added already exists in cache I09UI003"<br /></strong></h4>
+<p><strong>Scenario:  </strong>Why does the Batch Voucher Processing Report (R04110ZA) return the error message " The Record being added already exists in cache 109U1003".<strong><br /></strong></p>
+<p><strong>Solution: </strong> This issue can be caused if the system detects a duplicate record in one the files being processed. In this case, the logs described that one record inserted into the cache correctly (for an amount, on one of the F0911Z1 lines), and then the error is thrown when it tries to insert the other line into the cache. To correct this error,  change one of the JELN lines (not the EDLN) to 2.0.  </p>
+<hr />
+<p> </p>
+<a name="aref_section29"></a><h3 class="km"><strong>General Troubleshooting Questions<br /></strong></h3>
+<a name="aref_section210"></a><h4 class="km"><strong>Question 1:</strong>  What issue can occur if the F0411Z1 and F0911Z1 records do not correspond?</h4>
+<p><strong>Answer 1:  </strong>Because the programs perform data selection and sequencing of the transactions before the first record is read for processing, the following situations could occur that will result in errors:</p>
+<ul>
+<li>A Journal Entry Transactions Batch File table (F0911Z1) record exists with a document number for which there is no corresponding Voucher Transactions Batch Upload table (F0411Z1) record. In this situation, the system stops processing Journal Entry Transactions Batch File table (F0911Z1) records and all records in the tables from this point forward are out of balance.</li>
+<li>A Voucher Transactions Batch Upload table (F0411Z1) record exists with a document number for which there is no corresponding Journal Entry Transactions Batch File table (F0911Z1) record. In this situation, the system writes an error message and continues to process subsequent records.</li>
+</ul>
+<hr />
+<a name="aref_section211"></a><h4 class="km"><strong>Question 2:</strong>  After running the Batch Voucher Processing Report (R04110ZA), why is the Document Company field not the same as the value written in the F0411Z1 table?</h4>
+<p class="km"><strong><strong>Answer 2: </strong></strong> It is possible that the original value in the Voucher Transactions Batch Upload table (F0411Z1) and Journal Entry Transactions Batch File table (F0911Z1) does not exist in the Company Constants table (F0010).  Another possibility is that the Document Company (data dictionary item KCO) was not populated in the Journal Entry Transactions Batch File table (F0911Z1). When specifying this information in the batch voucher process, ensure both worktables contain the same value for associated records.</p>
+<hr />
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

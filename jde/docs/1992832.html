@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Pay When Paid Within EnterpriseOne Accounts Payable (P03B470, R03B470) (Non-Purchase Order Related)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Pay When Paid Within EnterpriseOne Accounts Payable (P03B470, R03B470) (Non-Purchase Order Related)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Pay When Paid Vouchers (R03B470/P03B470)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Understanding Pay When Paid Setup</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Voucher Payment Status Code Setup (UDC 00/PS)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Next Numbers Setup (P0002)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Customer Master Setup (P03013)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Accounts Payable Constants Setup (P0000)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Subcontractor Threshold Setup (P4355)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Important Pay When Paid Processing Options in the Voucher Entry Master Business Function (P0400047)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39"><strong>Important Pay When Paid Processing Options in Standard Voucher Entry (P0411)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310"><strong>Important Pay When Paid Processing Options in Voucher Match (P4314)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Entering Pay When Paid Vouchers</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312">Manually Create and Revise Pay When Paid Groups</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">Steps to Manually Create a Pay When Paid Group</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Steps to Add Vouchers or Invoices to a Pay When Paid Group</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Steps to Remove a Voucher or an Invoice from a Pay When Paid Group</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Steps to Remove All Vouchers and Invoices from a Pay When Paid Group</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">Release Pay When Paid Vouchers for Payment</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section318"><strong>Pay When Paid Integrity Reports</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section319"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section320"><strong>Question 1: </strong>When attempting to open the Pay When Paid Manual Link program for the first time after an install, why does the system trigger a database failure error?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section321"><strong>Question 2:</strong> We do not have Pay When Paid processing turned on but, am receiving an error "Pay When Paid has an invalid data dictionary value" when trying to add a test record using P0411Z1.&nbsp; How to fix this error?</a></td></tr></table>
+
+<!-- <table><tr><td width=20>&nbsp;</td><td><a href="#aref_section323"><strong>All AP Voucher Documents</strong></a></td></tr></table> -->
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides an overview of Pay When Paid Within EnterpriseOne Accounts Payable.&nbsp;</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are entering vouchers in the JD Edwards Accounts Payable module.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Pay When Paid Vouchers (R03B470/P03B470)</strong></h3>
+<p>Pay When Paid is the practice of paying suppliers only after payment is received from customers. For example, a subcontractor (supplier) submits an invoice to you for payment, but first you need to receive payment from the customer for whom the work was done before the subcontractor can be paid. Therefore, with the invoice, you enter a voucher with a unique holding Payment Status (data dictionary item PST). A corresponding invoice is then created and sent to the customer. After a payment for that invoice is received, the voucher entered for the subcontractor is released and paid. Although Pay When Paid processing is helpful in managing cash effectively, it can be time consuming. JD Edwards EnterpriseOne automates this process. This document outlines how to configure and use the automated Pay When Paid functionality.</p>
+<a name="aref_section32"></a><h3 class="km"><strong>Understanding Pay When Paid Setup</strong></h3>
+<p>Before you can use Pay When Paid processing, you must complete the setup requirements discussed in this section.</p>
+<a name="aref_section33"></a><h4 class="km">Voucher Payment Status Code Setup (UDC 00/PS)</h4>
+<p>To utilize the Pay When Paid automatic processing, a unique Payment Status Code (PST) should be created in UDC table 00/PS (Pay Status Codes) to signify Pay When Paid vouchers on hold. After the code is created in the UDC table,&nbsp;Processing Option 2: Pay Status Code on the Defaults tab for the Voucher Entry Master Business Function (P0400047) needs to reflect the correct code. For information on Pay When Paid voucher entry in the Procurement and Subcontract Management system, please see the Implementation guide for that module.</p>
+<p>If not using Pay when Paid in A/P, you can create a new Pay status type 00/PS to represent that PWP is not in Use. Apply this new Pay status code in the Pay When Paid Release Pay Status field (PST) in the A/P Constants.</p>
+<p><img src="../images/aap80.png" border="0" alt="PWPinuse" title="PWPinuse" hspace="0" vspace="0" /></p>
+<a name="aref_section34"></a><h4 class="km">Next Numbers Setup (P0002)</h4>
+<p>Corresponding Pay When Paid invoices and vouchers are linked together within a Pay When Paid Group Number (data dictionary item PWPG). This number is determined from line 7 in the Next Numbers program (P0002) for system 04 (Accounts Payable).</p>
+<a name="aref_section35"></a><h4 class="km">Customer Master Setup (P03013)</h4>
+<p>For all customers that will be associated with the Pay When Paid process, the Pay When Paid Cash Receipt Threshold (data dictionary item PWPCP) should be completed. This field is used to determine the amount that needs to be paid by that customer before the related Pay When Paid vouchers are released for payment. For example, if the Pay When Paid Cash Receipt Threshold is set to 50 percent and a corresponding Pay When Paid Group contains invoices totaling 50,000 USD, the system releases all vouchers in the group for payment only after cash receipts totaling at least 25,000 USD are applied to the invoices.</p>
+<div class="kmnotebox">Note: If the Pay When Paid Cash Receipt Threshold (PWPCP) is set to 0, the system releases all vouchers in the group for payment when at least one cash receipt, regardless of the amount, has been applied to an invoice in the group.</div>
+<a name="aref_section36"></a><h4 class="km">Accounts Payable Constants Setup (P0000)</h4>
+<p>The Accounts Payable Constants program (P0000) has a setting (Pay When Paid Release Pay Status) that determines what Pay Status Code (PST) the system assigns to vouchers in a Pay When Paid Group that has been released using the Pay When Paid Automatic Release (R03B470) UBE. This field must be a Payment Status Code that the system selects for payment, such as A (Approved for Payment).</p>
+<a name="aref_section37"></a><h4 class="km">Subcontractor Threshold Setup (P4355)</h4>
+<p>If Pay When Paid vouchers are entered in the Procurement and Subcontract Management system, a voucher's amount must exceed the subcontractor (supplier) Threshold Amount (data dictionary item ATHR) to be eligible for Pay When Paid processing. The Threshold Amount (data dictionary item ATHR) is specified per supplier in the Subcontractor Threshold (P4355) program. For example, if you set up a subcontractor threshold amount of 1,000 USD and then enter a voucher totaling 1,000 USD or less, the voucher is not eligible for Pay When Paid processing and the system does not create the voucher as a Pay When Paid voucher. If the voucher amount exceeds the subcontractor threshold amount, the voucher is eligible for Pay When Paid processing and the system assigns the payment status code that you specify in the Threshold Payment Status Code processing option in the Voucher Match program (P4314).</p>
+<a name="aref_section38"></a><h3 class="km"><strong>Important Pay When Paid Processing Options in the Voucher Entry Master Business Function (P0400047)</strong></h3>
+<p>Voucher Entry Master Business Function (P0400047) processing options specify the default processing for the voucher entry program. The standard version of this program that is used for Pay When Paid Processing is the ZJDE00012. The following are just some of the more important processing options available for this program and are all located on the Defaults tab:</p>
+<ul>
+<li>Processing Option 1: Service/Tax Date - determines whether the GL Date or the Invoice Date should be used as the date the goods or services were purchased.</li>
+<li>Processing Option 2: Pay Status Code - This processing option specifies the default Pay Status Code (data dictionary item PST) for Pay When Paid vouchers. This code must exist in the UDC table 00/PS (Pay Status Codes). Pay Status Code Specify the hold payment status code that the system assigns to Pay When Paid vouchers that are entered in the Accounts Payable system. The code must exist in UDC table 00/PS.</li>
+<li>Processing Option 3: Voucher Document Type - This processing option specifies the default Document Type (data dictionary item DCT) for a Pay When Paid voucher.</li>
+</ul>
+<a name="aref_section39"></a><h3 class="km"><strong>Important Pay When Paid Processing Options in Standard Voucher Entry (P0411)</strong></h3>
+<p>There are several versions of the Standard Voucher Entry (P0411) program that are specifically for Pay When Paid processing:</p>
+<ul>
+<ul>
+<li>ZJDE0014: Pay When Paid Voucher</li>
+<li>ZJDE0015: Multi Voucher Single Supplier with Pay When Paid</li>
+<li>ZJDE0016: Multi Voucher Multi Supplier with Pay When Paid</li>
+<li>ZJDE0017: Multi Company Single Supplier with Pay When Paid</li>
+</ul>
+</ul>
+<p>Below is an outline of some of the more important processing options for Standard Voucher Entry (P0411):</p>
+<ul>
+<ul>
+<ul>
+<li>Versions Tab&nbsp;</li>
+<ul>
+<li>Processing Option 1: Voucher Master Business Function Version- This processing option specifies the version of the Voucher Entry Master Business Function (P0400047) program that has the correct settings for Pay When Paid Processing. If this option is left blank, the system uses version ZJDE0001.</li>
+<li>Processing Option 3: Pay When Paid Manual Link Version- This processing option determines the version of the Pay When Paid Manual Link (P03B470) program that the system uses when the Pay When Paid option is selected from the Form exit of the Supplier Ledger Inquiry (P0411) program.</li>
+</ul>
+<li>Pay When Paid Tab</li>
+<ul>
+<li>Processing Option 1: Pay When Paid Voucher- This option needs to be set to a 1 so that all vouchers entered through the program are Pay When Paid vouchers.</li>
+<li>Note: Pay When Paid vouchers are distinguished by a 'W' in the Pay When Paid (PYWP) in the Accounts Payable Ledger (F0411) and the GL Posting Code - Alternate W (data dictionary item ALTW) field in the General Ledger table (F0911).</li>
+</ul>
+</ul>
+</ul>
+</ul>
+<a name="aref_section310"></a><h3 class="km"><strong>Important Pay When Paid Processing Options in Voucher Match (P4314)</strong></h3>
+<p>To enter Pay When Paid vouchers in the Procurement and Subcontract Management system, there are processing options that need to be adjusted in the Voucher Match application (P4314).&nbsp; These processing options specify whether the system processes vouchers that are entered in Procurement and Subcontract Management and that exceed the subcontractor threshold as pay when paid vouchers. The following are just some of the more important processing options available for this program:</p>
+<ul>
+<ul>
+<li>Process Tab&nbsp;</li>
+<ul>
+<li>Processing Option 12: Threshold Warning - This processing option determines whether the system displays a warning message if the voucher total gross amount exceeds the threshold for the subcontractor (supplier) as defined in the Subcontractor Threshold program (P4355).</li>
+<li>Processing Option 13: Threshold Pay Status Code - This processing option specifies the payment status code (UDC 00/PS) that the system assigns to vouchers that exceed the subcontractor/supplier threshold.</li>
+</ul>
+</ul>
+</ul>
+<a name="aref_section311"></a><h3 class="km"><strong>Entering Pay When Paid Vouchers</strong></h3>
+<p>After all of the required setup for the Pay When Paid process is complete, Pay When Paid vouchers can be entered using Standard Voucher Entry program (P0411). The steps to create Pay When Paid vouchers are the same as those for entering other types of vouchers.</p>
+<a name="aref_section312"></a><h4 class="km">Manually Create and Revise Pay When Paid Groups</h4>
+<p>Pay When Paid groups are comprised of at least one voucher and one invoice. The Pay When Paid Manual Link program (P03B470) can be used to review and revise existing Pay When Paid groups, or manually create new groups.&nbsp; The Pay When Paid Manual Link (P03B470) program has two processing options:</p>
+<ul>
+<li>Processing Option 1: Pay When Paid Voucher Pay Status - This processing option specifies the Pay Status Code (data dictionary item PST) assigned to vouchers that are added to an existing Pay When Paid group. The system does not assign a status code to vouchers with a current Pay Status Code of P (Paid), Z (Payment Pending) or # (Payment in Process).</li>
+<li>Processing Option 2: Pay Status for Removed Vouchers - This processing option specifies the Pay Status Code (data dictionary item PST) assigned to vouchers that are removed from a Pay When Paid group.</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: The system does not assign a new Pay Status Code (data dictionary item PST) to vouchers if the related Supplier Master (F0401) record has a hold payment or withholding status.</div>
+<a name="aref_section313"></a><h4 class="km">Steps to Manually Create a Pay When Paid Group</h4>
+<ol>
+<li>Access the Pay When Paid Manual Link (P03B470).</li>
+<li>Click Add.</li>
+<li>Select either the Link Vouchers option or the Link Invoices option from the Form exit.</li>
+<li>Find and select the desired vouchers or invoices.</li>
+<li>The system displays the vouchers or invoices in the detail area of the Pay When Paid Group Detail (W03B470B) form, using the Pay When Paid Group Number assigned by the system for the pay when paid group.</li>
+</ol>
+<a name="aref_section314"></a><h4 class="km">Steps to Add Vouchers or Invoices to a Pay When Paid Group</h4>
+<ol>
+<li>Access the Pay When Paid Manual Link (P03B470).</li>
+<li>Find the desired Pay When Paid Group and select it.</li>
+<li>From the Pay When Paid Group Detail (W03B470B) form, select either the Link Vouchers Option or the Link Invoices option from the Form Exit.</li>
+<li>Find and select the additional vouchers or invoices to add to the pay when paid group.</li>
+<li>Press Select.</li>
+</ol>
+<a name="aref_section315"></a><h4 class="km">Steps to Remove a Voucher or an Invoice from a Pay When Paid Group</h4>
+<ol>
+<li>Access the Pay When Paid Manual Link (P03B470).</li>
+<li>Find the desired Pay When Paid Group and select it.</li>
+<li>From the Pay When Paid Group Detail (W03B470B) form, select the voucher or invoice that needs to be deleted.</li>
+<li>Choose the Toggle Remove Flag option from the Row Exit.</li>
+<li>The system displays an X next to the document that you selected to indicate that it will be removed from group.</li>
+<li>Confirm the removal.</li>
+</ol>
+<a name="aref_section316"></a><h4 class="km">Steps to Remove All Vouchers and Invoices from a Pay When Paid Group</h4>
+<ol>
+<li>Access the Pay When Paid Manual Link (P03B470).</li>
+<li>Find the desired Pay When Paid Group and select it.</li>
+<li>From the Pay When Paid Group Detail (W03B470B) form, choose the Remove All option from the Form exit.</li>
+</ol>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: When all vouchers and invoices are removed from an existing Pay When Paid Group, the system deletes the Pay When Paid Group Number (data dictionary item PWPG).</div>
+<a name="aref_section317"></a><h4 class="km">Release Pay When Paid Vouchers for Payment</h4>
+<p>The Pay When Paid Automatic Release program (R03B470) uses the Pay When Paid Group Status (data dictionary item PWPS) field from the Pay When Paid Group Header table (F03B470) to select groups for processing. The system initially assigns the value of 1 (Inactive) to new Pay When Paid groups if no cash receipts are applied to the group yet. Groups with this Pay When Paid Group Status are not processed by the Pay When Paid Automatic Release (R03B470) program unless Processing Option 1: Inactive Groups is set to 1.&nbsp; When cash receipts are applied to invoices in a Pay When Paid group, the system set the Pay When Paid Group Status to 2 (Active).&nbsp; With the selected Pay When Paid groups, the Pay When Paid Automatic Release (R03B470) updates the Pay When Paid Group Status based on the related cash receipt percentages as defined in the Customer Master (P03013).&nbsp; If cash receipts have been applied to the invoices in a group and a minimum cash receipt percentage is defined in the Customer Master (P03013), the system summarizes the total of cash receipts and determines whether the minimum percentage is met. When the amount is lower than the minimum the system updates the Pay When Paid Group Status (data dictionary item PWPS) from 2 (Active) to 1 (Inactive). However, if the amount is greater than or equal to the minimum, the system:</p>
+<ul>
+<li>Updates the Pay Status Code (data dictionary item PST) on all vouchers in the group to the status that is defined in the Accounts Payable Constants program (P0000).</li>
+<li>Updates the Pay When Paid Group Status (data dictionary item PWPS) field from 2 to 0.</li>
+</ul>
+<p>If a minimum cash receipt percentage is not defined and there is at least one cash receipt applied to an invoice in the group, the system:</p>
+<ul>
+<li>Updates the Pay Status Code (data dictionary item PST) on all vouchers in the group to the status that is defined in the Accounts Payable Constants program (P0000).</li>
+<li>Updates the Pay When Paid Group Status (data dictionary item PWPS) field from 2 to 0.</li>
+</ul>
+<p>If a Pay When Paid group contains invoices for a customer that has different cash percentages defined by line of business, the system summarizes cash receipt totals based on the customer and company. Unless each customer and company combination in the group meets its related minimum cash receipt percentage, no vouchers are released.</p>
+<a name="aref_section318"></a><h3 class="km"><strong>Pay When Paid Integrity Reports</strong></h3>
+<p>The following integrity reports are key components to the Pay When Paid process:</p>
+<ul>
+<li>Pay When Paid Group Header Integrity (R03B471) -&Atilde;&Acirc; This report verifies all Pay When Paid groups have a corresponding record in the Pay When Paid Group Header (F03B470) table and contain at least one invoice and one voucher. If either of these requirements is not met, the system prints the problem groups on the resulting PDF.</li>
+<li>Pay When Paid Customer Ledger Integrity (R03B472) - This report locates invoices that the system cannot process in a Pay When Paid groups, such as: deductions, AR drafts, Unapplied cash and voided invoices. The system prints any groups that contain these invoices on the resulting PDF.</li>
+<li>Pay When Paid Supplier Ledger Integrity (R03B473) - This report locates vouchers that the system cannot process in a Pay When Paid groups, such as: AP drafts, Prepayments, voided vouchers and vouchers created in Payment Without Voucher Match program (P0411). The processing options of this UBE can be used to force the report to also identify logged vouchers, mixed vouchers (vouchers associated with multiple Pay When Paid group), and partial vouchers.</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: Purchasing information was provided in the above process as reference only. If you need assistance with this portion of the set up, please log a service request with Oracle Software Support within the EnterpriseOne Distribution support group.</div>
+<p><strong>&nbsp;</strong></p>
+<hr />
+<a name="aref_section319"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<a name="aref_section320"></a><h4 class="km"><strong>Question 1: </strong>When attempting to open the Pay When Paid Manual Link program for the first time after an install, why does the system trigger a database failure error?</h4>
+<p><strong>Answer 1: </strong>Receiving an error of "JAS_MSG346: JAS database failure: [SQL_EXCEPTION_OCCURRED] An SQL exception occurred: Invalid object name CONVDATA.F03B470" when opening the Pay When Paid Manual Link application (P03B470)&nbsp;is generally caused by a failure to generate the Pay When Paid Group Header table (F03B470). To fix the problem, the table needs to be generated and then an update package deployed to the server.</p>
+<hr />
+<a name="aref_section321"></a><h4 class="km"><strong>Question 2:</strong> We do not have Pay When Paid processing turned on but, am receiving an error "Pay When Paid has an invalid data dictionary value" when trying to add a test record using P0411Z1.&nbsp; How to fix this error?</h4>
+<p><strong>Answer 2:</strong> Confirm that the data dictionary item PYWP has been setup as it is at Oracle.&nbsp; Most likely, the Edit Rule may need to be changed to "No Edit Rule".&nbsp; See <a href='../docs/626511.html'>Deploying Data Dictionary Changes</a> on DD changes if needed.</p>
+<hr />
+
+<!-- <a name="aref_section323"></a><h3 class="km"><strong>All AP Voucher Documents</strong></h3>
+<div class="kmnotebox">
+<p><strong>Overview Documents</strong></p>
+<ul>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1408545.1'>Document 1408545.1</a> -&nbsp; E1: 04: Overview of Standard Vouchers in EnterpriseOne Accounts Payable (P0400047, P0411, P0411SV) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992836.1'>Document 1992836.1</a> -&nbsp; E1: 04: Overview of Speed Status Change Within EnterpriseOne Accounts Payable (P0411S) [Video] (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992857.1'>Document 1992857.1</a> -&nbsp; E1: 04: Overview of Multiple Voucher Multiple Supplier and Multi Company and Single Supplier Voucher Programs Within Accounts Payable (P0411, P041016, P041017) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992835.1'>Document 1992835.1</a> -&nbsp; E1: 04: Overview of Voucher Journal Report Within EnterpriseOne Accounts Payable (R048101) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992832.1'>Document 1992832.1</a> -&nbsp; E1: 04: Overview of Pay When Paid Within EnterpriseOne Accounts Payable (P03B470, R03B470) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992847.1'>Document 1992847.1</a> -&nbsp; E1: 04: Overview of Voucher Outbound Interoperability Within EnterpriseOne Accounts Payable (P0411, P0400048, P0900160) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992826.1'>Document 1992826.1</a> -&nbsp; E1: 04: Overview of Recurring Voucher Process Within EnterpriseOne Accounts Payable (P0411, R048101) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992825.1'>Document 1992825.1</a> -&nbsp; E1: 04: Overview of Prepayment (Prepaid) Vouchers Within EnterpriseOne Accounts Payable (P0411/ZJDE0009) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992806.1'>Document 1992806.1</a> -&nbsp; E1: 04: Overview of Logged Vouchers Within EnterpriseOne Accounts Payable (P042002) (Non-Purchase Order Related)</li>
+</ul>
+<p><strong>Frequently Asked Questions</strong></p>
+<ul>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1387758.1'>Document 1387758.1</a> - E1: 04: FAQ - Frequently Asked Questions Regarding Standard Voucher Entry Within EnterpriseOne Accounts Payable (P0411) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992886.1'>Document 1992886.1</a> - E1: 04: FAQ - Frequently Asked Questions Regarding Logged Vouchers Within EnterpriseOne Accounts Payable (P042002) (Non-Purchase Order Related)</li>
+</ul>
+<p><strong>Troubleshooting Errors and Issues</strong></p>
+<ul>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1992702.1'>Document 1992702.1</a> - E1: 04: Troubleshooting Standard Voucher Entry Issues Or Errors Within EnterpriseOne Accounts Payable (P0411) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1993350.1'>Document 1993350.1</a> - E1: 04: Troubleshooting Logged Vouchers Within EnterpriseOne Accounts Payable (P042002) (Non-Purchase Order Related)</li>
+<li><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1992832.1&id=1993251.1'>Document 1993251.1</a> - E1: 04: Troubleshooting Multiple Voucher Multiple Supplier and Multi Company and Single Supplier Vouchers (P0411, P041016, P041017) (Non-Purchase Order Related)</li>
+</ul>
+</div> -->
+<p>&nbsp;</p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

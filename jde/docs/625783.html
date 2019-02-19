@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Set Up, Map Data For Voucher Batch Processing, And Purge The Data (P0411Z1, R04110ZA, R0411Z1P)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How To Set Up, Map Data For Voucher Batch Processing, And Purge The Data (P0411Z1, R04110ZA, R0411Z1P)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview Batch Voucher Processing<br /></strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<!-- <table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>AP Voucher Batch Processing Video Presentation (Video)</strong></a></td></tr></table> -->
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Processing Batch Vouchers</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Processing Options for Batch Voucher Processor Report (R04110ZA)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34"><strong>Working with Batch Vouchers</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Alternate Tax Rate/Area Assignment Functionality (Release 9.1 and above)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Voucher Match Automation (Release 9.1 and above)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Processing Options for Batch Voucher Revisions (P0411Z1)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Default Automation Flag in Add Mode (Release 9.1 and above)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39"><strong>Mapping Voucher Transactions to Batch Input Tables</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Link to Mapping Instructions Including Required, Optional and Ignore Fields</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Voucher Batch Processing With Payments</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>Mapping for Tax Capture by Pay Item and Account Functionality</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313"><strong>Posting Processed Batch Vouchers</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section314"><strong>Purging Processed Batch Vouchers</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview Batch Voucher Processing<br /></strong></h3>
+<p>Voucher batch processing is a method of adding vouchers from an external system to JD Edwards EnterpriseOne software. To utilize JD Edwards Voucher Batch Processing, create a custom program to upload voucher information correctly into the Voucher Transactions Batch Upload table (F0411Z1) and the Journal Entry Transactions Batch File table (F0911Z1).<br /><br />After converting the voucher information to the proper format in the Voucher Transactions Batch Upload table (F0411Z1) and the Journal Entry Transactions Batch File table (F0911Z1), run the Batch Voucher Processor Report (R04110ZA). This program performs the following tasks:</p>
+<ul>
+<li>Applies validation rules to existing data.</li>
+<li>Provides default data, when applicable.</li>
+<li>Creates voucher information in the Accounts Payable Ledger (F0411).</li>
+<li>Creates associated GL distribution information in the General Ledger (F0911).</li>
+<li>Creates associated payment records in the Accounts Payable Matching Document (F0413) and Accounts Payable Matching Document Detail (F0414) tables if payment information is also specified in the batch voucher records.</li>
+</ul>
+<p>After the external vouchers have been uploaded to the Accounts Payable Ledger (F0411) and the General Ledger (F0911), they can be processed as JD Edwards EnterpriseOne transactions.</p>
+<div class="kmnotebox">Caution: Directly updating either the Accounts Payable Ledger (F0411) or the General Ledger (F0911) without using the batch process has the potential to negatively impact JD Edwards EnterpriseOne voucher information.</div>
+<p> </p>
+<div class="kmnotebox">Note: Use Voucher Batch Processing to upload Payment Without Voucher Match transactions of Batch Type 'W' and Document Type PM.  Run a test by adding a record via P0411Z1 application set with Processing Option - Manual Checks Creation to '1. This opens the Payment Information form to specify the Payment Number (DOCM). While running R04110ZA to process payments, ensure that Processing Option - Version tab, MBF for Voucher Processing to ZJDE0002 is set.</div>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are setting up or using the Batch Voucher functionality in the JD Edwards EnterpriseOne system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<!-- <a name="aref_section31"></a><h3 class="km"><strong>AP Voucher Batch Processing Video Presentation (Video)</strong></h3>
+<p>Below you will a link to our AP Voucher and AR Invoice batch upload overview video presentation. </p>
+<p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=625783.1&attachid=778.1:VIDEOLOGO&amp;clickstream=no" border="0" hspace="0" vspace="0" align="middle"/> Video - <a href="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=625783.1&attachid=625783.1:APARBATCHUPLOAD&amp;action=download&width=100%&height=100%" target="OracleVideo">AP Voucher &amp; AR Invoice Batch Upload Basic Overview Video Link (9:10)</a> <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=625783.1&id=778.1" target="_blank"><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=625783.1&attachid=778.1:ICONHELP&amp;clickstream=no" border="0" title="Trouble seeing this video?" hspace="0" align="bottom"/></a></p> -->
+<a name="aref_section32"></a><h3 class="km"><strong>Processing Batch Vouchers</strong></h3>
+<p>The Batch Voucher Processor Report (R04110ZA) is located on the Batch Voucher Processing menu (G04311).</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/aap100.png" alt="G04311 Batch Voucher Processing" title="G04311 Batch Voucher Processing" width="849"/></p>
+<p>After data is entered into the Voucher Transaction Batch Upload (F0411Z1) and the Journal Entry Transactions Batch File (F0911Z1) tables through a custom program or manual entry, run the Batch Voucher Processor Report (R04110ZA). This program copies the information in the Voucher Transaction Batch Upload (F0411Z1) and Journal Entry Transactions Batch File (F0911Z1) tables into the Accounts Payable Ledger (F0411) and Account Ledger (F0911) tables, respectively.</p>
+<p>This UBE runs in Proof or Final mode. <br /><br />In Proof Mode, the system:</p>
+<ul>
+<li>Verifies the data, produces a report that shows the number of incorrect transactions, and creates workflow messages. Processing in proof mode does not update the Accounts Payable Ledger (F0411) or the General Ledger (F0911).</li>
+<li>The workflow messages are helpful in correcting any errors before processing the batch vouchers in final mode.</li>
+</ul>
+<p>In Final Mode, the system:</p>
+<ul>
+<li>Creates vouchers in the Accounts Payable Ledger (F0411) and the associated journal entries in the General Ledger (F0911).</li>
+<li>Creates payments in the Accounts Payable Matching Document (F0413) and Accounts Payable Matching Document Detail (F0414) tables, if applicable.</li>
+<li>Creates Advanced Cost Accounting information in the General Ledger (F0911). This step is only executed if the Activate Cost Objects (data dictionary item CO01) flag in the Cost Management Constants table (F1609) is turned on and the voucher contains cost management information.</li>
+<li>Assigns each voucher a Document Number (data dictionary item DOC), if unspecified in the Voucher Transactions Batch Upload table (F0411Z1).</li>
+<li>Assigns a Batch Number (data dictionary item ICU), if unspecified in the Voucher Transactions Batch Upload table (F0411Z1).</li>
+<li>Populates fields that are left blank, if necessary.</li>
+<li>Produces a report that displays the number of correct and incorrect transactions.</li>
+<li>Creates workflow messages.</li>
+<li>Purges vouchers that have been processed from the worktables, if configured to do so in the Processing Options.</li>
+<li>The information that the system populates into blank fields includes:</li>
+<ul>
+<li>The Document Number (DOC) is fetched from Next Number Revisions (P0002).</li>
+<li>The Fiscal Year (data dictionary item FY) and Period (data dictionary item PN) are calculated from the GL Date and Companies program (P0010).</li>
+<li>The Explanation (data dictionary item EXA) in the General Ledger (F0911) is the supplier's alpha name as defined in the Supplier Master (P04012).</li>
+<li>The Company (data dictionary item CO) in the General Ledger (F0911) is assigned based on the business unit from the first line of distribution.</li>
+</ul>
+</ul>
+<div class="kmnotebox">Note: Two program versions of the Batch Voucher Processor Report (R04110ZA) are for Payroll processing only. These versions are ZJDE0003 and ZJDE0004.</div>
+<a name="aref_section33"></a><h4 class="km">Processing Options for Batch Voucher Processor Report (R04110ZA)</h4>
+<table style="width: 1050px; height: 1176px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr style="height: 16px;">
+<th class="km" style="width: 338px; padding: 4px; height: 16px;">Processing Option Tab</th>
+<th class="km" style="width: 338.067px; padding: 4px; height: 16px;">Processing Option Choice(s)</th>
+<th class="km" style="width: 337.933px; padding: 4px; height: 16px;">Explanations</th>
+</tr>
+<tr style="height: 200px;">
+<td class="km" style="width: 338px; padding: 4px; height: 200px;">Select</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 200px;">
+<p>1. EDI - User ID</p>
+<p>2. EDI - Batch Number</p>
+<p>3. EDI - Transaction Number</p>
+<p>4. EDI - Transmission Date</p>
+</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 200px;">
+<ul>
+<li><strong>1. EDI - User ID</strong> - Enter a valid user ID to narrow data selection to a single EDI user. If this processing options is left blank, the system selects all user IDs.</li>
+<li><strong>2. EDI - Batch Number</strong> - Enter a batch number to set data selection for the EDI - Batch Number. Use only existing batch numbers for this data selection.</li>
+<li><strong>3. EDI - Transaction Number</strong> - Enter a transaction number to select data by EDI transaction number. If this processing option is left blank, the system selects all EDI transaction numbers.</li>
+<li><strong>4. EDI - Transmission Date</strong> - Enter a transmission date to select records by EDI transmission date. If this processing option is left blank, the system selects records for all EDI transmission dates.</li>
+<li>Note - You are not required to use all of these above, however, Oracle Support recommends narrowing down to a small batch to process at a time.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 70px;">
+<td class="km" style="width: 338px; padding: 4px; height: 70px;">Process</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 70px;">
+<p>1. Mode</p>
+</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 70px;">
+<p>Specify whether the system runs the program in proof or final mode. Valid values are:</p>
+<ul>
+<li>Blank: Run program in proof mode, which does not update any tables.</li>
+<li>1: Run program in final mode.  In final mode, the system generates a report and updates the F0411 and F0911 tables based on the information that you provide. </li>
+</ul>
+</td>
+</tr>
+<tr style="height: 164px;">
+<td class="km" style="width: 338px; padding: 4px; height: 164px;"> </td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 164px;">
+<p>2. Allow out of Balance</p>
+</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 164px;">
+<p>Specify whether the system updates the F0411 and F0911 tables when the sum of the amounts to be distributed for the voucher does not equal the sum of the amounts to be distributed for the corresponding journal entry. The system considers tax amounts when determining the amounts to distribute for both the voucher and journal entry.</p>
+<ul>
+<li>Blank: Do not process vouchers that are out of balance.</li>
+<li>1: Process vouchers that are out of balance. Select this option ONLY when converting voucher records separately from their corresponding journal entries, such as when uploading legacy information from another system.</li>
+</ul>
+<p>Note: When processing vouchers that are out-of-balance, unpredictable results may occur in other applications.</p>
+</td>
+</tr>
+<tr style="height: 46px;">
+<td class="km" style="width: 338px; padding: 4px; height: 46px;">Purge</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 46px;">3. Purged Processed Transactions</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 46px;">
+<p>Specify whether the system automatically purges successfully processed voucher records from the F0411Z1 and F0911Z1. Valid values are:</p>
+<ul>
+<li>Blank: Do not purge voucher records from F0411Z1 and F0911Z1.</li>
+<li>1: Purge voucher records from F0411Z1 and F0911Z1.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 70px;">
+<td class="km" style="width: 338px; padding: 4px; height: 70px;">Messages</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 70px;">1. Suppress Warning</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 70px;">
+<p>Specify whether the system automatically purges successfully processed voucher records from the F0411Z1 and F0911Z1. Valid values are:</p>
+<ul>
+<li>Blank: Send warning messages to the employee work center.</li>
+<li>1: Do not send warning messages to the employee work center.</li>
+<li>Note - The system sends all error messages to the employee work center, regardless of how you set this processing option.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 58px;">
+<td class="km" style="width: 338px; padding: 4px; height: 58px;"> </td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 58px;">2. User ID for Workflow Messages</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 58px;">
+<p>Specify which user receives workflow warning messages. If this processing option is left blank, the system sends warning messages to the user who entered the transaction.</p>
+</td>
+</tr>
+<tr style="height: 117px;">
+<td class="km" style="width: 338px; padding: 4px; height: 117px;">Defaults</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 117px;">Bypass Tax Default</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 117px;">
+<p>Specify whether the system updates the tax explanation code and tax rate/area information on successfully processed supplier ledger records with the values specified in the Address Book Master table (F0101) and the Business Unit Master table (F0006). If the Tax Rate/Area field is completed in both tables, the system uses the value from the Supplier Master table (F0401). Values are:</p>
+<ul>
+<li>Blank: Update the tax values</li>
+<li>1: Do not update the tax values.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 70px;">
+<td class="km" style="width: 338px; padding: 4px; height: 70px;">Version</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 70px;">
+<p>1. Version <em>(Voucher MBF Processing Options)</em></p>
+</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 70px;">
+<p>Specify the version of the Voucher Entry MBF Processing Options program (P0400047) the system uses to process the voucher transaction to the F0411 table. If this processing option is left blank, the system uses version ZJDE0001.</p>
+</td>
+</tr>
+<tr style="height: 70px;">
+<td class="km" style="width: 338px; padding: 4px; height: 70px;"> </td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 70px;">2. Version <em>(Journal Entry MBF Processing Options)</em></td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 70px;">
+<p>Specify whether the system automatically purges successfully processed voucher records from the F0411Z1 and F0911Z1. Valid values are:</p>
+<ul>
+<li>Blank: Do not purge voucher records from F0411Z1 and F0911Z1.</li>
+<li>1: Purge voucher records from F0411Z1 and F0911Z1.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 105px;">
+<td class="km" style="width: 338px; padding: 4px; height: 105px;">Batch Approval</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 105px;">Batch Approval</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 105px;">
+<p>Specify the status that the system assigns to successfully processed voucher batches.  Values are:</p>
+<ul>
+<li>Blank: Assign the value according to the Manager Approval of Input option specified on the Accounts Payable Constants form.</li>
+<li>1: Assign a status of approved (A) to successfully processed voucher batches.</li>
+</ul>
+</td>
+</tr>
+<tr style="height: 82.4119px;">
+<td class="km" style="width: 338px; padding: 4px; height: 82.4119px;">Auto Post</td>
+<td class="km" style="width: 338.067px; padding: 4px; height: 82.4119px;">Version</td>
+<td class="km" style="width: 337.933px; padding: 4px; height: 82.4119px;">
+<p>Specify whether the system automatically posts successfully processed voucher transactions to the Account Balances table (F0902). Specify the version of the post program the system uses.  If this processing option is left blank, the system does not post transactions.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section34"></a><h3 class="km"><strong>Working with Batch Vouchers</strong></h3>
+<ul>
+<li>The Batch Voucher Processor Report program (R04110ZA) may not process some records due to incorrect field mapping or missing data. For any records that end in error, review the error messages in the Work Center (P012503), revise the records, and run the Batch Voucher Processor Report (R04110ZA) again. Use the Batch Voucher Entry (P0411Z1) to review and revise any unprocessed records in the Voucher Transaction Batch Upload (F0411Z1) and Journal Entry Transactions Batch File (F0911Z1). However, because limited changes are available using Batch Voucher Entry (P0411Z1), Oracle Support recommends making revisions directly to the external data.</li>
+<li>Batch Voucher Entry (P0411Z1) cannot be used to revise successfully processed records. After batch vouchers are uploaded in the Accounts Payable Ledger (F0411) and Account Ledger (F0911) tables, update the records using Supplier Ledger Inquiry or Standard Voucher Entry application (P0411).</li>
+<li>Use Batch Voucher Entry (P0411Z1) to manually add records to the Voucher Transactions Batch Upload table (F0411Z1) table. This feature is helpful in troubleshooting issues experienced when processing transactions. To detect and correct any discrepancies, add a batch voucher manually and attempt to processes it. If it is successful, compare the data with the problem records.</li>
+</ul>
+<p>To troubleshoot batch voucher errors please refer to troubleshooting knowledge <a href='../docs/1988817.html'>Troubleshooting Voucher Batch Processing Error(s) In EnterpriseOne (P0411Z1/R04110ZA)</em></a>.</p>
+<a name="aref_section35"></a><h4 class="km">Alternate Tax Rate/Area Assignment Functionality (Release 9.1 and above)</h4>
+<p>The Batch Voucher Revisions form (P0411Z1) retrieves the alternate tax rate/area assignment if the alternate tax rate/area assignment company constant is set up to do so. When working in the grid area of the form, the system retrieves the alternate tax rate/area based on the supplier and business unit specified in the header area. The system does not display the business unit in the grid. It retrieves the default value from the header. If the header is blank, the system retrieves the default value from the supplier's address book record.  When the alternate tax rate/area assignment company constant in enabled, the business unit field is disabled for modifications on the Features form. When the constant is disabled, modify the business unit on the Features form. When the business unit is modified from Features Form, the system changes the business unit in the header. However, the system does not retrieve a tax rate/area after modifying; it retains the value entered.  The system retrieves only the tax rate/area of the supplier or the alternate tax rate/area that was setup. The business unit is not considered in the transaction when the alternate tax rate/area assignment is disabled or when an error exists when attempting to retrieve the alternate tax rate/area.</p>
+<a name="aref_section36"></a><h4 class="km">Voucher Match Automation (Release 9.1 and above)</h4>
+<p>Before using the voucher match automation process (VMA), capture invoice records and add them to the Voucher Transactions - Batch Upload (F0411Z1) and Voucher Transactions Batch Upload - Voucher Match Automation (F0411Z1T) tables. Use the Batch Voucher Revisions program (P0411Z1) to modify invoice records used in the (VMA) process. Populate certain fields in the F0411Z1 and F0411Z1T tables for invoice records that are matched using the automated process. After the records are created, only certain fields allow for modification.</p>
+<a name="aref_section37"></a><h4 class="km">Processing Options for Batch Voucher Revisions (P0411Z1)</h4>
+<table style="width: 1056px; height: 752px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="width: 340.199px; padding: 4px;">Processing Option Tab</th>
+<th class="km" style="width: 340.199px; padding: 4px;">Processing Option Choice(s)</th>
+<th class="km" style="width: 340.199px; padding: 4px;">Explanations</th>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Defaults</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Service/Tax Date</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Select the default Service/Tax Date. Valid values are:</p>
+<ul>
+<li>Blank: Use the GL date as the service or tax date.</li>
+<li>1: To use the invoice date as the service or tax date.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;"> </td>
+<td class="km" style="width: 340.199px; padding: 4px;">2. Default Pay Status</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Enter a value that exists in the (00/PS) UDC table to specify the default pay status for a voucher or invoice.</p>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;"> </td>
+<td class="km" style="width: 340.199px; padding: 4px;">3. Default Factor/Special Payee Address</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Select the Default Factor/Special Payee Address. Valid values are:</p>
+<ul>
+<li>Blank: To load the supplier's address number from the Supplier Master table (F0401) into the Alternate/Payee field for payments.</li>
+<li>1: To load the factor/special payee number into the Alternate/Payee field.</li>
+</ul>
+<p>Note - Payments are made to the address book number that is in the Alternate/Payee field.</p>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Dates</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Invoice Date&gt;Todays Date</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Specify the type of message that the system sends when the invoice date is greater than the current date. Values are:</p>
+<ul>
+<li>Leave Blank: No Message. No edit is performed. Processing can continue.</li>
+<li>1: Warning message. Processing can continue.</li>
+<li>2: Error message. Processing cannot continue until the error is corrected.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;"> </td>
+<td class="km" style="width: 340.199px; padding: 4px;">2. Invoice Date&gt;G/L Date</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Specify the type of message that the system sends when the invoice date is greater than the GL date. Values are:</p>
+<ul>
+<li>Blank: No Message. No edit is performed. Processing can continue.</li>
+<li>1: Warning message. Processing can continue.</li>
+<li>2: Error message. Processing cannot continue until the error is corrected.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;"> </td>
+<td class="km" style="width: 340.199px; padding: 4px;">3. Due Date for Debit/Credit Memos</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Enter a value to select the Due Date for Debit/Credit Memos. Valid values are:</p>
+<ul>
+<li>Blank: To Use the GL date as the due date for debit memos.</li>
+<li>1: To use the payment terms code to determine the due date.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Currency</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Allow Value Added Tax</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Specify whether Value Added Tax (VAT) is allowed on currency entries. Valid values are:</p>
+<ul>
+<li>Blank: Do not allow VAT tax on currency entries.</li>
+<li>1: to enable value-added tax (VAT) on currency entries.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Manual Cks</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Manual Check Creation</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Specify whether manual checks are written. Valid values are:</p>
+<ul>
+<li>Blank: Do not write manual checks.</li>
+<li>1: To write manual checks.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Journal Entry</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Bypass Out-of-Balance Edit</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Specify whether transaction entries must balance. Valid values are:</p>
+<ul>
+<li>Blank: to specify that transaction entries must balance.</li>
+<li>1: To specify that transactions do not need to be in balance.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Display</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Summarized</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Specify whether summarized vouchers appear on the Work With Store &amp; Forward Vouchers form.  Valid values are:</p>
+<ul>
+<li>Blank: To suppress the display of summarized vouchers.</li>
+<li>1: To display summarized vouchers on the Work With Store &amp; Forward Vouchers from.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 340.199px; padding: 4px;">Enter Type</td>
+<td class="km" style="width: 340.199px; padding: 4px;">1. Transaction NOT Store and Forward Entry</td>
+<td class="km" style="width: 340.199px; padding: 4px;">
+<p>Indicate whether transactions were entered using the Store &amp; Forward Voucher Entry program. Valid values are:</p>
+<br />
+<ul>
+<li>Blank: To indicate that transactions were entered using the Store &amp; Forward Voucher Entry program.</li>
+<li>1: If transactions were not entered using the Store &amp; Forward Voucher Entry program.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section38"></a><h4 class="km">Default Automation Flag in Add Mode (Release 9.1 and above)</h4>
+<p>Enter 1 in this processing option to the Automation Flag (data item ATFLG) field populate with 1 for the records added to the F0411Z1 table. If a 1 is entered for this processing option, the system populates the Automation Flag field when a new record is added or an existing record is copied. If the processing option is left blank, the system is prevented from automatically populating the Automation Flag field.  Populate the Automation Flag field with 1 to enable the voucher match automation process to automatically match invoices to receipts and purchase orders. If this processing option is not used to automatically populate the Automation Flag field, manually enter 1 in each record in the F0411Z1 table to use the voucher match automation process.</p>
+<div class="kmnotebox">Note: The Automation Flag field is used by the system to identify records to process using the voucher match automation process. Complete this processing option only when working with records for the voucher match automation process.  Completing this processing option is optional. If it is not required to have the system automatically complete the Automation Flag field when records are added, leave the processing option blank and manually complete the Automation Flag field for the records being processed using the voucher match automation process.</div>
+<a name="aref_section39"></a><h3 class="km"><strong>Mapping Voucher Transactions to Batch Input Tables</strong></h3>
+<p>To successfully upload voucher information from external sources, create a custom program to map the data to the proper fields in the Voucher Transactions Batch Upload table (F0411Z1) and the Journal Entry Transactions Batch File table (F0911Z1). Certain fields are required for the basic voucher upload process. Additional fields for discount, tax, and payment information are available to include more voucher detail in the upload. Other fields are ignored or reserved for users. It is extremely important to do a manual test adding test data to the F0411Z1 and F0911Z1 first and run the process through. If successful, use this a mapping guide for the custom upload program to prevent duplicate key errors, incorrect uploads or general processing failures.<br /><br /></p>
+<div class="kmnotebox">Note: Global Customer Support does not support the custom upload program. Only manually adding data to the worktables using Batch Voucher Entry (P0411Z1) is supported.</div>
+<a name="aref_section310"></a><h4 class="km">Link to Mapping Instructions Including Required, Optional and Ignore Fields</h4>
+<p>For release 9.2: <a href="http://docs.oracle.com/cd/E64610_01/EOAAP/map_vcher_trsctn_to_btch_ip.htm#EOAAP00422" alt="9.2 A/P Guide - Appendix A - Mapping Voucher Transactions to Batch Input Tables" title="9.2 A/P Guide - Appendix A - Mapping Voucher Transactions to Batch Input Tables" target="_blank">Click this link to access our release 9.2 online guide</a> mapping information including required and optional fields.</p>
+<p>For release 9.1: <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15084/map_vcher_trsctn_to_btch_ip.htm#g037ee99c9453fb39_ef90c_10a77f2c279__7790" alt="9.1 A/P Guide - Appendix A - Mapping Voucher Transactions to Batch Input Tables" title="9.1 A/P Guide - Appendix A - Mapping Voucher Transactions to Batch Input Tables" target="_blank">Click this link to access our release 9.1 online guide</a> mapping information including required and optional fields.</p>
+<p>For older releases: <a href="http://www.oracle.com/technetwork/documentation/jdedarch-094918.html" alt="Archive of JD Edwards EnterpriseOne Documentation" title="Archive of JD Edwards EnterpriseOne Documentation" target="_blank">Click this link to access our archive of JD Edwards EnterpriseOne Documentation</a> to find the A/P guide for your release for the mapping information, including required and optional fields.</p>
+<a name="aref_section311"></a><h3 class="km"><strong>Voucher Batch Processing With Payments</strong></h3>
+<p>It is possible to process paid vouchers that meet the following conditions: </p>
+<ul>
+<li>
+<p class="MsoNormal" style="margin-top: 0px; margin-bottom: 0px;">There is only one payment per voucher; and</p>
+</li>
+<li>
+<p class="MsoNormal" style="margin-top: 0px; margin-bottom: 0px;">The payment pays the entire voucher (no partial payments)</p>
+</li>
+</ul>
+<div class="kmnotebox">Note: The Voucher Batch Processing can be used to upload Payment Without Voucher Match transactions of Batch Type 'W' and Document Type PM.  You could run a test by adding a record via P0411Z1 application set with Processing Option - Manual Checks Creation to '1. This will pop up Payment Information form where you can specify the Payment Number (DOCM). While running R04110ZA to process payments, ensure that you set the Processing Option - Version tab, MBF for Voucher Processing to ZJDE0002.</div>
+<a name="aref_section312"></a><h3 class="km"><strong>Mapping for Tax Capture by Pay Item and Account Functionality</strong></h3>
+<p>To accommodate tax capture functionality, the following changes were made to field mappings in 9.0 Update 1:</p>
+<ol>
+<li>Journal Entry Transactions - Batch File table (F0911Z1). If the tax constant is enabled for the invoice company, Pay Item (SFX) is a required field.</li>
+<li>Voucher Transactions - Batch Upload table (F0411Z1). If the tax constant is enabled for the voucher company, Pay Item (SFX) and Pay Item Extension Number<br />(SFXE - Zero value) are required fields.</li>
+</ol>
+<p>For additional information on the Tax Capture by Pay Item and Account Functionality, please see <a href='../docs/1413283.html'>How To Understand Tax Set Up Within Accounts Payable and Accounts Receivable Within EnterpriseOne (P0022, P4008, P0004A, R0018P, P73GE0).</a></p>
+<a name="aref_section313"></a><h3 class="km"><strong>Posting Processed Batch Vouchers</strong></h3>
+<p>Records are ready to purge from the worktables after they are successfully processed and added to the Accounts Payable Ledger (F0411) and General Ledger (F0911. The system holds processed vouchers in the batch table until they are purged. There are two ways to purge vouchers:</p>
+<ul>
+<li>Processing Option 1: Version on the Auto-Post tab - Enter a version of the General Ledger Post (R09801) UBE.</li>
+<li>Processing Option 1: Batch Approval on the Batch Approval tab - Enter 1 in the to automatically set the status of the processed batch to Approved.</li>
+</ul>
+<p>Pleases see knowledge <a href='../docs/1959882.html'>Understanding Non-Purchase Order Related Accounts Payable Voucher Post Process Within JD Edwards EnterpriseOne Financial Management (R09801, P00241)</a></p>
+<a name="aref_section314"></a><h3 class="km"><strong>Purging Processed Batch Vouchers</strong></h3>
+<p>After records from the worktables are successfully processed and added to the Accounts Payable Ledger (F0411) and General Ledger (F0911), they can be purged. The system holds processed vouchers in the batch table until they are purged. Batch vouchers can be purged in either of the following ways:</p>
+<p><strong>Option 1:</strong> Set a processing option for the Batch Voucher Processor Report program (R04110ZA) to automatically purge them when you process your batch vouchers in final mode. (<em>See processing option table above</em>)</p>
+<div class="kmnotebox">Note: As of Release 9.1 and above, records in the F0411Z1 table for which the Automation Flag field includes the value 1 are not purged when the processing option in the Batch Voucher Processor Report program is set to purge records. To purge records for which the value is 1, set the processing Purge Processed Records processing option in the VMA matching program, or manually run the Purge Batch Voucher Entries program (P0411Z1P).</div>
+<p>Option 2: Purge them manually by using the Purge Batch Voucher Entries (R0411Z1P) program from the Batch Voucher Processing menu (G04311).</p>
+<p>Successfully processed vouchers are purged from the following tables:</p>
+<ul>
+<li>Voucher Transactions Batch Upload table (F0411Z1).</li>
+<li> Journal Entry Transactions Batch File table (F0911Z1).</li>
+</ul>
+<p>Purging removes only batch vouchers from the worktables and does not affect vouchers in the Accounts Payable Ledger (F0411) or General Ledger (F0911) tables.</p>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

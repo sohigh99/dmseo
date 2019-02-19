@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting Print Sequence Set Up (P0415)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Print Sequence Set Up (P0415)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Print Sequence Set Up (P0415)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33"><strong>Question 1:</strong> When creating a new Print Sequence to add to sort by DOC, it errors out value does not exist, why?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34"><strong>Question 2:</strong> Is it possible to set an AP Check Sequence (P0415) to sort by Mailing Address?</a></td></tr></table>
+
+<!-- <table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Payment Setup KM References</strong></a></td></tr></table> -->
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document helps troubleshoot Print Sequence Set Up or Errors (P0415)</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are configuring the JD Edwards EnterpiseOne system to process Automatic Payments.<strong><br /> </strong></p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Print Sequence Set Up (P0415)</strong></h3>
+<p>Print Sequences give users control over the order payments are printed. For example, payments may need to be printed in descending order by amount so that the largest payment amounts print first. Sequence IDs configured in Work with Payment Sequences (P0415) are used to establish the printing order and can contain up to six data items from fields in the A/P Payments Worktable that are defined in UDC table H04/SF (Auto Payment Sequence Items).<br /> <br /> <img src="../images/pseq01.png" border="0" alt="pmtsequence" title="pmtsequence" hspace="0" vspace="0" /><br /> <br /> A Sequence ID (data dictionary item SQID) is required for each desired print sequence. When running the Create Payment Control Groups (R04570),&nbsp; Processing Option 1: Sequence ID on the Print tab should reflect the desired payment sequence for this batch of payments. <br /> <br /> Use the following steps to set up different Print Sequences to match your business requirements:</p>
+<ol><ol>
+<li>From the Automatic Payment Setup menu (G04411), choose Payment Sequence. On Work With Payment Sequences, click Add. You can add a new sequence by copying an existing one and modifying it as needed. On Work With Payment Sequences, choose the existing payment sequence and click Copy.</li>
+<li>On Set Up Payment Sequence, complete the following fields:</li>
+</ol></ol>
+<blockquote>
+<ul>
+<li>Sequence ID</li>
+<li>Description</li>
+</ul>
+</blockquote>
+<ol><ol>
+<li>Enter a data dictionary item in at least one of the following fields:</li>
+</ol></ol>
+<blockquote>
+<ul>
+<li>Sequence 1</li>
+<li>Sequence 2</li>
+<li>Sequence 3</li>
+<li>Sequence 4</li>
+<li>Sequence 5</li>
+<li>Sequence 6</li>
+</ul>
+</blockquote>
+<ol>
+<li>For each sequence that you set up, choose either Ascending or Descending.</li>
+<li>Click OK</li>
+</ol>
+<p>If you want to print payments based on criteria outside of the Accounts Payable system, you can use special handling codes. Special handling codes are user defined and assigned at the time of voucher entry. You can use them to sort payments by including them in your Sequence ID.</p>
+<div class="kmnotebox">Note: If Payment Handling Code (CRC) is the first field in your print sequence, you must assign vouchers a value from UDC table 00/HC (Special Handling Code AP Pymt) that is meaningful to your organization.</div>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<a name="aref_section33"></a><h4 class="km"><strong>Question 1:</strong> When creating a new Print Sequence to add to sort by DOC, it errors out value does not exist, why?</h4>
+<p><strong>Answer 1:</strong> Value must appear in the UDC table H04/SF and the UDC for higher releases must be cached to accept the change. Once UDC was cached issue was resolved.</p>
+<hr />
+<a name="aref_section34"></a><h4 class="km"><strong>Question 2:</strong> Is it possible to set an AP Check Sequence (P0415) to sort by Mailing Address?</h4>
+<p><span id="form1:panelPage1"><strong>Answer 2:</strong> Unfortunately, it is not possible to set up an AP Check Sequence (P0415) by Mailing address because this information is stored in the Address By Date (F0116) table and the fields available for sequencing are found in the AP Payment Temporary Tables (F04571, F04572, F04573). In particular, most fields available are found in the A/P Payment Processing - Summary (F04572) table. <br /> <br /> You could possibly use one of the category codes, AC01-AC05 for these purposes, which would need to be populated in the address book and supplier master and then in the related vouchers prior to creating the Payment Control Groups (R04570).</span></p>
+<hr />
+<!-- <p>&nbsp;</p>
+<div class="kmnotebox">
+<a name="aref_section35"></a><h3 class="km"><strong>Support Resource</strong></h3>
+<p>To discuss this information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the&nbsp;<a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/financial_-_jde1">My Oracle Support Community Financial - JDE1</a> sub space.</p>
+<p>To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=2015689.1&id=1450327.1'>Document 1450327.1</a>. If your topic is not currently scheduled please suggest it.</p>
+</div>
+<p>&nbsp;</p> -->
+<!-- <div class="kmnotebox">
+<a name="aref_section36"></a><h3 class="km"><strong>Payment Setup KM References</strong></h3>
+<p><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=2015689.1&id=2014777.1'>Document 2014777.1</a> - E1: 04: Troubleshooting Payee Control<br /><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=2015689.1&id=2015701.1'>Document 2015701.1</a> - E1: 04: Troubleshooting Payment Instrument and Print Program Set Up and Errors (P0417)<br /><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=2015689.1&id=2015705.1'>Document 2015705.1</a> - E1: 04: Troubleshooting GL Bank Account Set Up (P0030G)<br /><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=2015689.1&id=2015689.1'>Document 2015689.1</a> - E1: 04: Troubleshooting Print Sequence Set Up (P0415)<br /><a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=2015689.1&id=2017047.1'>Document 2017047.1</a> - E1: 04: FAQ - Frequently Asked Questions Regarding Payee Control Within EnterpriseOne Accounts Payable (X0450/P0450)</p>
+</div>
+<p>&nbsp;</p> -->
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

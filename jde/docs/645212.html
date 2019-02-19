@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Set Up Supplier Withholding (R04580)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How To Set Up Supplier Withholding (R04580)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#GOAL">Goal</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21">Overview</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section22">Set Up Tax Authority</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section23">Set Up Supplier for Withholding</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section24">Set Up Voucher Entry MBF (P0400047) Processing Options</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section25">Set Up Existing Individual Vouchers for Withholding</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section26">Set Up Many Existing Vouchers for Withholding</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section27">Stop Withholding Taxes</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section28">Calculate Withholding</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section29">Paying Withheld Amounts</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section210">Additional Information</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="GOAL"></A>Goal</H2>
+<p>This document provides details on how to set up Supplier Withholding (R04580) for use with 1099 processing.&nbsp; <span style="text-decoration: underline;"><strong><br /></strong></span></p>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<a name="aref_section21"></a><h3 class="km">Overview</h3>
+<p>Some government regulations require companies to withhold a percentage of payments to suppliers if they have not disclosed a Tax ID. This document provides instructions on how to set up and process withholding on a Supplier (Vendor), which includes the following steps:</p>
+<ul>
+<li>Set up a tax authority</li>
+<li>Set up a supplier for withholding</li>
+<li>Set up existing vouchers for withholding</li>
+<li>Stop withholding</li>
+<li>Calculate Withholding&nbsp;</li>
+<li>and Pay withheld amounts.</li>
+</ul>
+<a name="aref_section22"></a><h3 class="km">Set Up Tax Authority</h3>
+<p>The following steps detail how to set up a Tax Authority.</p>
+<ol>
+<li>Go to Tax Setup (G00218) menu and choose Tax Authorities (P01012).</li>
+<li>If you are required to report or pay withheld taxes to a particular tax authority, you must set up that tax authority in the address book.</li>
+<li>Set up the Tax Authority in the Supplier Master (P04012).</li>
+</ol>
+<a name="aref_section23"></a><h3 class="km">Set Up Supplier for Withholding</h3>
+<p>To set up a supplier for withholding:</p>
+<ol>
+<li>Go to Supplier and Voucher Entry (G0411) menu and choose Supplier Master Information (P04012).</li>
+<li>Select your Supplier and click on the Tax Tab.</li>
+<li>Complete the Tax Authority field and the Percent field.</li>
+<ul>
+<li>The percent field is the percent to withhold on each payment. The system will deduct the percentage you specify from each voucher you enter and will make that amount payable to the tax authority you specified above.</li>
+</ul>
+</ol>
+<a name="aref_section24"></a><h3 class="km">Set Up Voucher Entry MBF (P0400047) Processing Options</h3>
+<p>Processing Option 3: Voucher Document Type on the Defaults tab must be setup to any document type other then the document type of "PM". If it is set to PM, the Pay Status (data dictionary item PST) on the voucher does not default to % as required for tax withholding processing.<br /><br /></p>
+<a name="aref_section25"></a><h3 class="km">Set Up Existing Individual Vouchers for Withholding</h3>
+<p>To set up an existing voucher for withholding:</p>
+<ol>
+<li>Go to the Automatic Payment Processing menu (G0413) and choose Speed Status Change (P0411S).</li>
+<li>Locate and select the voucher(s).</li>
+<li>On Update Single Pay item, change the Pay Status (PST) field to a % to indicate that withholding applies to the voucher.</li>
+</ol>
+<a name="aref_section26"></a><h3 class="km">Set Up Many Existing Vouchers for Withholding</h3>
+<p>To set up multiple existing vouchers for withholding:</p>
+<ol>
+<li>Go to Automatic Payment Processing menu (G0413) and choose Speed Status Change (P0411S).</li>
+<li>Locate and select ALL vouchers you want to update.</li>
+<li>From the Row Exit, choose Global Update.</li>
+<li>On the Global Updates change the Pay Status (PST) to % to indicate that withholding applies, check the Update box to the right and then click OK to run the Global Update.</li>
+</ol>
+<a name="aref_section27"></a><h3 class="km">Stop Withholding Taxes</h3>
+<p>To stop withholding taxes on a supplier:</p>
+<ol>
+<li>Go to Supplier and Voucher Entry menu (G0411) and choose Supplier Master Information (P04012).</li>
+<li>Inquire and select on your Supplier (Vendor).</li>
+<li>Remove the values in Tax Authority (TAWH) and Percent (PE01).</li>
+</ol>
+<a name="aref_section28"></a><h3 class="km">Calculate Withholding</h3>
+<p>To calculate the withholding for suppliers:</p>
+<ol>
+<li>Go to Automatic Payment Processing (G0413) and choose Calculate Withholding (R04580).</li>
+<li>When you calculate withholding, the system creates withholding records for existing vouchers. The Calculate Withholding (R04580) program is a batch process that selects voucher pay items, calculates withholding amounts, updates the pay status, creates two pay items and produces two reports.</li>
+<ul>
+<li>Reminder: Be sure to enter a GL Offset for the withheld amount on the GL Offset tab of the processing options for Calculate Withholding you run of (R04580) "Calculate Withholding".</li>
+<li>A corresponding PC AAI item must exist (e.g. PCWHLD) and the account must be valid.</li>
+</ul>
+</ol>
+<a name="aref_section29"></a><h3 class="km">Paying Withheld Amounts</h3>
+<p>Depending on if you have tax information for a supplier when you calculate withholding, you perform either pay withheld amounts to a tax authority or to a supplier.</p>
+<ol>
+<li>To pay the tax authority, use your regular process to pay the amount to them.</li>
+<li>If you withhold taxes because you do not have a Tax ID for a supplier and later receive a tax ID, you can pay the withheld amount to the supplier instead of the tax authority. To do so follow these steps:</li>
+<ol>
+<li>Go to Automatic Payment Processing (G0413) and choose Speed Status Change (P0411S).</li>
+<li>Locate and select the voucher</li>
+<li>On Update Single pay item, change the Payee Number (PYE) from the tax authority number to the supplier number and change the Pay Status (PST) to A for approved for payment.</li>
+<li>Pay the voucher directly to the Supplier.</li>
+</ol></ol>
+<a name="aref_section210"></a><h3 class="km">Additional Information</h3>
+<p>If you have suppliers that have not provided a Tax ID and want to place them on hold so no future payments are made to them, use the following steps to complete this set up:</p>
+<ol>
+<li>Go to Supplier and Voucher Entry (G0411) and choose Supplier Master Information (P04012).</li>
+<li>Locate and select your Supplier (Vendor).</li>
+<li>Under the Voucher Tab change the Hold field to Y (Yes).</li>
+<li>To place existing vouchers on hold, go to Automatic Payment Processing (G0413) and choose Speed Status Change (P0411S).</li>
+<li>Inquire on this supplier, highlight all vouchers.</li>
+<li>From the Row Exit Bar select Global Update.</li>
+<li>On Global Updates change the Pay status to H to place them on hold, check the Update box to the right and click OK to run the update.</li>
+</ol>
+<p>&nbsp;</p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
