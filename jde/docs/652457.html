@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Use Custom Fonts with Embedded Publisher for EnterpriseOne</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Use Custom Fonts with Embedded Publisher for EnterpriseOne</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#GOAL">Goal</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><span style="color: #0000ff;">Overview</span></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section22"><span style="color: #0000ff;">Fonts default Location for Embedded BIP Engine (XMLP kernel)</span></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section23"><span style="color: #0000ff;">Defining fonts in the xdo.cfg file of the Enterprise Server (Option 1) [Recommended Method]</span></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section24"><span style="color: #0000ff;">Defining font directly in the RTF Template (Option 2)</span></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section25"><span style="color: #0000ff;">Troubleshooting Tips</span></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section26"><span style="color: #0000ff;">Known Issues</span></a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="GOAL"></A>Goal</H2>
+
+<p>This document describes the options to add custom fonts (for example MICR or Barcode) to reports created using Embedded BI Publisher for EnterpriseOne.</p>
+<div class="kmnotebox">The only font type specifically supported with BI Publisher is <strong>true type fonts</strong> (.ttf). Other fonts such as PostScript fonts have been known to be used with mixed results, however other font types are not supported. It is the recommendation of Oracle Global Customer Support to only use true type fonts with Embedded BI Publisher for EnterpriseOne.</div>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<a name="aref_section21"></a><h3 class="km"><span style="color: #0000ff;">Overview</span></h3>
+<p>There are 2 ways to add fonts to Embedded BI Publisher reports. Fonts can be defined for embedded BIP engine (XMLP kernel) through the BI Publisher configuration file <em>xdo.cfg </em>a OR Fonts can be added directly to the template.<br /><br />In order to build the template you can place the font in the fonts directory of the client where you are building the template, note that this will not work on the Enterprise Server. In order to test this on enterprise server, the font has to be added to the xdo.cfg or directly to the template.</p>
+<a name="aref_section22"></a><h3 class="km"><span style="color: #0000ff;">Fonts default Location for Embedded BIP Engine (XMLP kernel)</span></h3>
+<p>Tools release prior to 9.2 (all platforms except AS400)<br />EnterpriseOne folder &lt;E1Install&gt;\system\JRE\lib\fonts<br /><br />Tools release 9.2 and above (all platforms except AS400)<br />EnterpriseOne folder ...\E920\jdeJre\lib\fonts<br /><br />If the enterprise server jde ini has a defined inProcessJVMHome path under [JDE JVM] Section, make sure to place the fonts under jre\lib\fonts folder of the used jre. Example: E:\Program Files(x86)\Java\jrockit-jdk1.6.0_45-R28.2.7-4.1.0\jre\lib\fonts<br /><br />For AS400 platforms, Enterprise One does not ship JRE as it is &ldquo;in-built&rdquo; in the OS.  But in AS400, there are more than one JVM technology with different combinations.<br /><br />    On V5R3 only the older &ldquo;classic&rdquo; JVM available.This is obsolete now.<br />    If you are still running classic (Sun) Java, copy the font files to (version could be jdk16): /QOpenSys/qibm/ProdData/Java400/jdk15/lib/fonts<br />    On V5R4 and V6R1, there are both &ldquo;classic JVM&rdquo; and the new &ldquo;J9 JVM&rdquo;.<br />    On V7R1, there is only the new &ldquo;J9 JVM&rdquo; available.<br />    E1's default JVM location for 8.98.3.0 and above is J9 JVM.<br />    For 8.98.3.0 and above: /QOpenSys/QIBM/ProdData/JavaVM/jdk50/32bit/jre/lib/fonts<br />    For 9.1 and above: /QOpenSys/QIBM/ProdData/JavaVM/jdk60/32bit/jre/lib/fonts<br /> </p>
+<p>This default font location can be overridden by defining the new location in xdo.cfg file as explained in the below. Both default location and other custom font locations should have the same permission as the E1 delivered fonts location which is &lt;E1Install&gt;\system\resource\truetype.</p>
+<p>Any OS-level user IDs that E1 utilizes (e.g., for Windows/UNIX/Linux: the user ID used to start E1 services, for AS/400: ONEWORLD, JDE, and any other separate OS-level proxy IDs used to run UBEs) should have at least "Read Permissions" on the fonts folder where the fonts are located.</p>
+<p>Also, check that the following fonts exist on the Enterprise Server \system\JRE\&lt;JRE Version&gt;\lib\fonts directory. Please note that the location is different for AS400 platforms as mentioned above.</p>
+<div class="kmcodeblock">ALBANYWT.ttf       - Single-byte characters only<br />ALBANWTJ.ttf       - Unicode font with Japanese Han Ideographs<br />ALBANWTK.ttf       - Unicode font with Korean Han Ideographs<br />ALBANWTS.ttf       - Unicode font with Simplified Chinese Han Ideographs<br />ALBANWTT.ttf       - Unicode font with Traditional Chinese Han Ideographs</div>
+<p>The above ALBN* fonts will help to display special characters (For example - (Hyphen)) and double byte characters to display properly in the BIP output.</p>
+<div class="kmnotebox">There is BI Publisher engine documentation which states that font files automatically copied to $JAVA_HOME/jre/lib/fonts folder on the server will be automatically loaded by the engine. However this does not hold true for Embedded BI Publisher for EnterpriseOne. For this reason only the below two methods provided in this document are supported with EnterpriseOne.</div>
+<a name="aref_section23"></a><h3 class="km"><span style="color: #0000ff;">Defining fonts in the xdo.cfg file of the Enterprise Server (Option 1) [Recommended Method]</span></h3>
+<p>In the xdo.cfg (located in EnterpriseOne folder .../system/classes) file you can set the fonts properties to add fonts and their location that are used by embedded BI Publisher engine (XMLP Kernels)<br /><br />The format for the Fonts properties settings is the following:</p>
+<div class="kmcodeblock"><span style="color: #993366;">&lt;Config&gt;</span><br /><br /><span style="color: #0000ff;">&lt;Properties&gt;</span><br />...<br /><span style="color: #0000ff;">&lt;/Properties&gt;</span><br /><br /><span style="color: #008000;">&lt;fonts&gt;</span><br />   <span style="color: #ff0000;">&lt;font&gt;</span>  <span style="color: #800080;">[This element is primarily used to define fonts for FO-to-PDF processing (RTF to PDF). The PDF Form Processor (used for PDF templates) does not refer to this element.]</span><br />      &lt;truetype /&gt;<br />   <span style="color: #ff0000;">&lt;/font&gt;</span><br /><br />   <span style="color: #ff00ff;">&lt;font-substitute&gt;</span> <span style="color: #800080;">[This element is used to define fonts for the PDF Form Processor.]</span><br />       &lt;truetype /&gt;<br />  <span style="color: #ff00ff;">&lt;/font-substitute&gt;</span><br /><br /><span style="color: #008000;">&lt;/fonts&gt;</span><br /><br /><span style="color: #993366;">&lt;/Config&gt;</span></div>
+<p>Under the &lt;font&gt; section these are the available values:</p>
+<p style="margin-left: 30px;"><strong>font family: </strong>specify any family name for the font. If you specify "Default" for this attribute, you can define a default fallback font. The family attribute is case-insensitive.</p>
+<p style="margin-left: 30px;">This name should match the name which appears as font name when viewing the rtf template in MS word . </p>
+<p style="margin-left: 30px;"><img src="../images/font01.png" class="kmsmartresize" alt="Font Family Name" title="Font Family Name" width="380"/></p>
+<p style="margin-left: 30px;"><strong>style:</strong> specify "normal" or "italic" for the font style.</p>
+<p style="margin-left: 30px;"><strong>weight:</strong> specify "normal" or "bold" for the font weight.</p>
+<p style="margin-left: 30px;"><strong>truetype path:</strong> should be an absolute path. So in Windows server you must specify the drive letter like "C:\fonts\CustomArial.ttf". Font should be placed on the server in the truetype path using FTP. On server ensure font has the correct permission ( it should have the same permission as the fonts under E1 install system\resource\truetype directory).</p>
+<p>Within the Fonts properties settings section you can define a font, its location, its properties and a default fall back font etc :</p>
+<p>Here is an example:</p>
+<div class="kmcodeblock"><span style="color: blue;"><span style="color: black;"><span style="color: #0000ff;">&lt;Config&gt;<br /><br />&lt;Properties&gt;<br />...<br />&lt;/Properties&gt;<br /><br />&lt;fonts&gt;<br /><br />       &lt;<span style="color: #993366;">font family="BC C39 3 to 1 Medium" style="normal" weight="normal"&gt;</span><br /><span style="color: #993366;">          &lt;truetype path="C:\JDEdwardsPPack\E910\system\resource\truetype\C39M3.TTF" /&gt;   <span style="color: #003300;">[ For AS400, path could be, &lt;truetype path="/E920SYS/RESOURCE/truetype/C39M3.TTF" /&gt; ]</span></span><br /><span style="color: #993366;">       &lt;/font&gt;</span><br /><br /><span style="color: #993366;">       &lt;font family="Code 128" style="normal" weight="normal"&gt;</span><br /><span style="color: #993366;">          &lt;truetype path="C:\JDEdwardsPPack\E910\system\resource\truetype\128R00.TTF" /&gt;</span><br /><span style="color: #993366;">       &lt;/font&gt;</span><br /><br /><span style="color: #993366;">       &lt;font family="Candara" style="normal" weight="normal"&gt;</span><br /><span style="color: #993366;">          &lt;truetype path="C:\JDEdwardsPPack\E910\system\resource\truetype\MICR.TTF" /&gt;</span><br /><span style="color: #993366;">       &lt;/font&gt;</span><br /><br /><span style="color: #993366;">      &lt;font family="GnuMICR" style="normal" weight="normal"&gt;</span><br /><span style="color: #993366;">       &lt;truetype path="C:\Windows\Fonts\GnuMICR.ttf"/&gt;</span><br /><span style="color: #993366;">      &lt;/font&gt;</span><br /><br /><span style="color: #993366;">      &lt;font-substitute name="MSGothic"&gt; <span style="color: #003300;">[This element is used to define fonts for the PDF Form Processor, This element is not used at run time for non PDF templates]</span></span><br /><span style="color: #993366;">       &lt;truetype path="/fonts/msgothic.ttc" ttccno=0"/&gt;</span><br /><span style="color: #993366;">      &lt;/font-substitute&gt;</span><br /><br />&lt;/fonts&gt;<br /><br />&lt;/Config&gt;</span></span></span><br /><span style="color: blue;"><span style="color: black;"><span style="color: blue;"><span style="color: black;"><span style="color: blue;"><span style="color: black;"></span></span></span></span></span></span></div>
+<p>Add a default fall back font to be used if the font on the template is not found by BI Publisher Engine (XMLP Kernel): If no default font is selected BI Publisher will use Times New Roman</p>
+<div class="kmcodeblock">&lt;!--Example to add Default font --&gt;<br />&lt;fonts&gt;<br />   &lt;!-- Default Font setting for all --&gt;<br />   &lt;font family="Default" style="normal" weight="normal"&gt;<br />      &lt;truetype path="/fonts/ALBANWTJ.ttf" /&gt;<br />   &lt;/font&gt;<br />&lt;/fonts&gt;</div>
+<p>You can specify fonts available for a specific locale:</p>
+<div class="kmcodeblock">&lt;!-- Korean-specific font definitions --&gt;<br />&lt;fonts locales="ko-KR"&gt;<br />   &lt;!-- Font setting for Ko-KR locale--&gt;<br />   &lt;font family="KoreanArial" style="normal" weight="normal"&gt;<br />      &lt;truetype path="/fonts/KoreanArial.ttf" /&gt;<br />   &lt;/font&gt;<br />&lt;/fonts&gt;</div>
+<p>A locale is a combination of an ISO language and an ISO country. ISO languages are defined in ISO 639 and ISO countries are defined in ISO 3166.<br /><br />The structure of the locale statement is:<br /><br />ISO Language-ISO country<br />Locales are not case-sensitive and the ISO country can be omitted:</p>
+<ul>
+<li>en</li>
+<li>en-US</li>
+<li>EN-US</li>
+<li>ja</li>
+<li>ko</li>
+<li>zh-CN</li>
+</ul>
+<p>The &lt;font-substitute&gt; element defines a font substitution. This element is used to define fonts for the PDF Form Processor. This needs to be used to define the fonts for PDF templates. For example MICR font was embedded into PDF type template and associated with a RD job, Then this element is used to define fonts for the PDF Form Processor. </p>
+<div class="kmcodeblock">&lt;!--Font substitute setting (for PDFForm filling etc...) --&gt;<br />&lt;font-substitute name="MICR"&gt;<br />   &lt;truetype path="....\MICR.TTF" ttcno="0"/&gt;  [Path should be absolute font location on the server]<br />&lt;/font-substitute&gt;</div>
+<p>Re-start EnterpriseOne services after updating xdo.cfg.</p>
+<div class="kmnotebox">&bull;  Ensure file xdo.cfg is opened and saved using pure Text editor such as Notepad and there are no special characters embedded (use spaces not the TAB key for formatting).<br />&bull;  When xdo.cfg contains control format characters after saving in other text editor e.g. Wordpad, BIP engine is unable to retrieve the xdo.cfg content and the font is not rendered in the PDF output<br />&bull;  On case-sensitive server platforms, ensure font file name and extension are in correct case and are updated correctly in xdo.cfg<br />&bull;  On iSeries/AS400 platform ensure xdo.cfg does not exist in IFS root directory. <br />&bull;  For AS400 and Unix machines(AIX, SUN SOLARIS, LINUX, RS6000), binary transfer mode should be used when working with FTP to install the font on the server.</div>
+<a name="aref_section24"></a><h3 class="km"><span style="color: #0000ff;">Defining font directly in the RTF Template (Option 2)</span></h3>
+<p>Instead of defining a font in the xdo.cfg, you can define the font and its location directly in the RTF template. This is not recommended as the template need to be changed whenever any font location or property needs to be changed. Using xdo.cfg method is recommended because its one time setup compared to adding font in each and every template.</p>
+<p>In order to define the font within the template, a custom property should be added using Microsoft (MS) Word. The Microsoft Word document properties can be accessed in following ways listed below.</p>
+<p><strong>Microsoft Word Properties:</strong></p>
+<ul>
+<li>MS Word 2003 this is in menu File &gt; Properties.</li>
+<li>MS Word 2007 this is in Office Button &gt; Prepare &gt; Properties &gt; Document Properties &gt; Advanced Properties.</li>
+<li>MS Word 2010 and 2013 go to File &gt; Info, then in the properties section of Info screen, click the pull down for Properties and select Advanced Properties.</li>
+</ul>
+<p><img src="../images/font02.png" border="0" alt="Document Properties" title="Document Properties" hspace="0" vspace="0"/></p>
+<p>Let's assume you want to use a font named 'XMLPScript' in your template, this is not available as a regular font on your server so BI Publisher requires that you tell it where the font is at runtime. Lets assume it is located in the following path 'C:\Customfonts\Fonts\' then you can set the font and its location into the template and BI Publisher will use it at runtime. In the properties dialog you would enter:</p>
+<p style="margin-left: 30px;"><strong>Name</strong>: xdo-font.XMLPScript.normal.normal<br /><strong>Type</strong>:   Text<br /><strong>Value</strong>:  truetype.C:\Customfonts\Fonts\XMLPScript.ttf</p>
+<div class="kmnotebox">The XML Publisher properties needs to have 'xdo-' as a prefix to their regular names.</div>
+<p>When the template is applied to the XML data on the server BI Publisher will look for the font in the 'C:\Customfonts\Fonts\' directory.</p>
+<div class="kmnotebox">Make sure this is a valid path that the server that runs XML Publisher can get to.</div>
+<p><img src="../images/font03.png" border="0" alt="Document Properties" title="Document Properties" hspace="0" vspace="0"/></p>
+<p>After adding the font the Properties should look like this:</p>
+<p><img src="../images/font04.png" border="0" alt="Document Properties" title="Document Properties" hspace="0" vspace="0"/></p>
+<p>Highlight the text that needs to use this font, paste the font name XMLPScript in the Font Chooser box and press enter:</p>
+<p><img src="../images/font05.png" border="0" alt="Sample Template" title="Sample Template" hspace="0" vspace="0"/></p>
+<p>If this font does not exist in the Windows client you are using to build the template you may see the following message. Accept it by pressing Yes.</p>
+<p><img src="../images/font06.png" border="0" alt="Warning Message" title="Warning Message" hspace="0" vspace="0"/></p>
+<p>Once the XML output is submitted to the Enterprise Server you will see the font available:</p>
+<p><img src="../images/font07.png" border="0" alt="BI Report" title="BI Report" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">You may not see the specified font when previewing your template. You can see the font when previewing your template in RTF format if the font exists in the Windows client; you will not be able to see the font when previewing in PDF format. This is due to the XML Publisher engine looking for the specified font when the job is submitted to the server for XML output at runtime.</div>
+<a name="aref_section25"></a><h3 class="km"><span style="color: #0000ff;">Troubleshooting Tips</span></h3>
+<p>1. Verify the template to determine what custom fonts are being used. Open with NotePad++ and all fonts will be listed.</p>
+<p>2. Verify how this font is defined for XMLP kernel, Whether this font is defined in template itself or it is defined in xdo.cfg</p>
+<p>3. Verify the font file location on the enterprise server and make sure that the same path is used in xdo.cfg or in the template properties (if font is defined at template level).</p>
+<p>4. Make sure that the folder containing the font has proper permissions to access it by XMLP kernel.</p>
+<p>5. Make sure the font file (.TTF) name is properly mentioned in the xdo.cfg. Right-click on font, select properties and then select Details tab. This will list Font Title and that need to be XDO.CFG setting Family = Font Name.</p>
+<p>6. If the output is sent to printer, first verify that the font is displayed properly in the PDF output.</p>
+<p>7. Confirm that the font reference is not both embedded in the rtf template and defined in the xdo.cfg as this will cause conflict in which the font will not be displayed.</p>
+<a name="aref_section26"></a><h3 class="km"><span style="color: #0000ff;">Known Issues</span></h3>
+<p>1. Correct font is not being used or displayed when the RD job is processed in Large Job Kernel. This is because the large job kernel looking for the xdo.cfg at an incorrect location on the server. Issue has been addressed in Bug 24945031 XMLP LJK LOOK INTO SYSTEM/BIN32 FOR XDO.CFG,JDELOG.PROPERTIES,XDODEBUG.CFG. Review Logging not available and custom Font Not being used when Large Batch Job is Run while it is working as expected with Small Jobs</p>
+<p>2. Font Corrupt After Subsequent Save in MS-Word: There is a known issue with barcode font being corrupted when RTF template is re-opened and saved subsequently after the first time due to a bug in MS-Word. Follow workaround in Field with Custom Font Shows Gibberish/Garbage Characters when Template is Reopened in Microsoft Word.</p>
+<p>3. There is a known issue starting with tools release 9.2.2.1, where the custom fonts including barcode, MICR etc. ignored when bursting is enabled in RD job settings. This issue is fixed in 9.2.2.4 and above. Review: Font Settings and Other Settings from xdo.cfg under '..system\classes' are Ignored when Bursting is Enabled.</p>
+<p>4. Russian Language characters are not displayed in Bold while all other language characters are able to display in Bold. In the template the field is set to Arial with Bold property enabled. <br /><br />To display Russian Language Characters in BOLD font, there should be a proper bold font ttf file reference. In order to display them in BOLD, you need to have a installed BOLD font and use that either in template properties or in xdo.cfg that way they can be displayed as desired in BOLD. As Arial is not a valid font in Unix/Linux, JDE ships their equivalent font albw.ttf and albwb.ttf (Albany AMT)  in the system resource truetype folder. So to resolve this issue, In the template properties, add a custom rule as below:<br /><br />Name: xdo-font.Arial.normal.bold<br />Type: Text<br />Value: truetype.C:\BIPFonts\albwb.ttf  [In Unix, the path should be to your Unix server's system resource true type folder where this JDE shipped albwb.ttf exists]</p>
+<p><SPAN><table class="docInternalContentBox" width="100%"><tr><td> There is a report where only one of multiple fonts inserted using any of the two methods mentioned in this document appear in the PDF output. The issue was reported in supportability bug#14246685. The original issue was reported on tools release 8.98.2.2 and it was found to not occur in tools 8.98.4.9. The one major difference between these two releases is the upgrade of the BIP core engine from 10.1.3.3.2 to 10.1.3.4.1 in 8.98.3.0. We have not been able to validate where exactly the issue was fixed. Tests with BI Publisher Desktop 10.1.3.2.1 showed multiple fonts in the PDF output as expected. For this reason this note is being kept internal. If you have more information regarding this issue, please add a comment to this document. [This section is not visible to customers.]</td></tr></table></span></p>
+<p style="color: #0000ff;"> </p>
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

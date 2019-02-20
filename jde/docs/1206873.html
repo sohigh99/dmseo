@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Workflow Setup / External E-Mail Setup for Notifications with Releases 8.9 and Newer</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Workflow Setup / External E-Mail Setup for Notifications with Releases 8.9 and Newer</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Overview</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">1. Update the JDE.ini file on the Workstation AND the Enterprise Server</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">2. Setup the User in Address Book (Who's Who) and Define the Mail Preference</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34">3. Verifying the Setup of the SMTP server</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Secure SMTP </a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36">4. Testing External Mail to Verify the Setup</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37">5. Shortcut Information and Setup</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>External email can include approval URL (parameterized URL), job completion messages, etc., and requires routing through an SMTP server.  This document details the steps and requirements to setup External Mail (external email) for EnterpriseOne 8.9 and later releases of the software. Once this is set up, messages sent by Workflow processes, the Send Message or send messaged extended system functions, and UBE completion (report completion or RDA completion) messages will be sent to external mail.</p>
+<div class="kmnotebox">Currently SMTP user authentication (aka Secure SMTP or SSL SMTP) is not supported in E1. However there is an Enhancement bug requesting the functionality. See Bug:10849471 : SMTP, USER AUTHENTICATION for additional details and also see SMTP Error 553 Unable to Send Mail to Internet E-mail Address.  Please also try community or engage Oracle field consultant.<br /></div>
+<!-- <p>For information on setting this up for EnterpriseOne releases Xe and ERP 8.0, refer to <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1206873.1&id=1206854.1" alt="Document 1206854.1" title="Document 1206854.1" target="_blank">Document 1206854.1</a> </p> -->
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for the developer, system administrator, or user who will be setting up external mail.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Overview</h3>
+<p class="km">The following are the steps to setup External Mail for EnterpriseOne 8.9 and later releases of the software and are numbered by the headings.  Skipping a section, especially the final step, can result in emails or URL links not working properly.</p>
+<a name="aref_section32"></a><h3 class="km">1. Update the JDE.ini file on the Workstation AND the Enterprise Server</h3>
+<ol>
+<li>Open jde.ini located in the Windows or WinNT directory</li>
+<li>Search for key Rule1 in [JDEMAIL] section</li>
+<li>Set the value to Rule1=90|OPT|MAILSERVER=&lt;your SMTP server name&gt;.  <span id="kmPgTpl:r1:ot71" class="kmContent" style="font-size: small; color: black;">In Rule1 you can use the IP address for the name of the mail server for the Fat Client and the NT Application Server without any problems.  But for the AS/400, IP address will not work. So use the fully qualified mail server name in the AS/400 jde.ini file and also create a Host File entry.</span></li>
+<li>Setup for Rule2, Rule3 and Rule4 (normally leave as it is defined) or change the domain name from "jdedwards.com" to whatever is appropriate in the customer site</li>
+<li>Save the JDE.ini</li>
+<li>Restart EnterpriseOne</li>
+</ol>
+<p>The Web server is using the jde.ini on the Enterprise server for sending e-mail. Nothing needs to be done on the JAS server.</p>
+<div class="kmnotebox">NOTE: Rule3 is hard coded for PSFT_SYSTEM = PSFT_System.  Do not change the PSFT values.  See <a href="../docs/641616.html" alt="Document 641616.1" title="Document 641616.1" target="_blank">Sender's E-Mail Address on External E-Mails</a></div>
+<p style="margin-left: 30px;"><br /><a href="#top"></a></p>
+<a name="aref_section33"></a><h3 class="km">2. Setup the User in Address Book (Who's Who) and Define the Mail Preference</h3>
+<ol>
+<li>Setup the user  in the Address Book application, P01012.</li>
+<li>Define the Mail Preference for the user who is to receive the UBE completion and Workflow messages.</li>
+</ol>
+<ul>
+<li>Select Employee Queue Manager from G02.</li>
+<li>Find the users Address Book number.</li>
+<li>Select Email Preference from the Row exit.  Note: the following print screens are from a fat client. </li>
+<ul>
+<li><strong>8.10 Mail Preference - </strong> Enter the E-mail Preference = 3, Shortcut Client Type = 01 and valid E-mail Address for the user. There are many available values for E-mail Preference. It does not matter which one is selected, but the value cannot be blank when using external mail.</li>
+</ul>
+</ul>
+<p style="margin-left: 60px;"><img src="../images/emal01.png" border="0" alt="Preference 810" title="Preference 810" hspace="0" vspace="0"/></p>
+<ul>
+<ul>
+<li><strong>Mail Preference as of 8.11 SP1 and Later - </strong> Enter the Electronic Address Type = E, Email Address, and Messaging Indicator =1. Please see screen shot below from fat client.  Second print screen is from web client:-</li>
+</ul>
+</ul>
+<p style="margin-left: 60px;"><img src="../images/emal02.png" border="0" alt="Preference Current" title="Preference Current" hspace="0" vspace="0"/></p>
+<p style="margin-left: 60px;"><img src="../images/emal03.png" border="0" alt="P012503_Web2" title="P012503_Web2" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">As of EnterpriseOne release 8.11 SP 1, messages can be sent BOTH to external mail and Work Center. <br />In the preferences for the user, add an additional record with Address Type = W and Messaging Indicator = 1. ie Add one more line in the grid. Please see the screen shot below.  When accessing Preferences from the web use Electronic Address Type = Internal Address to send messages to Work Center.<br /><br /><strong>Caution</strong>: If workflow succeeded in sending message to workcenter but failed to email, the workflow instance will be in error status and user will get error message "Message is already acted upon" when they open the message in workcenter. Enhancement Bug 27138186 - ENHANCEMENT: P98805 &amp; P98806 SHOULD SAY THERE IS AN ERROR INSTEAD OF MSG ACTED was entered for this.</div>
+<p style="margin-left: 30px;"><img src="../images/emal04.png" border="0" alt="PreferencesCurrentBoth" title="PreferencesCurrentBoth" hspace="0" vspace="0"/>     </p>
+<p style="margin-left: 30px;">3. User Profile</p>
+<ul>
+<li>Each User ID must have a valid address book number associated with it in User Profiles, P0092.</li>
+</ul>
+<div class="kmnotebox">Currently UBE completion messages and Workflow approval messages either are sent to Work Center or External Mail or both (as of 811 SP1). They cannot be mixed and selectively sent to either of the two.<br />You can disable the UBE completion messages. See How to Disable the UBE Job Completion Messages for additional details.</div>
+<p><br /><a href="#top">Back to top</a></p>
+<a name="aref_section34"></a><h3 class="km">3. Verifying the Setup of the SMTP server</h3>
+<p>E1 can connect to any mail server which supports standard SMTP protocol. Use the following steps to verify the setup of the SMTP server.</p>
+<ol>
+<li>Ping the SMTP server. It should return with success.</li>
+<li>To test the connection to the SMTP server, issue the following from the client PC and the enterprise server: telnet &lt;smtpHost&gt; 25. For example: telnet mail.domain.com 25. It should return 220 &lt;SMTP server name&gt; SMTP.  Note: telnet port 25 to send email is the same for every smtp server.</li>
+<li>If the line comes back beginning with 220, this verifies the integrity of the SMTP connection.</li>
+<li>Follow this link to test sending e-mail through the SMTP server:  <a href="http://support.microsoft.com/kb/153119/">http://support.microsoft.com/kb/153119/</a> JDE is using the same method to send email, if email is not sent, please login to the smtp server to check if there is error. Your smtp server should have log to show what was happening.</li>
+<li>Use link:  <a href="http://community.spiceworks.com/how_to/show/11-test-email-flow-using-smtp-commands" alt="Test Email flow using SMTP commands" title="Test Email flow using SMTP commands" target="_blank">http://community.spiceworks.com/how_to/show/11-test-email-flow-using-smtp-commands</a> to test outside E1 whether the SMTP server is ready to access a message from 3rd party software like E1.</li>
+</ol>
+<div class="kmnotebox">The value used for smtpHost in the above telnet test should be the same value for the mail server that was entered in the jde.ini for the Rule 1 mail server.<br />Make sure e-mail through port 25 is not blocked by any third party security software.<br />Make sure smtp server is configured according to standard and do not do unnecessary validation.</div>
+<p> </p>
+<div class="kmnotebox">Starting with release 9.1.2, the SMTP port can be configurable. JDE.ini (Enterprise Server) has a new setting in [JDEMAIL] to define the SMTP port used to send email messages:<br />SMTPPort=25<br />The default value of the ini setting is 25 but you can change the value to match your SMTP configuration.<br />Refer to BUG 12867793 JDE TO HANDLE OTHER SMTP PORTS BESIDES 25 for additional information.<br /><strong>NOTE:- </strong>We do not have any specific port number recommendation. You may use any port number that is not in use and that does note create a port conflict .</div>
+<a name="aref_section35"></a><h4 class="km">Secure SMTP </h4>
+<div class="kmnotebox">Currently SMTP user authentication (aka Secure SMTP or SSL SMTP that requires login and password) is not supported in E1.  However there is an Enhancement bug requesting the functionality.  See Bug 10849471 SMTP, USER AUTHENTICATION for additional details and also see SMTP Error 553 Unable to Send Mail to Internet E-mail Address. </div>
+<p> <br /><a href="#top">Back to top</a></p>
+<a name="aref_section36"></a><h3 class="km">4. Testing External Mail to Verify the Setup</h3>
+<div align="left">After completing the steps above, test to verify external mail is setup correctly. <br />
+<ol>
+<li>From a Fat Windows client, run a report such as R0006P locally. The UBE completion message should be sent to your external mail and then you know the local jde.ini is setup correctly and communicating with the SMTP server.</li>
+<ul>
+<li>If the UBE completion message is not received, then review the jde.log for SMTP errors and also verify the jde.ini has the correct mail server in Rule1.</li>
+</ul>
+<li>Then run the same report on the enterprise server. The UBE completion message should be sent to your external mail and then you know the enterprise server jde.ini is setup correctly and communicating with the SMTP server.</li>
+<ul>
+<li>If the UBE completion message is not received, then review the jde.log for SMTP errors and also verify the jde.ini on the enterprise server has the correct mail server in Rule1.</li>
+<li>You can also review the information in the jdedebug.log. It will show whether the e-mail was forward to smtp server successfully or if an error was encountered. If smtp server receive the email but end user still does not, get smtp admin to check smtp log.</li>
+</ul>
+</ol>
+<ol>
+<ul>
+<li>Example jdedebug.log when smtp receive the email without errors:
+<div class="kmcodeblock" style="width: 95%;"><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDE_SendEMailSMTP</span><br /><span style="font-size: 8pt;">myEmailAddress: &lt;JDE_System&gt;</span><br /><span style="font-size: 8pt;">emailSubject: &lt;OneWorld Job R0010P , COT0001 Completed&gt;</span><br /><span style="font-size: 8pt;">numAttachments: 0</span><br /><span style="font-size: 8pt;">recipients: &lt;firstname.lastname@somecompany.com&gt;</span><br /><span style="font-size: 8pt;">cc: &lt;(null)&gt;</span><br /><span style="font-size: 8pt;">bcc: &lt;(null)&gt;</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_InitUser with commit mode 0.</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_BeginTransaction</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_OpenTable( Table = F90005)</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_SelectAll</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 ORACLE DBInitReq conn=03F46130</span><br /><span style="font-size: 8pt;">requ=06C7FE88 cot-jde (prod) new</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 SELECT * FROM PRODDTA.F90005</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_Fetch</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 ORACLE DBFetch: Invoke OCI Fetch</span><br /><span style="font-size: 8pt;">fetchNumRows = 100</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_CloseTable(Table = F90005)</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_ClearSequencing</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_ClearSelection</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 ORACLE DBFreeReq conn=03F46130</span><br /><span style="font-size: 8pt;">requ=06C7FE88 CLOSE</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_ClearBuffers</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Exiting JDB_ClearBuffers with success.</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Exiting JDB_CloseTable(Table = F90005) with</span><br /><span style="font-size: 8pt;">Success</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Entering JDB_FreeUser</span><br /><span style="font-size: 8pt;">Mar 18 16:16:27 ** 1548/1300 Leaving JDE_SendEMailSMTP with return code value: &lt;0&gt;</span></div>
+</li>
+</ul>
+</ol>
+</div>
+<p> </p>
+<p>       3. Use "Send Shortcut" feature from the Tools menu of any application and send a message to an User/Role or Distribution list.</p>
+<div class="kmnotebox">Note: In some situations if the body of the email is blank, the message will not be sent. There is a setting "SaveBlankTextMO = true" in the OWweb section in the jas.ini which will enable blank media to be stored in the F00165 table. If this is not true then blank media objects will not be saved and the email will not be sent. Making this ini setting equal to true will send e-mails even with a blank body in the Send Shortcut form.</div>
+<p> </p>
+<ul>
+<li>
+<p><a href="#top">Back to top</a></p>
+<a name="aref_section37"></a><h3 class="km">5. Shortcut Information and Setup</h3>
+<p>Most of the workflow processes send a shortcut link to an EnterpriseOne application. Normally, the shortcut contains a link to an approval form, but can be any type of form or application. The way the initial application, workflow process or report sends the link to the user is via the Send Message system function or Send Message Extended system function. Those system functions contain an "Active parameter" which provides a shortcut to an E1 application, approval form, etc. <br /><br />When external mail is used, the user will receive an e-mail containing a shortcut link for an E1 application. The shortcut URL is constructed using the JAS server settings. When the user clicks on the shortcut link in external mail, the URL will contain the protocol,  JAS server URL, and http port. <br /><br /><img src="../images/emal05.png" border="0" alt="ExternalMail" title="ExternalMail" hspace="0" vspace="0"/><br /><br /><img src="../images/emal06.png" border="0" alt="ClickOnLink" title="ClickOnLink" hspace="0" vspace="0"/></p>
+</li>
+</ul>
+<p> </p>
+<p style="margin-left: 30px;">In order for the shortcut URL to be generated correctly and sign the user into the correct environment, JAS server information needs to be setup. The following steps discuss the necessary JAS server setup.</p>
+<ol>
+<li style="margin-left: 30px;">Setup all JAS servers in P9654A. Go to P9654A, select JAVA Application Server node and press Add.</li>
+</ol>
+<p style="margin-left: 30px;"><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/emal07.png" alt="P986110WORD" title="P986110WORD" width="302"/></p>
+<p style="margin-left: 30px;"><br />    2.  One server must be designated as the primary JAS server by entering a "1"in Primary HTML Server. All other servers will have a "0" in Primary HTML server. The information on this form is used to construct the URL for the shortcut link in the external e-mail. The protocol, server URL, and port number are used to create the URL</p>
+<blockquote>Primary Server</blockquote>
+<blockquote><img src="../images/emal08.png" border="0" alt="P9654APrimarryWord" title="P9654APrimarryWord" hspace="0" vspace="0"/></blockquote>
+<blockquote>Secondary Server</blockquote>
+<blockquote><img src="../images/emal09.png" border="0" alt="P9654ASecondaryWord" title="P9654ASecondaryWord" hspace="0" vspace="0" align="bottom"/><br /><br />
+<div class="kmnotebox">NOTE: the Server URL  field needs to contain the fully qualified server name such as servername.domain.com or the ip address such as x.x.x.17.</div>
+</blockquote>
+<p style="margin-left: 30px;">    3.  Setup JAS server overrides in P986110 version ZJDE0003.</p>
+<p> </p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>There may be certain users or certain environments where you want a different JAS server for the workflow shortcut. For example: the primary JAS server is the production JAS server, but you want the development users to use a different server when working in DV. So you would setup the overrides to the primary JAS server in P986110.</li>
+<li>Another desirable scenario would be to have multiple JAS servers for same environment and same user.  However, in JAS server overrides (P986110 version ZJDE0003), the application is not allowing to activate such configuration as described above. The workaround is to create a Role acting like *PUBLIC, add this Role to the desired users and create the mappings in P986110|ZJDE0003 using this Role instead of *PUBLIC.</li>
+<li>The available values for Service Name are JAS, SVC_DEF, and RTE and are stored in UDC table H95/VT. From a workflow perspective, JAS and SVC_DEF are the only relevant values in H95/VT.</li>
+<ul>
+<li>RTE is reserved for the Real Time Events transaction server location setting. When doing a JAS lookup in P986110, the system first looks for an Object Name OMOBNM = "JAS" in F986101. If this entry is not found, then the system looks for OMOBNM= "SVC_DEF" as an alternative. SVC_DEF is just the default service that system defaults to when it does not find a particular one (i.e. JAS in case of workflow shortcut). </li>
+<li>The value that should be used the jas shortcut url configuration is JAS.</li>
+<li>Ports within the Service Configuration Revisions (P96110) have to match a JAS Server definition within JAS Server Definition (P9654A), on name as well as port.</li>
+</ul>
+<li>For 8.10, if you cannot find version 3, <span id="form1:panelPage1">install ESU PG3492 to get the new version named "Service Configuration"</span></li>
+</ul>
+</li>
+</ul>
+<p>             4.  In a load balancer environment in order for the shortcut link to contain the load balancer url and not the other Jas servers as defined in P9654A perform the following:</p>
+<ul style="list-style-type: circle;">
+<li style="list-style-type: none;">
+<ul style="list-style-type: circle;">
+<li>Add a new jas server record in P9654A for the load balancing using the load balancer url.</li>
+<li>Many times load balancer do not have a port number associated with them. <span id="form1:panelPage1">Internet standard states that if there is no port its assumed port 80 is used.</span> If that's the case use port 90 in the definition of the load balancer server in P9654A.</li>
+<li>If that doesn't work then configure the actual load balancer to user a port number and then use that port number in the definition of P9654A.</li>
+<li>Then setup an override in P986110 if necessary.</li>
+</ul>
+</li>
+</ul>
+<div class="kmnotebox">
+<p>These mappings need to be defined for both System and Server Map data sources including "J"environments</p>
+<p>If you do not have the jas server with matching port number setup in P9654A you will receive error "Invalid Logical Data Source" when setting up overrides in P986110.</p>
+<p>In order for the JAS server overrides to be effective in case of ROLE mappings, the user must sign in specifically with the role for which the mappings are made. Signing in with *ALL will ignore the mappings done at Role level.  See Comprehensive Solution On OCM and Its Role in JD Edwards EnterpriseOne. It states: OCM (P986110) only uses mappings defined for the Role when the user signs-on as the specific role. If a user signs-on as *ALL, then by design, mappings defined for the role are not used. OCM will first look for a mapping at the *PUBLIC level and then the individual User level when the user signs on as *ALL.  </span></p>
+</div>
+<p style="list-style-type: none;"> </p>
+<ul>
+<li style="list-style-type: none;"><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/emal10.png" alt="P9654MAINSCREENWORD" title="P9654MAINSCREENWORD" width="568"/></li>
+<li style="list-style-type: none;">
+<p><br />The following is the hierarchy used in determining how to construct the URL</p>
+</li>
+<li>
+<ol>
+<li>If job is run on the Enterprise server:</li>
+</ol>
+<blockquote>
+<ul>
+<li>The system will look at JAS server override mapping in P986110, Environment/Service Configuration. The system will use the record found here to find the JAS server parameters defined in P9654A. The system will use the protocol, hostname plus domain name (defined in the Server URL field) and port to construct the shortcut URL.</li>
+<li>If the JAS service mapping is not set up, it will use the primary JAS server specified in P9654A. The JAS preference section of the jde.ini of the enterprise server is not used.</li>
+</ul>
+</blockquote>
+<p>    2.  If job is run on Fat, Windows client:</p>
+<blockquote>
+<ul>
+<li>The system will look at JAS server override mapping in Environment/Service Configuration, P986110.</li>
+<li>If the mapping does not exist, it will look at the JAS server listed in the JAS Preference section of the jde.ini on the workstation.</li>
+<li>If that's not setup, it will use the primary JAS server specified in P9654A.</li>
+</ul>
+</blockquote>
+<p>If P9564A and JAS server overrides in P986110 version ZJDE0003 not configured correctly, you will get these error:</p>
+<div class="kmcodeblock"><span style="font-size: 8pt;">18753/-167733552 WRK:Starting jdeCallObject         Mon Jun 23 16:33:52.127982 jdeshortcut.c671</span><br /><span style="font-size: 8pt;">GetPrimaryJasServerFromDL : Primary Jas Server Info not found</span><br /><br /><span style="font-size: 8pt;">18753/-167733552 WRK:Starting jdeCallObject         Mon Jun 23 16:33:52.128095 jdeshortcut.c1282</span><br /><span style="font-size: 8pt;">GenWebShortcut : Failed in GetJasServerConf</span><br /><br /><span style="font-size: 8pt;">18753/-167733552 WRK:Starting jdeCallObject         Mon Jun 23 16:33:52.128156 jdemsg.c1900</span><br /><span style="font-size: 8pt;">DoSendMessageSingle : GenShortcut Failed for shortcut 0/1.</span><br /><br /><span style="font-size: 8pt;">18753/-167733552 WRK:Starting jdeCallObject         Mon Jun 23 16:33:52.128209 jdemsg.c1210</span><br /><span style="font-size: 8pt;">DoSendMessageSingleWithPref : shortcut generation failed</span></div>
+</li>
+</ul>
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

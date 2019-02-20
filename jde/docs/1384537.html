@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FAQ - Frequently Asked Questions Regarding Writing, Updating, Undoing Work With Payment Groups (P04571, R04571, R04575) </title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>FAQ - Frequently Asked Questions Regarding Writing, Updating, Undoing Work With Payment Groups (P04571, R04571, R04575) </h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Question 1:</strong>  Is there an audit trail when using the UNDO feature on a payment group?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 2:</strong>  What print program is Processing Option 1: Default Print Program Version on the Default tab referring to?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 3:</strong>  When writing a payment, if pressing Cancel on the pop up message why does the system ignore the command and continue to the printer selection? </a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 4: </strong>Is it possible to have different payment GL Dates for payments in a single payment group?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Question 5:</strong>  Why does the automatic payment process automatically populate the Cleared Date field?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 6:</strong>  Why is the Work with Payment Groups (P04571) unable to search for payment groups with a blank Payment Instrument (PYIN)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Question 7:</strong>  In the Work with Payment Detail application, is it possible to select an entire voucher instead of the vouchers individual pay items when choosing the Undo option in the Row Exit?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Question 8:</strong> Currently when user clicks on "Update" from Work With Payment Group P04571, system is defaulted to call print attachment program R04575 version ZJDE0001. If user wants to use other version beside ZJDE0001 where should this be setup?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Question 9: </strong> Which payment programs need to be run in a single-threaded job queue?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Question 10: </strong> Is there a way to use a custom Document Type for payments based on the Payment Instrument?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Question 11: </strong> Does EnterpriseOne offer functionality on credit card payments?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Question 12:</strong>  We want to pay certain suppliers with the corporate American Express (AMEX) cards. How do we set up AMEX to make payments to them?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section213"><strong>Question 13:</strong> How do you create a Record Code (RC) 2 in the F04573 table?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section214"><strong>Question 14: </strong> Is it possible to create or modify the Payment Order file so that it aligns with the requirements of a specific bank?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section215"><strong>Question 15:</strong> Is it possible to use the automatic payment process without creating an actual payment?</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides answers to frequently asked questions regarding Writing, Updating, Undoing Work With Payment Groups (P04571, R04571, R04575).</p>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<a name="aref_section21"></a><h4 class="km"><strong>Question 1:</strong>  Is there an audit trail when using the UNDO feature on a payment group?</h4>
+<p><strong>Answer 1:</strong>  Processing Option 2: Post Void Payments in the Update tab of the Work with Payment Groups (P04571) determines if an audit trail exists for payments that have been undone. Please note that this is only valid if a payment or payment group has been Undone. If using the Reset functionality, no audit trail is created.</p>
+<div class="kmnotebox">Note: It allows you to keep track of payments that have been undone or reset. Use this processing option to specify whether you want the system to post void payments (i.e zero dollar check) to the general ledger (F0911). Void payments include alignment checks and reset payments. Void payments also include checks that are printed as Void so that the stub can be used for additional information continued from the previous stub (when using attachments R04573). Void payments are not the same as voided payments. A void payment is a check that has the words VOID***VOID*** VOID printed on it.</div>
+<hr />
+<a name="aref_section22"></a><h4 class="km"><strong>Question 2:</strong>  What print program is Processing Option 1: Default Print Program Version on the Default tab referring to?</h4>
+<p><strong>Answer 2: </strong> The Print Program is defined based on GL Bank Account and Payment Instrument in the Work with Payment Instrument Defaults application (P0417). This processing option is used to determine what version of the print program is used if a version is not also specified in the Work with Payment Instrument Defaults (P0417).</p>
+<hr />
+<a name="aref_section23"></a><h4 class="km"><strong>Question 3:</strong>  When writing a payment, if pressing Cancel on the pop up message why does the system ignore the command and continue to the printer selection? </h4>
+<p><strong>Answer 3: </strong> In UDC table 00/RR (Object in Use Application ID), ensure that the record for F0030 has a Special Handling Code (data dictionary item SPHD) of 1. If this field is left blank, the system ignores the cancel feature.</p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Question 4: </strong>Is it possible to have different payment GL Dates for payments in a single payment group?</h4>
+<p><strong>Answer 4:</strong>  It is not possible to have multiple GL Dates in a single payment group.</p>
+<hr />
+<a name="aref_section25"></a><h4 class="km"><strong>Question 5:</strong>  Why does the automatic payment process automatically populate the Cleared Date field?</h4>
+<p><strong>Answer 5: </strong> The Cleared Date (data dictionary item VLDT) is automatically populated during the payment process. However, it can be changed to a desired date during the automatic payment process:</p>
+<ol>
+<li>In Work with Payment Groups (P04571), inquire on the desired payment group.</li>
+<li>Highlight the payment group.</li>
+<li>Click Select.</li>
+<li>Choose the Value Date option from the Form exit.</li>
+<li>Complete Global Value Date (VLDT) field.</li>
+<li>Select the Load Date option from the Form exit.</li>
+<li>Click OK.</li>
+<li>Press Close to return to the Work with Payment Groups (P04571).</li>
+</ol>
+<hr />
+<a name="aref_section26"></a><h4 class="km"><strong>Question 6:</strong>  Why is the Work with Payment Groups (P04571) unable to search for payment groups with a blank Payment Instrument (PYIN)?</h4>
+<p><strong>Answer 6: </strong> The program is unable to search by a blank value. If it is necessary to search on the default payment instrument (data dictionary item PYIN), you should use a different value as your default Payment Instrument by updating the Supplier Master (P04012) and outstanding vouchers (P0411S) accordingly.</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong>Question 7:</strong>  In the Work with Payment Detail application, is it possible to select an entire voucher instead of the vouchers individual pay items when choosing the Undo option in the Row Exit?</h4>
+<p><strong>Answer 7: </strong> The Payment Creation field (data dictionary item SCK) in the Supplier Master (P04012) determines if individual pay items or entire vouchers can be selected in the Work with Payment Detail application (P04573):</p>
+<ul>
+<li>If the Payment Creation Payment Detail application (P04573), thereby requiring each pay item to be selected individually for the Undo option in the Row Exit.</li>
+<li>If the Payment Creation (SCK) field for a supplier is set to By Voucher (value equal to 3), payments in the Payment Detail application (P04573) are created and displayed as single vouchers, despite the number of pay items. This configuration eliminates the need (or the ability) to select each individual pay item in a voucher to use the Undo option in the Row Exit.</li>
+</ul>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Question 8:</strong> Currently when user clicks on "Update" from Work With Payment Group P04571, system is defaulted to call print attachment program R04575 version ZJDE0001. If user wants to use other version beside ZJDE0001 where should this be setup?</h4>
+<p><strong>Answer 8:</strong> System is hard coded to call AP Auto Payments - Update Driver R04575 version ZJDE0001 in Work With Payment Group. It is not possible to use other custom version unless you change the code in the program.</p>
+<hr />
+<a name="aref_section29"></a><h4 class="km"><strong>Question 9: </strong> Which payment programs need to be run in a single-threaded job queue?</h4>
+<p><strong>Answer 9: </strong> It is recommended that the following payment programs are run in a single-threaded job queue to reduce the possibility of duplicate payments:</p>
+<ul>
+<li>AP Auto Payments - Print Driver (R04571).</li>
+<li>AP Auto Payments - Update Driver (R04575).</li>
+</ul>
+<hr />
+<a name="aref_section210"></a><h4 class="km"><strong>Question 10: </strong> Is there a way to use a custom Document Type for payments based on the Payment Instrument?</h4>
+<p><strong>Answer 10:</strong>  All Payment Document types are hard coded to be used depending on the process used to create the payment, e.g. PT for EFT payments, PK for regular Automatic Payments, PN for Manual Payments, PB for UK BACS, etc. There are no processing options to change this document type.</p>
+<hr />
+<a name="aref_section211"></a><h4 class="km"><strong>Question 11: </strong> Does EnterpriseOne offer functionality on credit card payments?</h4>
+<p><strong>Answer 11: </strong> No, EnterpriseOne currently does not have functionality in Accounts Payable to set up credit card payment information. Workaround suggestions include:</p>
+<ol>
+<li>Set up an alternate payee where the alternate payee is the credit card company.</li>
+<li>Use the P0030A (Bank Account Cross Reference) to store the credit card information for the specific vendor. Input the credit card number in the bank account number field. The description field could hold the detailed information so the vendor could apply the payment. To put the information into a txt file, you could use the EFT process. Payments are written to the F04572OW table. Our EFT payments are in CTX format (or PPD format starting at release 8.9 and above). Oracle Software Support would not be able to support this setup, as you may need to customize the text file to meet your bank's requirements.</li>
+<li>Set up a new payment instrument but make sure it is associated to a valid JDE version of the payment program so you can create the ACH file format properly. You can test the P04572T2 to see if it meets your needs or if you are currently using a JDE program to write other ACH payments, copy the details from that payment instrument to the new one. This allows you to use the same format as other payments, but the payment group itself remains separate and will not print a live check.</li>
+</ol>
+<hr />
+<p> </p>
+<div class="kmnotebox">NOTE:  These are suggested workarounds, however, they are not supported by Oracle Software Support (OSS).</div>
+<hr />
+<a name="aref_section212"></a><h4 class="km"><strong>Question 12:</strong>  We want to pay certain suppliers with the corporate American Express (AMEX) cards. How do we set up AMEX to make payments to them?</h4>
+<p><strong>Answer 12:</strong>  The Factor/Special Payee field is the appropriate place to put the AMEX address book number for the suppliers that are paid via AMEX. This ensures that suppliers' vouchers can still be entered for the suppliers themselves, but the payee (i.e. the person or company paying the bill) are Amex. The only other thing to keep in mind is to group payment control groups (via R04570) based on payee, so the payment is created to be sent to AMEX.</p>
+<hr />
+<a name="aref_section213"></a><h4 class="km"><strong>Question 13:</strong> How do you create a Record Code (RC) 2 in the F04573 table?</h4>
+<p><strong>Answer 13:</strong> <span id="form1:panelPage1">To summarize, when you run create payment control groups (R04570), change the first processing option under Summarize to 1. After the payment has been written, double check the F04573. You should see 2 lines for the payment with an RC 1 and RC 2.</span></p>
+<hr />
+<p> </p>
+<a name="aref_section214"></a><h4 class="km"><strong>Question 14: </strong> Is it possible to create or modify the Payment Order file so that it aligns with the requirements of a specific bank?</h4>
+<p><strong>Answer 14: </strong> No, this is not possible. E1 provides a simple payment writing process that cannot be changed or modified without customization. To meet a bank's specific requirements pertaining to the Payment Order file, you will need to customize your payment process.</p>
+<hr />
+<p> </p>
+<p> </p>
+<a name="aref_section215"></a><h4 class="km"><strong>Question 15:</strong> Is it possible to use the automatic payment process without creating an actual payment?</h4>
+<p><strong>Answer 15:</strong> When you use the Automatic Payment Process, the system will always create either a check or an EFT payment file when you WRT the payment. Even if you setup a dummy print payment program (like for example P5504572NPxxx), you need to have a valid object R5504572NPxxx. If object R5504572NPxxx does not exist, the Work with Payment Groups application will not allow you to write (WRT) the payment and move it to the next status (UPD - Update).</p>
+<p>You can use the Automatic Payment Process and then remove the EFT payment file from the F04572OW and F0457 tables so it does not accidentally get sent to the bank. The unique key for both tables is the Member ID field, which is also visible in the P0457 application (scroll to your right to see the field). If you inquire by the Member ID field, you should see all the records belonging to that EFT payment file (one record in F0457, multiple records in F04572OW).</p>
+<p><br />You can use the Manual Payment program P0413M without creating a check or EFT payment file if you do not check the box &ldquo;Print Payment&rdquo;. The Manual Payment application will create record(s) in the F0413 (Payment Header) and F0414 (Payment Detail), but no actual payment</p>
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

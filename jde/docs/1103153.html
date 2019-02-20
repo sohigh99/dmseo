@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Setup Dynamic Subject and Body for E-mail Delivery using Embedded BI Publisher with in JDE?</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Setup Dynamic Subject and Body for E-mail Delivery using Embedded BI Publisher with in JDE?</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Pre-requisites</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Overview </a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Example</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34">Troubleshooting</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><span>Starting with EnterpriseOne Tools Release 8.98.3.0 and ESU containing enhancement BUG 11019115 for EnterpriseOne 9.0 and BUG 11024413 for EnterpriseOne 8.12, it is possible to deliver BI Publisher reports via e-mail containing a custom subject and body. According to the instructions in the Guide </span>JD Edwards EnterpriseOne Tools Release 8.98 Update 3 Enhanced Embedded BI Publisher Email Delivery Options it is possible to define a custom subject and body that will be used every time the report definition runs.</span></p>
+<p>The subject and body are defined by a custom data item (glossary group 'E') and values that are inserted in placeholders defined in the message. These values are passed via the data structure associated to the custom data item. The actual values are defined by clicking the button "Define Values" in the Report Definition/Burst and Delivery form (P95620).</p>
+<p>However, unless these values are manually modified between different runs of the same report definition, the subject and body of the e-mail will be all the same. Similarly, if using burst, all bursted emails will have the same subject and body.  </p>
+<p>It is possible to <span>dynamically change the e-mail subject or body using substitution parameters that take value from Source XML. </span></p>
+<p>This document contains a step by step example of how to setup custom e-mail subject and body in reports delivered by embedded BI Publisher for EnterpriseOne 8.12 and later, with tools release 8.98.3.0 and later.</p>
+
+
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> This document is <span>intended for the JDE Report Developer and System administrators who are responsible for customizing the Report definition email delivery </span></p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Pre-requisites</h3>
+<ul>
+<li>Please make sure you follow post install instructions for the ESU containing bug 11024413 for 8.12, and bug 11019115 for 9.0.</li>
+<li>After applying ESU and executing their special instructions, ensure tables F95xxxx are generated in each respective environment&rsquo;s Control Tables data source and that OCM mappings are added accordingly. Failure to execute these instructions will prevent custom email messages from being sent as data structure mappings will not save and text substitution will not work.</li>
+</ul>
+<a name="aref_section32"></a><h3 class="km">Overview </h3>
+<p>To dynamically change the e-mail subject or body you need to use a substitution parameters of the data structure. These can be mapped with a literal or with report data. The tools code checks for the first character of mapped data, and if it is '/' it treats it as XML field from report data. If the first character is not '/', the value will be treated as literal data.</p>
+<div class="kmnotebox">Note: If you specify a dynamic XML field, make sure it actually exists in the XML source. If the tag is not found in the XML Source it will cause the Report Definition to remain in 'X' status indefinitely and an email will not be delivered. XML PUBLISHER logs will also have message "[Tag_Name] not found in the xml." indicating the issue.</div>
+<a name="aref_section33"></a><h3 class="km">Example</h3>
+<p>Below are steps demonstrating how to setup a custom email subject and body in bursted BI Publisher output. For this example we will use the standard report R0006P|XJDE0001. The output will be bursted by field with XPATH '/R0006P/Business_Unit_Report_Driver_S3_Group/Business_Unit_Report_LBH_S6'. The <a href="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1103153.1&attachid=1103153.1:SAMPLETEMPLATE&amp;clickstream=no" alt="Sample Template" title="Sample Template">Sample Template</a> used in this test is attached and it is provided only for reference.</p>
+<ol>
+<li>Identify or create a data structure that can accommodate the values you want to pass into the e-mail subject and/or body<br /> <br /> <img src="../images/xe01.png" border="0" hspace="0" align="bottom"/><br />  <br />  </li>
+<li>Create a custom data item with<strong> glossary group 'E'</strong>. The description field will be the e-mail subject. The Item Glossary text will be the body . In tests conducted by Oracle support, the maximum length of the subject field was 256 characters (after values were expanded) and the e-mail body can be up to 16KB.<br /> <br /> Deploy the new or modified data dictionary changes throughout your install as recommended in <a href="../docs/626511.html" alt="626511.1" title="626511.1" target="_blank">Deploying Data Dictionary Changes</a><br /> <br />
+<div class="kmnotebox"><strong>NOTES</strong><br /><br />1. Data Dictionary Item Glossary Text cannot be blank or a space character. Enter a non-blank character such as dot in the glossary text.<br /><br />2. Ensure OCM for GT92002 maps to Data Dictionary data source in Server Map data source. Otherwise report delivery fails with FD status with message <em>XmlpProxy.sendEMail():  java.lang.NullPointerExceptio</em>n in XMLP kernel jas log.<br /><br />3. It is not currently possible to include any formatting in the body of the email. The message will be sent as a plain text format. Enhancement BUG 16636067 ABILITY TO FORMAT HTML IN BODY OF EMAILS SENT FROM BI PUBLISHER requests such functionality by allowing use of HTML tags inside the glossary field.<br /><br />4. If ampersand '&amp;' is present in the glossary text of a DD item used in send message, the '&amp;' is dropped in the output message because the system assumes that all '&amp;' are for the purpose of text substitution parameters. Issue is reported in Bug 17259718 ENABLE '&amp;' IN WORKFLOW GLOSSARY DRIVEN EMAIL, fixed in tools release 9.1.4.0.<br /><br />5. There is no specific limit in the number of text substitution parameters. However if the number of parameters is large (100-150), it can affect performance in loading of the text substitution parameters in the send message system function.</div>
+</li>
+<li>  <br /> <img src="../images/xe02.png" border="0" hspace="0" align="bottom"/><br /> <br /> <img src="../images/xe03.png" border="0" hspace="0" align="bottom"/><br /> <br /> <img src="../images/xe04.png" border="0" hspace="0" align="bottom"/><br />  <br />  </li>
+<li>Obtain the XML Source of the EnterpriseOne report and identify the fields you want to include in your custom email subject and/or body<br /> <br /> <img src="../images/xe05.png" border="0" hspace="0" align="bottom"/><br /> <br />  </li>
+<li>In the Report Definition application / Bursting and Delivery form, enter the alias of your custom data item in the "Data Item for Subject and Body" field. <span style="text-decoration: underline;"><strong>Tab out</strong></span> and then click on the "Define Values" button. This will open the "Structure Member Value Revisions" form<br /> <br /> <img src="../images/xe06.png" border="0" hspace="0" align="bottom"/><br /> <br /> <img src="../images/xe07.png" border="0" hspace="0" align="bottom"/><br /> <br />  </li>
+<li>Submit the report definition and verify the results. All bursted outputs were delivered and each e-mail had a specific subject and body<br /> <br /> <img src="../images/xe08.png" border="0" hspace="0" align="bottom"/><br /> <br /> <img src="../images/xe09.png" border="0" hspace="0" align="bottom"/><br />  </li>
+</ol>
+<p>For information on other e-mail Delivery options consult the "JD Edwards EnterpriseOne Tools Release 8.98 Update 3 Enhanced Embedded BI Publisher Email Delivery Options" </p>
+<div class="kmnotebox">Please note that even though new tables F95625 and F95626 were created to hold records for recipient language preference and email body substitution values, no code was written to promote records in these tables. As a result it is necessary to add the values by logging in each environment as promotion will not transfer language preferences and email body substitution records. Defect Bug 18469350 INCOMPLETE PROMOTION BI RELATED OBJECTS was raised to request this behavior to be corrected. The enhancement is first included in EnterpriseOne application release 9.1.4.5.</div>
+<p>For older releases refer to <a href="../docs/754249.html" alt="754249.1" title="754249.1" target="_blank">How to Change E-Mail Delivery Text) for information about how to change the Subject and Body text of the e-mail.</a></p>
+<a name="aref_section34"></a><h3 class="km">Troubleshooting</h3>
+<ul>
+<li>Make sure that F95625 and F95626 tables have the required OCMs</li>
+<li>Make sure to deploy the DD item changes properly ( - End JDE services  - Delete the global and data dictionary table specs (glbltbl, dddict, ddtext - .ddb and .xdb) under each pathcode  - Restart services)</li>
+</ul>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

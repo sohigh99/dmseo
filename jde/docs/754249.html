@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHerAP</title>
+    <title>How to Change E-Mail Delivery Text</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -80,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThisAgain</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Change E-Mail Delivery Text</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -108,13 +108,47 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<table><tr><td width='0'></td><td><A HREF="#GOAL">Goal</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+<hr size=1><p>
 
 
 
-<!-- ======================================== Body Starts Here =================================== -->
-
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+<H2 class=km><A NAME="GOAL"></A>Goal</H2>
+<p>When sending an e-mail using the Report Definition delivery options, the e-mail contains a generic text.&nbsp; Is there a way to change this text to be specific to the customer's need?</p>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<p>The Subject and Body Text of the e-mail can be changed by changing the data dictionary items.</p>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><strong>951S</strong> - Report Definition email subject text<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Will change the subject of the XMLP RD delivery e-mail.<br />
+<br />
+<br />
+<strong>951T</strong> - Report Definition email attachment text<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Will change the text in the body of the e-mail.</p>
+<p>&nbsp;</p>
+<p>To change these data dictionary items:</p>
+<ol>
+<li>Enter P92002 - Data Dictionary Glossary Items</li>
+<li>Search for and Select the appropriate Data Item</li>
+<li>Select the Item Glossary tab</li>
+<li>Change text as required<br />
+<br />
+</li>
+</ol>
+<p>Changes may need to be deployed. Refer to <a href='../docs/626511.html'>Deploying Data Dictionary Changes</a> for more information about how to deploy data dictionary changes. If the Data Dictionary is environment specific you will need to promote and deploy these changes to all environments.</p>
+<div class="kmnotebox"><strong>Note:</strong> the ability to dynamically set e-mail subject and body is available in EnterpriseOne 8.12 and later, with tools release 8.98.3.0 and later. Refer to <a href='../docs/1103153.html'>How to Setup Dynamic Subject and Body for E-mail Delivery?</a> for more information.</div>
+<p>&nbsp;</p>
+<p>It is also possible to somewhat customize the <strong>From</strong> field of the e-mail address sent by the BI Publisher engine. The From address can be changed from the server JDE.INI, the system looks for <strong>PSFT_SYSTEM</strong> in the JDEMAIL section.&nbsp; An example would be:</p>
+<p style="margin-left: 30px;"><span class="kmfixedwidthfont">[JDEMAIL]<br />
+...<br />
+Rule3=110|DEFAULT|PSFT_SYSTEM=PSFT_System@oracle.com</span></p>
+<p>change to:</p>
+<p style="margin-left: 30px;"><span class="kmfixedwidthfont">[JDEMAIL]<br />
+...<br />
+Rule3=110|DEFAULT|PSFT_SYSTEM=mymailserver@mycompany.com</span></p>
+<p>Keep in mind that this is a global setting affecting all emails sent by the system and will only take effect after bouncing services.<br />
+<br />
+</p>
 
 
 

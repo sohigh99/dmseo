@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting Work With Payment Control Groups (P04571, R04571, R04575, R04576)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Work With Payment Control Groups (P04571, R04571, R04575, R04576)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#TRBLSHOOT">Troubleshooting Steps</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Question 1: </strong> Why does the system increment the Next Payment Number in the Work with GL Bank Accounts (P0030G) when canceling out on the Printer Selection (P986162) screen during the Write process?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 2:</strong>  What causes a voucher to get stuck in a # (Payment in Progress) Pay Status?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 3:</strong>  When writing a payment, if pressing Cancel on the pop up message why does the system ignore the command and continue to the printer selection? </a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 4:</strong>  When writing an automatic payment, why is a 'User Defined Error Code' triggered at the Printer Selection (P986162)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Question 5: </strong> After clicking OK on the Write Payments (W04572A) form, why does the system trigger a User Defined Code error for UDC table 04/PP (Produce Bank File)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 6: </strong> Is it possible to disable the Check Number Sequencing warning message that is displayed when writing payments in Work with Payment Groups (P04571)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Question 7:</strong>  What steps should be taken if a payment group Next Status does not change after the Write process completes?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Question 8: </strong> Why is a blank payment number assigned to a check?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Question 9: </strong> The system crashed during the Write of a Payment Group. How do we finish out the rest of the Write process?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Question 10: </strong> Why is a User Defined Code error given when Writing payments in Work with Payment Groups (P04571)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Question 11:</strong>  When resetting a payment group and reusing a check, when we print the check, why does the number reused show twice; once as zero dollars and as VOID and then a second time but for the correct amount?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Question 12:</strong> Why does the system only process the first 20 payment groups when a large number of payment groups have been selected to Write in Work with Payment Control Groups (P04571)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section213"><strong>Question 13: </strong>How can an invalid "Record In Use" error be cleared if no one is accessing a payment group and no one is able to make an update to this group?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section214"><strong>Question 15</strong>: An A/P Check was printed (written), mailed, and cashed, but in E1 the F0911 states "void payment" and there are no F0411 records. The invoices on the check were not flagged as paid, so the following week the same invoices were paid again, along with more invoices, why?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section215"><strong>Question 16:</strong> Can old records in the F04571 table, which aren't associated with any records in the F04572 or F04573 records, be deleted?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section216"><strong>Question 17:</strong> What causes the Update Driver (R04575) or the A/P Auto Payment Register(R04576) to fail with a work center error indicating that the "record being inserted into table F0414 already exists"?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section217"><strong>Question 18:</strong> After upgrading to a new release, we have trouble sporadically with writing and/or updating payments. We have tried everything on this list but still have trouble. Is there anything else we can try?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section218"><strong>Question 19: </strong>Why P04571 is allowing to Update a Payment Control Group (PCG) several times, resulting the vouchers including in the PCG with an Open Amount "zero" or negative after the payment group is Undo?</a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document helps troubleshoot issues with Work Within Payment Control Groups also known as Write, Updating or Undoing payment groups within EntepriseOne Accounts Payable.</p>
+<H2 class=km><A NAME="TRBLSHOOT"></A>Troubleshooting Steps</H2>
+<a name="aref_section21"></a><h4 class="km"><strong>Question 1: </strong> Why does the system increment the Next Payment Number in the Work with GL Bank Accounts (P0030G) when canceling out on the Printer Selection (P986162) screen during the Write process?</h4>
+<p><strong>Answer 1:</strong>  If the user clicks OK on the warning message that appears during the Write process, but then decides to Cancel, the payment number needs to be manually reset because it has already been incremented prior to Printer Selection (P986162).</p>
+<hr />
+<a name="aref_section22"></a><h4 class="km"><strong>Question 2:</strong>  What causes a voucher to get stuck in a # (Payment in Progress) Pay Status?</h4>
+<p><strong>Answer 2:</strong>  Vouchers getting stuck in a # Pay Status (data dictionary item PST) can be caused by a multitude of reasons. Here are a couple troubleshooting steps to try:</p>
+<ol>
+<li>Ensure the AP Auto Payments (R04571) and AP Auto Payments Update Driver (R04575) UBEs are running in a single-threaded job queue.</li>
+<li>When there are no automatic payment groups being processed, the payment worktables (i.e. F04571, F04572, F04573) should be clear. Using a database utility, ensure these tables are empty. Any leftover data found in these tables may cause unpredictable results during the payment process. If data exists in these tables when there are no payment groups in process, do a table generation on these three tables to clear all data and refresh the tables.</li>
+</ol>
+<hr />
+<a name="aref_section23"></a><h4 class="km"><strong>Question 3:</strong>  When writing a payment, if pressing Cancel on the pop up message why does the system ignore the command and continue to the printer selection? </h4>
+<p class="km"><strong><strong>Answer 3: </strong> </strong>In UDC table 00/RR (Object in Use Application ID), ensure that the record for F0030 has a Special Handling Code (data dictionary item SPHD) of 1. If this field is left blank, the system ignores the cancel feature.</p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Question 4:</strong>  When writing an automatic payment, why is a 'User Defined Error Code' triggered at the Printer Selection (P986162)?</h4>
+<p><strong>Answer 4:</strong>  This issue can be caused by an incorrect Payment Instrument (data dictionary item PYIN) setup in the Work with Payment Instrument Defaults application (P0417). If the payment instrument being used has been configured with an association to a GL Bank Account and the current payment is not using that GL Bank Account, the system cannot determine what print programs to use when writing a payment. To correct this issue, add a Payment Instrument Default for that Payment Instrument with no GL Bank Account association.</p>
+<hr />
+<a name="aref_section25"></a><h4 class="km"><strong>Question 5: </strong> After clicking OK on the Write Payments (W04572A) form, why does the system trigger a User Defined Code error for UDC table 04/PP (Produce Bank File)?</h4>
+<p><strong>Answer 5: </strong> This issue usually occurs when the print program the system is trying to use is not defined in UDC 04/PP (Produce Bank File). To confirm that the Print Program exists in this UDC:</p>
+<ol>
+<li>Go to Work with Payment Groups (P04571).</li>
+<li>Highlight the payment group or pay item.</li>
+<li>Use the Control option from the Row exit.</li>
+<li>Pick a valid program and version using the Visual Assist.</li>
+<li>Write the payment again. </li>
+</ol>
+<hr />
+<a name="aref_section26"></a><h4 class="km"><strong>Question 6: </strong> Is it possible to disable the Check Number Sequencing warning message that is displayed when writing payments in Work with Payment Groups (P04571)?</h4>
+<p><strong>Answer 6: </strong> This warning message cannot be disabled.</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong>Question 7:</strong>  What steps should be taken if a payment group Next Status does not change after the Write process completes?</h4>
+<p><strong>Answer 7:</strong>  To correct this issue, follow the steps below:</p>
+<ol>
+<li>Undo the payment group in the Work with Payment Groups application (P04571).</li>
+<li>Ensure that the temporary tables AP Payment Processing - Header (F04571), AP Payment Processing - Summary (F04572) and AP Payment Processing Detail (F04573) have been cleared for the payment group in question.</li>
+<li>Run the Create Payment Control Groups (R04570) to re-create the payment group.</li>
+<li>Go to Work with Payment Groups (P04571) to find the new payment group.</li>
+<li>Use the Write option from the Row exit.</li>
+</ol>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Question 8: </strong> Why is a blank payment number assigned to a check?</h4>
+<p><strong>Answer 8: </strong> This issue can be the result of one of the following:</p>
+<ul>
+<li>The user overwrote the value in the Next Payment field of the Write Payments (P04572W2) form when writing the payment.</li>
+<li>The Next Payment Number (data dictionary item NXTC) field in the Work with GL Bank Accounts (P0030G) for the related bank account is blank, and the user did not specify a number in the Next Number field in the Write Payments (P04572W2) form.</li>
+</ul>
+<p>In either scenario, the system erroneously assigns a blank payment number to the first check. All subsequent payment numbers start with 1 and updates the Next Payment Number field for the GL Bank Account Information (P0030G).</p>
+<hr />
+<a name="aref_section29"></a><h4 class="km"><strong>Question 9: </strong> The system crashed during the Write of a Payment Group. How do we finish out the rest of the Write process?</h4>
+<p><strong>Answer 9: </strong> With a system crash or power failure there is a high chance there is data corruption within the payment tables,  Therefore, rather then finishing the payment group, the recommendation would be to undo all payment groups that exist in the "Work With Payment Group" screen for all statuses both Write and Update. Be sure no one is creating or working on payment groups during this process. Once you undo all groups, this should reset all vouchers back to open status, then run a query over the three payment tables: F04571, F04572 and F04573 to determine if there are any records in these tables.  If there is data  in these tables remove the records or regenerate the tables. (Have your IT group do this step). Once all records are cleared form the tables, then the user can recreate the payment group and should  be able to successfully complete writing the payments.  </p>
+<p>If a voucher has a negative open amount, use its document number to query the F0414 to see what payment information appears for that voucher. If there is a PK or PN showing for the voucher, then it has been paid.  If you see a PK (or PN) and a PO, the check has been voided and the voucher is unpaid.  You may also see PK (or PN) and a PO and another PK, which means there was an initial payment, but it was voided, then it was paid again.  If the voucher shows as paid per the F0414 table, you need to SQL the F0411 to show the voucher as paid; that is open amount equal zero and pay status field equal 'P'. If there is no payment or the payment was voided, then you need to SQL the F0411 to show the voucher as open; update the Open amount to equal Gross amount and pay status would be set to 'A' for approved for payment or H for on hold.</p>
+<div class="kmnotebox">NOTE: If part of the group did finish, you need to either void out the payments or make sure when you write the new group to set the align checks to match so they print correctly in the new PDF.</div>
+<hr />
+<a name="aref_section210"></a><h4 class="km"><strong>Question 10: </strong> Why is a User Defined Code error given when Writing payments in Work with Payment Groups (P04571)?</h4>
+<p><strong>Answer 10:</strong>  This issue may be caused by incomplete records in the AP Payment Processing Header (F04571). If any of the following fields are blank, it is because the Payment Instrument (data dictionary item PYIN) is not configured correctly:</p>
+<ul>
+<li>Payment Print Program (PGMP).</li>
+<li>Register Print Program (PGMR).</li>
+<li>Attachments Print Program (PGMA).</li>
+<li>Debit Statement Print Program (PGMD).</li>
+</ul>
+<p>To fix this issue, undo the payment group and correct the payment instrument setup.</p>
+<hr />
+<a name="aref_section211"></a><h4 class="km"><strong>Question 11:</strong>  When resetting a payment group and reusing a check, when we print the check, why does the number reused show twice; once as zero dollars and as VOID and then a second time but for the correct amount?</h4>
+<p><strong>Answer 11: </strong>  This is functioning as designed.  WhenProcessing Option 2: Post Void Payments on the Update tab of the Work with Payment Groups (P04571) is turned set to 1, the system is designed to create zero dollar checks for all voids.  This functionality can help prevent fraud so that users can not print checks, reset the group and still mail and cash the check.  There are no current plans to redesign this feature at this time. </p>
+<hr />
+<a name="aref_section212"></a><h4 class="km"><strong>Question 12:</strong> Why does the system only process the first 20 payment groups when a large number of payment groups have been selected to Write in Work with Payment Control Groups (P04571)?</h4>
+<p><strong>Answer 12:</strong> When selecting more than 20 payment groups in Work with Payment Groups (P04571) to write payments, use the Write Row exit, which opens Write Payments (P04572), form W04572A. On this form, click the Go To End button to have all the rows loaded and to process all payment groups. Otherwise, only payment groups corresponding to the first 19 different GL bank accounts visible are processed.</p>
+<hr />
+<a name="aref_section213"></a><h4 class="km"><strong>Question 13: </strong>How can an invalid "Record In Use" error be cleared if no one is accessing a payment group and no one is able to make an update to this group?</h4>
+<p class="km"><strong>Answer 14: </strong>To clear this error on a payment group:</p>
+<ol>
+<li class="km">Access the A/P Payment Processing &ndash; Header Table (F04571).</li>
+<li class="km">Find the Generic Flag 4 (GLFL4) field. Thisfield is used for locking the Payment Group. If it is populated, then the corresponding payment record cannot be chosen for update.</li>
+<li class="km">Reset the field to &lt;blank&gt;. Since there isn&rsquo;t a standard application to do this, the field will need to be reset using a database utility program with record update capability.</li>
+</ol>
+<div class="kmnotebox">WARNING: Please be aware that since this resolution may require SQL, it is strongly recommended any changes be made in Test and verifying the results prior to making any changes in Production.</div>
+<hr />
+<a name="aref_section214"></a><h4 class="km"><strong>Question 15</strong>: An A/P Check was printed (written), mailed, and cashed, but in E1 the F0911 states "void payment" and there are no F0411 records. The invoices on the check were not flagged as paid, so the following week the same invoices were paid again, along with more invoices, why?</h4>
+<p>We would like to figure out:</p>
+<ol>
+<li>What happened</li>
+<li>How to prevent this from happening again</li>
+<li>How to verify that other checks have not been sent out like this</li>
+</ol>
+<p><br /> <strong>Answer 15:</strong></p>
+<ol>
+<li>Since the AP Payment process is being done in "worktables", then it is possible for a check to be written, printed and mailed but, then the payment group undone or reset.  This would reopen the vouchers for further payment even though the check has been mailed.</li>
+<li>To prevent this, one suggestion is to have a Work with Payment Group version for "AP Processors" that has the reset and undo options secured.  Then have a second version for "AP Supervisor or Manager" which allows them to undo or reset a payment group if necessary.</li>
+<li>Can SQL query the F0411 to first identify all document numbers that have an open amount greater than zero then query the F0414  to see if any of these open documents have payment records.</li>
+</ol>
+<div class="kmnotebox">Note: Behind the Work With Payment Group program, there is a processing option to turn on that creates a "VOID" record, which is what this client experienced, if a check is reset/undone during the Write process. It creates only a F0911 "VOID PAYMENT" record for security purpose.  This feature is functioning as design. Answer above can be used for additional security if this processing option feature is turned off.</div>
+<hr />
+<a name="aref_section215"></a><h4 class="km"><strong>Question 16:</strong> Can old records in the F04571 table, which aren't associated with any records in the F04572 or F04573 records, be deleted?</h4>
+<p><strong>Answer 16:</strong> If there are any records in the AP Payment temporary tables (F04571, F04572 or F04573) that are not part of a current payment group, they should be deleted.  These are corrupt, orphan records that could cause problems when attempting to Write or Update payment groups. The recommendation for when these corrupt, erroneous records are found is to:</p>
+<ol>
+<li>Ensure that there are no Create Payment Control Groups (R04570) jobs processing.</li>
+<li>In Work with Payment Groups (P04571), find all payment groups in process.</li>
+<li>Select all payment groups.</li>
+<li>Choose the Undo option from the Row exit.</li>
+<li>Cleared the remaining data and regenerate the three temporary tables (F04571, F04572, F04573).</li>
+</ol>
+<hr />
+<a name="aref_section216"></a><h4 class="km"><strong>Question 17:</strong> What causes the Update Driver (R04575) or the A/P Auto Payment Register(R04576) to fail with a work center error indicating that the "record being inserted into table F0414 already exists"?</h4>
+<p><strong>Answer 17:</strong> This error is generally thrown if there is an inconsistency in the Next Numbers (P00022) for Payment ID (PYID) in the F0414/F0413 tables. If the Next Number is lower than the highest Payment ID in the Payment Header (F0413), then this causes the system to throw duplicate primary key errors so no records can be inserted. To resolve this issue:</p>
+<p><span id="form1:panelPage1">1. Query the F0413 for the highest PYID value.<br /> 2. Check the P00022 for F0413 Table Name and ensure that this value is higher than the value returned in step 1. If it is not, then you should adjust this and re-test. </span></p>
+<hr />
+<a name="aref_section217"></a><h4 class="km"><strong>Question 18:</strong> After upgrading to a new release, we have trouble sporadically with writing and/or updating payments. We have tried everything on this list but still have trouble. Is there anything else we can try?</h4>
+<p><strong>Answer 18:</strong> Make sure that you have created new versions for R04570 and R04572 in your new release. Using older versions from previous release have been known to cause issues such as these.</p>
+<hr />
+<a name="aref_section218"></a><h4 class="km"><strong>Question 19: </strong>Why P04571 is allowing to Update a Payment Control Group (PCG) several times, resulting the vouchers including in the PCG with an Open Amount "zero" or negative after the payment group is Undo?</h4>
+<p><strong>Answer 19:</strong> When PCG is created for a voucher and in supplier master, payment creation is set to "By pay item" , then after Writing PCG, Update can be done on PCG multiple times , which corrupts the Open Amount. In 9.0, apply BUG 11055053.</p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

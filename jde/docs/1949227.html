@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHerAP</title>
+    <title>Automatic Payment Process (P04571) – Monetary Bank Account Validation</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -80,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThisAgain</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Automatic Payment Process (P04571) – Monetary Bank Account Validation</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -108,13 +108,29 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<table><tr><td width='0'></td><td><A HREF="#SYMPTOM">Symptoms</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#CHANGE">Changes</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#CAUSE">Cause</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+
+<hr size=1><p>
 
 
 
-<!-- ======================================== Body Starts Here =================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+<H2 class=km><A NAME="SYMPTOM"></A>Symptoms</H2>
+<p>If a user attempts to pay a voucher with a base currency of TND with a monetary bank account assigned with a USD currency code, the automatic payment process will allow the user to process the voucher until it&rsquo;s time to post the results. At that time, the post will fail with no specific error message.</p>
+<p><br /><br /></p>
+<H2 class=km><A NAME="CHANGE"></A>Changes</H2>
+<p> </p>
+<H2 class=km><A NAME="CAUSE"></A>Cause</H2>
+<p>This issue is addressed in our code by Bug 20109290 - AUTOMATIC PAYMENT PROCESS - MONETARY BANK ACCOUNT VALIDATION </p>
+<p>Create Payment Control Groups                                 R04570</p>
+<p>Before the fix: The reported issue is just about displaying an error message if a user enters a monetary bank account in the Bank account field and also enters a different currency code while creating the voucher it allows the user to continue with the automatic payment process. This issue occurred because the transaction currency code and the bank currency code in the case of monetary accounts were not <br /> compared and verified.                                 </p>
+<p>After the fix: This issue is resolved by comparing the transaction currency code and the bank currency code and if they are same then only it is allowed to process further and it will create the payment. User will not be able to proceed further until correct data is provided to match the currency between monetary account and the currency code. </p>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<p>Apply the ESU for Bug 20109290 - AUTOMATIC PAYMENT PROCESS - MONETARY BANK ACCOUNT VALIDATION </p>
+<p> </p>
 
 
 

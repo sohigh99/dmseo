@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ChangeTitleHerAP</title>
+    <title>When creating a file with P0457D, why is the file missing the carriage returns?</title>
 <!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/styles.css"> -->
     <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
@@ -80,7 +80,7 @@
 
 <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
 
-<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>ChangeThisAgain</h1></div>
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>When creating a file with P0457D, why is the file missing the carriage returns?</h1></div>
 <!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
 
 <script>
@@ -108,13 +108,22 @@ function topFunction() {
 <!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
 <!-- ================================= Purpose of Document ================================== -->
 
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+<table><tr><td width='0'></td><td><A HREF="#SYMPTOM">Symptoms</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#CHANGE">Changes</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#CAUSE">Cause</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+<hr size=1><p>
 
 
+<H2 class=km><A NAME="SYMPTOM"></A>Symptoms</H2>
+<p>When creating a file with P0457D, why is the file missing the carriage returns?</p>
+<H2 class=km><A NAME="CHANGE"></A>Changes</H2>
+<p>N/A</p>
+<H2 class=km><A NAME="CAUSE"></A>Cause</H2>
+<p>See below</p>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<p>The text file is created by the B0400520 business function and the carriage return will be different depending on the operating system of the computer where the business function was run. Find below the end of line conventions for Windows and Unix:<br /> <br /> OS Decimal Hexadecimal English<br /> --------- ------- ----------- --------<br /> Windows 13, 10 0D, 0A Carriage Return, Line Feed (CR,LF)<br /> <br /> Unix/ 10 0A Line Feed<br /> <br /> Linux/ AS400<br /> You can find these codes by looking at the file with a binary text editor. <br /> <br /> Usually the issue occurs when examining a file created in a non-Windows operating system from Windows. <br /> <br /> Numerous bugs have been entered on this issue including Bug 11026570 and Bug 10978679, however, they have been closed as functioning as designed and the explanation was that the program should use the operating system convention.  As a workaround, the bank file can be converted with a text editor. For instance in Notepad++, you can select that from the menu under Edit\EOL Conversion.   Another workaround would be to map the business function B0400520 through OCM to run on a server with the desired End of Line convention. For instance, if you need to use the Windows convention, map it to run on a Windows server.</p>
 
-<!-- ======================================== Body Starts Here =================================== -->
-
-<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
 
 
 
