@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Revenue Business Unit and Revenue Business (Cost Center) Basic Preference Profiles (P40303, P40349, P40070, P40073)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Revenue Business Unit and Revenue Business (Cost Center) Basic Preference Profiles (P40303, P40349, P40070, P40073)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Revenue Business Unit (Preference Type 03)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">Setup (Menus G4231)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Example</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34">Revenue Business Unit (Cost Center) (Preference Type 49)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35">Additional Information</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><span style="font-size: medium;"><strong>Overview</strong></span></p>
+<p>The Revenue Business Unit preference (Preference Type 03) is used when a cost center (business unit) other than the cost center on the Sales Order Header is needed for the revenue journal entries. The system uses the company of revenue business unit to fetch 4220 (COGS) and 4230 (Revenue) AAIs, not the header company.</p>
+<p>The system will search through the preference hierarchy until it finds a match. The Header Cost Center (EMCU) field in the F4211 is loaded with the preference value.</p>
+<p>Note: The Revenue Business Unit preference does NOT apply to interbranch or intercompany sales orders.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document outlines the steps required to set up and apply the Revenue Business Unit Preference (Preference Type 03) and Revenue Business Unit (Cost Center) (Preference Type 49) at Sales Order Entry.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Revenue Business Unit (Preference Type 03)</h3>
+<a name="aref_section32"></a><h4 class="km">Setup (Menus G4231)</h4>
+<p><strong>1.&nbsp;</strong>&nbsp; &nbsp;On menu G4231, select Preference Master (P40070).&nbsp; Inquire on the preference type and take the Row Exit to Preference Hierarchy (P40073). &nbsp;</p>
+<p><img src="../images/p03001.png" border="1" alt="1" title="1" hspace="0" vspace="0" /></p>
+<p><img src="../images/p03002.png" border="1" alt="2" title="2" hspace="0" vspace="0" /></p>
+<p>&nbsp;<br /><strong>2.&nbsp;</strong>&nbsp; &nbsp;To add the preference, the user can either take the Row Exit to Profiles (in Preference Master), or go directly to Work with Preference Master (P40303):</p>
+<p><img src="../images/p03003.png" border="1" alt="3" title="3" hspace="0" vspace="0" /></p>
+<p><br /><em>Note: The fields eligible for input in the header section are dependent on the hierarchy setup for this preference type. </em></p>
+<p><br />In this case, the example is shown for &ldquo;Item Only&rdquo;, therefore only an Item Number is required.</p>
+<p><img src="../images/p03004.png" border="1" alt="4" title="4" hspace="0" vspace="0" /><br />&nbsp;<br />Populate the Branch Plant field which will allow specifying the desired Revenue Business Unit to be populated in the EMCU field in F4211. For this example, we should expect the EMCU value to be populated with 20.<br />The Preference Status needs to be &ldquo;1&rdquo; in order to be considered active and also make sure that the effective date and expired date are populated as desired.</p>
+<p><br /><img src="../images/p03005.png" border="1" alt="5" title="5" hspace="0" vspace="0" /></p>
+<p><br /><strong>3.</strong>&nbsp;&nbsp; &nbsp;In a version of Preference Process Options (R40400), make sure that the Revenue Business Unit preference is activated by populating a &ldquo;1&rdquo;:</p>
+<p><img src="../images/p03006.png" border="1" alt="6" title="6" hspace="0" vspace="0" /></p>
+<p><br /><strong>4.&nbsp;</strong>&nbsp; &nbsp;Once the preference record is created, Sales Order Entry (P4210) needs to have activated the preference profile so the proper value can be retrieved. In the Preference Tab of the Sales Order Entry (P4210) processing options, make sure Processing Option #1 is populated with a value of 1:</p>
+<p><img src="../images/p03007.png" border="1" alt="7" title="7" hspace="0" vspace="0" /><br />&nbsp;<br /><strong>5.&nbsp;&nbsp;</strong> &nbsp;In the Versions Tab, make sure that the proper version of Preference Process Options (R40400) is populated in the Processing Option #6:</p>
+<p><img src="../images/p03008.png" border="1" alt="8" title="8" hspace="0" vspace="0" /><br />&nbsp;<br /><strong>6.&nbsp;</strong>&nbsp; &nbsp;Since the main purpose of the Revenue Business Unit preference is to allow the EMCU field in the Sales Order Detail file (F4211) to be used in the Revenue Journal Entry, the 4230 DMAAI entry must have a blank cost center:</p>
+<p><br />&nbsp;<img src="../images/p03009.png" border="1" alt="9" title="9" hspace="0" vspace="0" /></p>
+<p><br /><strong>7.&nbsp;</strong>&nbsp; &nbsp;Lastly, Processing Option # 5 on the Default tab in Sales Update (R42800) must be blank:</p>
+<p>&nbsp;</p>
+<p><img src="../images/p03010.png" border="1" alt="10" title="10" hspace="0" vspace="0" /></p>
+<p>&nbsp;</p>
+<a name="aref_section33"></a><h4 class="km">Example</h4>
+<p>In Sales Order Entry (P4210/P42101), at the moment the required data is populated, the system will resolve the preference and default the EMCU value specified in the preference:</p>
+<p>&nbsp;</p>
+<p><img src="../images/p03011.png" border="1" alt="11" title="11" hspace="0" vspace="0" /></p>
+<p><br />After the order is processed through the Sales cycle, Sales Update (R42800) will create the Journal Entry for the Revenue DMAAI 4230 based on the EMCU value defaulted by the preference:</p>
+<p>&nbsp;</p>
+<p><img src="../images/p03012.png" border="1" alt="12" title="12" hspace="0" vspace="0" /></p>
+<p>&nbsp;</p>
+<a name="aref_section34"></a><h3 class="km">Revenue Business Unit (Cost Center) (Preference Type 49)</h3>
+<p>The Revenue Business Unit/Cost Center by Branch preference (P40349) offers more flexibility than the Revenue Business Unit preference by allowing more detailed criteria to be added to the preference. <strong>The rules of the Revenue Business Unit preference apply to this preference as well.</strong></p>
+<p><strong> Note:</strong> In the version of Preference Process Options (R40400) used, make sure the "Revenue Cost Center (branch specific)" preference is activated by populating a "1" on the "Process Ctl 4" tab.</p>
+<p>The added fields are the Sequence No., Revenue Branch, Line of Business, and Salesperson Code.</p>
+<p>&nbsp;</p>
+<p><img src="../images/p03013.png" border="1" alt="13" title="13" hspace="0" vspace="0" /><br /><br />The Revenue Branch field is the actual value used to default into the sales order detail line (EMCU). The Branch Plant field (MCU alias) is used to tell the system that this preference applies to only specific Branch Plants or all Branch/Plants. <br /><br />The Line of Business field is a preference key field used as additional search criteria for the preference. If this key field is left blank, the system applies the preference to all line of business values for the customers/items to which this preference applies. <br /><br />The Salesperson Code field (used with Commissions) is a key field used as additional search criteria to select sales orders that match customers, items, and key fields defined with this preference. If this key field is left blank, the system applies the preference to all salesperson codes for the customers/items to which this preference applies. It is important to note that the Revenue Business Unit can only be fetched using the Salesperson Codes in the order header commissions (F42150) table. Entering different Salesperson Codes on the detail commissions (F42160) records will not cause the Revenue Business Unit to be fetched from the preference.</p>
+<a name="aref_section35"></a><h3 class="km">Additional Information</h3>
+<p>&bull;&nbsp;&nbsp; &nbsp;Revenue Business Unit (Preference Type 03 and Preference Type 49) can be set up as Basic preferences only.<br />&bull;&nbsp;&nbsp; &nbsp;The Revenue Business Unit preference does NOT apply to interbranch or intercompany sales orders.<br />&bull;&nbsp;&nbsp; &nbsp;Revenue Business Unit (Cost Center) allows more flexibility with the added fields in the definition:&nbsp; Sequence No., Revenue Branch, Line of Business, and Salesperson Code. <br /><br /><br /><br /></p>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
