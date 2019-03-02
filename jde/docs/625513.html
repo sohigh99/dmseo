@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Promised Shipment and Delivery Date Calculation</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Promised Shipment and Delivery Date Calculation</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Routing</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Workday Calendar</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Back Schedule Processing for Outbound Shipments</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Back Scheduling based on Requested Delivery Date (DRQJ)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Back Scheduling based on Promised Delivery Date (RSDJ)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Back Scheduling based on Promised Shipment Date (PPDJ)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37">Promised Shipment Date (PPDJ) with Intermodal</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38">Forward Schedule Processing for Outbound Shipments</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39">Scheduled Pick, Promised Shipment and Promised Delivery Dates Calculation</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310">Test Scenario</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311">Scheduled Pick Date (PDDJ) with Manufacturing</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312">Load Processing</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313">Shipment Consolidation</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section314">Date Calculations for Inbound Shipments generated from Purchase Orders</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Back Scheduling based on Requested Delivery Date (DRQJ)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Back Scheduling based on Promised Delivery Date (RSDJ)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">Forward Scheduling on Inbound Shipments</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section318">Date Calculation for Inbound Shipments generated from Credit Orders</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section319">Forward Scheduling on Inbound Shipments from Credit Orders</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section320">Conclusion</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><strong>Overview</strong></p>
+<p>There are three dates in Transportation that drive shipments on the generated sales order: Requested Delivery Date, Promised Shipment Date and Promised Delivery Date. From order entry (Sales and Purchasing), a Promised Shipment Date (PPDJ), Requested Delivery Date (DRQJ) and/or Promised Delivery Date (RSDJ) can be entered.  <br /> <br />  <img src="../images/ps01.png" border="1" hspace="0" vspace="0"/><br /> <br /> When a shipment is initially created from Sales if the user has not manually entered a Promised Shipment Date (PPDJ) and/or a Promised Delivery Date (RSDJ), the Promised Shipment Date and/or Promised Delivery Date are set to zero.  From Purchasing the Promised Delivery Date is always set to zero. From both Sales and Purchasing if the user has not manually entered a Requested Delivery Date (DRQJ) then the date is defaulted to today's date. The function Calculate Dates (N4901350) will be called to calculate the dates.  First, the function will try to back schedule, and if it fails then it will forward schedule.</p>
+<p> </p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> </p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Routing</h3>
+<p>The system will only show routing options that can meet the Promised Delivery date that is established in the Shipment Routing Steps table F4941, which is seen in the grid in Work with Shipments (P4915).  For instance, if the Promised Delivery date is tomorrow, then the system will only consider routing options that have 1 or 0 transit days specified in the routing entry record.  Any routes with two transit days or more would not meet the Promised Delivery date, so they are eliminated from consideration and do not show up in the grid.  However, if an order is entered and no dates are keyed in, then "blank" dates are passed into Transportation, and all routes are considered eligible until the dates are established by selecting a routing entry (or by the system selecting one via auto-routing). <br /> Note: For more details on auto-routing functionality, see Bug 1085078.1 When the Promised Shipment and/or Promised Delivery dates are in the past, no routing options may be seen at all in the screen, because no routing entries are capable of meeting shipment or delivery dates in the past.  To fix this so that a routing option can be selected, one or both dates can be blanked out in the Shipment Revisions form. This clears the date restriction on the route search results and presents all the available routes. However, the affiliated sales order detail line will retain its original Promised Shipment Date and Promised Delivery Date. Once the shipment has been successfully routed, these dates will be re-established in the F4941 Shipment Routing Steps table and both the shipment and the sales order detail lines on the shipment will reflect the routed shipment's Promised Shipment Date and Promised Delivery Date.</p>
+<hr />
+<a name="aref_section32"></a><h3 class="km">Workday Calendar</h3>
+<p>The system uses the workday calendars when routing the shipment in order to calculate the Promised Delivery Date and the Promised Shipment Date. Workday calendars are set up and maintained by calendar type. To calculate the promised shipment date, the system compares the workday calendars of the carrier and route or branch/plant to find a common workday. To calculate the promised delivery date, the system compares the workday calendars of the customer and carrier to find a common workday.<br /> <br /> The Branch/Plant, Calendar Month and Calendar Year are required values. <br />  <img src="../images/ps02.png" border="1" hspace="0" vspace="0"/><br /> <br /> A different calendar is set up for the route also. The route calendar is used first, when calculating the promised shipment and scheduled pick dates. If no valid calendar is found for the route code, then the system will search for the branch/plant calendar to validate the dates. If calendars are not found the dates may not calculate correctly as all days will be considered working days. <br /> <br /> <img src="../images/ps03.png" border="1" hspace="0" vspace="0"/><br /> <br /> Calendar type is an optional field that is used to specify unique calendars for the same branch/plant such as a workday calendar for the carrier.<br /> <br /> <img src="../images/ps04.png" border="1" hspace="0" vspace="0"/><br />  <br /> A different workday calendar is set up for the customer for the same branch/plant.<br /> <br /> <img src="../images/ps05.png" border="1" hspace="0" vspace="0"/><br />  <br /> The workday calendars for March 2011 are set up the same way. The calendars set up above will be used to illustrate different date calculation scenarios in this document. With this set up, the system will find a workday calendar for the route code, so it will not validate against the workday calendar of the branch/plant also.<br /> <br /> <em>Note: <br /> After enhancement Bug 12322314: BRANCH CALENDAR FOR MFG AND TMS in 9.0 was implemented in order to allow both Transportation and Manufacturing to work correctly, a new calendar for Transportation called Depot Calendar was created.<br /> The Workday Calendar functionality was modified to first fetch the workday calendar using the depot calendar type and then, if not found, fetch the workday calendar based on just the branch/plant.  If a Depot Calendar is not set up the existing functionality for current customers is maintained, where the system uses the branch/plant calendar for Transportation Date Scheduling.<br /> <br /> </em>For more details on the Workday Calendar set up, see "Workday Calendar in Transportation (P00071)"</p>
+<hr />
+<a name="aref_section33"></a><h3 class="km">Back Schedule Processing for Outbound Shipments</h3>
+<a name="aref_section34"></a><h4 class="km">Back Scheduling based on Requested Delivery Date (DRQJ)</h4>
+<p>If the user hasn't entered either a Promised Delivery Date or a Promised Shipment Date then the following Requested Delivery Date calculation will occur.<br />  <br /> <strong>Test data:</strong></p>
+<table style="text-align: left; width: 472px; height: 152px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="height: 25px; width: 210px;">Customer:</td>
+<td style="width: 197px;">33</td>
+</tr>
+<tr>
+<td style="height: 25px; width: 210px;">Shipping branch:  </td>
+<td style="width: 197px;">30</td>
+</tr>
+<tr>
+<td style="height: 25px; width: 210px;">Carrier:</td>
+<td style="width: 197px;">56805</td>
+</tr>
+<tr>
+<td style="height: 25px; width: 210px;">Route: </td>
+<td style="width: 197px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="height: 25px; width: 210px;">Today's date: </td>
+<td style="width: 197px;">02/23/2011</td>
+</tr>
+<tr>
+<td style="height: 25px; width: 210px;">Manually entered requested date:</td>
+<td style="width: 197px;">03/02/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <br /> <img src="../images/ps06.png" border="1" hspace="0" vspace="0"/><br />  <br /> <strong>Promised Delivery Date Calculation</strong><br /> <br /> The Promised Delivery Date will be set to the Requested Delivery Date.  This date will be compared to the workday calendars of the customer and carrier.  If calendars are not found for the customer and/or carrier the dates may not calculate correctly as all days will be considered working days. The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Delivery Date and the workday calendar will be called again. This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today. If Promised Delivery Date passes, the Promised Shipment Date will be calculated. <br /> <br /> In this example, the promised delivery date is set to 03/02/2011 which is a workday for the carrier, but is not a workday for the customer. Considering this, one day will be subtracted and the comparison will be done again, this time the system finding 03/01/2011 to be a workday for both the customer and the carrier and also greater than today's date. As a result, the promised delivery date passes and the promised shipment date will be calculated next.<br /> <br /> <strong>Promised Shipment Date Calculation</strong><br /> <br /> The Promised Shipment Date will be calculated as Promised Delivery Date less transit days for the route.  This date will be compared to the workday calendars of the carrier and route or Branch/Plant.  If calendars are not found then the dates may not calculate correctly as all days will be considered working days.  The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  If Promised Shipment Date passes, the Scheduled Pick Date will be calculated. <br /> <br /> The promised shipment date will be calculated as the promised delivery date less 2 days, which means 02/27/2011. This day is compared to the workday calendars of the carrier and route. Being a Sunday, it is not a workday for either of them so one day is subtracted and the new promised shipment date becomes 02/26/2011, but this is still not a workday for any of the route and carrier calendars so one more day is subtracted. The new shipment date is set to 02/25/2011 which is a workday for all calendars and also greater than today's date. As a result, the promised shipment date passes and the scheduled pick date will be calculated next.<br /> <br /> <img src="../images/ps07.png" border="1" hspace="0" vspace="0"/><br /> <br /> <strong>Scheduled Pick Date Calculation</strong><br /> <br /> The Scheduled Pick Date will be calculated as Promised Shipment Date less lead days for the route. This date will be compared to the workday calendars of the route or Branch/Plant.  If calendars are not found then the dates may not calculate correctly as all days will be considered working days. The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Scheduled Pick Date and the workday calendar will be called again. This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  If Scheduled Pick Date passes then processing will continue.<br /> <br /> The scheduled pick date is calculated as the promised shipment date less 1 day, which means 02/24/2011. This date is a workday for the route calendar and is also greater than today's date, so this date will pass and processing will continue.<br /> <br />  <img src="../images/ps08.png" border="1" hspace="0" vspace="0"/><br /> <br /> Once the shipment has been successfully routed, both the shipment and the sales order detail lines on the shipment will reflect the routed shipment's calculated dates.</p>
+<table style="text-align: left; height: 116px; width: 892px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="text-align: center; width: 170px;">Event</th>
+<th style="text-align: center; width: 170px;">Requested Date</th>
+<th style="text-align: center; width: 170px;">Scheduled Pick Date</th>
+<th style="text-align: center; width: 170px;">Promised Shipment Date</th>
+<th style="text-align: center; width: 170px;">Promised Delivery Date</th>
+</tr>
+<tr>
+<th style="text-align: center; width: 170px;">Order Entry</th>
+<td style="text-align: center; width: 170px;">03/02/2011</td>
+<td style="text-align: center; width: 170px;">0</td>
+<td style="text-align: center; width: 170px;">0</td>
+<td style="text-align: center; width: 170px;">0</td>
+</tr>
+<tr>
+<th style="text-align: center; width: 170px;">Shipment Creation</th>
+<td style="text-align: center; width: 170px;">03/02/2011</td>
+<td style="text-align: center; width: 170px;">0</td>
+<td style="text-align: center; width: 170px;">0</td>
+<td style="text-align: center; width: 170px;">0</td>
+</tr>
+<tr>
+<th style="text-align: center; width: 170px;">Route is Selected</th>
+<td style="text-align: center; width: 170px;">03/02/2011</td>
+<td style="text-align: center; width: 170px;">02/24/2011</td>
+<td style="text-align: center; width: 170px;">02/25/2011</td>
+<td style="text-align: center; width: 170px;">03/01/2011</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<a name="aref_section35"></a><h4 class="km">Back Scheduling based on Promised Delivery Date (RSDJ)</h4>
+<p>If the user has entered a Promised Delivery Date and this is the first routing step then this date will be used. <br /> <br /> <strong>Test data:</strong></p>
+<table style="text-align: left; width: 473px; height: 134px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 255px;">Customer:</td>
+<td style="width: 152px;">33</td>
+</tr>
+<tr>
+<td style="width: 255px;">Shipping branch:</td>
+<td style="width: 152px;">30</td>
+</tr>
+<tr>
+<td style="width: 255px;">Carrier:</td>
+<td style="width: 152px;">56805</td>
+</tr>
+<tr>
+<td style="width: 255px;">Route:</td>
+<td style="width: 152px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="width: 255px;">Today's date:</td>
+<td style="width: 152px;">02/23/2011</td>
+</tr>
+<tr>
+<td style="width: 255px;">Manually entered promised delivery date:</td>
+<td style="width: 152px;">02/28/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <img src="../images/ps09.png" border="1" hspace="0" vspace="0"/><br /> <br /> <strong>Promised Delivery Date Calculation</strong><br /> <br /> This date will be compared to the workday calendars of the customer and carrier. The workday calendar will validate whether the date entered is a workday. If not, one day will be subtracted from the Promised Delivery Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today. If Promised Delivery Date passes, the Promised Shipment Date will be calculated. <br /> <br /> The promised delivery date manually entered of 02/28/2011 is compared to the workday calendars of the customer and carrier and it is found to be a workday which is also greater than today's date (02/23/2011). As a result, the promised delivery date passes and the promised shipment date will be calculated next.<br /> <br /> <strong>Promised Shipment Date Calculation </strong><br /> <br /> The Promised Shipment Date will be calculated as Promised Delivery Date less transit days for the route.  This date will be compared to the workday calendars of the carrier and route or Branch/Plant.  The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  If Promised Shipment Date passes, the Promised Pick Date will be calculated. <br /> <br /> The Promised Shipment Date will be calculated as Promised Delivery Date less 2 transit days, which is 02/26/2011. This date is compared to the workday calendars of the route and carrier and it is a Saturday, which is not a workday. One day is subtracted and the promised shipment date becomes 02/25/2011. This date is compared to the workday calendars of the route and carrier and it is a Friday, which is a workday for the Carrier and route calendars, but the carrier needs 2 days to deliver the goods and since they are not working over the weekend, one more day will be subtracted and the promised shipment date becomes 02/24/2011 which is a workday for all calendars and is also greater than today's date. As a result, the promised shipment date passes and the promised pick date will be calculated next.<br /> <br /> <img src="../images/ps10.png" border="1" hspace="0" vspace="0"/><br />  <br /> If the Carrier had Saturday as a working day, then the Promised Shipment date would have been 02/25/2011, being a workday for the carrier and route calendars and considering that the Carrier would have had the 2 days needed to deliver the goods to the customer. <br /> <br /> <strong>Scheduled Pick Date Calculation</strong><br /> <br /> The Scheduled Pick Date will be calculated as Promised Shipment Date less lead days for the route.  This date will be compared to the workday calendar of the route or Branch/Plant. The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Scheduled Pick Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  If Scheduled Pick Date passes then processing will continue. <br /> <br /> The Scheduled Pick Date will be calculated as Promised Shipment Date less 1 day, which means 02/23/2011. This date is compared to the workday calendar of the route and passes as a workday which is equal to today's date. At this point, the dates calculation process is complete and transportation processing can continue.<br /> <br /> <img src="../images/ps11.png" border="1" hspace="0" vspace="0"/><br /> <br /> Once the shipment has been successfully routed, both the shipment and the sales order detail lines on the shipment will reflect the routed shipment's calculated dates.</p>
+<table style="text-align: left; width: 892px; height: 116px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 170px; text-align: center;">Event</th>
+<th style="width: 170px; text-align: center;">Requested Date</th>
+<th style="width: 170px; text-align: center;">Scheduled Pick Date</th>
+<th style="width: 170px; text-align: center;">Promised Shipment Date</th>
+<th style="width: 170px; text-align: center;">Promised Delivery Date</th>
+</tr>
+<tr>
+<th style="width: 170px; text-align: center;">Order Entry</th>
+<td style="width: 170px; text-align: center;">02/23/2011</td>
+<td style="width: 170px; text-align: center;">0</td>
+<td style="width: 170px; text-align: center;">0</td>
+<td style="width: 170px; text-align: center;">02/28/2011</td>
+</tr>
+<tr>
+<th style="width: 170px; text-align: center;">Shipment Creation</th>
+<td style="width: 170px; text-align: center;">02/23/2011</td>
+<td style="width: 170px; text-align: center;">0</td>
+<td style="width: 170px; text-align: center;">0</td>
+<td style="width: 170px; text-align: center;">02/28/2011</td>
+</tr>
+<tr>
+<th style="width: 170px; text-align: center;">Route is Selected</th>
+<td style="width: 170px; text-align: center;">02/23/2011</td>
+<td style="width: 170px; text-align: center;">02/23/2011</td>
+<td style="width: 170px; text-align: center;">02/24/2011</td>
+<td style="width: 170px; text-align: center;">02/28/2011</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<a name="aref_section36"></a><h4 class="km">Back Scheduling based on Promised Shipment Date (PPDJ)</h4>
+<p>If the user has entered a Promised Shipment Date and the Promised Delivery Date calculation has either failed or it wasn't entered, because the Promised Delivery Date calculation failed, the following Promised Shipment Date calculation is performed. <br /> <br /> <strong>Test data:</strong></p>
+<table style="text-align: left; width: 495px; height: 156px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 265px;">Customer:</td>
+<td style="width: 154px;">33</td>
+</tr>
+<tr>
+<td style="width: 265px;">Shipping branch:</td>
+<td style="width: 154px;">30</td>
+</tr>
+<tr>
+<td style="width: 265px;">Carrier:</td>
+<td style="width: 154px;">56805</td>
+</tr>
+<tr>
+<td style="width: 265px;">Route:</td>
+<td style="width: 154px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="width: 265px;">Today's date:</td>
+<td style="width: 154px;">02/23/2011</td>
+</tr>
+<tr>
+<td style="width: 265px;">Manually entered promised shipment date:</td>
+<td style="width: 154px;">02/25/2011</td>
+</tr>
+<tr>
+<td style="width: 265px;">Manually entered promised delivery date:</td>
+<td style="width: 154px;">02/26/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <img src="../images/ps12.png" border="1" hspace="0" vspace="0"/><br /> <br /> Since the promised delivery date was manually entered, the system will try to back schedule based on this date. The promised delivery date manually entered of 02/26/2011 is compared to the workday calendars of the customer and carrier and it is not a workday for the customer. One day is subtracted and the delivery date becomes 02/25/2011, but this is still not a workday for the customer. The process will continue and the system will try to set the delivery date to 02/24/2011, then to 02/23/2011 and until it finds a workday in the customer's calendar. The first workday found is 02/22/2011 which is compared to today's date and it is found to be less than today's date (02/23/2011). As a result, the promised delivery date calculation fails and so the system will try to back schedule the dates based on the promised shipment date that was manually entered on the sales order.<br /> <br /> As no routes are found to match the given carrier, destination and delivery date, the promised delivery date will be blanked out on the shipment, so the routing can be based on the promised shipment date manually entered.<br /> <br /> <img src="../images/ps13.png" border="1" hspace="0" vspace="0"/><br /> <br /> <strong>Promised Shipment Date Calculation</strong> <br /> <br /> This date will be compared to the workday calendars of the carrier and route or Branch/Plant. The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found. The returned workday is then checked to see if it's greater than or equal to today.  If Promised Shipment Date passes, the Scheduled Pick Date will be calculated. <br /> <br /> In this example, the promised shipment date of 02/25/2011 is a workday for the carrier and route calendars and it is also greater than today's date (02/23/2011). As a result, the promised shipment date passes and the pick date will be calculated next.<br /> <br /> <strong>Scheduled Pick Date Calculation</strong> <br /> <br /> The Scheduled Pick Date will be calculated as Promised Shipment Date less lead days for the route.  This date will be compared to the workday calendars of the route or Branch/Plant.  The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Scheduled Pick Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  If Scheduled Pick Date passes, the Promised Delivery Date will be calculated. <br /> <br /> In this example, the scheduled pick date is calculated as the promised ship date less 1 lead day, which means 02/24/2011. This date is compared to the workday calendar of the route and it is found to be a workday which is also greater than today's date. Since the pick date has passed, the promised delivery date will be calculated next.<br /> <br /> <strong>Promised Delivery Date Calculation</strong><br /> <br /> The Promised Delivery Date will be calculated as the Promised Shipment Date plus transit days for the route. This date will be compared to the workday calendars of the customer and carrier. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Promised Delivery Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  Processing will continue. <br /> <br /> The promised delivery date is calculated as the promised ship date plus 2 transit days, thus becoming 02/27/2011.This date is compared to the workday calendars of the customer and carrier and although it is a workday for the customer, it is not a workday for the carrier. As a result, the system will add one day and to the same comparison again. The new date value 02/28/2011 is a workday for both the carrier and the customer, but the carrier needs 2 days to deliver the goods and as a result, one more day is added and as a result, the promised delivery date is set to 03/01/2011. <br /> <br /> <img src="../images/ps14.png" border="1" hspace="0" vspace="0"/><br />  <br /> Once the shipment has been successfully routed, both the shipment and the sales order detail lines on the shipment will reflect the routed shipment's calculated dates.<br /> <br /> <img src="../images/ps15.png" border="1" hspace="0" vspace="0"/><br />  <br /> A summary of the dates calculation for this example</p>
+<table style="text-align: left; width: 892px; height: 116px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 170px; text-align: center;">Event</th>
+<th style="width: 170px; text-align: center;">Requested Date</th>
+<th style="width: 170px; text-align: center;">Scheduled Pick Date</th>
+<th style="width: 170px; text-align: center;">Promised Shipment Date</th>
+<th style="width: 170px; text-align: center;">Promised Delivery Date</th>
+</tr>
+<tr>
+<th style="text-align: center;">Order Entry</th>
+<td style="text-align: center;">02/23/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">02/25/2011</td>
+<td style="text-align: center;">02/26/2011</td>
+</tr>
+<tr>
+<th style="text-align: center;">Shipment Creation</th>
+<td style="text-align: center;">02/23/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">02/25/2011</td>
+<td style="text-align: center;">02/26/2011</td>
+</tr>
+<tr>
+<th style="text-align: center;">Shipment Update</th>
+<td style="text-align: center;">02/23/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">02/25/2011</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Route is Selected</th>
+<td style="text-align: center;">02/23/2011</td>
+<td style="text-align: center;">02/24/2011</td>
+<td style="text-align: center;">02/25/2011</td>
+<td style="text-align: center;">03/01/2011</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<a name="aref_section37"></a><h3 class="km">Promised Shipment Date (PPDJ) with Intermodal</h3>
+<p>If the user has entered a Promised Shipment Date and if the second or greater routing step is being routed, the following Promised Shipment Date calculation is performed. <br /> <br /> <strong>Promised Shipment Date Calculation</strong><br /> <br /> This date will be compared to the workday calendars of the carrier and route or Branch/Plant. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found. The Promised Pick Date will be calculated. <br /> <br /> <strong>Promised Delivery Date Calculation</strong><br /> <br /> The Promised Delivery Date will be calculated as the Promised Shipment Date plus transit days for the route.  This date will be compared to the workday calendars of the customer and carrier. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Promised Delivery Date and the workday calendar will be called again. This logic will continue for the rest of the current month and next month until a common workday can be found.  Processing will continue. <br /> <br /> <strong>Scheduled Pick Date Calculation</strong><br /> <br /> The Scheduled Pick Date will not be calculated in this instance.  The Scheduled Pick Date does not need to be calculated for the second or greater routing step, only for the first routing step.</p>
+<hr />
+<a name="aref_section38"></a><h3 class="km">Forward Schedule Processing for Outbound Shipments</h3>
+<p>If all of the above back schedule processing fails then the following forward scheduling processing will occur. <br /> <br /> <strong>Test data:</strong></p>
+<table style="text-align: left; width: 374px; height: 112px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 130px;">Customer:</td>
+<td style="width: 171px;">33</td>
+</tr>
+<tr>
+<td style="width: 130px;">Shipping branch:</td>
+<td style="width: 171px;">30</td>
+</tr>
+<tr>
+<td style="width: 130px;">Carrier:</td>
+<td style="width: 171px;">56805</td>
+</tr>
+<tr>
+<td style="width: 130px;">Route:</td>
+<td style="width: 171px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="width: 130px;">Today's date:</td>
+<td style="width: 171px;">02/23/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> A sales order is entered and the dates are allowed to default.  The Requested Delivery Date is set to today's date (02/23/2011). The Promised Delivery Date and Promised Shipment Date are set to zero. Since the Promised Delivery Date is zero the Promised Delivery Date will be set to the Requested Delivery Date and back schedule processing will occur.  This new Promised Delivery Date will be used as a starting point to compare the customer and carrier workday calendars.  02/23/2011 is a workday for both the carrier and customer. This date will be compared to today's date and it will pass, as it is equal to today's date, so processing will continue. <br /> <br /> The <strong>Promised Shipment Date</strong> will be calculated based on the Promised Delivery Date minus 2 transit days  and will become 02/21/2011.  This new Promised Shipment Date will be used as a starting point to compare the route and carrier workday calendars. 02/21/2011 is a workday for the route and carrier calendars therefore this date will be used.  This date will be compared to today's date (02/23/2011).  In this case the Promised Shipment Date is less than today's date, therefore back schedule processing will fail, and forward schedule processing will be used. <br /> <br /><strong>Scheduled Pick Date (PDDJ) Calculation <br /> </strong><br /> The Scheduled Pick Date will be set to today's date.  This date will be compared to the workday calendars of the route or Branch/Plant. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Scheduled Pick Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  The Promised Shipment Date will be calculated. <br /> In this example, the scheduled pick date is set to 02/23/2011 which is a workday for the route calendar. As a result, the pick date passes and the promised ship date will be calculated next.</p>
+<p><strong>Promised Shipment Date (PPDJ) Calculation</strong> <br /> <br /> The Promised Shipment Date will be calculated as Scheduled Pick Date plus the lead days for the route.  This date will be compared to the workday calendars of the carrier and route or Branch/Plant. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  The Promised Delivery Date will be calculated. <br /> <br /> In this example, the promised shipment date is calculated as the pick date plus one lead day for the route, which means the ship date will become 02/24/2011. This date is then compared to the workday calendars of the route and carrier and is found to be a workday for both. As the promised shipment date passes, the promised delivery date is calculated next.<br /> <br /><strong>Promised Delivery Date (RSDJ) Calculation</strong> <br /> <br /> The Promised Delivery Date will be calculated as Promised Shipment Date plus transit days for the route.  This date will be compared to the workday calendars of the customer and carrier. The workday calendar will validate whether the date entered is a workday. If not, one day will be added to the Promised Delivery Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  Processing will continue. <br /> <br /> The promised delivery date in this example is calculated as the promised ship date (02/24/2011) plus 2 transit days for the route. The promised delivery date is set to 02/26/2011 and then compared to the workday calendars of the customer and carrier. 02/26/2011 is a workday for neither the customer nor the carrier, so one day is added. 02/27/2011 is a workday for the customer, but not for the carrier, so an additional day is added. 02/28/2011 is set and compared to the workday calendars of the carrier and customer and it is found to be a workday for both. <br /> <br /> <img src="../images/ps16.png" border="1" hspace="0" vspace="0"/><br />  <br /> Once the shipment has been successfully routed, both the shipment and the sales order detail lines on the shipment will reflect the routed shipment's calculated dates.<br /> <br /> <img src="../images/ps17.png" border="1" hspace="0" vspace="0"/><br /> <br /> A summary of the dates calculation process for this example</p>
+<table style="text-align: left; width: 892px; height: 116px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 170px; text-align: center;">Event</th>
+<th style="width: 170px; text-align: center;">Requested Date</th>
+<th style="width: 170px; text-align: center;">Scheduled Pick Date</th>
+<th style="width: 170px; text-align: center;">Promised Shipment Date</th>
+<th style="width: 170px; text-align: center;">Promised Delivery Date</th>
+</tr>
+<tr>
+<th style="text-align: center;">Order Entry</th>
+<td style="text-align: center;"> 02/23/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Shipment Creation</th>
+<td style="text-align: center;"> 02/23/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Route is Selected</th>
+<td style="text-align: center;"> 02/23/2011</td>
+<td style="text-align: center;"> 02/23/2011</td>
+<td style="text-align: center;"> 02/24/2011</td>
+<td style="text-align: center;"> 02/28/2011</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<a name="aref_section39"></a><h3 class="km">Scheduled Pick, Promised Shipment and Promised Delivery Dates Calculation</h3>
+<p>The following is a brief summary of the Scheduled Pick, Promised Shipment and Promised Delivery dates calculation. <br /> <br /> <strong><em>Back schedule processing is always tried first. </em></strong><br /> <br /> If a <strong>Promised Delivery Date</strong> is entered then this date is used to compare the workday calendars of the carrier and the customer.  The closest common workday between the calendars becomes the Promised Delivery Date for the shipment.  To calculate the Promised Shipment Date, the Promised Delivery Date minus the transit days is used to compare the workday calendars of the Carrier and either the Route if it exists, and if not, the Branch. The closest common workday between the calendars becomes the Promised Shipment Date for the shipment.  To calculate the Scheduled Pick Date, the Promised Shipment Date minus lead days is used to compare the workday calendars of either the Route Code, if it exists, and if not, the Origin Depot. The closest workday becomes the Scheduled Pick Date for the shipment. <br /> <br /> If any of the calculated dates are less than today's date and the <strong>Promised Shipment Date</strong> was entered then the dates would be calculated based on the Promised Shipment Date. The closest common workday between the Carrier and Route Code or Origin Depot calendars becomes the Promised Shipment Date for the shipment.  To calculate the Promised Delivery Date, the Promised Shipment Date plus transit days is used to compare the workday calendars of the carrier and the customer.  The closest common workday between the calendars becomes the Promised Delivery Date for the shipment.  To calculate the Scheduled Pick Date, the Promised Shipment Date minus lead days is used to compare the workday calendars of the route code or the origin. The closest workday becomes the Promised Pick Date for the shipment. <br /> <br /> If any of the calculated dates are less than today's date then the dates would be calculated based on the <strong>Requested Delivery Date</strong>. The Promised Delivery Date gets set to the Requested Delivery Date and then this date is used to compare the workday calendars of the carrier and the customer.  The closest common workday between the calendars becomes the Promised Delivery Date for the shipment.  To calculate the Promised Shipment Date, the Promised Delivery Date minus the transit days is used to compare the workday calendars of the Carrier and Route Code or Branch (Origin Depot).   The closest common workday between the calendars becomes the Promised Shipment Date for the shipment.  To calculate the Scheduled Pick Date, the Promised Shipment Date minus lead days is used to compare the workday calendars of the Route Code or Origin Depot. The closest workday becomes the Scheduled Pick Date for the shipment. <br /> <br /> <em><strong>If any of the calculated dates are less than today's date, then forward schedule processing is done.</strong></em> <br /> <br /> The <strong>Scheduled Pick Date</strong> is set to today.  This date is used to compare the workday calendars of either the Route Code, if it exists, and if not, the Origin Depot.  The closest common workday between the calendars becomes the Scheduled Pick Date for the shipment.  <br /> <br /> To calculate the <strong>Promised Shipment Date</strong>, the Scheduled Pick Date plus the lead days is used to compare the workday calendars of the Carrier and either the Route Code, if it exists, and if not, the Origin Depot. The closest common workday between the calendars becomes the Promised Shipment Date for the shipment.  <br /> <br /> To calculate the <strong>Promised Delivery Date</strong>, the Promised Shipment Date plus the transit days is used to compare the workday calendars of the carrier and the customer.  The closest common workday between the calendars becomes the Promised Delivery Date for the shipment. <br /> <br /> The Scheduled Pick, Promised Shipment and Promised Delivery Dates will be updated to the Sales Order Detail for outbound shipments.  </p>
+<a name="aref_section310"></a><h3 class="km">Test Scenario</h3>
+<table style="text-align: left; width: 487px; height: 156px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 265px;">Customer:</td>
+<td style="width: 161px;">33</td>
+</tr>
+<tr>
+<td style="width: 265px;">Shipping branch:</td>
+<td style="width: 161px;">30</td>
+</tr>
+<tr>
+<td style="width: 265px;">Carrier:</td>
+<td style="width: 161px;">56805</td>
+</tr>
+<tr>
+<td style="width: 265px;">Route:</td>
+<td style="width: 161px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="width: 265px;">Today's date:</td>
+<td style="width: 161px;">02/24/2011</td>
+</tr>
+<tr>
+<td style="width: 265px;">Manually entered promised shipment date:</td>
+<td style="width: 161px;">02/24/2011</td>
+</tr>
+<tr>
+<td style="width: 265px;">Manually entered requested date:</td>
+<td style="width: 161px;">02/27/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <img src="../images/ps18.png" border="1" hspace="0" vspace="0"/> <br /> <br /> Because the Promised Delivery Date was not entered the Promised Shipment Date (02/24/2011) will be used as a starting point to compare the carrier and the route workday calendars.  <br />  <br /> <img src="../images/ps19.png" border="1" hspace="0" vspace="0"/><br /> <br /> 02/24/2011 is a workday for all calendars; therefore the Promised Shipment Date will remain 02/24/2011.  This date will be compared to today's date (02/24/2011).  In this case it is equal to today's date, so <strong>back schedule processing</strong> will continue. <br /> <br /> The <strong>Promised Delivery Date</strong> will be calculated as the Promised Shipment Date plus 2 transit days, which will result in 02/26/2011. It will now be used to compare the customer and carrier workday calendars.  02/26/2011 is not a workday for either the customer or the carrier; therefore the Promised Delivery date will become 02/27/2011 which is a workday for the customer, but not the carrier, so the Promised Delivery Date will become 02/28/2011. This date is compared to the workday calendars of the customer and carrier and it is found to be a workday for both, so the Promised Delivery Date will pass. <br /> <br /> The <strong>Scheduled Pick Date</strong> will be calculated as the Promised Shipment date minus 1 lead day for the route, which means 02/23/2011. This date is compared to the workday calendar of the route and it is found to be a workday. This date however is less than today's date, so back scheduling will fail.<br /> <br /> <img src="../images/ps20.png" border="1" hspace="0" vspace="0"/><br /> <br /> Notice there is no route for Carrier 56805 that can meet the Promised Shipment Date set at sales order entry. In this case, the Promised Shipment Date is blanked out on the shipment and the system will try to back schedule based on the Requested Date that was manually entered on the sales order.<br /> <br /> <img src="../images/ps21.png" border="1" hspace="0" vspace="0"/><br /> <br /> The <strong>Promised Delivery Date</strong> will be set to the Requested Date that was manually entered on the Sales Order (02/27/2011). This date is compared to the customer and carrier workday calendars and although it is a working day for the customer, it is not for the carrier also. As a result, the system will subtract one day and the delivery date becomes 02/26/2011, but this is not a workday for neither the customer nor the carrier. The process will continue and the system will try to set the delivery date to 02/24/2011, then to 02/23/2011 until it finds a workday in the customer's calendar. The first workday found is 02/22/2011 which is compared to today's date and it is found to be less than today's date (02/24/2011). In this case the Promised Delivery Date is less than today's date, therefore back schedule processing based on the manually entered Requested Date will fail and <strong>forward schedule processing</strong> will be used.<br /> <br /> <img src="../images/ps22.png" border="1" hspace="0" vspace="0"/><br /> <br /> The <strong>Scheduled Pick Date</strong> is set to today (02/24/2011).  This date is used to compare the workday calendar of the Route code, since there is one available (see the Workday Calendar section of the white paper).  02/24/2011 is a workday so it becomes the Scheduled Pick Date for the shipment.<br />   <br /> To calculate the <strong>Promised Shipment Date</strong>, the Scheduled Pick Date (02/24/2011) plus 1 lead day is used to compare the workday calendars of the Route Code and the Carrier. 02/25/2011 is a common workday between the calendars, so it becomes the Promised Shipment Date for the shipment. <br />  <br /> To calculate the <strong>Promised Delivery Date</strong>, the system uses the Promised Shipment Date (02/25/2011) plus 2 transit days and compares it to the workday calendars of the carrier and the customer. 02/27/2011 is a workday for the customer, but not for the carrier, so the system adds one day and validates both calendars again. 02/28/2011 is a common workday for both calendars, but the carrier needs 2 days to deliver the goods to the customer, so the system adds one more day and the Promised Delivery date becomes 03/01/2011, which is a workday for both the customer and carrier calendars. <br /> <br /> <img src="../images/ps23.png" border="1" hspace="0" vspace="0"/><br />  <br /> The Scheduled Pick, Promised Shipment and Promised Delivery Dates are updated to the Sales Order Detail for outbound shipments.</p>
+<table style="text-align: left; width: 892px; height: 116px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 170px; text-align: center;">Event</th>
+<th style="width: 170px; text-align: center;">Requested Date</th>
+<th style="width: 170px; text-align: center;">Scheduled Pick Date</th>
+<th style="width: 170px; text-align: center;">Promised Shipment Date</th>
+<th style="width: 170px; text-align: center;">Promised Delivery Date</th>
+</tr>
+<tr>
+<th style="text-align: center;">Order Entry</th>
+<td style="text-align: center;">02/27/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">02/24/2011</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Shipment Creation</th>
+<td style="text-align: center;">02/27/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">02/24/2011</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Shipment Update </th>
+<td style="text-align: center;">02/27/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Route is Selected</th>
+<td style="text-align: center;">02/27/2011</td>
+<td style="text-align: center;">02/24/2011</td>
+<td style="text-align: center;">02/25/2011</td>
+<td style="text-align: center;">03/01/2011</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<a name="aref_section311"></a><h3 class="km">Scheduled Pick Date (PDDJ) with Manufacturing</h3>
+<p>The Scheduled Pick Date will be updated to the Sales Order Detail (F4211) file only if there is no related PO/SO/WO number in the Sales Order Detail (F4211) file.  Therefore, if manufacturing is on and a Sales Order generates a Work Order then Transportation will not update the Scheduled Pick Date.<br /> <br /> The reason why Scheduled Pick Date is not updated is because Manufacturing gets called before Transportation and it doesn't get called again after.  Manufacturing uses the Scheduled Pick Date passed to it by sales for calculating manufacturing dates, if this date gets changed and Manufacturing doesn't get called with this new date then there is a date integrity issue.  Therefore, if the Sales Order has a related Work Order then the Scheduled Pick Date stays the same as it was when Manufacturing was called. <br /> <br /> However, this functionality has been enhanced in release 9.0 with Bug 11028337: NO SCHED.PICK W/LNTY=W+OW49 - SAR: 8947453. After the fix, the Scheduled Pick Date will be updated correctly in the Sales Order Detail F4211 file. The Scheduled Pick Date in the F4211 table is the Planned Effective Date for the Work Order. So if the Scheduled Pick Date is changed then the Planned Effective Date and start date of the Work Order will be re-calculated and updated.<br /> <br /> <strong>Test scenario: </strong>Enter a transportation sales order with 3 W lines and manually entered requested date<br /> <br /> <img src="../images/ps24.png" border="1" hspace="0" vspace="0"/><br /> <br /> Notice 3 work orders have been created for the 3 items and all order lines have been consolidated on the same shipment, based on the single order consolidation criteria.<br /> <br /> <img src="../images/ps25.png" border="1" hspace="0" vspace="0"/> <br /> <br /> The shipment is auto-routed at sales order generation<br /> <br /> <img src="../images/ps26.png" border="1" hspace="0" vspace="0"/><br />  <br /> Back scheduling based on requested date has taken place, and considering the transit days and lead days set up of the route, the scheduled pick date was also updated to a different date than the manually entered requested date.<br /> <br /> <img src="../images/ps27.png" border="1" hspace="0" vspace="0"/><br />  <br /> The Scheduled Pick Date has been updated by transportation and the Planned Effective Date and start date of the Work Order have been re-calculated and updated.<br />  <br /> <img src="../images/ps28.png" border="1" hspace="0" vspace="0"/><br /> <br /> The Scheduled Pick Date in the Sales Order Detail F4211 table is the Planned Effective Date for the Work Order.</p>
+<p>New functionality has been added with <strong>9.0 Bug 14175973 and 9.1 </strong><strong>Bug 14252025</strong>, regarding the Scheduled Pick Date on transfer orders.  Before these bugs, when a sales transfer order was routed, the Promised Delivery Date, Promised Shipment Date, and Scheduled Pick Date were being updated on the shipment and ST order lines.  Now, customers have the option of whether or not the Scheduled Pick Date gets updated as a result of routing with lead days. A new UDC has been introduced for this purpose - UDC 49/RP which can be set up similar to <span style="font-size: 12px;"><span style="font-size: 12px;"></span></span>UDC 49/SD, which is used to determine if Transportation is active. <span style="font-size: 12px;"></span>If an order being routed is a transfer order (the field SDSO11 = '1' in the Sales Order detail F4211 file) and a UDC 49/RP record exists for the Order Type and Line Type combination being processed, the routing engine will retain the Schedule Pick Date (F4211.SDPDDJ) that was set by the MRP process. The Scheduled Pick Date was a problem when the transfer order was being generated from an MRP or DRP message in manufacturing because that date is what the planning systems are keying off of.  When using a planning system to generate these transfer order messages, the Scheduled Pick Date cannot be changed by Transportation or else it will badly affect the MRP or DRP processing.</p>
+<hr />
+<a name="aref_section312"></a><h3 class="km">Load Processing</h3>
+<p>The Promised Ship and Delivery dates are coming from the Shipment, if the shipment is routed before putting it on a load or if the dates were manually entered on the sales order. When routing the load, the system only populates origin and destination fields, it doesn't update the dates. This is because the system has no way of knowing the sequence of stops in which shipments are delivered, or the time required for each delivery. If routing each shipment, the system will take the lead and transit days specified in the route and update the Promised Shipment and Promised Delivery dates on the shipment. These dates will be updated on the load. <br /> <br /> Consider the following shipments for building a standard load<br /> <br /> <img src="../images/ps29.png" border="1" hspace="0" vspace="0"/> <br /> <br /> Build a standard load for the above shipments where the Promised Delivery and Promised Shipment dates were manually entered on the sales orders and updated on the shipments while other shipments were routed.<br /> <br /> <img src="../images/ps30.png" border="1" hspace="0" vspace="0"/><br /> <br /> Taking a look at the stop sequence it can be noticed that the Promised Shipment and Promised Delivery dates are coming from the shipment. <br /> <br /> <img src="../images/ps31.png" border="1" hspace="0" vspace="0"/><br /> <br /> When routing the load, the system only populates origin and destination fields, it doesn't update the dates. This is because the system has no way of knowing the sequence of stops in which shipments are delivered, or the time required for each delivery, so these dates need to be entered manually.<br /> <br /> <img src="../images/ps32.png" border="1" hspace="0" vspace="0"/><br /> <br /> In this particular example, if the load had been left with the dates coming from the shipments, error "Load date/time less than prior stop" would have been received. <br /> <br /> <img src="../images/ps33.png" border="1" hspace="0" vspace="0"/><br /> <br /> If the dates on the load are taken from the routed shipments, then errors may appear due to the promised shipment and promised delivery dates not following the sequence of stops on the load.</p>
+<hr />
+<a name="aref_section313"></a><h3 class="km">Shipment Consolidation</h3>
+<p>Consolidation to other shipments will occur only if the Promised Shipment and Promised Delivery Date are the same as the shipment being consolidated to.  If both of these dates are not exactly the same then consolidation will not occur.  An exception to this rule is if the dates of the existing shipment are in the past. <br /> <br /> If the Promised Shipment Date and Promised Delivery Date for a new Sales Order which generates a shipment are not manually entered, the sales order line will only consolidate onto another shipment with the same Request Date.<br /> <br /> For more detailed information on the shipment consolidation functionality see "Shipment Consolidation"</p>
+<hr />
+<a name="aref_section314"></a><h3 class="km">Date Calculations for Inbound Shipments generated from Purchase Orders</h3>
+<p>The system uses the workday calendars when routing the shipment in order to calculate the Promised Delivery Date and the Promised Shipment Date. To calculate the promised delivery date for inbound shipments generated from purchase orders, the system compares the workday calendars of the branch/plant and carrier to find a common workday. To calculate the promised shipment date for inbound shipments generated from purchase orders, the system compares the workday calendars of the carrier and supplier to find a common workday. <br /> <br /> For purchase orders, the users can enter manually either the Requested Date or the Promised Delivery Date. If no date is manually entered, the Promised Delivery Date is defaulted to zero while the Requested Date is defaulted to today's date. <br /> <br /> Back scheduling will be tried first and if it fails, forward scheduling will be used to calculate the dates. The calculated dates will be updated on the routed shipment and back on the purchase order.<br /> <br /> Set up a workday calendar for supplier 103160.<br /> <br /> <img src="../images/ps34.png" border="1" hspace="0" vspace="0"/><br /> <br /> A different workday calendar is set up for the carrier.<br />  <img src="../images/ps35.png" border="1" hspace="0" vspace="0"/><br /> <br /> A regular 5-days working week calendar is set up for the Branch/Plant.<br /> <br /> <img src="../images/ps36.png" border="1" hspace="0" vspace="0"/> </p>
+<hr />
+<a name="aref_section315"></a><h4 class="km">Back Scheduling based on Requested Delivery Date (DRQJ)</h4>
+<p>If the user hasn't entered a Promised Delivery Date then the following Requested Delivery Date calculation will occur. <br /> <br /> <strong>Test data:</strong></p>
+<table style="text-align: left; width: 497px; height: 134px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 249px;">Supplier:</td>
+<td style="width: 177px;">103160</td>
+</tr>
+<tr>
+<td style="width: 249px;">Receiving branch:</td>
+<td style="width: 177px;">30</td>
+</tr>
+<tr>
+<td style="width: 249px;">Carrier:</td>
+<td style="width: 177px;">56805</td>
+</tr>
+<tr>
+<td style="width: 249px;">Route:</td>
+<td style="width: 177px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="width: 249px;">Today's date:</td>
+<td style="width: 177px;">10/19/2011</td>
+</tr>
+<tr>
+<td style="width: 249px;">Manually entered requested date:</td>
+<td style="width: 177px;">10/31/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <img src="../images/ps37.png" border="1" hspace="0" vspace="0"/><br />  <br /> <strong>Promised Delivery Date Calculation</strong><br /> <br /> The Promised Delivery Date will be set to the Requested Delivery Date.  This date will be compared to the workday calendars of the branch and carrier.  If calendars are not found for the supplier and/or carrier the dates may not calculate correctly as all days will be considered working days. The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Delivery Date and the workday calendar will be called again. This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today. If Promised Delivery Date passes, the Promised Shipment Date will be calculated. <br /> <br /> In this example, the requested date was manually set to 10/31/2011. The system will set the promised delivery date to 10/31/2011 which is a workday for the carrier and the branch and it is also greater than today's date. As a result, the promised delivery date passes and the promised shipment date will be calculated next.<br /> <br /> <strong>Promised Shipment Date Calculation</strong><br /> <br /> The Promised Shipment Date will be calculated as Promised Delivery Date less transit days for the route.  This date will be compared to the workday calendars of the carrier and supplier.  If calendars are not found then the dates may not calculate correctly as all days will be considered working days.  The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  For the promised ship date to pass, the lead days need to also be considered which means that if subtracting the lead days from the calculated shipment date, a valid workday for the supplier calendar which is also greater that today's date needs to be found, otherwise the shipment date calculation will fail.<br /> <br /> For this example, the promised shipment date will be calculated as the promised delivery date less 2 days, which means 10/29/2011. This day is compared to the workday calendars of the carrier and supplier. Being a Saturday, it is not a workday for either of them so one day is subtracted and the new promised shipment date becomes 10/28/2011, but this is still not a workday for either of them so one more day is subtracted, but 10/27/2011 is not a workday for the carrier even though it is for the supplier. The new shipment date is set to 10/26/2011 which is a workday for both the carrier and supplier calendars and also greater than today's date. In order for this date to pass, one lead day needs to be subtracted and validated against the supplier calendar. Since 10/25/2011 is a workday and greater than today's date, the promised shipment date passes.<br /> <br /> <img src="../images/ps38.png" border="1" hspace="0" vspace="0"/><br />  <br /> Once the shipment has been successfully routed, the promised ship and promised delivery dates are updated on the shipment. The calculated and validated promised delivery date will be updated also on the purchase order.</p>
+<hr />
+<a name="aref_section316"></a><h4 class="km">Back Scheduling based on Promised Delivery Date (RSDJ)</h4>
+<p>If the user has entered a Promised Delivery Date and this is the first routing step then this date will be used. <br /> <strong><br /> Test data:</strong></p>
+<table style="text-align: left; width: 479px; height: 134px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 261px;">Supplier:</td>
+<td style="width: 165px;">103160</td>
+</tr>
+<tr>
+<td style="width: 261px;">Receiving branch:</td>
+<td style="width: 165px;">30</td>
+</tr>
+<tr>
+<td style="width: 261px;">Carrier:</td>
+<td style="width: 165px;">565805</td>
+</tr>
+<tr>
+<td style="width: 261px;">Route:</td>
+<td style="width: 165px;">2 transit days, 1 lead day</td>
+</tr>
+<tr>
+<td style="width: 261px;">Today's date:</td>
+<td style="width: 165px;">10/19/2011</td>
+</tr>
+<tr>
+<td style="width: 261px;">Manually entered promised delivery date:</td>
+<td style="width: 165px;">10/25/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <img src="../images/ps39.png" border="1" hspace="0" vspace="0"/><br /> <br /> <strong>Promised Delivery Date Calculation<br /> </strong><br /> This date will be compared to the workday calendars of the branch and carrier. The workday calendar will validate whether the date entered is a workday. If not, one day will be subtracted from the Promised Delivery Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today. If Promised Delivery Date passes, the Promised Shipment Date will be calculated. <br /> <br /> The promised delivery date manually entered of 10/25/2011 is compared to the workday calendars of the branch and carrier and it is found to be a workday for both which is also greater than today's date (10/19/2011). As a result, the promised delivery date passes and the promised shipment date will be calculated next.<br /> <br /> <strong>Promised Shipment Date Calculation</strong> <br /> <br /> The Promised Shipment Date will be calculated as Promised Delivery Date less transit days for the route.  This date will be compared to the workday calendars of the carrier and supplier.  The workday calendar will validate whether the date entered is a workday.  If not, one day will be subtracted from the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and previous month until a common workday can be found.  The returned workday is then checked to see if it's greater than or equal to today.  For the promised ship date to pass, the lead days need to also be considered which means that if subtracting the lead days from the calculated shipment date, a valid workday for the supplier calendar which is also greater that today's date needs to be found, otherwise the shipment date calculation will fail.<br /> <br /> The Promised Shipment Date will be calculated as Promised Delivery Date less 2 transit days, which is 10/23/2011. This date is compared to the workday calendars of the supplier and carrier and it is a Sunday, which is not a workday for the supplier. One day is subtracted and the promised shipment date becomes 10/22/2011, which is not a workday for either the carrier or the supplier. The calculation goes on until the first common workday is found for the carrier and supplier and this is 10/19/2011 which is equal to today's date. However, one lead day is required for the supplier to have the goods available for shipment but the shipment date being already today's date, there is no lead day available so the calculated shipment date fails and the route cannot fit the calendars. <br />  <br /> <img src="../images/ps40.png" border="1" hspace="0" vspace="0"/><br /> <br /> At this point the route will not be displayed and the shipment cannot be routed because the promised delivery date cannot be met. Back scheduling based on the manually entered promised delivery date has failed so now forward scheduling will have to be used.</p>
+<hr />
+<a name="aref_section317"></a><h4 class="km">Forward Scheduling on Inbound Shipments</h4>
+<p>Continuing the example above, the dates on the shipments will be blanked out manually to see what dates the existing route can meet.<br /> <br /> <img src="../images/ps41.png" border="1" hspace="0" vspace="0"/><br /> <br /> The route is found and once selected, the dates will be updated on the shipment based on forward schedule processing.<br />  <img src="../images/ps42.png" border="1" hspace="0" vspace="0"/><br /> <br /> The calculation will start from today's date (10/19/2011). One lead day will be added and compared against the supplier and carrier calendars to calculate the shipment date. 10/20/2011 however is not a workday for the carrier, and neither is the next day. The first workday for the carrier is 10/23/2011 but being a Sunday, it is not a workday in the supplier calendar. The first valid workday for the carrier and supplier is 10/24/2011 and it is set as the Promised Shipment Date. <br /> <br /> The Promised Delivery Date will be calculated by adding 2 transit days to the previously calculated shipment date. 10/26/2011 is a valid workday for both the carrier and the branch so it will be set as the promised delivery date. This is the earliest date on which the goods can be delivered by the carrier. <br /> <br /> The calculated promised delivery date is updated also on the purchase order.<br /> <br /> <img src="../images/ps43.png" border="1" hspace="0" vspace="0"/><br />  </p>
+<hr />
+<a name="aref_section318"></a><h4 class="km">Date Calculation for Inbound Shipments generated from Credit Orders</h4>
+<p>The system uses the workday calendars when routing the shipment in order to calculate the Promised Delivery Date and the Promised Shipment Date. To calculate the promised shipment date for inbound shipments generated from credit orders, the system compares the workday calendars of the carrier and customer to find a common workday. To calculate the promised delivery date for inbound shipments generated from credit orders, the system compares the workday calendars of the branch/plant and carrier to find a common workday.<br /> <br /> For credit orders, the users can enter manually the Requested Date, the Promised Shipment Date and/or the Promised Delivery Date. If no date is manually entered, the Promised Delivery Date and Promised Shipment Date are defaulted to zero while the Requested Date is defaulted to today's date. <br /> <br /> Back scheduling will be tried first and if it fails, forward scheduling will be used to calculate the dates. The calculated dates will be updated on the routed shipment and back on the credit order.<br /> <br /> Set up a calendar for the Branch/plant for December 2011.<br />  <img src="../images/ps44.png" border="1" hspace="0" vspace="0"/><br /> <br /> A different workday calendar is set up for the carrier for the same branch/plant.<br /> <br /> <img src="../images/ps45.png" border="1" hspace="0" vspace="0"/><br /> <br /> A different workday calendar is set up for the customer for the same branch/plant.<br />  <img src="../images/ps46.png" border="1" hspace="0" vspace="0"/><br /> <br /> All calendar are set up the same way for November month. The calendars set up above will be used to illustrate the next date calculation scenario.</p>
+<hr />
+<a name="aref_section319"></a><h4 class="km">Forward Scheduling on Inbound Shipments from Credit Orders</h4>
+<p>The dates calculation process for credit orders follows the same principles as the one for sales orders and outbound shipments. The only difference is the workday calendars that the system checks to validate the dates because in the case of credit orders, the goods are returned from the customer to the shipping branch. For inbound routing, the system can use the existing outbound routes by doing a logical "swap" of the origin and destination information specified in the routing entry.  Therefore, no special inbound routes would normally need to be set up. <br /> <br /> <strong>Test data:</strong></p>
+<table style="text-align: left; width: 454px;" border="0" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 231px;">Customer:</td>
+<td style="width: 195px;">33</td>
+</tr>
+<tr>
+<td style="width: 231px;">Branch/plant:</td>
+<td style="width: 195px;">30</td>
+</tr>
+<tr>
+<td style="width: 231px;">Carrier:</td>
+<td style="width: 195px;">56805</td>
+</tr>
+<tr>
+<td style="width: 231px;">Route:</td>
+<td style="width: 195px;">4 transit days, 2 lead days</td>
+</tr>
+<tr>
+<td style="width: 231px;">Today's date:</td>
+<td style="width: 195px;">11/30/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> All the dates are allowed to default<br /> <br /> A credit order is entered and the dates are allowed to default.  The Requested Delivery Date is set to today's date (11/30/2011). The Promised Delivery Date and Promised Shipment Date are set to zero. Since the Promised Delivery Date is zero the Promised Delivery Date will be set to the Requested Delivery Date and back schedule processing will occur.  This new Promised Delivery Date will be compared to the branch/plant and carrier workday calendars.  11/30/2011 is a workday for both calendars. This date will be compared to today's date and it will pass, as it is equal to today's date, so processing will continue. <br />  <br /> <img src="../images/ps47.png" border="1" hspace="0" vspace="0"/><br /> <br /> The <strong>Promised Shipment Date</strong> will be calculated based on the Promised Delivery Date minus 4 transit days  and will become 11/26/2011.  This new Promised Shipment Date will be used as a starting point to compare the customer and carrier workday calendars. 11/26/2011 is not a workday for neither the customer nor the carrier calendar therefore one day will be subtracted.  11/25/2011 is a workday only for the customer, so one more day is subtracted. 11/24/2011 is a workday for both customer and carrier calendars so this date will be compared to today's date (11/30/2011).  In this case the Promised Shipment Date is less than today's date, therefore back schedule processing will fail, and forward schedule processing will be used. <br /> <br /> <strong>Scheduled Pick Date (PDDJ) Calculation </strong><br /> <br /> The Scheduled Pick Date will be set to today's date.  This date will be compared to the workday calendar of the customer because for credit orders, the goods are picked from the customer and sent back to the shipping branch. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Scheduled Pick Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  The Promised Shipment Date will be calculated. <br /> <br /> In this example, the scheduled pick date is set to 11/30/2011 which is a workday for the customer calendar. As a result, the pick date passes and the promised ship date will be calculated next.<br /> <br /> <strong>Promised Shipment Date (PPDJ) Calculation </strong><br /> <br /> The Promised Shipment Date will be calculated as Scheduled Pick Date plus the lead days for the route.  This date will be compared to the workday calendars of the carrier and customer. The workday calendar will validate whether the date entered is a workday.  If not, one day will be added to the Promised Shipment Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  The Promised Delivery Date will be calculated. <br />  <br /> <img src="../images/ps48.png" border="1" hspace="0" vspace="0"/><br /> <br /> In this example, the promised shipment date is calculated as the pick date plus 2 lead days for the route, which means the ship date will become 12/02/2011. This date is then compared to the workday calendars of the customer and carrier but it is a workday only for the customer, so one more day is added to the current Promised Shipment Date. The first workday for the carrier calendar is 12/06/2011 which is a workday for the customer also so 12/06/2011 will be set as the Promised Shipment Date. As this date passes, the promised delivery date is calculated next.<br /> <br /> <strong>Promised Delivery Date (RSDJ) Calculation </strong><br /> <br /> The Promised Delivery Date will be calculated as Promised Shipment Date plus transit days for the route.  This date will be compared to the workday calendars of the branch/plant and carrier because for the case of credit orders, the goods are delivered to the original shipping branch. The workday calendar will validate whether the date entered is a workday. If not, one day will be added to the Promised Delivery Date and the workday calendar will be called again.  This logic will continue for the rest of the current month and next month until a common workday can be found.  Processing will continue. <br /> <br /> <img src="../images/ps49.png" border="1" hspace="0" vspace="0"/><br /> <br /> The promised delivery date in this example is calculated as the promised ship date (12/06/2011) plus 4 transit days for the route. The promised delivery date is set to 12/10/2011 and then compared to the workday calendars of the branch and carrier. 12/10/2011 is a workday for neither the branch nor the carrier, so one day is added but 12/11/2011 is still not a workday for either of the carrier and branch calendars. 12/12/2011 is a workday for the branch, but not for the carrier, so an additional day is added. 12/13/2011 is set and compared to the workday calendars of the carrier and branch and it is found to be a workday for both, but the carrier needs 4 transit days to deliver the goods from the customer back to the shipping branch. Considering that the shipment date was set for 12/06/2011, by 12/13/2011 the carrier has only 3 days to deliver the goods. As a result, one more day needs to be added in order to allow the carrier the time needed to deliver the goods. 12/14/2011 is compared to the workday calendars of the branch and carrier and is found to be a workday for both calendars, so the Promised Delivery Date passes and processing will continue. <br /> <br /> <img src="../images/ps50.png" border="1" hspace="0" vspace="0"/><br />  <br /> Once the shipment has been successfully routed, both the shipment and the sales order detail lines on the shipment will reflect the routed shipment's calculated dates.</p>
+<table style="text-align: left; width: 892px; height: 116px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="width: 170px; text-align: center;">Event</th>
+<th style="width: 170px; text-align: center;">Requested Date</th>
+<th style="width: 170px; text-align: center;">Scheduled Pick Date</th>
+<th style="width: 170px; text-align: center;">Promised Shipment Date</th>
+<th style="width: 170px; text-align: center;">Promised Delivery Date</th>
+</tr>
+<tr>
+<th style="text-align: center;">Order Entry</th>
+<td style="text-align: center;">11/30/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Shipment Creation</th>
+<td style="text-align: center;">11/30/2011</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+</tr>
+<tr>
+<th style="text-align: center;">Route is Selected</th>
+<td style="text-align: center;">11/30/2011</td>
+<td style="text-align: center;">11/30/2011</td>
+<td style="text-align: center;">12/06/2011</td>
+<td style="text-align: center;">12/14/2011</td>
+</tr>
+</tbody>
+</table>
+<p><br /> The table above shows a summary of the dates calculation process for this example.</p>
+<hr />
+<a name="aref_section320"></a><h3 class="km">Conclusion</h3>
+<p>The dates calculation process is extremely important because it needs to reflect the times necessary to pick, load and deliver the goods. Based on these times, certain routes will be available which may be defined with different rates schedules, so properly managing the dates in the system is crucial for meeting specific business requirements.</p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

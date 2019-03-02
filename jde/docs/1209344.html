@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Advanced Transportation Preferences</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Advanced Transportation Preferences</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">General Processing and Setup Considerations</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Customer Freight Preference: Advance Preference Type 14</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Mode of Transport Preference: Advance Type 16</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34">Carrier Preference: Advance Type 15</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35">Options and Equipment Preference: Advance Type 13</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36">Document Set Preference: Advance Type 12</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37">Advanced Preferences Schedule Revisions</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38">Test Scenario #1: Freight, MOT, Carrier</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39">Test Scenario #2: Freight, MOT, Carrier, Options/Equipment</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310">Test Scenario #3: Freight, MOT, Carrier, Options/Equipment, Document Set</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311">Frequently Asked Questions</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><strong>Overview</strong></p>
+<p>Advanced Preferences have the ability to default customer-preferred carrier/mode of transport/services as specified in the customer profile.</p>
+<p>Beginning with release 8.10, all the basic transportation preferences are available as advanced preferences.  The system will resolve advanced preferences first then look for standard preferences. Transportation Management supports the following advance preference types:</p>
+<table border="1"><caption>Transportation Advanced Preferences</caption>
+<tbody>
+<tr>
+<td width="15%"><strong><strong>Type</strong></strong></td>
+<td width="30%"><strong>Description</strong></td>
+<td width="53%"><strong>Advanced Preference Functionality</strong></td>
+</tr>
+<tr>
+<td width="15%">12</td>
+<td width="30%">Document Set</td>
+<td width="53%">Transportation Management</td>
+</tr>
+<tr>
+<td width="15%">13</td>
+<td width="30%">Options and Equipment</td>
+<td width="53%">Transportation Management</td>
+</tr>
+<tr>
+<td width="15%">14</td>
+<td width="30%">Customer Freight</td>
+<td width="53%">Transportation Management</td>
+</tr>
+<tr>
+<td width="15%">15</td>
+<td width="30%">Carrier</td>
+<td width="53%">Transportation Management</td>
+</tr>
+<tr>
+<td width="15%">16</td>
+<td width="30%">Mode of Transport</td>
+<td width="53%">Transportation Management</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p>The transportation preferences are resolved when the shipment is created, in the sequence listed:</p>
+<ol>
+<li>Customer Freight Preference</li>
+<li>Mode of Transport Preference</li>
+<li>Carrier Preference</li>
+<li>Options and Equipment Preference</li>
+</ol>
+<p>The Document Set Preference is resolved whenever shipment documents are printed and the Document Selection (P49591) is called.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> </p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">General Processing and Setup Considerations</h3>
+<ul>
+<li>Define Preference Names</li>
+<li>Define Preference Schedules</li>
+<li>Define the Preference Detail</li>
+<li>Assign a Preference Schedule in System Constants</li>
+</ul>
+<p>Select the System Constants form exit from Branch/Plant Constants (P41001) and populate the Preference Schedule field with the advanced preference schedule. For transportation it is mandatory to have the schedule in System Constants. Transportation will not consider the advanced preference schedule associated with the P4210 processing options.<br /> <br /> <img src="../images/a13001.png" class="kmsmartresize" border="1" alt="1" title="1" hspace="0" vspace="0" width="401"/></p>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><a name="Customer_Freight_Preference:_Advance"></a>Customer Freight Preference: Advance Preference Type 14</h3>
+<p>This preference provides several defaults (or return values):</p>
+<ul>
+<li>Freight Rate Schedule</li>
+<li>Freight Handling Code</li>
+<li>Route Selection Type</li>
+<li>Billable Freight Summary/Detail flag</li>
+<li>Distance</li>
+<li>Distance UOM</li>
+</ul>
+<p><strong>Customer Freight Preference: Advanced Preferences Name Revisions (P4071)</strong><br /> <br /> From menu G40311 select Advanced Preferences Name Revisions (P4071). <br /> Create a new customer freight preference: click Add and specify:</p>
+<ul>
+<li>Preference name: for example TAFR. <em>Note: Creating a new Preference Name will generate an entry in the 40/TY UDC table. A '2' will be placed in the Special Handling Code to indicate that this is a Preference Name rather than a Price Adjustment.</em></li>
+<li>Item Group / Customer Group: optional (needed when complex groups are used). Note:  If complex groups are used, the customer /item group needs to be specified here in the preference name. </li>
+<li>Preference Hierarchy: required.</li>
+<li>Advance Preference: 14 (Customer Freight).</li>
+<li>Level break type: None (or Quantity level break).</li>
+</ul>
+<p><img src="../images/a13002.png" class="kmsmartresize" border="1" alt="2" title="2" hspace="0" vspace="0" width="1008"/><br />  <br /> <strong>Customer Freight Preference: Advance Preference Detail Revision (P4072)<br /> </strong><br /> From menu G40311 select Advanced Preference Detail Revisions (P4072).<br /> <br /> On Advance Preference Detail, search for the Preference Name defined as the previous step in P4071 and click Add to create a new preference detail.<br /> <br /> On Preference Hierarchy Selection, select the appropriate combination and click Select.<br /> <br /> <em>Note: This hierarchy is based on the preference hierarchy defined for this preference during Preference Name Revisions P4071.</em><br /> <br /> In this example, an Item Group and Customer group combination is selected.<br /> <br />  <img src="../images/a13003.png" class="kmsmartresize" border="1" alt="3" title="3" hspace="0" vspace="0" width="640"/><br /> <br /> For example, when selecting the preference name TAFR, the Item Price Group and Customer Groups default from P4071 Advanced Preferences Name Revisions. Then, specify Effective/ Expired date and the fields corresponding to customer group/Item group (in P4072 form W4072A).<br /> <br /> "Lin Bus" is a group key defined in P4092 "Define Customer Price Groups" application (the menu G4222 Price Management). <br /> <br /> "SlsCd1" and "SlsCd2" are group keys defined in Define Item Price Groups (P4092) application (the menu G4222 Price Management). The effective values (BIK and 101) are populated in Item Branch/Plant (P41026) by taking the Category Codes row exit.<br /> <br /> <img src="../images/a13004.png" class="kmsmartresize" border="1" alt="4" title="4" hspace="0" vspace="0" width="740"/><br />  <br /> Select the line and take Pref Details form exit. <br /> <br /> <img src="../images/a13005.png" class="kmsmartresize" border="1" alt="5" title="5" hspace="0" vspace="0" width="755"/><br />  <br /> In P4072 (form W4072D) enter the additional Driver fields (if any) and the Return fields. The key fields that will appear on this form are dependent upon the Advanced Preference Type. For the customer freight preference, the return fields are:</p>
+<ul style="list-style-type: disc;">
+<ul style="list-style-type: disc;">
+<li><strong><strong>Freight Rate Schedule  <img src="../images/a13006.png" class="kmsmartresize" alt="6" title="6" width="723"/></strong></strong><br />
+<ul>
+<li><strong>Billable Freight Summary/Detail flag:</strong> This is used by Freight Update (R4981) to determine whether to write a Sales Order Detail (F4211) record for each individual charge or whether to summarize the charges (by charge code) into a single order line. For this example, we are using BF = 1 (An order line will be loaded to the order for each individual billable charge).</li>
+<li><strong>Distance:</strong> Generally set up by ship-to customer, this is the distance that will be used in calculating distance-based freight.</li>
+<li><strong>Distance UOM</strong></li>
+</ul>
+<p><img src="../images/a13007.png" class="kmsmartresize" border="1" alt="7" title="7" hspace="0" vspace="0" width="757"/></p>
+<hr />
+<a name="aref_section33"></a><h3 class="km"><a name="Mode_of_Transport_Preference:_Advance"></a>Mode of Transport Preference: Advance Type 16</h3>
+<p>This preference provides the return value for:</p>
+<ul>
+<li>Mode of transport</li>
+</ul>
+<p><strong>Mode of Transport Preference: P4071 Advanced Preferences Name Revisions</strong><br /> <br /> From menu G40311 select Advanced Preferences Name Revisions (P4071). <br /> Create a new mode of transport preference: click Add and specify:</p>
+<ul>
+<li>Preference name: for example TAMOT.</li>
+<li>Item Group / Customer Group: optional (needed when complex groups are used).</li>
+<li>Preference Hierarchy: required.</li>
+<li>Advance Preference: 16 (Mode of transport)</li>
+<li>Level break type: Quantity level break (or none).</li>
+</ul>
+<p><img src="../images/a13008.png" class="kmsmartresize" alt="8" title="8" width="745"/><br /> <strong>Mode of transport Preference: P4072 Advance Preference Detail revision</strong><br /> <br /> From menu G40311 select Advanced Preference Detail Revisions (P4072).<br /> On Advance Preference Detail, search for the Preference Name defined as the previous step in P4071 and click Add to create a new preference detail.<br /> <br /> On Preference Hierarchy Selection, select the appropriate combination and click Select.<br /> <em>Note: This hierarchy is based on the preference hierarchy defined for this preference during Preference Name Revisions P4071.</em><br /> <br /> In this example, an Item Group and Customer group combination is selected.<br /> <br /> For example, when selecting the Mode of Transport preference name TAMOT, the Item Price Group and Customer Groups defaults from P4071 Advanced Preferences Name Revisions. Then, specify Effective/ Expired date and the fields corresponding to customer group/Item group (in P4072 form W4072A) and also the threshold UM.<br /> <br /><img src="../images/a13009.png" class="kmsmartresize" alt="9" title="9" width="760"/><br /> <br /> Select the line and take Pref Details form exit. In P4072 (form W4072D) enter the additional Driver fields (like origin, FH, etc.) and the Return fields.  For the mode of transport preference, the return field is the Mode of Transport.<br />  <br /> The Mode of Transport provides an override mode, which is used in route selection. <br /> <br /> When a Mode of Transport preference is resolved, the mode will be used as a driver for subsequent preferences that have Mode of Transport (MOT) for the driver field (Carrier Preference and Options and Equipment Preference).  <em>Note: the mode selected by the routing program is <strong>not</strong> used for the driver fields because all preferences are resolved before routing takes place.</em><br /> <br /> In the example below we setup 2 modes of transports (GRD, TL) driven by business unit, Origin and City. That means when a shipment is created from Origin 6031 to destination Paris, the preferred mode of transport will be TL.<br /> <br /> <img src="../images/a13010.png" class="kmsmartresize" border="1" alt="10" title="10" hspace="0" vspace="0" width="758"/> </p>
+<hr />
+<a name="aref_section34"></a><h3 class="km"><a name="Carrier_Preference:_Advance_Type_15"></a>Carrier Preference: Advance Type 15</h3>
+<p>This preference provides several defaults (or return values):</p>
+<ul>
+<li>Include/Exclude flag</li>
+<li>Preferred Carrier 1</li>
+<li>Preferred Carrier 2</li>
+<li>Preferred Carrier 3</li>
+</ul>
+<p><strong>Carrier Preference: P4071 Advanced Preferences Name Revisions</strong><br /> <br /> From menu G40311 select Advanced Preferences Name Revisions (P4071). <br /> Create a new carrier preference: click Add and specify:</p>
+<ul>
+<li>Preference name: for example TACARR.</li>
+<li>Item Group / Customer Group: optional (needed when complex groups are used).</li>
+<li>Preference Hierarchy: required.</li>
+<li>Advance Preference:  15 (Carrier).</li>
+<li>Level break type: None (or Quantity level break).</li>
+</ul>
+<p><strong>Carrier Preference: P4072 Advance Preference Detail revision</strong><br /> <br /> From menu G40311 select Advanced Preference Detail Revisions (P4072).<br /> On Advance Preference Detail, search for the Preference Name defined as the previous step in P4071 and click Add to create a new preference detail.<br /> <br /> On Preference Hierarchy Selection, select the appropriate combination and click Select.<br /> <em>Note: This hierarchy is based on the preference hierarchy defined for this preference during Preference Name Revisions P4071.</em><br /> <br /> In this example, an Item Group and Customer group combination is selected.<br /> <br /> For example, when selecting the preference name TACARR, the ItemPrice Group and Customer Groups default from P4071 Advanced Preferences Name Revisions. Then, specify Effective/ Expired date and the fields corresponding to customer group/Item group (in P4072 form W4072A).<br /><img src="../images/a13011.png" class="kmsmartresize" alt="11" title="11" width="651"/></p>
+<p><img src="../images/a13012.png" class="kmsmartresize" alt="12" title="12" width="645"/><img src="../images/a13013.png" border="1" alt=" " title=" " hspace="0" vspace="0"/><br /> <br /> Select the line and take the Pref Details form exit:<br /> <br /><img src="../images/a13014.png" class="kmsmartresize" alt="13" title="13" width="758"/><br /> <br /> <img src="../images/a13015.png" class="kmsmartresize" alt="14" title="14" width="760"/><br />In P4072 (form W4072D) enter the additional Driver fields (Mode of Transport, FH, Origin, etc.) and the Return fields. For the Carrier preference, the return fields are:</p>
+<ul>
+<li>Include/Exclude flag</li>
+<li>Preferred Carrier 1, 2 and 3</li>
+</ul>
+<p>Up to three carriers can be defined as preferred or excluded carriers.&amp;clickstream=no"1", the carriers are considered to be preferred, and the routing process will only select a route for one of the defined carriers.  If the Include/Exclude flag is set to "0", the carriers are excluded from consideration during the routing process. <br /> <br /> In our example, when a shipment is created from origin 6031 and a mode of transport TL was picked based on the preference, then the preferred carriers are 8599 and 8580.</p>
+<hr />
+<a name="aref_section35"></a><h3 class="km"><a name="Options_and_Equipment_Preference:"></a>Options and Equipment Preference: Advance Type 13</h3>
+<p>This preference provides the following return values:</p>
+<ul>
+<li>Delivery Line Level</li>
+<li>Options/Equipment</li>
+</ul>
+<p><strong>Options and Equipment Preference: P4071 Advanced Preferences Name Revisions</strong><br /> <br /> From menu G40311 select Advanced Preferences Name Revisions (P4071). <br /> <br /> Create a new preference: click Add and specify:</p>
+<ul>
+<li>Preference name: for example TAOPT</li>
+<li>Item Group / Customer Group</li>
+<li>Preference Hierarchy: required.</li>
+<li>Advance Preference: 13 (Options and Equipment)</li>
+<li>Level break type: None (or Quantity level break).</li>
+</ul>
+<p>Define the Preference Revisions in the following way:</p>
+<p><img src="../images/a13016.png" class="kmsmartresize" alt="15" title="15" width="643"/></p>
+<p><strong>Options and Equipment Preference: P4072 Advance Preference Detail revision</strong><br /> <br /> From menu G40311 select Advanced Preference Detail Revisions (P4072).<br /> On Advance Preference Detail, search for the Preference Name defined as the previous step in P4071 and click Add to create a new preference detail.<br /> <br /> On Preference Hierarchy Selection, select the appropriate combination and click Select.<br /> <br /> <em>Note: This hierarchy is based on the preference hierarchy defined for this preference during Preference Name Revisions (P4071).<br /> </em><br /><img src="../images/a13017.png" class="kmsmartresize" alt="16" title="16" width="757"/><br /> <br /> In this example, Item Only is selected.<br /> <br /> Then the item number is required when selecting the preference name TAOPT. Also specify Effective/ Expired date in P4072 form W4072A.<br /> <br /> Select the line and take Pref Details form exit.<br /> <br /> <img src="../images/a13018.png" class="kmsmartresize" border="1" alt="17" title="17" hspace="0" vspace="0" width="735"/><br />  <br /> In P4072 (W4072D form) enter the additional Driver fields (like Mode of Transport) and the Return fields. For the Options and Equipment preference, the return fields are:</p>
+<ul>
+<li><strong>Delivery Line Level:</strong> this field is used to indicate that a freight charge is calculated once per detail line, once per delivery, or once per load/trip.</li>
+<li><strong>Options/Equipment: </strong>option or piece of equipment which is associated with a shipment or which is required in order to make a shipment.</li>
+</ul>
+<p>This preference can be used in a variety of ways. In the simplest case, it can be used for an option that is always required for an item or customer, such as a refrigerated trailer or inside delivery. An option preference is useful (when the requirement is ongoing) so that the person taking the order does not have to manually attach (or even know about) the option. This preference can also be used to drive selection (or suppression) of certain carriers or modes for special requirements. This is because once an option is attached to a shipment; the option must be supported by a route, carrier and mode in order for a specific routing option to be selected. For example, certain items cannot be shipped by air.  In this case, air-based routes can be suppressed by adding a default option/equipment code that is incompatible with these routes.<br /> <br /> For more information on Options and Equipment please review the whitepaper <strong>"How to Set up of Options and Equipment in Transportation Management"</strong></p>
+<hr />
+<a name="aref_section36"></a><h3 class="km"><a name="Document_Set_Preference:_Advance_Type_12"></a>Document Set Preference: Advance Type 12</h3>
+<p>This preference provides the following return value:</p>
+<ul>
+<li>Document Set</li>
+</ul>
+<p><strong>Document Set Preference: P4071 Advanced Preferences Name Revisions</strong><br /> <br /> From menu G40311 select Advanced Preferences Name Revisions (P4071). <br /> <br /> Create a new Document Set preference: click Add and specify:</p>
+<ul>
+<li>Preference name: for example TASET.</li>
+<li>Item Group / Customer Group: optional. </li>
+<li>Preference Hierarchy: required.</li>
+<li>Advance Preference: 12 (Document Set)</li>
+<li>Level break type: None (or Quantity level break).</li>
+</ul>
+<p><img src="../images/a13019.png" class="kmsmartresize" alt="18" title="18" width="641"/></p>
+<p><br /> <strong>Document Set Preference: P4072 Advance Preference Detail revision</strong><br /> <br /> From menu G40311 select Advanced Preference Detail Revisions (P4072).<br /> <br /> On Advance Preference Detail, search for the Preference Name defined as the previous step in P4071 and click Add to create a new preference detail.<br /> <br /> On Preference Hierarchy Selection, select the appropriate combination and click Select.<br /> <br /> <em>Note: This hierarchy is based on the preference hierarchy defined for this preference during Preference Name Revisions P4071.</em><br /> <br />  <img src="../images/a13020.png" class="kmsmartresize" border="1" alt="19" title="19" hspace="0" vspace="0" width="637"/><br /> <br /> In this example, a combination of Item and Customer is being used.<br /> <br />  <img src="../images/a13021.png" class="kmsmartresize" border="1" alt="20" title="20" hspace="0" vspace="0" width="585"/><br /> <br /> When selecting the preference name TASET, the item number, the customer number and date range are specified (in P4072 form W4072A).<br /> <br /> Select the line and take Pref Details form exit.<br /> <br /> In P4072 (form W4072D) enter the additional Driver fields (like Business Unit, Line Type, Bulk/Package, and Carrier) and the Return field (Document Set). The key fields that will appear on this form are dependent upon the Advanced Preference Type. For the Document Set preference, the return field is Document Set.<br />  <br /> <img src="../images/a13022.png" class="kmsmartresize" border="1" alt="21" title="21" hspace="0" vspace="0" width="755"/><br /> <br /> Make sure that P49190 Document Setup contains the documents codes within a document set.<br /> <br />  <img src="../images/a13023.png" class="kmsmartresize" border="1" alt="22" title="22" hspace="0" vspace="0" width="811"/><br /> <br /> Document Set row exit<br /> <br />  <img src="../images/a13024.png" class="kmsmartresize" border="1" alt="23" title="23" hspace="0" vspace="0" width="624"/><br /> <br /> For more information on how to setup transportation documents, please review the whitepaper <strong>"Transportation Delivery Documents"</strong></p>
+<hr />
+<a name="aref_section37"></a><h3 class="km"><a name="Advanced_Preferences_Schedule_Revisions"></a>Advanced Preferences Schedule Revisions</h3>
+<p>From menu G40311 select Advanced Preference Schedule Revisions (P4070).</p>
+<ul>
+<li>Define the Preference Schedule: ADVANCE.</li>
+<li>Select one or more Preference Names to make up the Preference Schedule</li>
+</ul>
+<p> <img src="../images/a13025.png" class="kmsmartresize" border="1" alt="24" title="24" hspace="0" vspace="0" width="808"/></p>
+<hr />
+<a name="aref_section38"></a><h3 class="km"><a name="Test_Scenario_1:_Freight_MOT_Carrier"></a>Test Scenario #1: Freight, MOT, Carrier</h3>
+<p>This is an example on how to use advanced preference for Customer Freight, Mode of Transport and Carrier in EnterpriseOne.<br /> <br /> 1. <span>Use preference Schedule &lsquo;ADVANCE&rsquo;</span></p>
+<p>2.<span> P4210 Enter a transportation sales order for branch plant 30 (Origin 6031) and Sold To 17122013 (destination city: Paris).</span><br />  <img src="../images/a13026.png" class="kmsmartresize" border="1" alt="25" title="25" hspace="0" vspace="0" width="1341"/><br />  <br />3.    P4915 Make sure a shipment is created.<br /> <br /> <img src="../images/a13027.png" class="kmsmartresize" border="1" alt="26" title="26" hspace="0" vspace="0" width="1413"/><br /> <br />4.    Select the shipment and take the Revisions row exit to Shipment.<br /> <br /> <img src="../images/a13028.png" class="kmsmartresize" border="1" alt="27" title="27" hspace="0" vspace="0" width="802"/><br /> <br /> Notice that Branch Plant 30, Origin 6031 and City Paris will be the driver fields used when starting to resolve the transportation preference.<br /> <br /> In this example, the logic used to resolve the preference is the following:</p>
+<div style="margin-left: 40px;">1.    Resolve Customer Freight preference: <br /> Driver data: Business Unit = 30<br /> Return data: Freight Handling Code = FP, Route Selection Type=6, BF=1 <br /> <br /> 2.    Resolve Mode of Transport preference:<br /> Driver data: Business Unit = 30, Origin = 6031, City = Paris, FreightCode = FP<br /> Return data: Mode of Transport = TL<br /> <br /> 3.    Resolve Carrier Preference: <br /> Driven data: Business Unit = 30, Mode of Transport = TL, Origin = 6031, FreightCode=FP<br /> Return data: Preferred Carrier: 8599 or 8580. <br /> Notice that at the end the system picks the carrier 8580 (Preferred carrier #2) because it offers Best delivery time and least cost (the selection based on the Route Selection Type=6 defined on Customer Freight preference).</div>
+<p><br />  <img src="../images/a13029.png" class="kmsmartresize" border="1" alt="28" title="28" hspace="0" vspace="0" width="632"/><br /> <br /> 5.    Routing Options<br /> Error ID 103W Carrier and Preferred Carriers Mismatch  <br /> <br /> <img src="../images/a13030.png" class="kmsmartresize" border="1" alt="29" title="29" hspace="0" vspace="0" width="808"/></p>
+<hr />
+<a name="aref_section39"></a><h3 class="km"><a name="Test_Scenario_2:_Freight_MOT_Carrier"></a>Test Scenario #2: Freight, MOT, Carrier, Options/Equipment</h3>
+<p>This is an example on how to use advanced preference for Customer Freight, Mode of Transport, Carrier, Options and Equipment in EnterpriseOne.<br /> <br /> 1.    <span>Use preference Schedule &lsquo;ADVANCE&rsquo;</span><br /><br />2.    <span>P4210 Enter a transportation sales order for branch plant 30 (Origin 6031) and Sold To 17122013 (destination city: Paris).</span></p>
+<p><img src="../images/a13031.png" class="kmsmartresize" alt="30" title="30" width="807"/><br /> <br /> 3.    <span>P4915 Make sure a shipment is created.</span><br /> <br /> Notice that Branch Plant 30, Origin 6031 and City Paris will be the driver fields used when starting to resolve the transportation preference.<br />  <img src="../images/a13032.png" class="kmsmartresize" border="1" alt="31" title="31" hspace="0" vspace="0" width="810"/></p>
+</li>
+</ul>
+</ul>
+<p style="padding-left: 30px;"><span>Select the shipment and take the Revisions row exit to Shipment</span></p>
+<p style="padding-left: 30px;"><span><img src="../images/a13033.png" class="kmsmartresize" alt="32" title="32" width="666"/></span></p>
+<p style="padding-left: 30px;">Notice that Branch Plant 30, Origin 6031 and City Paris will be the driver fields used when starting to resolve the transportation preference.</p>
+<p style="padding-left: 30px;">In this example, the logic used to resolve the preference is the following:</p>
+<div style="margin-left: 40px;">1.    Resolve Customer Freight preference: <br /> Driver data: Business Unit = 30<br /> Return data: Freight Handling Code = FP, Route Selection Type=6, BF=1 <br /> <br /> 2.    Resolve Mode of Transport preference:<br /> Driver data: Business Unit = 30, Origin = 6031, City = Paris, FreightCode = FP<br /> Return data: Mode of Transport = TL<br /> <br /> 3.    Resolve Carrier Preference: <br /> Driven data: Business Unit = 30, Mode of Transport = TL, Origin = 6031, FreightCode=FP<br /> Return data: Preferred Carrier: 8599 or 8580. <br /> <br /> 4.    Resolve Options and Equipment Preference:<br /> Driven data: Mode of Transport = TL<br /> Return data: Option/Eq=LIFTGATE, DL=D<br /> <br /> Notice that at the end the system picks the carrier 8599 (Preferred carrier #1) because it is the only carrier having a LIFTGATE option defined in P4956 Work with Options and Equipment.</div>
+<p><img src="../images/a13034.png" class="kmsmartresize" border="1" alt="34" title="34" hspace="0" vspace="0" width="808"/><br /> <br /> 4.    P4915. Inquire on the Shipment Number. Row exit-&gt;Routing Options<br />  <img src="../images/a13035.png" class="kmsmartresize" border="1" alt="35" title="35" hspace="0" vspace="0" width="813"/><br />  <br /> 5.     Shipment Revisions. Row exit-&gt;Options and Equip<br />  <img src="../images/a13036.png" class="kmsmartresize" border="1" alt="36" title="36" hspace="0" vspace="0" width="800"/></p>
+<hr />
+<a name="aref_section310"></a><h3 class="km"><a name="Test_Scenario_3:_Freight_MOT_Carrier"></a>Test Scenario #3: Freight, MOT, Carrier, Options/Equipment, Document Set</h3>
+<p>This is an example on how to use advanced preference for Customer Freight, Mode of Transport, Carrier, Options /Equipm. And Document Set in EnterpriseOne.<br /> <br /> 1.    <span>Use preference Schedule &lsquo;ADVANCE&rsquo;.</span><br />2.    <span>In P4210 Enter a transportation sales order similar with the sales order entered at the previous test scenario #2 for branch plant 30 (Origin 6031) and Sold To 17122013 (destination city: Paris).</span><br /> 3.    Make sure a shipment is created. Notice that Branch plant 30, Origin 6031 and City Paris will be the driver fields used when starting to resolve the transportation preference.<br /> 4.    Select the shipment and take row exit "Routing Options"<br /> <br /> <img src="../images/a13037.png" class="kmsmartresize" border="1" alt="37" title="37" hspace="0" vspace="0" width="811"/><br />  <br /> 5.    Confirm the shipment: P49645<br /> Make sure the processing option #2.Print Delivery Documents and #3.Display Delivery Document Selection Form are set to 1.<br /> <br />  <img src="../images/a13038.png" class="kmsmartresize" border="1" alt="38" title="38" hspace="0" vspace="0" width="579"/></p>
+<p><span>Select the shipment from P4915 and take row exit -&gt;Shipment -&gt;Confirm Shipment</span><br /> <br /> <img src="../images/a13039.png" class="kmsmartresize" border="1" alt="39" title="39" hspace="0" vspace="0" width="899"/></p>
+<p><img src="../images/a13040.png" class="kmsmartresize" alt="40" title="40" width="583"/></p>
+<p> </p>
+<p><span>P49591 Delivery Document Selection is called by P49645 and it resolves the preference type 12 Document set by displaying the 2 document codes (BOL1, MBL1) setup in preferred Document set DS1.</span><br />  <img src="../images/a13041.png" class="kmsmartresize" border="1" alt="41" title="41" hspace="0" vspace="0" width="838"/></p>
+<hr />
+<a name="aref_section311"></a><h3 class="km"><a name="Frequently_Asked_Questions"></a>Frequently Asked Questions</h3>
+<p><strong>Question 1: How to activate advanced transportation preferences?</strong><br /> <br /> <strong>Answer 1: </strong>To activate the advanced transportation preferences setup the Preference Schedule in System Constants (P41001) in order to be resolved. While the transportation base preferences are "always on", the advanced ones need to have the schedule set up in Branch/Plant constants in order to be resolved. Transportation preferences will not be activated by setting up the processing options on the Preference tab of Sales Order Entry (P4210). The schedule set up there overrides the one in Branch Plant Constants only when resolving sales advanced preferences.<br /> <br /> <strong>Question 2: In which sequence the transportations preferences are resolved?</strong><br /> <br /> <strong>Answer 2:</strong> Transportation preferences are resolved at the time a shipment is created, in the sequence listed:</p>
+<ul style="list-style-type: disc;">
+<ul style="list-style-type: disc;">
+<ol>
+<li>Customer Freight Preference</li>
+<li>Mode of Transport Preference</li>
+<li>Carrier Preference</li>
+<li>Options and Equipment Preference</li>
+</ol>
+</ul>
+</ul>
+<p>The Document Set Preference is resolved whenever shipment documents are printed and the Document Selection (P49591) is called.<br /> <br /> <strong>Question 3: What happens when there are override values?</strong><br /> <br /> <strong>Answer 3: </strong>Transportation preference values will never override values that are manually keyed in a transaction. The values will be based on the following sequence:</p>
+<ul style="list-style-type: disc;">
+<ul style="list-style-type: disc;">
+<ol>
+<li>Manually keyed</li>
+<li>Non-blank values in Customer Master Table</li>
+<li>Preference profile value</li>
+</ol>
+</ul>
+</ul>
+<p><br /> <strong>Question 4: What are the driver fields and the return fields when using advance preference?</strong><br /> <br /> <strong>Answer 4: </strong>The driver and return fields are the key fields that will appear on P4072 (form W4072D) dependent upon the Advanced Preference Type.<br /> <br /> The driver fields are additional fields used to select a preference. The return values are the values default or the values resulted after applying the preference. Each preference type has a different set of return values. A return value can be a driver value for a subsequent preference. For example, when a Mode of Transport preference is resolved, the mode will be used as a driver for subsequent preferences that have Mode of Transport (MOT) for the driver field (Carrier Preference and Options and Equipment Preference).</p>
+<hr />
+<p> </p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

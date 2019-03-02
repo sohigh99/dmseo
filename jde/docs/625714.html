@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Grade and Potency</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Grade and Potency</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>Grades enable items to be classified, for example, grade A eggs and grade AA eggs. Potency allows a percentage of an active ingredient in a product to be specified, for example the percentage of alcohol in cough syrup.</p>
+<p>When grade or potency control is activated for an item, a standard grade or potency can be entered for the item along with a range of acceptable values. If items are received that are not within the acceptable range, the system displays a warning message. A sales order can not be created for items that are not within the acceptable range.</p>
+<p>Acceptable grade or potency ranges for each of customer can be specified using preference profiles. Item grade and potency values are applicable only to items that are produced in lots. Both grade control and potency control cannot be used for the same item. The grade or potency of all items in a lot can be specified on Work With Lot Master (P4108). If a grade or potency is not specified, the system uses the standard grade or potency entered on the Additional System Information form of the Item Master (P4101) or Item Branch (P4102) applications.</p>
+<p>Bulk products cannot be selected by grade or potency or load confirmed by lot, hence Grade and Potency should only be setup and used for packaged items.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> </p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Grade Control Setup</h3>
+<p>All items that are grade or potency controlled will be produced in lots. Grades can be used to classify items. If grade control is turned on in the Item Master (P4101) or Item Branch (P4102), the system edits for grades and will not perform transactions if the items involved do not meet the grade standards. Both grade and potency control cannot be used for the same item.<br /> <br /> To use Grade Control (OT2Y) perform these setup steps: <br /> <br /> Define grades to be used in the user defined code table 40/LG.<br /> <br /> <img src="../images/p08001.png" border="0" hspace="0" vspace="0"/><br /> <br /> Set up grade control fields, accessed by taking the Additional Information row exit the Item Master Information screen and selecting the Grade/Potency tab:</p>
+<ul>
+<li>Grade Control (Y/N)</li>
+<li>Standard Grade</li>
+<li>From and Thru Grade</li>
+</ul>
+<p><br /> <img src="../images/p08002.png" border="0" hspace="0" vspace="0"/></p>
+<hr />
+<a name="aref_section32"></a><h3 class="km">Potency Control Setup</h3>
+<p>Potency refers to the active ingredient in a product. For example, alcohol is the active ingredient in rubbing alcohol but only comprises a percentage of the whole product. Ten percent of the entire product may be potent. If potency control is turned on in the Item Master (P4101) or Item Branch (P4102), the system edits for potency and will not perform transactions if the items involved do not meet the potency standards. Both grade and potency control cannot be used for the same item.<br /> <br /> To use Potency Control (OT1Y) perform these setup steps: <br /> <br /> Define units of measure to measure potent items. Use the user defined code table 00/UM. For each potent unit of measure defined, enter 'P' in the second space of the Special Handling Code field of the User Defined Code screen.<br /> <br /> <img src="../images/p08003.png" border="0" hspace="0" vspace="0"/><br /> <br /> Define a conversion for each potent unit of measure to the volume unit of measure of the item. For example, one potent gallon is always equal to one gallon. Use the Unit of Measure Conversions screen (P41002).<br /> <br /> Set up Potency control fields, accessed by taking the Additional Information row exit the Item Master Information screen and selecting the Grade/Potency tab:</p>
+<ul>
+<li>Potency Control (Y/N)</li>
+<li>Standard Potency </li>
+<li>From and Thru Potency</li>
+</ul>
+<p><br /> <img src="../images/p08004.png" border="0" hspace="0" vspace="0"/><br /> <br /> <strong>Note</strong> <strong>:</strong> During setup if you see Error 3349 , Cannot Convert UOM back to Primary, ensure that UOM conversion for primary is set before you set the potency UOM conversion.</p>
+<hr />
+<a name="aref_section33"></a><h3 class="km">Grade/Potency Pricing</h3>
+<p>A price may be different based on the grade or potency of a product being sold. In order to activate Grade/Potency Pricing, go to the Item Master (P4101) and take the Additional Information row exit. On the Grade and Potency tab there is a field for Grade/Potency Pricing. A value of  '1' in this field activates Potency Pricing; a  2 activates Grade Pricing, a blank value means that no price change will be done based on grade or potency.<br /> <br /> <img src="../images/p08005.png" border="0" hspace="0" vspace="0"/><br /> <br /> Grade Pricing functionality was not designed to price based on the grade assigned to the lot.  It was designed to price based on the grade range assigned to the sales detail line. The grade range assigned to the sales detail line can be:</p>
+<blockquote>1. defaulted from the item/branch, or <br /> 2. preferenced in.<strong>  </strong></blockquote>
+<p>When an order is entered, it is not necessarily expected that a lot will be assigned at that time.  It is expected that a customer will request an acceptable grade range or a specific grade that they are willing to purchase.  In this case, pricing will ensure that the price being retrieved is within the range specified on the sales detail line and is also the price associated with the lowest grade within the range.<br /> <br /> Possible Alternatives:<br /> 1.   The client could change the item price level from item/branch to item/branch/location/lot.  They could then assign a price to each lot and not use grade pricing. <br /> 2.   They could preference in the grade range based on customer or customer group. Grade pricing would still be used as it would then retrieve either the specific grade price (if the from and through value were the same) or the lowest acceptable grade price (if the from and through were different).</p>
+<hr />
+<a name="aref_section34"></a><h3 class="km">Adjust Quantity for Potency Item</h3>
+<p>When using the Inventory Adjustments (P4114) program to adjust in quantity for a Potency Item, go to the processing options. If Processing Option # 3 on the process tab is set to 1, the Grade and Potency fields will be displayed.<br /> <br /> <img src="../images/p08006.png" border="0" hspace="0" vspace="0"/><br /> <br /> If a Grade or Potency is not entered into the field, the Standard Grade/Potency will default into the transaction. Also, if an item is setup as Grade or Potency controlled in Item Master or Item Branch, then it is recommended to setup Grade and Potency in P4108 as well.<br /> <br /> <img src="../images/p08007.png" border="0" hspace="0" vspace="0"/><br /> <br /> The Lot Grade/Potency can be changed on the Lot Master (G4113 / P4108). This will only affect future transactions.<br />You may use the Reclassifications Transactions program (P4116) to change the Lot Grade/Potency to a new lot and different Lot Grade/Potency. You can reclassify only uncommitted quantities of items and lots.<br /> <br /> <img src="../images/p08008.png" border="0" hspace="0" vspace="0"/></p>
+<hr />
+<a name="aref_section35"></a><h3 class="km">Preference Profile Setup</h3>
+<p>To setup a specific Grade or Potency for an Item and Customer go to menu G4231 to the Preference Master (P40070) and find Preference Type 08.<br /> <br /> <img src="../images/p08009.png" border="0" hspace="0" vspace="0"/><br /> <br /> Click the Hierarchy row exit to make sure that it is setup for the Customer/Item combination desired, and then click OK.<br /> <br /> <img src="../images/p08010.png" border="0" hspace="0" vspace="0"/><br /> <br /> Click Select, and then click Add to create a customer/item preference. In this case, a preference will be created for a specific Item/Customer combination.<br /> <br /> <img src="../images/p08011.png" border="0" hspace="0" vspace="0"/><br /> <br /> In this example, the item's standard potency is 60, but this customer needs the potency between 70 and 80 and will accept  product that is past its expiration date. <br /> <br /> Remember to setup a version of Preference Processing Options (R40400) with the Grade/Potency processing option activated.<br /> <br /> <img src="../images/p08012.png" border="0" hspace="0" vspace="0"/><br /> <br /> This version of Preference Processing Options (R40400) will be called from Sales Order Entry (P4210).</p>
+<p>The Advanced Preference Type is 25. Also the wording on the expiration date has changed to Days Before but still represents how many days until a product is expired. This allows for setup where one specific customer may allow products that are within a week of expiration where another customer may need a product that expires in two weeks or more. This is the purpose of the days before value to return only products that is within the grade/potency threshold and date timeframes will be brought into the order.</p>
+<p><img src="../images/p08013.png" border="1" alt="32" title="32" hspace="0" vspace="0"/></p>
+<hr />
+<a name="aref_section36"></a><h3 class="km">Pricing Setup</h3>
+<p>Potency/Grade Pricing is activated in the Item Master, by selecting the Additional System row exit and going to the Grade/Potency tab.<br /> <br /> <img src="../images/p08014.png" border="0" hspace="0" vspace="0"/><br /> <br /> Once that is set, go to the Price Revisions row exit and Add a new price. An additional field for Grade or Potency will be displayed.<br /> <br /> <img src="../images/p08015.png" border="0" hspace="0" vspace="0"/><br /> In this example, Item MKP100 for Customer 5225 will be priced at $10.00 for a Potency of 70.<br /> <br /> Note: Notice that there is no LOT number field at this time. Why? This is because the Price levels  for the item is not set to be 3 in Item Master. That is, the costing is not being done at Item / Branch /Location/ Lot level.  clients would normally have multiple lots, each with a different Potency and Price.<br /> <br /> Note: The Adjust Prices By field is designed to modify existing  base price records only.So when you enter the form in the Add mode this field will be disabled. For further information on this field and how to use it , you may need Advance Pricing setup.</p>
+<hr />
+<a name="aref_section37"></a><h3 class="km">Sales Order Entry</h3>
+<p>Set the processing options behind Sales Order Entry (P4210) to look at<br /> 1.  the version of Preference Processing Options (R40400) setup for Grade/Potency. This is required if any customer/item preferences have been setup.<br /> 2. also, preferences must be activated on the Preference tab.<br /> <br /> At this time, for demonstration purposes, the price levels in Item Master , have been set to 3. (<em>Item/Branch/Location/Lot</em>) and hence we are able to sepcify Prices by Lots as seen the screen shot below: Note: remember that customer 5225 acceptable potency is between 70 and 80 (Preference Master- Grade and Potency Profile revisions screen shot above)<br /> <br /> <img src="../images/p08016.png" border="0" hspace="0" vspace="0"/><br /> <br /> Add a Sales Order and select Lot Number 123, Notice the, Warning: No Base Price in Effect, Error 2394, is displayed. This is because<br /> 1. Customer 5225s acceptable potency is between 70-80<br /> 2. SO has Lot 123 which has a potency of 60<br /> <br /> <img src="../images/p08017.png" border="0" hspace="0" vspace="0"/><br /> <br /> Note: The program will allow this order to go through, simply because the lot number was entered on the line as an override. If the lot was selected through the commitment program, this lot would be ignored. <br /> The potency in the Base Price Revisions (P4106) is used to select the correct price for the specific potency.</p>
+<hr />
+<a name="aref_section38"></a><h3 class="km">Potency in Procurement</h3>
+<p>In procurement, potency is used in the price calculation when Potency Pricing is activated. Standard Potency is defined as a default. If a higher Potency item is purchased, the price should be higher than the standard potency price. If a lower Potency item is purchased, the price should be lower, in comparison to the standard potency price. To demonstrate this, a new item was created.</p>
+<p>Item Master (P4101)</p>
+<p><img src="../images/p08018.png" border="0" hspace="0" vspace="0"/><br /> <br /> With a Primary Unit of Measure of Liters, pricing Unit of Measure of Potent Liters (potency UOM).<br /> <br /> <img src="../images/p08019.png" border="0" hspace="0" vspace="0"/><br /> <br />  Setup a 1 to 1 conversion, just to keep things simple.<br /> <br /> <img src="../images/p08020.png" border="0" hspace="0" vspace="0"/><br /> <br /> Once again, use the 00/UM UDC table to define a potency unit of measure. For each potent unit of measure defined, enter 'P' in the second space of the Special Handling Code field of the User Defined Code screen.<br /> <br /> <img src="../images/p08021.png" border="0" hspace="0" vspace="0"/><br /> <br /> Setup the Standard Potency and the From and Thru Potency values, also the Grade/Potency Pricing is activated here.<br /> <br /> <img src="../images/p08022.png" border="0" hspace="0" vspace="0"/></p>
+<p>Item Branch (P41026)</p>
+<p>Item Branch/Plant has the same Potency settings; the Standard Potency is always pulled from the Item Branch/Plant record.<br /> <br /> <img src="../images/p08023.png" border="0" hspace="0" vspace="0"/><br /> <br /> Setup two different locations.<br /> <br /> <img src="../images/p08024.png" border="0" hspace="0" vspace="0"/><br /> <br /> The first location has a Lot Potency of 50. <br /> <br /> <img src="../images/p08025.png" border="0" hspace="0" vspace="0"/><br /> <br /> The second location has a lot potency of 70. <br /> <br /> <img src="../images/p08025.png" border="0" hspace="0" vspace="0"/><br /> <br /> Again, the Lot Potency value for each location must be set to a number between the From and Thru Potency. If a number outside of the range is selected a warning will be displayed:<br /> <br /> <img src="../images/p08027.png" border="0" hspace="0" vspace="0"/><br /> <br /> Setup a Cost for the item - in this case Standard Cost is being used for simplicity. <br /> <br /> <img src="../images/p08028.png" border="0" hspace="0" vspace="0"/></p>
+<p>Purchase Order Entry (P4310)</p>
+<p>Pricing in Purchase Order Entry ALWAYS uses the Standard Potency.<br /> <br /> <img src="../images/p08029.png" border="0" hspace="0" vspace="0"/><br /> <br /> The Unit Cost with Potency Pricing is calculated as:<br /> <br /> Cost ($100) / Standard Potency Percentage (.6) = $166.67</p>
+<p>Purchase Order Receipts (P4312)</p>
+<p>In P.O. Receipts (P4312), go to multiple locations and pick the location with a potency of 70.<br /> <br /> <img src="../images/p08030.png" border="0" hspace="0" vspace="0"/><br /> <br /> At time of receipt, the difference between the Standard Potency and the Lot Potency is taken into account.<br /> <br /> The Lot Potency (70%) - Standard Potency (60%) = difference in Potency (10%). <br /> <br /> The Variance is then calculated as = Cost ($100) / Standard Potency Percentage (.6) * Difference in Potency (.1) = $16.67<br /> <br /> The Received Not Vouchered = Cost ($100) + Variance ($16.67) = $116.67<br /> <br /> <img src="../images/p08031.png" border="0" hspace="0" vspace="0"/><br /> <br /> In the above example, if Quantity other than 1 is used. Then the calculation is Variance ($16.67) * Quantity (2) = 33.33<br /> <br /> Selecting a lot with the lesser (50%) Potency.<br /> <br /> <img src="../images/p08032.png" border="0" hspace="0" vspace="0"/><br /> <br /> Then a -10% difference or a variance of $-16.67 calculated.<br /> <br /> Received Not Vouchered = Cost ($100) + $-16.67 = $83.33 </p>
+<hr />
+<a name="aref_section39"></a><h3 class="km">Frequently Asked Questions</h3>
+<p><strong>Question 1:</strong> The system shows no availability in both Summary Availability and Detail Availability (P41202) when grade or potency control is turned on in Additional System Info. This only happens for those lots that are stored in a primary location and potency or grade are outside the accepted range.<br /> <br /> <strong>Answer 1:</strong> The system is working as designed. When grade or potency is out of the acceptable range, the system prevents those items from being transacted. Since many transactions default to the primary location, the system is designed to only count items in secondary locations as available when grade or potency are not accepted.</p>
+<hr />
+<p><strong>Question 2:</strong> The Grade and Potency Preference incorrectly places items on backorder under the following scenario:</p>
+<ol>
+<li>One customer is setup in the Grade and Potency Preference to take Grade A items only</li>
+<li>A different customer is setup in the Grade and Potency Preference to take Grade B items only</li>
+<li>There is a lot with 3 Grade A units available and another lot with 10 Grade B units available.</li>
+<li>Branch Plant Constants (P41001) Availability Definition has the checkbox for Quantity Soft Committed (DA01) to SO checked. </li>
+<li>An order is placed for 3 units for the first customer  which uses Grade A only.</li>
+<li>A second order is placed for 10 units for the second customer which uses Grade B only.</li>
+<li>On the the second order a quantity of 3 is placed on backorder even though a quantity of 10 is available in the Grade B lot. </li>
+</ol>
+<p>Why is this occurring when there are enough items available (10) to meet the order quantity (10) of the second customer?<strong>  </strong></p>
+<p><strong>Answer 2:</strong> The issue occurs because the Soft Committed Quantity (3), in the Primary Location which has no grade, is subtracted from the Grade B Quantity on Hand (10) before the quantity ordered (10) is subtracted from the Grade B Quantity Available.   <br /> <br /> This issue has been reported in Bug 11708841 (P4210 BACKORDERS QTY FOR ITEM LOT GRADE WHEN QTY AVAILABLE) which revealed a design flaw in availability checking when the Grade and Potency preference is used and Branch Plant Constants (P41001) Availability Definition has the checkbox for Quantity Soft Committed (DA01) to SO checked. Bug 11708841 will be evaluated as an enhancement.<br /> <br /> There are four available alternatives to work around the issue:</p>
+<ol>
+<li>HARD COMMIT DURING ORDER ENTRY - If the user enters the Lot Number with the correct grade during order entry, the quantity will not go on backorder.</li>
+<li>UNCHECK QUANTITY SOFT COMMITTED (DA01) - If the Quantity Soft Committed (DA01) checkbox is not checked in the Branch Plant Constants, the SO soft commit quantity will not be subtracted from the Grade B Quantity Available, allowing the quantity 10 to be soft committed.</li>
+<li>UNCHECK THE CHECK AVAILABILITY FLAG (CKAV) IN THE ITEM BRANCH  - If the check availability (CKAV) flag in the item branch revisions program (P41026) is unchecked, for Grade Controlled items only, the SO soft commit quantity will not be subtracted from the Grade B Quantity Available, allowing the quantity 10 to be soft committed.</li>
+<li>MANUALLY OVERRIDE QUANTITY SHIPPED AND QUANTITY BACKORDERED - When the Availability Warning appears, the user can go into the Quantity Shipped field and enter the full quantity and go into the Quantity Backordered field and enter 0 in the backordered quantity. The order will be accepted and will not go on backorder.</li>
+</ol>
+<hr />
+<p><strong>Question 3:</strong> When is a 'CP' (Change Potency) record inserted in the Item Ledger (P4111)?</p>
+<p><strong>Answer 3:</strong> If the lot potency is updated using the Lot Master (P4108), a record of this update is written to the item ledger with a document type which can be specified. If no document type is specified in this processing option, then the system will use "CP"</p>
+<p>Check the processing options on the Lot Master Version as follows:</p>
+<ul>
+<li>Process Tab Option #3 (Update Lot Potency) is set to Blank.</li>
+<li>Defaults Tab Option #2 (Document Type to be used when updating lot potency) is set to Blank (Doc Type CP will be used).</li>
+</ul>
+<p>There are some programs such as PO Receipts Entry (P4312) which allow a user to change the potency field during transaction processing. This will update the Potency value on the Lot Master (F4108) record, but will not insert a Potency Change (CP) record to the Item Ledger (P4111)   </p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
