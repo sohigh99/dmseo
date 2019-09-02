@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Setup of Leave Balance Rollover DBAs</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Setup of Leave Balance Rollover DBAs</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#GOAL">Goal</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FIX">Solution</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21">Vacation Accrual DBA Setup &ndash; Not Immediately Available</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22">Calculation Table Setup (P059021)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23">Vacation Available DBA Setup</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24">Rollover Setup (P07RSW)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25">Calculation Table Setup (P059021) for Rollover</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26">Leave Balance Lost DBA Setup</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27">Vacation Pay Type Setup</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28">Vacation Immediately Available DBA Setup</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29">Calculation Table Setup (P059021)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210">Calculation Table Setup (P059021) for Rollover</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211">Rollover Setup (P07RSW)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212">Vacation Pay Type Setup</a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="GOAL"></A>Goal</H2>
+<p>Provide examples for Leave Balance Rollover DBA's (Deduction, Benefit, Accruals). The DBA codes are defined using PDBA Setup (P059116) on the Pay/Deductions/Benefits Setup menu (G05BD4). Calculation Tables (P059021) and Basis of Calculation (P059118) can be accessed from the menu or from row exits within PDBA Setup. Advanced DBA Information (P059117) and Rollover Setup (P07RSW) can be accessed from row exits within PDBA Setup.<br /><br /></p>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<p>The following tables contain examples of Leave Balance Rollover DBAs (Deduction, Benefit, Accruals) and pay type setup. The DBA codes are defined using PDBA Setup (P059116) on the Pay/Deductions/Benefits Setup menu (G05BD4). Calculation Tables (P059021) and Basis of Calculation (P059118) can be accessed from the menu or from row exits within PDBA Setup. Advanced DBA Information (P059117) and Rollover Setup (P07RSW) can be accessed from row exits within PDBA Setup.</p>
+<a name="aref_section21"></a><h3 class="km">Vacation Accrual DBA Setup &ndash; Not Immediately Available</h3>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">DBA code</td>
+<td class="km">8015</td>
+</tr>
+<tr>
+<td class="km">Paystub text</td>
+<td class="km">Accrual</td>
+</tr>
+<tr>
+<td class="km">Print Method</td>
+<td class="km">N (Do not print on pay stub)</td>
+</tr>
+<tr>
+<td class="km">Source of Calculation</td>
+<td class="km">G (Current period)</td>
+</tr>
+<tr>
+<td class="km">Method of Calculation</td>
+<td class="km">2 (Table - Date Range)</td>
+</tr>
+<tr>
+<td class="km">Table Code</td>
+<td class="km">8011 (Vacation)</td>
+</tr>
+<tr>
+<td class="km">Amount Rate 1</td>
+<td class="km">1.00</td>
+</tr>
+<tr>
+<td class="km">Pay Period of the Month</td>
+<td class="km">Y (Yes) for all periods</td>
+</tr>
+<tr>
+<td class="km">Calculate Only Once Per Pay</td>
+<td class="km">Optional</td>
+</tr>
+<tr>
+<td class="km">Period</td>
+<td class="km">&nbsp;</td>
+</tr>
+<tr>
+<td class="km">PDBA Range*</td>
+<td class="km">1-999</td>
+</tr>
+<tr>
+<td class="km">Limit Method**</td>
+<td class="km">1 - Calendar<br />20 or 3 - Fiscal/Anniversary</td>
+</tr>
+<tr>
+<td class="km">Leave Balance Rollover Date Code**</td>
+<td class="km">A valid code in User Defined Code (UDC) table 07/AF.<br />Only applicable with limit methods 2 and 3.</td>
+</tr>
+<tr>
+<td class="km">Anniversary Proration Rule**</td>
+<td class="km">0/Blank - Prorate<br />1 - allocate to Next Anniversary Year Only applicable with the limit methods 2 and 3.</td>
+</tr>
+</tbody>
+</table>
+<p><br />* Basis of Calculation (P059118)<br />** Advanced DBA Information (P059117)</p>
+<a name="aref_section22"></a><h4 class="km">Calculation Table Setup (P059021)</h4>
+<p>To accrue vacation hours at the following rates:</p>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Period of Employment</th><th class="km">Rate of Accrual</th></tr>
+<tr>
+<td class="km">0-5 Months</td>
+<td class="km">4 hours/month</td>
+</tr>
+<tr>
+<td class="km">6 Months - 1 Year</td>
+<td class="km">6 hours/month</td>
+</tr>
+<tr>
+<td class="km">1- 2 Years</td>
+<td class="km">80 hours/year</td>
+</tr>
+<tr>
+<td class="km">3+ Years</td>
+<td class="km">120 hours/year</td>
+</tr>
+</tbody>
+</table>
+<p><br />Define a calculation table using the following values:</p>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">Table Code</td>
+<td class="km">08011</td>
+</tr>
+<tr>
+<td class="km">Description</td>
+<td class="km">Vacation Accrual</td>
+</tr>
+<tr>
+<td class="km">Table Method</td>
+<td class="km">OA (Amount x Rate/Basis = Months)</td>
+</tr>
+</tbody>
+</table>
+<table class="km" style="text-align: left; width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td class="km"><strong>Lower Limit<br /></strong></td>
+<td class="km"><strong>Upper Limit<br /></strong></td>
+<td class="km"><strong>Amount Rate<br /></strong></td>
+<td class="km"><strong>Limit Amount<br /></strong></td>
+</tr>
+<tr align="right">
+<td class="km">&nbsp;</td>
+<td class="km">5.99</td>
+<td class="km">4.00</td>
+<td class="km" align="left">If necessary</td>
+</tr>
+<tr align="right">
+<td class="km">6.00</td>
+<td class="km">11.99</td>
+<td class="km">6.00</td>
+<td class="km" align="left">If necessary</td>
+</tr>
+<tr align="right">
+<td class="km">12.00</td>
+<td class="km">35.99</td>
+<td class="km">6.66</td>
+<td class="km" align="left">If necessary</td>
+</tr>
+<tr>
+<td class="km" align="right">36.00</td>
+<td class="km" align="right">99999999.99</td>
+<td class="km" align="right">10.00</td>
+<td class="km">If necessary</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<a name="aref_section23"></a><h4 class="km">Vacation Available DBA Setup</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">DBA code</td>
+<td class="km">8016 (This value must be greater than the value used for Vacation Accrual.)</td>
+</tr>
+<tr>
+<td class="km">Paystub text</td>
+<td class="km">Available</td>
+</tr>
+<tr>
+<td class="km">Print Method</td>
+<td class="km">I (Print individual transactions)</td>
+</tr>
+<tr>
+<td class="km">Source of Calculation</td>
+<td class="km">G (Current period)</td>
+</tr>
+<tr>
+<td class="km">Method of Calculation</td>
+<td class="km">$ (Flat Amount)</td>
+</tr>
+<tr>
+<td class="km">Pay Period of the Month</td>
+<td class="km">N (No) for all periods</td>
+</tr>
+<tr>
+<td class="km">PDBA Range*</td>
+<td class="km">8015-8015 (Accrual DBA)</td>
+</tr>
+<tr>
+<td class="km">Limit Method**</td>
+<td class="km">1-Calendar<br />2 or 3 &ndash; Fiscal/Anniversary</td>
+</tr>
+<tr>
+<td class="km">Leave Balance Rollover Date Code**</td>
+<td class="km">A valid date code in User Defined Code (UDC) table 07/AF<br />Only applicable with limit methods 2&amp;3</td>
+</tr>
+<tr>
+<td class="km">Anniversary Proration Rule**</td>
+<td class="km">0/Blank-Prorate<br />1-Allocate to Next Anniv Year<br />Only applicable with limit methods 2&amp;3.</td>
+</tr>
+</tbody>
+</table>
+<p>* Basis of Calculation (P059118)<br />** Advanced DBA Information (P059117)</p>
+<a name="aref_section24"></a><h4 class="km">Rollover Setup (P07RSW)</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">Benefit/Accrual Type V</td>
+<td class="km">V (Vacation Accruals) or S (Sick Accruals)</td>
+</tr>
+<tr>
+<td class="km">Rollover Table</td>
+<td class="km">00002</td>
+</tr>
+<tr>
+<td class="km">Leave Balance Rollover Date Code</td>
+<td class="km">Defaults from Advanced DBA Information (P059117)</td>
+</tr>
+<tr>
+<td class="km">Related PDBA*</td>
+<td class="km">811 (Vacation)</td>
+</tr>
+<tr>
+<td class="km">Related PDBA</td>
+<td class="km">8015 (Vacation Accrual)</td>
+</tr>
+</tbody>
+</table>
+<p>* Do not associate a previously used pay type or accrual to more than one accrual; doing so yields unreliable available amounts.<br />Note: There is no ITD Limit in a two-DBA setup.</p>
+<a name="aref_section25"></a><h4 class="km">Calculation Table Setup (P059021) for Rollover</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km" style="font-weight: normal;">Table Code</td>
+<td class="km" style="font-weight: normal;">00002</td>
+</tr>
+<tr>
+<td class="km" style="font-weight: normal;">Description</td>
+<td class="km" style="font-weight: normal;">Vacation Rollover - 80 Hours Maximum</td>
+</tr>
+<tr>
+<td class="km" style="font-weight: normal;">Table Method</td>
+<td class="km" style="font-weight: normal;">VR (Vacation Roll Over Table)</td>
+</tr>
+<tr>
+<td class="km" style="font-weight: normal;">Table Type</td>
+<td class="km" style="font-weight: normal;">R (Calculate rollovers)</td>
+</tr>
+</tbody>
+</table>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Lower Limit</th><th class="km">Upper Limit</th><th class="km">Amount Rate</th><th class="km">Limit Amount</th></tr>
+<tr>
+<td class="km">&nbsp;</td>
+<td class="km" align="right">99999999.99</td>
+<td class="km" align="right">80.00</td>
+<td class="km">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section26"></a><h4 class="km">Leave Balance Lost DBA Setup</h4>
+<p>The Fiscal and Anniversary Year History (F06147) table records the "lost" amount. This DBA is not required, but tracks all amounts lost by employees that do not use their accrued time.</p>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">DBA Code</td>
+<td class="km">9001-9999 recommended</td>
+</tr>
+<tr>
+<td class="km">DBA Type</td>
+<td class="km">A (Accrual)</td>
+</tr>
+<tr>
+<td class="km">Paystub Tex</td>
+<td class="km">Bal Lost</td>
+</tr>
+<tr>
+<td class="km">Print Method</td>
+<td class="km">N (Do not print on pay stub)</td>
+</tr>
+<tr>
+<td class="km">Source of Calculation</td>
+<td class="km">G (Current Period)</td>
+</tr>
+<tr>
+<td class="km">Method of Calculation</td>
+<td class="km">$ (Flat Amount)</td>
+</tr>
+<tr>
+<td class="km">Amount Rate 1</td>
+<td class="km">Blank</td>
+</tr>
+<tr>
+<td class="km">Pay Period of the Month</td>
+<td class="km">N (No) for all periods</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<a name="aref_section27"></a><h4 class="km">Vacation Pay Type Setup</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">DBA Code</td>
+<td class="km">811</td>
+</tr>
+<tr>
+<td class="km">Paystub Text</td>
+<td class="km">Vacation Pay</td>
+</tr>
+<tr>
+<td class="km">Print Method I</td>
+<td class="km">I (Print individual transactions)</td>
+</tr>
+<tr>
+<td class="km">Pay Source</td>
+<td class="km">H (Hours Worked)</td>
+</tr>
+<tr>
+<td class="km">Pay Type Multiplier</td>
+<td class="km">1.00</td>
+</tr>
+<tr>
+<td class="km">Shift Differential Method</td>
+<td class="km">1 ((rate+shift diff) x multiplier x hours)</td>
+</tr>
+<tr>
+<td class="km">Auto Pay Methods</td>
+<td class="km">Y ($ part of employee's base pay)</td>
+</tr>
+<tr>
+<td class="km">Effect on Gross pay</td>
+<td class="km">+ (Pay type added to employee's gross pay)</td>
+</tr>
+<tr>
+<td class="km">Effect on Net Pay</td>
+<td class="km">+ (Pay type added to employee's net pay)</td>
+</tr>
+<tr>
+<td class="km">Effect on GL</td>
+<td class="km">N (Write amounts and hours to general ledger)</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<a name="aref_section28"></a><h4 class="km">Vacation Immediately Available DBA Setup</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">DBA Code</td>
+<td class="km">8000</td>
+</tr>
+<tr>
+<td class="km">Paystub Text</td>
+<td class="km">Vacation Accrual</td>
+</tr>
+<tr>
+<td class="km">Print Method</td>
+<td class="km">I (Print Individual transactions)</td>
+</tr>
+<tr>
+<td class="km">source of Calculation</td>
+<td class="km">G (Current Period)</td>
+</tr>
+<tr>
+<td class="km">Method of Calculation</td>
+<td class="km">2 (Table - Date Range)</td>
+</tr>
+<tr>
+<td class="km">Table Code</td>
+<td class="km">08011</td>
+</tr>
+<tr>
+<td class="km">Amount Rate 1</td>
+<td class="km">1.00</td>
+</tr>
+<tr>
+<td class="km">Pay Period of the Month</td>
+<td class="km">Y (Yes) for all periods</td>
+</tr>
+<tr>
+<td class="km">Calculate Only Once Per Pay Period</td>
+<td class="km">Optional</td>
+</tr>
+<tr>
+<td class="km">PDBA Range*</td>
+<td class="km">1-999</td>
+</tr>
+<tr>
+<td class="km">Limit Method*</td>
+<td class="km">1-Calendar<br />2 or 3 &ndash; Fiscal/Anniversary</td>
+</tr>
+<tr>
+<td class="km">Leave Balance Rollover Date Code**</td>
+<td class="km">A valid date code in User Defined Code (UDC) table 07/AF.<br />Only applicable with limit methods 2&amp;3</td>
+</tr>
+<tr>
+<td class="km">Anniversary Proration Rule**</td>
+<td class="km">0/Blank-Prorate<br />1-Allocate to Next Anniv Year<br />Only applicable with limit methods 2&amp;3</td>
+</tr>
+</tbody>
+</table>
+<p>* Basis of Calculation (P059118)<br />** Advanced DBA Information (P059117)<br />*** Rollover Setup (P07RSW)</p>
+<a name="aref_section29"></a><h4 class="km">Calculation Table Setup (P059021)</h4>
+<p>For vacation hours accrued at the following rates:</p>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Period of Employment</th><th class="km">Rate of Accrual</th></tr>
+<tr>
+<td class="km">0-5 Months</td>
+<td class="km">4 hours/month</td>
+</tr>
+<tr>
+<td class="km">6 Months-1 Year</td>
+<td class="km">6 hours/month</td>
+</tr>
+<tr>
+<td class="km">1-2 Years</td>
+<td class="km">80 hours/year</td>
+</tr>
+<tr>
+<td class="km">3+ Years</td>
+<td class="km">120 hours/year</td>
+</tr>
+</tbody>
+</table>
+<p><br />Define a calculation table using the following values:</p>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">Table Code</td>
+<td class="km">8001</td>
+</tr>
+<tr>
+<td class="km">Description</td>
+<td class="km">Vacation Accrual</td>
+</tr>
+<tr>
+<td class="km">Table Method</td>
+<td class="km">OA (Amount x Rate/Basis = Months, based on length of service)</td>
+</tr>
+<tr>
+<td class="km">Table Type</td>
+<td class="km">D (DBAs)</td>
+</tr>
+</tbody>
+</table>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Lower Limit</th><th class="km">Upper Limit</th><th class="km">Amount Rate</th><th class="km">Limit amount</th></tr>
+<tr>
+<td class="km" align="right">&nbsp;</td>
+<td class="km" align="right">5.99</td>
+<td class="km" align="right">4.00</td>
+<td class="km">If necessary</td>
+</tr>
+<tr>
+<td class="km" style="text-align: right;">6.00</td>
+<td class="km" align="right">11.99</td>
+<td class="km" align="right">6.00</td>
+<td class="km">If necessary</td>
+</tr>
+<tr>
+<td class="km" align="right">12.00</td>
+<td class="km" align="right">35.99</td>
+<td class="km" align="right">6.66</td>
+<td class="km">If necessary</td>
+</tr>
+<tr>
+<td class="km" align="right">36.00</td>
+<td class="km" align="right">99999999.99</td>
+<td class="km" align="right">10.00</td>
+<td class="km">If necessary</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section210"></a><h4 class="km">Calculation Table Setup (P059021) for Rollover</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">Table Code</td>
+<td class="km">00002</td>
+</tr>
+<tr>
+<td class="km">Description</td>
+<td class="km">Vacation Rollover - 80 Hours Maximum</td>
+</tr>
+<tr>
+<td class="km">Table Method</td>
+<td class="km">VR (Vacation Roll Over Table)</td>
+</tr>
+<tr>
+<td class="km">Table Type</td>
+<td class="km">R (Calculate rollovers)</td>
+</tr>
+</tbody>
+</table>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Lower Limit</th><th class="km">Upper Limit</th><th class="km">Amount Rate</th><th class="km">Limit Amount</th></tr>
+<tr>
+<td class="km">&nbsp;</td>
+<td class="km" align="right">99999999.99</td>
+<td class="km" align="right">80.00</td>
+<td class="km">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<a name="aref_section211"></a><h4 class="km">Rollover Setup (P07RSW)</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">Benefit/Accrual Type</td>
+<td class="km">V (Vacation Accruals) or S (Sick Accruals)</td>
+</tr>
+<tr>
+<td class="km">Rollover Table</td>
+<td class="km">00002</td>
+</tr>
+<tr>
+<td class="km">ITD Limit</td>
+<td class="km">Populate, if applicable</td>
+</tr>
+<tr>
+<td class="km">Leave Balance Rollover Date Code</td>
+<td class="km">Defaults from Advanced DBA Information (P059117)</td>
+</tr>
+<tr>
+<td class="km">Related PDBA*</td>
+<td class="km">817 (Vacation)</td>
+</tr>
+</tbody>
+</table>
+<p>*Do not associate a previously used pay type or accrual to more than one accrual; doing so yields unreliable available amounts</p>
+<a name="aref_section212"></a><h4 class="km">Vacation Pay Type Setup</h4>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km">Field</th><th class="km">Value</th></tr>
+<tr>
+<td class="km">DBA Code</td>
+<td class="km">817 (Vacation)</td>
+</tr>
+<tr>
+<td class="km">Paystub Text</td>
+<td class="km">Vacation Pay</td>
+</tr>
+<tr>
+<td class="km">Print Method</td>
+<td class="km">I (Print individual transactions)</td>
+</tr>
+<tr>
+<td class="km">Pay Source</td>
+<td class="km">H (Hours Worked)</td>
+</tr>
+<tr>
+<td class="km">Pay Type Multiplier</td>
+<td class="km">1.00</td>
+</tr>
+<tr>
+<td class="km">Shift Differential Method</td>
+<td class="km">1 ((rate+shift diff) x multiplier x hours)</td>
+</tr>
+<tr>
+<td class="km">Auto Pay Methods</td>
+<td class="km">Y ($ part of employee's base pay)</td>
+</tr>
+<tr>
+<td class="km">Effect on Gross Pay</td>
+<td class="km">+ (Pay type added to employee's gross pay)</td>
+</tr>
+<tr>
+<td class="km">Effect on Net Pay</td>
+<td class="km">+ (Pay type added to employee's net pay)</td>
+</tr>
+<tr>
+<td class="km">Effect on GL</td>
+<td class="km">N (Write amounts and hours to general ledger)</td>
+</tr>
+</tbody>
+</table>
+<p><br /><br /></p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

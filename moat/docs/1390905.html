@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to maintain Order Integrity between SD/OD and ST/OT</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to maintain Order Integrity between SD/OD and ST/OT</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note provides a technical review on the integrity between Sales and Purchasing and how to maintain order integrity between SD/OD and ST/OT.</p>
+<p>Note that this document is written based on EnterpriseOne application release 9.1</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Below tables are to show how F4211 (as representation of Sales) and F4311 (as representation of Procurement) are added/inserted through Master Business Functions. F4311 Integrity is handled by Table Trigger in F4211 (Sales Order Detal File) whereas integrity from Procurement is handled by N4002540 (F4211DirectShipIntegrity and F4211DirectShipIntegrityReceipts). Note that a Business Function F4211GetShipmentInfo (B4200920) can be called to get Shipment Information (in F4211) or to Update F4211.</p>
+<h3 class="km"><a name="addsd"></a>Add SD/OD and/or ST/OT (Sales -&gt; Procurement)</h3>
+<p>Case study in W4210A - [Order Detail]</p>
+<table style="width: 987px; border-collapse: collapse; height: 399px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 20pt;" width="27" /><col style="width: 48pt;" span="5" width="64" /><col style="width: 101pt;" width="134" /><col style="width: 297pt;" width="396" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl67" style="width: 20pt; height: 12.75pt; background-color: #ffcc00;"> </th>
+<th class="xl65" style="width: 341pt; background-color: #ffcc00;" colspan="6">Source Module &amp; Description</th>
+<th class="xl65" style="width: 297pt; background-color: #ffcc00;">Purpose &amp; comments</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Set Focus on Grid in W4210A - [Sales Order Detail] Header/Detail Form</td>
+<td class="xl65"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">B4200310</td>
+<td class="xl66" colspan="5">F4211FSBeginDoc</td>
+<td class="xl66">Validate Sales Order Header and Create Sales Order Cache/Work Files (F42UI01, F42UI02) which is to be used in Edit Doc and End Doc routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Row Exit &amp; Changed - Asynch in W4210A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">B4200311</td>
+<td class="xl66" colspan="5">F4211FSEditLine</td>
+<td class="xl66">Validate Sales Order Detail and Create Sales Order Detail Cache/Work File (F42UI11, F42UI12) which is to be used in Edit Doc and EndDoc routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4202510</td>
+<td class="xl66" colspan="4">CalcSOMBFPricesBeforeProcurement</td>
+<td class="xl66">Assign how to compute PRRC in populating PO Detail Cache. If it is a Direct Ship line and cost override is true, then populate the PO price with the appropriate cost. Note that the Purchasing Unit Price is always computed based on Purchasing UOM in Item Master</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">X4311Z2</td>
+<td class="xl66" style="font-weight: bold; color: red;" colspan="4">F4311EditLine</td>
+<td class="xl66">Validate Purchase Order Detail Information and create cache (F4311Z) for Purchase Order Detail</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">X4311Z1</td>
+<td class="xl66" colspan="3">F4311FSBeginDoc</td>
+<td class="xl66">Validate Purchase Order Header Information and crate cache (F4301Z) for Purchase Order Header</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4202510</td>
+<td class="xl66" colspan="4">CalcSOMBFPricesAfterProcurement</td>
+<td class="xl66">To set/determine how to set Sales Cost based on Purchasing Unit Price</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">OK button clicked event in W4210A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">B4200312</td>
+<td class="xl66" colspan="5">F4211EditDoc</td>
+<td class="xl66">Check whether header and detail caches are NULL or not and if not validate it order level information</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Post OK button clicked event in W4210A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">B4200310</td>
+<td class="xl66" colspan="5">F4211FSEndDoc</td>
+<td class="xl66">Commit Header and Detail Cache/Work File to Database. Order level validation can take place (for example, Credit Check)<br /> Transaction Processing ON (MANUAL COMMIT)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="5">(Insert F4211)</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4301250</td>
+<td class="xl66" colspan="4">F4311ZUpdateRelatedOrderInfo</td>
+<td class="xl66">To update PO detail cache with Related Order Information (because we have followed usual routine to create  Purchase Ordr by calling  the Business Function CacheProcessPODetailCache with Cache Action Code 7 - To Update it</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" style="font-weight: bold; color: red;" colspan="4">F4311EndDoc</td>
+<td class="xl66">Commit Purchase Order Header and Detail Cache into Database</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="4">(Insert F4311)</td>
+<td class="xl66" style="color: white;">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" colspan="3">F4311ClearWorkFiles</td>
+<td class="xl66">Clear caches used during Purchase Order Creation</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200310</td>
+<td class="xl66" colspan="4">F4211ClearWorkFile</td>
+<td class="xl66">Clear caches used during Sales Order Creation</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>    Hook-up can be done differently in P42101 which follows MVC (Model-View-Controller) architecture. For detail, refer to <a href="#5854540" alt="Click to Continue &gt; by name" title="Click to Continue &gt; by name" class="zbtpzozjvyq"> Document<img src="https://cdncache1-a.akamaihd.net/items/it/img/arrow-10x10.png"/></a> 1212163.1&gt; E1: 42: MVC Architecture (Powerform) and Sales Order Entry (P42101)</li>
+<li>    F4211FSBeginDoc can be called in OK button clicked event in W4210G - [Sales Order Header]</li>
+<li>    Commission Header and Detail cache can be created through Begin Doc (for header) and Edit Line (for detail)</li>
+<li>    Example of Purchase Order creation on the fly can be found at &lt;Document 1395381.1&gt; E1: 43: Fetch From Cache Failed (078N) Error in P4314 - 3 Way Voucher Match</li>
+</ul>
+</div>
+<hr />
+<p> </p>
+<h3 class="km"><a name="updatesd"></a>Update SD and/or ST (Sales -&gt; Procurement)</h3>
+<p>Case Study in W4205K - [Shipment Confirmation]</p>
+<table style="width: 982px; border-collapse: collapse; height: 483px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 20pt;" width="27" /><col style="width: 48pt;" span="5" width="64" /><col style="width: 101pt;" width="134" /><col style="width: 297pt;" width="396" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl67" style="width: 20pt; height: 12.75pt; background-color: #ffcc00;"> </th>
+<th class="xl65" style="width: 341pt; background-color: #ffcc00;" colspan="6">Source Module &amp; Description</th>
+<th class="xl65" style="width: 297pt; background-color: #ffcc00;">Purpose &amp; comments</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Row Exit &amp; Changed - Asynch even in W4205K - [Shipment Confirmation]</td>
+<td class="xl65"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">N4200790</td>
+<td class="xl66" colspan="5">F42UI05EditLine</td>
+<td class="xl66">Validate Ship confirmation detail lines and create cache by calling LoadOrUnloadShipConfirmCache (B4200810)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200810</td>
+<td class="xl66" colspan="4">LoadOrUnloadShipConfirmCache</td>
+<td class="xl66">Create Cache when it gets called by Edit Line routine, whereas it reads cache in End Doc routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4111Z1</td>
+<td class="xl66" colspan="4">F4111EditLine</td>
+<td class="xl66">Create Inventory Transaction Cache (F41UI001) to deal with F4111 (Item Ledger)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200810</td>
+<td class="xl66" colspan="4">LoadOrUnloadShipConfirmCache</td>
+<td class="xl66">Update Ship Confirm Cache</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Post OK button clicked in W4205K</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">B4200810</td>
+<td class="xl66" colspan="5">LoadOrUnloadShipConfirmCache</td>
+<td class="xl66">To get cache created through Edit Line routine to make use of in calling End Doc</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Post OK button clicked in W4205K</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">N4200790</td>
+<td class="xl66" colspan="5">ShipConfirmEndDoc</td>
+<td class="xl66">Commit Shipment Cache to DB<br /> Transaction Processing (MANUAL COMMIT)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200810</td>
+<td class="xl66" colspan="4">LoadOrUnloadShipConfirmHdrCache</td>
+<td class="xl66">Read all caches created during Edit Line routine which is to be used in calling F4211GetShipmentInfo</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200920</td>
+<td class="xl66" colspan="4">F4211GetShipmentInfo</td>
+<td class="xl66">The purpose of this function is to get or update all the information from the SO Detail (F4211) needed to process a ship confirm.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="4">(Update F4211)</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl68" style="height: 12.75pt;" colspan="7" height="17">Table Trigger in F4211 (Sales Order Detail File)</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4201310</td>
+<td class="xl66" style="font-weight: bold; color: red;" colspan="3">F4311OrderIntegrity</td>
+<td class="xl66">This function maintains integrity between Sales and Purchase when modification/update is done from Sales side</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z2</td>
+<td class="xl66" colspan="2">F4311EditLine</td>
+<td class="xl66">Validate Purchase Order detail line based on value changed in Sales side and create cache for  purchase order detail</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66">F4311FSBeginDoc</td>
+<td class="xl66">Validate purchase order header and create cache for header</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" colspan="2">F4311EndDoc </td>
+<td class="xl66">Commit caches during Edit Line and Begin Doc routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="2">(Update F4311)</td>
+<td class="xl66" style="color: white;">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66">F4311ClearWorkFiles</td>
+<td class="xl66">Clear all the caches used during update of Purchase Order</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4111Z1</td>
+<td class="xl66" colspan="4">F4111EndDocument</td>
+<td class="xl66">Write Cardex to record Inventory Transaction</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">N4200790</td>
+<td class="xl66" colspan="4">F42UI05DeleteCache</td>
+<td class="xl66">Clear all the caches used during shipment confirmation</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4111Z1</td>
+<td class="xl66" colspan="3">F4111ClearDetailStack</td>
+<td class="xl66">Clear inventory transaction caches used</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>    Since F4311OrderIntegrity (and it's sub-routine) gets called through Table Trigger Application Name and Version information is to be set blank (for example, "Application Name [], Version []") in CallObject Kernel log (or namely jdedebug.log)</li>
+<li>    Though this routine does not contain N4200790 - ShipConfirmEditDoc (Shipment Confirmation Edit Document), which can be called for Reconciling Carton Detail or Kits based on Edit Mode (blank or null = reconcile cartons, 1 = edit kits,  2 = reconcile cartons and edit kits)</li>
+<li>    F4211 (Sales Order Detail File) gets updated through F4211GetShipmentInfo (B4200920). Depends on input parameter cActionCode this function can get/update Sales Order Information</li>
+<ul>
+<li>Update/Change: '2', 'c', 'C'</li>
+<li>Inquire: '4', 'i', 'I'</li>
+</ul>
+<li>    LoadOrUnloadShipConfirmCache (B4200810) is used to store or retrieve ship confirmation information to or from the cache</li>
+<li>    F4311OrderIntegrity (B4201310) gets called when F4211.SO11 (The SO11 flag indicates how a sales order will be processed further) 1 - Transfer order, 2 - Direct ship order, 3 - Intercompany order. F4311.PS01 = '1' to indicate this order is transfer order from Purchase side.</li>
+</ul>
+</div>
+<p> </p>
+<h3 class="km">Performing PO Receipt:</h3>
+<p>In turning on In-trasit account (flag for cIntransit_Accounting) through processing option of P4205, you can perform receipt of related order,</p>
+<ul>
+<li>This routine is not integrity routine (becaue it can create additional entry as such P4312 does)</li>
+<li>This action is NOT handled by table trigger</li>
+<li>This is handled by N4200790 (ShipConfirmEndDoc) which calls PO Receipt Master business function directly at the end of routine.</li>
+<li>Even validation routine may determine errors and so on but this may not stop you from processing. In case the result is different from what you expect then,</li>
+<li>Try same routine through P4312 (PO Receipt)</li>
+<li>Capture CallObject Kernel log and look for error during validation routine (e.g., - F4312BeginDoc and F4312EditLine)</li>
+<li>Simplified routine can be represented as below,</li>
+</ul>
+<p style="margin-left: 80px;"><span style="font-weight: bold; text-decoration: underline;">P4205 - Shipment Confirmation</span><br />     |--- ShipConfirmEndDoc<br />         |--- F4211GetShipmentInfo<br />         |--- Update Table (F4211)<br />         |--- (Table Trigger which is calling) F4311OrderIntegrity (this is to update F4311)<br />                 (below action take places in the end - not through table trigger but direct calling of MBF for PO receipt)<br />         |--- <span style="font-weight: bold;">F4312BeginDoc</span>, which validate/defaults receipt header<br />         |--- <span style="font-weight: bold;">F4312EditLine</span>, which validate/defaults receipt detail<br />         |--- <span style="font-weight: bold;">F4312EditDoc</span>: Order level validation<br />         |--- <span style="font-weight: bold;">F4312EndDoc</span>: Commit cache created during Edit Line<br />         |--- SetLevelPOReceiptsEndDocError which collect errors during validation <br />         |--- ProcessErrorsToPPAT which writes work center error message<br />         |--- <span style="font-weight: bold;">F4312ClearWorkFile</span>:  release resource used during process</p>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>In case P4205 failed to create PO receipt, error will be written into Work Center. So check the error and correct it</li>
+<li>Or perform PO receipt through P4312 (with the version you have specified)</li>
+</ul>
+</div>
+<p> </p>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="updateod"></a>Update OD (Procurement -&gt; Sales)</h3>
+<p>Case study in W4310A - [Order Detail]</p>
+<table style="width: 1001px; border-collapse: collapse; height: 378px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 20pt;" width="27" /><col style="width: 48pt;" span="5" width="64" /><col style="width: 101pt;" width="134" /><col style="width: 297pt;" width="396" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="width: 20pt; height: 12.75pt; background-color: #ffcc00;"> </th>
+<th class="xl65" style="width: 341pt; background-color: #ffcc00;" colspan="6">Source Module &amp; Description</th>
+<th class="xl65" style="width: 297pt; background-color: #ffcc00;">Purpose &amp; comments</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Set Focus on Grid event in W4310A - [Order Detail]</td>
+<td class="xl65"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" colspan="5">F4311FSBeginDoc</td>
+<td class="xl66">Validate and create cache for Purchase Order Header (e.g., Supplier etc.)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Row Exit &amp; Changed - Asynch event in W4310A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4311Z2</td>
+<td class="xl66" colspan="5">F4311EditLine</td>
+<td class="xl66">Validate and create cache for Purchase Order Detail</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4302180</td>
+<td class="xl66" colspan="4">CacheProcessPODetailCache</td>
+<td class="xl66">To store Purchase Order detail cache which is to be used for Edit Doc and End Doc routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">OK button clicked event in W4310A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" colspan="5">F4311EditDoc</td>
+<td class="xl66">This function is called after F4311EditLine has executed successfully, records have been written to the hF4311Cache, and before calling F4311EndDoc.<br /> Edit Doc will cycle through all the records in the cache, to determine the total value of the order and if the order is above (MAXO) or below (MINO) supplier order value.<br /> In addition this function handles the budget warning message, if requested in the P4310 processing options and any account- based line on the order exceeds the budget amount.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4302180</td>
+<td class="xl66" colspan="4">CacheProcessPOHeaderCache</td>
+<td class="xl66">Read Header Cache which is created during Begin Doc</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4302180</td>
+<td class="xl66" colspan="4">CacheProcessPODetailCache</td>
+<td class="xl66">Read Detail Cache which is created during Edit Line</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Post OK button clicked event in W4310A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" colspan="5">F4311EndDoc</td>
+<td class="xl66">Commit cache created during Begin Doc and Edit Line<br /> Transaction Processing ON (MANUAL COMMIT)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4302180</td>
+<td class="xl66" colspan="4">CacheProcessPODetailCache</td>
+<td class="xl66">Read detail cache</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="5">(UPDATE F4311)</td>
+<td class="xl66" style="color: white;">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">N4002540</td>
+<td class="xl66" style="font-weight: bold; color: red;" colspan="4">F4211DirectShipIntegrity</td>
+<td class="xl66">Validate change made in OD side and update SD if needed</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200920</td>
+<td class="xl66" colspan="3">F4211GetShipmentInfo</td>
+<td class="xl66">To update SD based on change made in OD</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="3">(Update F4211)</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4311Z1</td>
+<td class="xl66" colspan="4">F4311ClearWorkFiles</td>
+<td class="xl66">Clean up caches which were used during OD update</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>    Begin Doc is called OK button clicked not Post OK button clicked event to show validation result before form W4310B gets closed</li>
+<li>    F4311FSBeginDoc can be called in OK button clicked event in W4310B - [Order Header]</li>
+</ul>
+</div>
+<hr />
+<p> </p>
+<h3 class="km"><a name="receipt"></a>Update OD [Receipt] (Procurement -&gt; Sales)</h3>
+<p>Case study in W4312A - [Purchase Order Receipts]</p>
+<table style="width: 1001px; border-collapse: collapse; height: 714px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 20pt;" width="27" /><col style="width: 48pt;" span="5" width="64" /><col style="width: 101pt;" width="134" /><col style="width: 297pt;" width="396" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="width: 20pt; height: 12.75pt; background-color: #ffcc00;"> </th>
+<th class="xl65" style="width: 341pt; background-color: #ffcc00;" colspan="6">Source Module &amp; Description</th>
+<th class="xl65" style="width: 297pt; background-color: #ffcc00;">Purpose &amp; comments</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Set Focus on Grid event in W4312A - [Purchase Order Receipts]</td>
+<td class="xl65"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4312Z1</td>
+<td class="xl66" colspan="5">F4312BeginDoc</td>
+<td class="xl66">Validate Purchase Order Header information before proceed detail validation (e.g., Supplier and so on)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Row Exit &amp; Changed - Asynch Event in W4312A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4312Z2</td>
+<td class="xl66" colspan="5">F4312EditLine</td>
+<td class="xl66">Validate Receipt Detail and create cache (F43121Z) for that and call subroutine to handle inventory transaction and GL transaction</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B0900049</td>
+<td class="xl66" colspan="4">F0911FSBeginDoc</td>
+<td class="xl66">GL Transaction - Validate GL Header and create cache (I09UI001)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4111Z1</td>
+<td class="xl66" colspan="4">F4111EditLine</td>
+<td class="xl66">Inventory Transaction - Validate and create Inventory Transaction cache (F41UI001)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4301060</td>
+<td class="xl66" colspan="4">F43121ZGetReceiverCache</td>
+<td class="xl66">Create Purchase Order Receipt Cache (F43121Z) which is to be used during Edit Doc and End Doc routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4302510</td>
+<td class="xl66" colspan="4">CreatePOReceiptJournalEntries</td>
+<td class="xl66">Validate DMAAI depends on transaction before calling F0911FSEditLine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B0900049</td>
+<td class="xl66" colspan="3">F0911FSEditLine</td>
+<td class="xl66">Validate GL Transaction Detail and create Cache I09UI002</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4111Z1</td>
+<td class="xl66" colspan="4">F41UI001ProcessInventoryCache</td>
+<td class="xl66">Store inventory transaction cache into F41UI001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl67" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">OK button clicked in W4312A</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4312Z1</td>
+<td class="xl66" colspan="5">F4312EditDoc</td>
+<td class="xl66">Before calling End Doc validate processing option, default, check caches (if needed) handle blink landed cost  and summarize G/L cache if requested</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B0900049</td>
+<td class="xl66" colspan="4">F0911FSEditDoc</td>
+<td class="xl66">Compare and validate GL header and detail cache</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="font-style: italic; height: 12.75pt; text-decoration: underline;" colspan="7" height="17">Post OK button clicked</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">B4301060</td>
+<td class="xl66" colspan="5">F43121ZGetReceiverCache</td>
+<td class="xl66">Fetch Receipt cache created during Edit Line</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66">XT4312Z1</td>
+<td class="xl66" colspan="5">F4312EndDoc</td>
+<td class="xl66">To commit transaction caches created to database<br /> Transaction Processing ON (MANUAL COMMIT)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B0900049</td>
+<td class="xl66" colspan="4">F0911FSEndDoc</td>
+<td class="xl66">Commit GL Cache to General Ledger</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4111Z1</td>
+<td class="xl66" colspan="4">F4111EndDocument</td>
+<td class="xl66">Commit Inventory Transaction Cache to Item Ledger</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4100050</td>
+<td class="xl66" colspan="3">InventoryCardexShell</td>
+<td class="xl66">Since XT4111Z1 is general master business function in handling Inventory Transaction it has a specific functions to execute</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4100040</td>
+<td class="xl66" colspan="2">WriteCardexRecord</td>
+<td class="xl66">Write F4111 (Item Ledger)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="5">(Update F4311)</td>
+<td class="xl66" style="color: white;">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XF43121</td>
+<td class="xl66" colspan="4">POReceiptF43121Shell</td>
+<td class="xl66">Functional server to handle PO receipt data</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XF43121</td>
+<td class="xl66" colspan="3">InsertPOReceiver</td>
+<td class="xl66">write F43121 because PO receipt update Purchase Order and Insert it into F43121</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="3">(Insert F43121)</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200920</td>
+<td class="xl66">F4211GetShipmentInfo</td>
+<td class="xl66" colspan="3"> </td>
+<td class="xl66">(when F4311.PS01 = 2) To get Sales Order Detail Information</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">N4002540</td>
+<td class="xl66">F4211DirectShipIntegrityReceipts</td>
+<td class="xl66" style="font-weight: bold; color: red;" colspan="3"> </td>
+<td class="xl66">Depends on receipt to maintain integrity with SD</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200450</td>
+<td class="xl66" colspan="2">AdvancedSODetailLineSplit</td>
+<td class="xl66">Create cache for Sales Order line which to be used during Sales Order Master business function routine</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200310</td>
+<td class="xl66" colspan="4">F4211FSBeginDoc</td>
+<td class="xl66">Validate Sales Order Header and create cache for it for Update Mode</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200920</td>
+<td class="xl66" colspan="4">F4211GetShipmentInfo</td>
+<td class="xl66">To get Sales Order detail information</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200311</td>
+<td class="xl66" colspan="4">F4211FSEditLine</td>
+<td class="xl66">Validate Sales Order detail lines based on value modified during Receipts</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">B4200310</td>
+<td class="xl66" style="font-weight: bold; color: red;" colspan="4">F4211FSEndDoc</td>
+<td class="xl66">Commit Sales Order detail cache to DB</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66"> </td>
+<td class="xl65" colspan="4">(Update F4211)</td>
+<td class="xl66"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17"> </td>
+<td class="xl66"> </td>
+<td class="xl66">XT4312Z1</td>
+<td class="xl66" colspan="4">F4312ClearWorkFile</td>
+<td class="xl66">Clear caches used during Purchase Order Receipt</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>    To deal with partial receipt or multiple location the business function AdvancedSODetailLineSplit (B4200450) gets called</li>
+<li>    Alternatively, F4312BeginDoc can be called at OK button clicked in same form when it was not handled in Set Focus on Grid</li>
+<li>    This note is not to cover detail routines on GL and Inventory Transaction</li>
+</ul>
+</div>
+<hr />
+<p> </p>
+<h3 class="km"><a name="clarification"></a>Clarification on work center message LM0083</h3>
+<p><br /> This message can be issued to indicate that F4211 got updated but F4311 was not updated so Purchase Order has to be updated manually.</p>
+<p>Data Item : LM0083<br />Sales Order &amp;1 &amp;2 &amp;3 &amp;4 Integrity Issue<br />Cause. . . . . Errors were encountered when assuring order integrity between<br />               sales order &amp;1 &amp;2 &amp;3 , line &amp;4 and<br />               purchase order &amp;5 &amp;6 &amp;7 , line &amp;8 .<br />Resolution . . Please review the following errors to determine the source of<br />               the integrity issue.  The purchase order will need to be<br />               manually updated to maintain integrity with the sales order.<br /> <br /> <br /> <big>Columns to compare from Sales to Purchase through B4201310:</big></p>
+<table style="width: 898px; border-collapse: collapse; height: 477px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 164pt;" width="218" /><col style="width: 44pt;" width="58" /><col style="width: 42pt;" width="56" /><col style="width: 255pt;" width="340" /><col style="width: 58pt;" width="77" /><col style="width: 232pt;" width="309" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;">
+<th class="xl63" style="width: 164pt; height: 15.75pt; background-color: #ffcc00;">Description</th>
+<th class="xl63" style="width: 44pt; background-color: #ffcc00;">Target</th>
+<th class="xl63" style="width: 42pt; background-color: #ffcc00;">Source</th>
+<th class="xl63" style="width: 59px; background-color: #ffcc00;">Compare?</th>
+<th class="xl63" style="width: 69px; background-color: #ffcc00;">UpdatePO</th>
+<th class="xl63" style="width: 410px; background-color: #ffcc00;">Assignment</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnUnitsSecondaryQty</td>
+<td>pdsqor</td>
+<td>sdsqor</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;">f4311.pdsqor = f4211.sdsqor</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnCarrierNumber</td>
+<td>pdancr</td>
+<td>sdcars</td>
+<td style="width: 59px;"> </td>
+<td style="width: 69px;"> </td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szModeOfTransport</td>
+<td>pdmot</td>
+<td>sdmot</td>
+<td style="width: 59px;"> </td>
+<td style="width: 69px;"> </td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szStatusCodeNext</td>
+<td>pdnxtr<br /> (999)</td>
+<td>sdnxtr</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px; text-align: left;">F4211.NXTR = 999 AND F4311.NXTR = 999 AND LTTR = 980</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szStatusCodeLast</td>
+<td>pdlttr<br /> (980)</td>
+<td>sdlttr</td>
+<td style="width: 59px;"> </td>
+<td style="width: 69px;"> </td>
+<td style="width: 410px; text-align: left;">980</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szLotSerialNumber</td>
+<td>pdlotn</td>
+<td>sdlotn</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">jdDateRequested</td>
+<td>pddrqj</td>
+<td>sddrqj</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">jdPromisedDeliveryDate</td>
+<td>pdpddj</td>
+<td>sdpddj</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;">set cPromisedDeliveryDateChanged 'Y'</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">jdCancelDate</td>
+<td>pdcndj</td>
+<td>sdcndj</td>
+<td style="width: 59px;"> </td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;">f4211.cndj not NULL</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnQuantityOrdered</td>
+<td>pduorg</td>
+<td>sduorg</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnQuantityOpen</td>
+<td>pduopn</td>
+<td>A</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;">A = mnQuantityOrdered - mnQuantityCancelled</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnAddressNumberShipTo</td>
+<td>pdshan</td>
+<td>sdshan</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szUnitOfMeasurePricing</td>
+<td>pduom3</td>
+<td>sduom3</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szUnitOfMeasurePrimary</td>
+<td>pduom</td>
+<td>sduom</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnAmountUnitWeight</td>
+<td>pditwt</td>
+<td>sditwt</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnAmountUnitVolume</td>
+<td>pditbl</td>
+<td>sditbl</td>
+<td style="width: 59px;">Yes</td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnSOUnitPriceCostInPOCurrency</td>
+<td>pdprrc</td>
+<td>sduprc</td>
+<td style="width: 59px;"> </td>
+<td style="width: 69px;"> </td>
+<td style="width: 410px;">prrc</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">nSTPriceChanged</td>
+<td> </td>
+<td> </td>
+<td style="width: 59px;"> </td>
+<td style="width: 69px;">Yes</td>
+<td style="width: 410px;">When ST Price has changed</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>PO detail line is to be updated only if not received</li>
+<li>PO detail line is to be updated only if not closed</li>
+<li>This routine is from Sales (Source) to Purchase (Target)</li>
+<li>It gets Purchase Order Information based on columns KCOO*, DOCO*, DCTO*, SFXO*, LNID* (If cInsertedNewSOLine is '1' then mnSalesOrderLineNumber, else mnRelatedPurchaseOrderLineNo), which returns</li>
+<li>MCU, RLLN, SHAN, DRQJ, PDDJ, ITM, LOTN, LNTY, NXTR, LTTR, UORG, UOPN, UREC, PRRC, AREC, UOM, UOM3, ITWT, ITVL, CRR, FRRC, DMCT, DMCS, SQOR, PROV, PODC01, PODC02, PODC03, PODC04</li>
+<li>If value is not defined above, it will be used in adding a new line (that is, new row is populated after copying current row)</li>
+</ul>
+</div>
+<hr />
+<h3 class="km"><a name="columns"></a>Columns to compare from Purchase to Sales:</h3>
+<p> </p>
+<table style="width: 886px; border-collapse: collapse; height: 273px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 164pt;" width="218" /><col style="width: 44pt;" width="58" /><col style="width: 42pt;" width="56" /><col style="width: 62pt;" width="82" /><col style="width: 58pt;" width="77" /><col style="width: 299pt;" width="398" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;">
+<th class="xl65" style="width: 164pt; height: 15.75pt; background-color: #ffcc00;">Description</th>
+<th class="xl65" style="width: 44pt; background-color: #ffcc00;">Target</th>
+<th class="xl65" style="width: 42pt; background-color: #ffcc00;">Source</th>
+<th class="xl65" style="width: 62pt; background-color: #ffcc00;">Compare?</th>
+<th class="xl65" style="width: 58pt; background-color: #ffcc00;">UpdateSO</th>
+<th class="xl65" style="width: 299pt; background-color: #ffcc00;">Assignment</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnUnitsSecondaryQty</td>
+<td>sdsqor</td>
+<td>pdsqor</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Only when f4211.nxtr &lt; 900</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">jdPromisedDeliveryDate</td>
+<td>sdrsdj</td>
+<td>pdrsdj</td>
+<td>Yes</td>
+<td>Yes</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szLot</td>
+<td>sdlotn</td>
+<td>pdlotn</td>
+<td>Yes</td>
+<td>Yes</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnUnitCost</td>
+<td>sduncs</td>
+<td>pdprrc</td>
+<td>Yes</td>
+<td>Yes</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szStatusCodeNext</td>
+<td>sdnxtr</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td>Receipt</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szStatusCodeLast</td>
+<td>sdlttr</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td>based on Sales Order Activity Rule</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szStatusCodeNext</td>
+<td>sdnxtr</td>
+<td> </td>
+<td>Cancelled</td>
+<td> </td>
+<td style="text-align: left;">Set 999 if Purchase Order is Cancelled</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">szStatusCodeLast</td>
+<td>sdlttr</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td style="text-align: left;">Set 980 if Purchase Order is Cancelled</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">mnQuantityCancelled</td>
+<td>sdsocn</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td>When Purchase Order is Cancelled, set socn = socn + soqs</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">jdActualShipDate</td>
+<td>sdaddj</td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td>only when this is not updated through shipment confirmation</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>If f4211.nxtr &gt;= 900 which is considered closed</li>
+<li>Compare if the unit cost changed.  Must convert the unit cost on the purchase to primary to compare to unit cost on sales (which is primary)</li>
+<li>NXTR and LTTR is written twice one is to indicate advance of status and the other one for cancellation</li>
+<li>B4200920 - F4211GetShipmentInfo (F4211 Get Shipment Info) can be used to retrieve related Sales information with ActionCode I - Inquiry</li>
+<li>To maintain for partial receipt BSFN B4200450 - AdvancedSODetailLineSplit (Advanced SO Detail Line Split) can be used. In this case parameters defined in B4200920 will be used to copy into new lines</li>
+</ul>
+</div>
+<p><br /> Refer to <strong>&lt;Document 1438174.1&gt; E1: 40: Columns Mapped in Purchase Order Generation from Sales Order</strong> to verify columns in Purchase Order which are inherited from Sales Order.</p>
+<p>This note is written based on EnterpriseOne application release 9.1</p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

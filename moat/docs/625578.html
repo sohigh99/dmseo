@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Complex Groups in Advanced Pricing (P4092/P4093W/R40932/P4071/P4072/P4073)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Complex Groups in Advanced Pricing (P4092/P4093W/R40932/P4071/P4072/P4073)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Item Price Groups (P4092)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section22"><strong>Customer Price Groups (P4092)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section23"><strong>Order Detail Groups (P4092)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section24"><strong>Notes</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section25">&nbsp;<strong>Frequently Asked Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 1:&nbsp; </strong>User is getting Blanks Invalid error (0003) in the Price Detail (P4072) when they do not enter a value in the category code field when using complex groups.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Question 2:</strong> Customer is upgrading from XE to 9.1. The fields SDGR,SDV1,SDV2,SDV3,&nbsp;<span id="form1:panelPage1">FRAT, RATT</span> are used in V4072A in XE. In E9.1 these fields are deleted. What is the replacement for these fields?</a></td></tr></table>
+<hr size=1><p>
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><strong>Overview</strong></p>
+<p>Complex groups can be used to provide more flexibility in a pricing structure. Category codes are used to set up the complex groups. There are 3 types of complex groups: Item, Customer, and Order Detail groups.&nbsp;</p>
+<p>Complex Prices Groups are created using P4092 from menu G42311.&nbsp; The processing option behind the P4092 determines what type of group will be set up.<br />&nbsp;</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section21"></a><h3 class="km"><strong>Item Price Groups (P4092)</strong></h3>
+<p>Item price groups can be setup using the program P4092, version ZJDE0001 off menu G42311. <br /> <br /> From the Item Price Groups (P4092), click Add.&nbsp; Users may specify up to ten Category Codes. <br /> <br /> <img src="../images/cg01.png" border="1" hspace="0" vspace="0" /><br /> <br /> For stock items, the Category Codes used in Item Price Group are the same Category Codes found in the Item Branch/Plant (P41026) off menu G4111.</p>
+<p>NOTE:&nbsp; If the item is a non-stock item, the Item Master Category Code fields will be used<br /> <br /> <img src="../images/cg02.png" border="1" hspace="0" vspace="0" /><br /> <br /> Before adding the Price Adjustment Definition, select a Preference Hierarchy (P40073) where the Item Group is used.<br /> <br /> <img src="../images/cg03.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Setup Price Adjustment Definition (P4071)</strong></p>
+<p>The Item Price Group name must be attached to the Price Adjustment Definition (P4071).</p>
+<p><strong>Note:</strong> Enhancement Bug 10962721 has been entered requesting that a complex group should not need to be added via P4071 to work.<br /> <br /> <img src="../images/cg04.png" border="1" hspace="0" vspace="0" /><br /> <br /> The values in the Item Branch category codes must match the category code values in the Adjustment Details for the adjustment to be applied.&nbsp; The second screen below shows the 'Item Price Group' field in the 'Additional Info' tab of the Item Branch record (P41026), which can be left blank or populated with another Item Price Group - this field is used in conjunction with Simple Groups, which do not use Category codes.<br /> <br /> <img src="../images/cg05.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg06.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Setup Adjustment Detail (P4072)</strong></p>
+<p>The Item Group Category Codes are required fields in the adjustment detail. Blank is not a valid value in the adjustment detail even though blank may be a valid value in the UDC table. <br /> <br /> <img src="../images/cg07.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg08.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Sale Order Entry (P4210)</strong></p>
+<p>Enter a Sales Order with the Price Adjustment Schedule attached.</p>
+<p><strong>Price History (P4074)</strong></p>
+<p>Price History (P4074) will show the adjustment. <br /> <br /> <img src="../images/cg09.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Generate Item Price Groups (R40931)</strong></p>
+<p>For EnterpriseOne users, it is not mandatory to run the Generate Item Price Groups (R40931) UBE in order to use the Item Price Group. This UBE creates records in the Item/Customer Group Relationship (F4093) table with a "Group Type" (GPTY) value of "I". This table contains the allowable combinations for Item Groups and Category Codes.</p>
+<p><strong>Item Group Code (P4093)</strong></p>
+<p>Once the R40931 UBE has been run, the user may access this table as an Item Group Code Row Exit off of the Price Adjustment Detail (P4072). The option will not appear unless the UBE has been executed. <br /> <br /> <img src="../images/cg10.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg11.png" border="1" hspace="0" vspace="0" /><br /> <br /> Or, this can also be accessed from Base Price Revisions (P4106). The information displayed shows all the Category Codes selected for the Item Group and all the valid values for the Category Codes. <br /> <br /> <img src="../images/cg12.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg13.png" border="1" hspace="0" vspace="0" /></p>
+<hr />
+<a name="aref_section22"></a><h3 class="km"><strong>Customer Price Groups (P4092)</strong></h3>
+<p>Customer Price Groups can be added using the P4092, version ZJDE0002 off menu G42311. <br /> <br /> From the Customer Price Groups (P4092), click Add. Users may specify up to ten Category Codes. <br /> <br /> <img src="../images/cg14.png" border="1" hspace="0" vspace="0" /><br /> <br /> The Category Codes used by the Customer Price Groups are the same Category Codes found in the Customer Master (P03013) on menu G4241.<br /> <br /> <img src="../images/cg15.png" border="1" hspace="0" vspace="0" /><br /> <br /> Before adding the Price Adjustment Definition, select a Preference Hierarchy (P40073) where Customer Group is used.&nbsp; The customer group can be for either the Ship To or Sold To.<br /> <br /> <img src="../images/cg16.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Setup Price Adjustment Definition (P4071)</strong></p>
+<p>The Customer Price Group name must be attached to the Price Adjustment Definition (P4071). <br /> <br /> <img src="../images/cg17.png" border="1" hspace="0" vspace="0" /><br /> <br /> The values in the Customer Master category codes must match the category values in the Adjustment Details for the adjustment to be applied.&nbsp; The second screen below shows that the Customer Billing Instructions (P03013) can be left blank or populated with another Customer Price Group.&nbsp; &nbsp;<br /> <br /> <img src="../images/cg18.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg19.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Setup Adjustment Detail (P4072)</strong></p>
+<p>The Customer Group Category Codes are required fields in the adjustment detail. Blank is not a valid value in the adjustment detail even though blank may be a valid value in the UDC table.<br /> <br /> <img src="../images/cg20.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg21.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Sale Order Entry (P4210)</strong></p>
+<p>Enter a Sales Order with the Price Adjustment Schedule attached.</p>
+<p><strong>Price History (P4074)</strong></p>
+<p>Price History (P4074) will show the adjustment. <br /> <br /> <img src="../images/cg22.png" border="1" hspace="0" vspace="0" /><br /> <br /> The Customer Group can be either the Ship To or Sold To.<br /> <br /> <img src="../images/cg23.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Generate Customer Price Groups (R40932)</strong></p>
+<p>For EnterpriseOne users, it is not mandatory to run the Generate Customer Price Group (R40932) UBE in order to use the Customer Price Group.&nbsp;This UBE creates records in the Item/Customer Group Relationship (F4093) table with a "Group Type" (GPTY) value of "C". This table contains the allowable combinations for Customer Groups and Category Codes.</p>
+<p><strong>Customer Group Code (P4093)</strong></p>
+<p>Once this UBE has been run, the user may access this table as a Customer Group Code Row exit off of the Price Adjustment Detail (P4072).<br /> <br /> <img src="../images/cg24.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg25.png" border="1" hspace="0" vspace="0" /><br /> <br /> Or, this can also be accessed via Base Price Revisions (P4106). The information displayed shows all the Category Codes selected for the Customer Group and all the valid values for the Category Codes.<br /> <br /> <img src="../images/cg26.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg27.png" border="1" hspace="0" vspace="0" /></p>
+<hr />
+<a name="aref_section23"></a><h3 class="km"><strong>Order Detail Groups (P4092)</strong></h3>
+<p>Order Detail Groups are setup using the P4092, version ZJDE0003 off menu G42311.<br /> <br /> To add an Order Detail Group users may select up to 8 Category Codes. The information on the Order Detail Group pertains to the Sales Order. The values used in the adjustment detail will be matched to the values defaulted (via preference) or manually entered into the Sales Order.<br /> <br /> Although the name order detail group might seem to indicate an Order level adjustment, the adjustment is applied at the line level. Therefore each individual line on the sales order must meet the order detail requirement in order to receive the price adjustment.<br /> <br /> <img src="../images/cg28.png" border="1" hspace="0" vspace="0" /></p>
+<p><strong>Price Adjustment Definition (P4072)</strong></p>
+<p>The Order Detail Group must be specified on the price adjustment definition.<br /> <br /> <img src="../images/cg29.png" border="1" hspace="0" vspace="0" /><br /> <br /> There is no specific Preference Hierarchy for Order Detail Groups.<br /> <br /> Price Adjustment Detail information must match the information in the sales order detail line.&nbsp; For example, the adjustment detail is setup so that a discount is received if the Sales Order is an 'SO' Order Type and Branch/Plant 30 is used for the detail line. <br /> <br /> <img src="../images/cg30.png" border="1" hspace="0" vspace="0" /><br /> <br /> <img src="../images/cg31.png" border="1" hspace="0" vspace="0" /><br /> <br /> Enter a Sales Order using the Price Adjustment.<br /> <br /> Adjustment is applied.<br /> <br /> <img src="../images/cg32.png" border="1" hspace="0" vspace="0" /></p>
+<hr />
+<a name="aref_section24"></a><h3 class="km"><strong>Notes</strong></h3>
+<p><strong>Using Date Effective Category Codes with Line of Business Turned Off</strong></p>
+<p>Customers might want to select the Date Effective Category Code option on the P0009 Enhanced A/R Constants form with Advanced Pricing. Customer Category Codes in the Advanced Pricing system are used to specify the customer group and pricing on sales orders. By selecting this option, multiple sets of category codes for a single customer can be set-up by effective date. This enables the Advanced Pricing system to adjust the pricing based on the effective date for each customer group. If using Date Effective Category Codes, the system reads table F03012A and not F03012.<br /> <br /> If system is defined/activated to use Date Effective Category Codes within the Enhanced A/R Constants (Accounts Receivable Constants) the Category Codes selection from the Form menu on P03013; Customer Master Revisions cannot be used to add, change or update the category code values as all category code fields will be grayed out. Instead, updates/changes need to be entered in the Date Effective Category Codes selection and then program R03012A ran to update F03013 Customer Master Category Codes. <br /> <br /> The General Constants (F0009) table can be reviewed to confirm if system is set up to use customer category code values by effective date.<br /> <br /> With the Date Effective Category Code option, the system displays row and form menu options from the Customer Master application that enable you to set up category codes with effective dates. If you do not select this option, the system hides these menus.<br /> <br /> When adding a Date Effective Category Code value, this creates a record in the Customer Date Effective Category Codes table (F03012A). Multiple records can be entered at one time with different effective dates on the Date Effective Category Codes Revision form. When adding date-effective category code records, the system updates the Eff Used field with N to indicate that the record is not used. The Date Effective Category Code Update program copies the values of the effective category codes record to the customer master category codes in the Customer Master by Line of Business table (F03012) and changes the value of the Eff Used field to Y.&nbsp; The system does not update the new category code value on the customer record until the Date Effective Category Code Update program is ran (R03012A). <br /> <br /> When deleting a Date Effective Category Code and running the Date Effective Category Code Update program, the system does not update the category code value to blank. To remove a value previously updated, override the value to blank, and then run the update program. Once an effective date category code is deleted, it no longer exists in the system.<br /> <br /> Category Codes that are no longer effective can be purged by running the Purge Date Effective Category Codes program (R03012B).<br /> <em><br /> Note: Each Date Effective Category Code record entered is independent on previous records. Therefore, complete all desired values for system to use for each record. For example, if a value in category code 1 exists, and a new record with a value in category code 2 is added, the value for category code 1 must be re-entered in the new record or the system will update it to blank.</em></p>
+<p><strong>Complex Groups rules prior to 8.9</strong></p>
+<p>The number of category codes available for defining customer groups and item groups was four.&nbsp; The number of category codes available for order detail groups was three.&nbsp;&nbsp;&nbsp; The data item for the third Category Code selected can only be 8 characters in length. So, for example, if MCU field was selected as the third Category Code the system would error because the MCU field is 12 characters in length. Therefore, if user would like to use MCU field, it will need to be the first or second Category Code selected.<br /> <br /> The category codes from the Address Book were used depending on how the Accounts Receivable Constants were set.&nbsp;&nbsp; As of SAR #5003614 (XE) and SAR # 4979009 (B73.3.2), if Line of Business is turned on in the Accounts Receivable Constants, then Advanced Pricing will use the Category Codes in the Customer Master (F03012). If the Accounts Receivable Constants are set to use World AR or EnterpriseOne AR, then Advanced Pricing will use the Category Codes in the Address Book (F0101). <em>Note: In EnterpriseOne 8.9 and above, Advanced Pricing will always use the Category Codes in the Customer Master (F03012) regardless of the Accounts Receivable Constants setting.</em><br /> <br /> When Line of Business is used, the company of the Header Branch/Plant is used to determine which Customer Master (F03012) record is selected to use for Category Code and Customer Group retrieval. &nbsp;<br /> <br /> To verify the Accounts Receivable Constants, go to P0000, click Accounts Receivable Constants.&nbsp; Search and select on Company 00000. Take the FORM exit to Enhanced AR. The World AR, EnterpriseOne AR, and EnterpriseOne AR &ndash;Line of Business flags are set here.</p>
+<p>&nbsp;</p>
+<hr />
+<a name="aref_section25"></a><h3 class="km">&nbsp;<strong>Frequently Asked Questions</strong></h3>
+<a name="aref_section26"></a><h4 class="km"><strong>Question 1:&nbsp; </strong>User is getting Blanks Invalid error (0003) in the Price Detail (P4072) when they do not enter a value in the category code field when using complex groups.</h4>
+<p class="km"><strong>Answer1</strong>: When using complex groups (item, customer or order detail)blank is not a valid value therefore the error being thrown is valid.&nbsp; See Bug 12470261 : BLANK CAT CODE NOT ALLOWED - SAR: 4338236 which states: Since order detail groups are defined by their category codes, blanks are not valid when setting them up.&nbsp; The complex group UDC (item, customer and order detail) allow for blanks when setting them up, however Pricing does not allow for blank, a value is required when used with adjustments.&nbsp; These fields cannot be blank.</p>
+<a name="aref_section27"></a><h4 class="km"><strong>Question 2:</strong> Customer is upgrading from XE to 9.1. The fields SDGR,SDV1,SDV2,SDV3,&nbsp;<span id="form1:panelPage1">FRAT, RATT</span> are used in V4072A in XE. In E9.1 these fields are deleted. What is the replacement for these fields?</h4>
+<p><strong>Answer 2</strong>: In JD Edwards EnterpriseOne Release XE, the &ldquo;Work With Adjustment Detail&rdquo; P4072 application was based on business view V4072A and displayed the following fields from table F4072: Order Detail (SDGR), Sales Detail Value 01 &ndash; 03 (SDV1 SDV2, SDV3), Item Grp 01 &ndash; 04, Cust Grp 1 &ndash; 4.<br /> <br /> In Release 9.1 (starting with release 8.9), the application P4072 grid is based on a new business view V4072B, which is a join on 4 tables: F4072 and 3 new tables: Item Key ID Master File (F40941), Customer Key ID Master File (F40942), Order Group Key ID Master File (F40943). <br /> <br /> The fields Order Detail (SDGR) and Sales Detail Value 01 &ndash; 08 (SDV1 &ndash; SDV8) are from table F40943. The fields Item Grp 01 &ndash; 10 (IGP1 &ndash; IGP10) fields from table F40941. The fields Cust Grp 1 &ndash; 10 (CGP1 &ndash; CGP10) are from table F40942. The link between the tables is based on the common field OrderGroupKeyID (OGID).</p>
+<p>FRAT and RATT fields have been removed from the details of the sales order and no longer can be used to define the groups.</p>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

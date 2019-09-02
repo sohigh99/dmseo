@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Address Book Parent Child Relationships (P0150/P02150/P01501)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Address Book Parent Child Relationships (P0150/P02150/P01501)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11">Overview of Address Book Parent/Child Relationships (P0150)</a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Setting Processing Options for Structure Revisions (P0150)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Setting Processing Options for Structure Inquiry (P02150)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Creating Parent/Child Relationships</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34">Reviewing Parent/Child Relationships</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35">Enhanced Parent/Child Relationships (P01501)</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km">Overview of Address Book Parent/Child Relationships (P0150)</h3>
+<p>Parent/child relationships in the address book records of your suppliers, customers, and prospects are like family relationships. One address book record is the parent and one or more address book records are the children of that parent. Creating parent/child relationships can make your business more efficient. For example, you can send billing for field offices or subsidiary companies (children) to the corporate headquarters (parent) if you set up parent/child relationships.</p>
+<p>After you enter address book records in the Address Book system, you can create parent/child relationships among them. You can create these relationships for these structures:</p>
+<ul>
+<li>Accounts receivable structures.</li>
+<li>Accounts payable structures.</li>
+<li>Reporting structures within your organization.</li>
+</ul>
+<p>Two main forms are used for parent/child relationships:</p>
+<ul>
+<li>Address Parent/Child Revisions (p0150) - used to create parent/child relationships among address book records for suppliers, customers, and so on.</li>
+<li>Work With Distribution Lists (P02150) - used to review the parents of a child or all child relationships.</li>
+</ul>
+<p>It is also possible to set up enhanced parent/child relationships to create organizational structures between an address book number and one or more who&rsquo;s who entries.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> This document is intended for users setting up and using parent/child relationships in address book.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p> </p>
+<a name="aref_section31"></a><h3 class="km">Setting Processing Options for Structure Revisions (P0150)</h3>
+<p>Processing options enable you to specify the default processing for programs and reports.</p>
+<p><strong><em>Process Tab</em></strong></p>
+<ol start="1">
+<li><strong>Workflow Information</strong> - Specify whether to display workflow processing information. Values are:</li>
+<ul>
+<li>Blank: Do not display workflow information</li>
+<li>1: Display workflow information</li>
+</ul>
+<li><strong>Tier Descriptions</strong> - Specify whether to allow a tier structure to be defined based on effective dates for a root parent address. The root parent in a structure is the highest level of a parent/child structure, and can have no parent. Values are:</li>
+<ul>
+<li>Blank: Do not allow a tier structure to be defined.</li>
+<li>1: Allow a tier structure to be defined.</li>
+</ul>
+</ol>
+<p><em><strong>Defaults Tab</strong> </em></p>
+<ol start="1">
+<li><strong>Date Defaults</strong> - Specify whether the system supplies default dates on the P0150 parent/child revisions form when the beginning and ending effective dates are omitted. Values are:</li>
+<ul>
+<li>Blank: The system does not supply default dates.</li>
+<li>1: The system supplies default dates.</li>
+</ul>
+<li><strong>Default Organization Structure Type -</strong> Specify the value that the system enters in the Organizational Structure field when the A/B Org Structure Browse program (P0150) is first run. If you leave this processing option blank, the system does not provide a default value for the organization structure type.</li>
+</ol>
+<a name="aref_section32"></a><h3 class="km">Setting Processing Options for Structure Inquiry (P02150)</h3>
+<p><strong>Defaults Tab</strong></p>
+<ol start="1">
+<li><strong>Enter the default Structure Type -</strong> Specify a valid structure type from user-defined code (UDC) table (01/TS). A structure type identifies a type of organizational structure that has its own hierarchy in the JD Edwards Address Book system (for example, E-mail). When you create a parent/child relationship for the JD Edwards Accounts Receivable system, the structure type must be omitted.</li>
+<li><strong>Enter the version of Organizational Structure Revisions (P0150) to be called.</strong> If left blank, version ZJDE0001 will be used. The version indicates a specific set of data selection and sequencing settings for the application. Versions may be named using any combination of alphabetic and numeric characters.</li>
+</ol>
+<a name="aref_section33"></a><h3 class="km">Creating Parent/Child Relationships</h3>
+<p>Access the Address Parent/Child Revisions form (P0150) and click 'Add'.</p>
+<p><img src="../images/pc01.png" class="kmsmartresize" alt="1" title="1" width="1000"/></p>
+<p>Enter the following field information as required:</p>
+<ul>
+<li><strong>Parent Number </strong>-  Enter the address book number of the parent entity (for example, parent company). The system uses this number to associate a particular address with a parent entity or location. Any value that you enter in this field updates the Address Organizational Structure Master table (F0150) for the specified structure type. This address number must exist in the Address Book Master table (F0101). Examples of address book records that would have a parent number include: Subsidiaries with parent companies, branches with a home office, job sites with a general contractor. On the Address Parent/Child form, enter the Address Book number of the primary level in a hierarchy, or reporting relationship. A parent in one hierarchy can be a child in another hierarchy. A hierarchy can be organized by business unit, employee, or position. For example, you can create a hierarchy that displays the reporting relationships between employees and supervisors.</li>
+<li><strong>Structure Type </strong>- Enter a user-defined code (UDC) from table 01/TS to identify a type of organizational structure that has its own hierarchy in the Address Book system (for example, email). <br />When you create a parent/child relationship for the Accounts Receivable system, the structure type must be blank. This field identifies the type of distribution list, such as WFS for workflow, ORG for group, and EML for email.</li>
+<li><strong>Address Number</strong>  - Enter a valid address book number. This number identifies an entry in the Address Book system, such as employee, applicant, participant, customer, supplier, tenant, or location.</li>
+<li><strong>Group</strong>  - Enter a number for the group. This number reorders a group of records on the form.</li>
+<li><strong>Begin Eff Date (beginning effective date)</strong> - Enter a valid date. This is the date on which the address number appears in the structure. The Beginning Effective Date field prevents the address number from occurring in the structure until the beginning effective date is the same as the current date. If you select the processing option for tier descriptions in the Structure revisions program (P0150), you must complete this field. If left blank, the address number always occurs in a structure unless there is an ending effective date.</li>
+<li><strong>End Eff Date (ending effective date)</strong> - Enter the date on which the address book record will cease to exist in the structure.</li>
+</ul>
+<div class="kmnotebox">Note. The Escalation Hours and Escalation Minutes fields are not used by the JD Edwards Address Book system.</div>
+<a name="aref_section34"></a><h3 class="km">Reviewing Parent/Child Relationships</h3>
+<p>Access the Work With Distribution Lists form (P02150):</p>
+<p><img src="../images/pc02.png" class="kmsmartresize" alt="2" title="2" width="500"/></p>
+<p>To review parent/child relationships:</p>
+<ol>
+<li>Change the value in the Structure Type field, if necessary. The default organization structure type is specified in a processing option.</li>
+<li>To review all child relationships, click the folders that have + to the left of the names in the detail area.</li>
+<li>To review the parents of a child, complete the remaining steps.</li>
+<li>Select the Parents option.</li>
+<li>Enter a child address book number in the Parent Number field and click 'Find'.</li>
+</ol>
+<a name="aref_section35"></a><h3 class="km">Enhanced Parent/Child Relationships (P01501)</h3>
+<p>You use the Enhanced Parent/Child Relationships program (P01501) to create organizational structures between an address book number and one or more who's who entries. These organizational structures identify an address book number as a parent and one or more address book numbers that are attached to who's who entries as children. For example, you can create an enhanced parent/child organizational structure to set up a project. You identify an address book number as the parent and then identify individuals (who's who entries) as members of the project. The who's who entries can be attached to the parent address book number as well as other address book numbers. Enhanced parent/child relationships are stored in the Enhanced Parent Child table (F01501). In order to use Enhanced Parent/Child, set up codes for enhanced parent/child structure types in UDC table 01/TS.</p>
+<p>To create enhanced parent/child relationships</p>
+<p>Access the Enhanced Parent/Child Revisions form (P01501) and click 'Add'.</p>
+<p><img src="../images/pc03.png" class="kmsmartresize" alt="3" title="3" width="1000"/></p>
+<p>Enter the following field information as required:</p>
+<ul>
+<li><strong>Parent Number</strong> - Enter the address book number of the parent company to create an enhanced parent/child organizational structure.</li>
+<li><strong>Address Number</strong> - Enter the Address Book number. This number that identifies an entry in the Address Book system, such as employee, applicant, participant, customer, supplier, tenant, or location.</li>
+<li><strong>Who's Who Line</strong> - Enter the line number. This field is used to identify the line ID number for a Who's Who record.</li>
+<li><strong>Relation Type</strong> - Specify the type of relationship created between the two entities. Roles must be defined in UDC 01/RT. Example values include
+<ul>
+<li>A: Administrative Assistant</li>
+<li>B: Important Business Contact</li>
+<li>C: Child</li>
+<li>D: Project Lead</li>
+<li>E: Researcher</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp; </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

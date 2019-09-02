@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order Detail Defaults Advanced Preference with Advanced Pricing (P4071/P4072/P4070/P4092/P4074)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Order Detail Defaults Advanced Preference with Advanced Pricing (P4071/P4072/P4070/P4092/P4074)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Order Detail Defaults - Advanced Preference Setup</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">Advanced Preference (P4071)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Advanced Preference Detail (P4072)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Advanced Preference Schedule (P4070)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Order Detail Defaults Standalone Example</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Sales Order Entry (P4210)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Order Detail Defaults Advanced Pricing Example</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Order Detail Group (P4092)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Price Adjustment Definition (P4071)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Price Adjustment Detail (P4072)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">Sales Order Entry (P4210)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312">Price History (P4074)</a></td></tr></table>
+<table><tr><td width=-20>&nbsp;</td><td><a href="#aref_section313"> </a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>Overview</p>
+<p>The Order Detail Defaults Advanced Preference allows users to define default values for the Sales Order Detail File (F4211) fields based on Advanced Preference set up during Sales Order Entry:</p>
+<ul>
+<li>Adjustment Schedule (ASN)</li>
+<li>Sales Price Based on Date (CP01)</li>
+<li>Duty Status (DTYS)</li>
+<li>Header Business Unit (EMCU)</li>
+<li>End Use (EUSE)</li>
+<li>Line of Business (LOB)</li>
+<li>Price at Ambient/Standard/Weight (PRAS)</li>
+<li>Payment Terms Code (PTC)</li>
+<li>Payment Instrument (RYIN)</li>
+<li>Price Code 1, Price Code 2, and Price Code 3 (UPC1, UPC2, UPC3)</li>
+<li>Pricing Unit of Measure (UOM4)</li>
+</ul>
+<p>The preference can be set up using complex groups (Item Group and/or Customer Group), depending on the Preference Hierarchy setup, as well quantity or non-quantity based.  The Order Detail Defaults preference is invoked during Sales Order Entry and one or all of the above fields can be set up to default values into the F4211.  For more information on Advanced Preferences and the setup, see <a href="../docs/625693.html" target="_blank">Advanced Preferences (P4070/P4071/P4072/P4210/P42101)</a><br /> <br /> One common use of the preference is to provide the field driver for invoking line level Advanced Price Adjustments.  Although any of the above fields can be used as the price adjustment driver, the most common fields used in this application of the preference are the Price Code 1, Price Code 2, and Price Code 3 fields (UPC1, UPC2, and UPC3).  The preference is used to populate a field value into one or all of these fields.  If this value matches the value from the adjustment detail then the Advanced Price Adjustment will be applied also.<br /> <br /> Currently driver fields are hard coded and listed below:</p>
+<ul>
+<li>Business Unit (MCU)</li>
+<li>Agreement Number (DMCT)</li>
+<li>Header Business Unit (EMCU)</li>
+<li>End Use (EUSE)</li>
+<li>Duty Status (DTYS)</li>
+<li>Stop Code (STOP)</li>
+<li>Rate Type &ndash; Freight (RATT)</li>
+<li>Rate Code &ndash; Freight (FRAT)</li>
+<li>Shipping Commodity Class (SHCM)</li>
+<li>Shipping Condition Code (SHCN)</li>
+<li>Price Code 1 (UPC1)</li>
+<li>Price Code 2 (UPC2)</li>
+<li>Price Code 3 (UPC3)</li>
+</ul>
+<p>Note: EMCU, EUSE, UPC1, UPC2 and UPC3 are defined in both driver fields and default fields.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> </p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Order Detail Defaults - Advanced Preference Setup</strong></h3>
+<a name="aref_section32"></a><h4 class="km">Advanced Preference (P4071)</h4>
+<p>On menu G40311, go into Advance Preference Name Revisions, click Add, and input the preference definition information.  Advanced Preference Type 02 (Order Detail Defaults) needs to be specified.  The user has the option of specifying an item or customer group as well as making it a quantity or non-quantity based preference. <br /> <br /> For more details on how to setup Advanced Preferences, see <a href="../docs/625693.html" target="_blank">Advanced Preferences (P4070/P4071/P4072/P4210/P42101)</a>.</p>
+<p> <img src="../images/a02001.png" class="kmsmartresize" alt="NEW1" title="NEW1" width="900"/></p>
+<p> </p>
+<hr />
+<a name="aref_section33"></a><h4 class="km">Advanced Preference Detail (P4072)</h4>
+<p>On menu G40311, go into Advance Preferences Detail Revisions, input the preference name defined above, and click Add.  Then input the preference info:<br /> <br /> <img src="../images/a02002.png" class="kmsmartresize" alt="NEW2" title="NEW2" width="800"/><br /> <br /> Row Exit to "Pref Details" to add the default value(s). In this example the Price Code 1 field will be entered with 01. Note that a value must be entered in the "Sequence" field (SEQ) before the record can be saved. <br /> <br /> <img src="../images/a02003.png" class="kmsmartresize" alt="NEW3" title="NEW3" width="800"/><br /> <br /> Note: In the preference detail, the form may appear to display duplicate field names. The reason: the first 13 fields, starting with Business Unit through PC3, are the 'driver' fields, that can be populated to selectively apply the preference, based on these field values. The system validates the value in the driver fields against the values in the Sales Order Detail File (F4211) fields. If the fields match, then the preference will be applied. The second set of fields, starting with Adjustment Schedule, are the values that will be set by the preference when it resolves. When populated by the user, these fields are shown in blue text.  </p>
+<hr />
+<a name="aref_section34"></a><h4 class="km">Advanced Preference Schedule (P4070)</h4>
+<p>Add the advanced preference to a preference schedule:<br /> <br /> <img src="../images/a02004.png" class="kmsmartresize" alt="NEW4" title="NEW4" width="950"/></p>
+<hr />
+<a name="aref_section35"></a><h3 class="km"><strong>Order Detail Defaults Standalone Example</strong></h3>
+<a name="aref_section36"></a><h4 class="km">Sales Order Entry (P4210)</h4>
+<p>Attach the Advanced Preference Schedule to either the System Constants or within the Processing option #3 in the Preference Tab for the version of the Sales Order Entry (P4210).   Also Processing Option #1. Preference Profile Processing must be equal to 1 within the same Preference Tab in order to activate Preference functionality.<br /> <br /> <img src="../images/a02005.png" class="kmsmartresize" alt="NEW5" title="NEW5" width="650"/><br /> <br /> Enter a one line sales order and notice that 01 is defaulted into the PC1 field from the Advanced Preference:<br /> <br /> <img src="../images/a02006.png" class="kmsmartresize" alt="NEW6" title="NEW6" width="875"/></p>
+<hr />
+<a name="aref_section37"></a><h3 class="km"><strong>Order Detail Defaults Advanced Pricing Example</strong></h3>
+<p>The Order Defaults Advanced Preference can also be used in conjunction with line level advanced pricing adjustments to act as a driver to apply adjustments to the sales order line.<br /> <br /> Note:  For more information on Advanced Pricing, please refer to the Advanced Pricing Implementation Guide.<br /> <br /> Steps for defining an advanced pricing schedule based on Price code 1, 2, or 3:</p>
+<ul>
+<li>Order Detail Groups (P4092) - define an order detail group based on price code 1, 2, 3, or any of the available order detail default fields discussed previously.</li>
+<li>Price Adjustment Definition (P4071) - create a line level adjustment and attach the order detail group.</li>
+<li>Price &amp; Adjustment Detail Revisions (P4072) &ndash; define adjustment detail, populate the value for PC1, PC2 or PC3 that should match the value in F4211.UPC1, UPC2, or UPC3 to qualify for a discount</li>
+<li>Price &amp; Adjustment Schedule Revisions (P4070) &ndash; define an adjustment schedule that contains the adjustment created at previous steps and attach to the customer.</li>
+</ul>
+<p>Now, when entering a sales order ensure the processing options for Preferences is activated. The preference will populate the detail fields UPC1, UPC2, or UPC3, and if this value matches the value from the adjustment detail then a discount will be applied also.</p>
+<a name="aref_section38"></a><h4 class="km">Order Detail Group (P4092)</h4>
+<p><img src="../images/a02007.png" class="kmsmartresize" alt="NEW7" title="NEW7" width="850"/></p>
+<a name="aref_section39"></a><h4 class="km">Price Adjustment Definition (P4071)</h4>
+<p>Specify the Order Detail group UPC1 created in the prior step.<br /> <br /> <img src="../images/a02008.png" class="kmsmartresize" alt="NEW8" title="NEW8" width="825"/></p>
+<a name="aref_section310"></a><h4 class="km">Price Adjustment Detail (P4072)</h4>
+<p>A $10 discount will be given for the item and customer combination used previously, where the UPC1 value is equal to 01. The UPC1 value 01 will be defaulted from the Advanced Preference set up earlier.  Be sure to attach the adjustment to a schedule, and link the schedule to a customer.<br /> <br /> <img src="../images/a02009.png" class="kmsmartresize" alt="NEW9" title="NEW9" width="825"/></p>
+<a name="aref_section311"></a><h4 class="km">Sales Order Entry (P4210)</h4>
+<p>Enter a new sales order and notice the PC1 field gets populated with 01: <br /> <br /> <img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/a02010.png" alt="NEW10" title="NEW10" width="825"/></p>
+<a name="aref_section312"></a><h4 class="km">Price History (P4074)</h4>
+<p>Row Exit to Price History and notice the adjustment gets applied:<br /> <br /> <img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/a02011.png" alt="NEW11" title="NEW11" width="825"/></p>
+<a name="aref_section313"></a><h1> </h1>
+<hr />
+<p> </p>
+<p><strong>Question 1:  </strong>When attempting to create a sales order using the Create Sales Order (P42101) or the Sales Order Entry (P4210) where Advanced Preference types:  Inventory Commitment Preference (05) is set up to default in a specific Branch Plant and Order Detail Defaults (02) has been activated to pull by the branch plant that was set up within the Inventory Commitment Preference (05) and the Inventory Commitment Preference (05) is located first on the schedule, the following issue occurs: The Order Detail Preference is not being resolved because the Inventory Commitment Preference which is first on the schedule is being resolved last by the system. The system ignores the sequence of the preferences within the schedule.  Is this working as designed? Why is the system not following the sequencing of the Advanced Preference Schedule (P4070)?<br /> <br /> <strong>Answer 1:  </strong>The Present Design of Advanced Preference (Releases 8.9 to present) regarding the sequencing within the Preference Schedule is to follow the order listed below. It is not coded to consider the sequence order specified in Preference Schedule (P4070):</p>
+<ol>
+<li>Delivery Date (03)</li>
+<li><strong>Order Detail Defaults (02)</strong></li>
+<li>Print Message (04)</li>
+<li>Commission Code (21)</li>
+<li>Sales Price Based On Date (18)</li>
+<li>Advanced Lot (23)</li>
+<li>Fulfillment Entry (41)</li>
+<li>Internal Sales Order Tax Date (46)</li>
+<li>Grade and Potency (25)</li>
+<li><strong>Inventory Commitment (05)</strong> The Inventory Commitment preference will be resolved during the sales order commitment processing.</li>
+<li>Next Order Status (24)</li>
+<li>Gross Profit Margin Target (19)</li>
+</ol>
+<p>If the Inventory Commitment Processing Option is activated within the Sales Order Entry (P4210) Processing Option Preference tab, then the system will only resolve these two preferences: Order Prep. Days (22) &amp; Delivery Date (03) again after the Inventory Commitment Preference is resolved during the commitment processing time. All the other listed Preferences will be resolved during the sales order detail grid tab down process (i.e., F4211 Edit Line Process). The Inventory Commitment Preference can also be resolved during the Print Pick Slip (R42520) UBE Process.<br /> <br /> Possible workaround:  Set up both the Advanced Preference and Basic Preference.  Advanced Preference will resolve first and the then preference engine will resolve the basic preference. So one work around is to use Inventory Commitment Preference as the Advanced Preference and set up the Order Detail Preference as Basic Preference, this workaround may or may not work for all customers. <br /><br />Note: If both Advanced Preference and Basic preference has been set up within the system, Advanced Preference will take precedence over Basic Preference. If a customer sets up an Advanced Preference and a Basic Preference that have the same available fields, the system will only apply the Advanced Preference and ignore the Basic Preference.<br /><br />For example: Advanced Preference Type 02 (Order Detail Defaults) and Basic Preference Type 47 (Pricing Unit of Measure by Branch) has been activated for a specific customer. The Advanced Preference 02 (Order Detail Defaults) has been set up to use the Pricing Unit of Measure (UOM) for EA (Each) and the Basic Preference type 47 (Pricing Unit of Measure) has been set up to bring in CA (Cases) by a specific branch plant for the same customer. The system will only apply the Advanced Preference, it will not apply the Basic preference this is per the design of the software.</p>
+<hr />
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

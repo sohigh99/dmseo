@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fixed Asset Report Writer FAQ</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Fixed Asset Report Writer FAQ</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose</BIG></span></big></big></h2>
+
+<p>Purpose of this document is guide how to overcome hidden column in Tabular Report (e.g., R1200002 - Asset Report Writer: Additions and Retirements). Same issue can be occurred any Financial Report Writer, Fixes Asset Report Writer and add-on tabular reports you have created.</p>
+<p><strong>Issue &amp; Business Requirement</strong></p>
+<p>Currently standard Fixed Asset Report R1200002 (Asset Report Writer: Additions and Retirements) is running based on business view V1201H (F1201/F1202 Joined View with All Fields) which joins two tables F1201 (Asset Master File) and F1202 (Asset Account Balances File).</p>
+<p>To generating reports for Fixed Assets, category codes are used from F0006.RP01 (Business Unit Master.Division) as it does for various financial reports, given the Business View (BSVW) V1201H does not include the table F0006. Whereas the pre-defined business view for Financial Report V8300001 (Financial Reporting F0901/F0902/F0006) includes F0006 as referencing table.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+<h4>Table of Contents</h4>
+<ul>
+  <li><a href="#q1">Question 1: How to create a new business view with tables F0006, F1201 and F1202?</a></li>
+  <li><a href="#q2">Question 2:  When copying R1200002 it gives Event Rule Validation Error, why and how to overcome it?</a></li>
+  <li><a href="#q3">Question 3:  When adding additional level break for columns MCU, RP01 and CO, the value for these columns are treated as RC (Report Constant) and RV (Report Variable).</a></li>
+  <li><a href="#q4">Question 4:  Is there any way to convert Tabular Report to Group Section Report or Columnar Section Report?   If so, what are the considerations?</a></li>
+  <li><a href="#q5">Question 5:  How does the R1200002 (Asset Report Writer: Additions and Retirements) determine which assets will be shown on the report?</a></li>
+</ul>
+
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Questions and Answers</BIG></span></big></big></h2>
+
+<h4 class="km"><strong><a name="q1"></a>Question 1:&nbsp;</strong>How to create a new business view with tables F0006, F1201 and F1202?</h4>
+<p><strong>Answer 1:</strong>.&nbsp; Before changing the Business View (BSVW), check whether there are any other objects which make use of same business view through Cross Reference Facilities. If there are any standard objects which references it, do not change any. It is important to generate it (by clicking Create Typedef), build update server package and (if needed) delete the glbltbl.xdb and ddb to have correct result. Plus, before changing any, verify the relationship amongst tables again, and set the correct table relationship (e.g., Simple Join, Left-Outer Join and so on) depends on your business requirement. Note that Table Join may not be the most cost effective way to fetch data, especially with a multiple table join, as it is very expensive in getting the data, users desire, to handle, as it depends on the RDBMS system.</p>
+<hr />
+<h4 class="km"><strong><a name="q2"></a>Question 2:&nbsp;</strong> When copying R1200002 it gives Event Rule Validation Error, why and how to overcome it?</h4>
+<p><strong>Answer 2:</strong>&nbsp; Unlike Group/Columnar Section reports, you are not able to any hidden columns in Tabular till you click 'Columns' tab in report design aid.</p>
+<p>To overcome this, both business view V1201H and report template R1200002 have been copied, then assigned copied business view to the copied report template. Now the problem is that in validating event rule, it issues Error ID's 3003 and 3013, as seen in the example below -</p>
+<p style="margin-left: 30px;"><strong><em>EVENT RULE VALIDATION LOG</em></strong><br /><br /><em>UBE - R561200002 - Asset Report Writer: Additions and Retirements by Job</em><br /><br /><em>Created : Wed Dec 05 11:34:24 2012</em><br /><em>&nbsp;<span class="awizStartDelimiter">&nbsp;</span></em></p>
+<div class="kmcodeblock" style="margin-left: 30px;"><em>/* CER ERROR #3003 : Unable to assign to data structure */</em><br /><em>Function Name: S3_15_44</em><br /><em>Function Description: ER for R561200002_+_S3_15_44</em><br /><em>Section: S3 - F1201/F1202 Joined View with A</em><br /><em>Event: 44 - (null)</em><br /><em>Seq #: 3</em><br /><em>Line #: 1</em><br /><em>Line Text: PYPriorYearsNetPostings</em><br /><br /><em>*************************</em><br /><br /><em>/* CER ERROR #3013 : Invalid BOB column */</em><br /><em>Function Name: S3_15_44</em><br /><em>Function Description: ER for R561200002_+_S3_15_44</em><br /><em>Section: S3 - F1201/F1202 Joined View with A</em><br /><em>Event: 44 - (null)</em><br /><em>Seq #: 3</em><br /><em>Line #: 1</em><br /><em>Line Text: PYPriorYearsNetPostings</em></div>
+<p style="margin-left: 30px;">Column Properties</p>
+<p style="margin-left: 30px;"><img src="../images/fa01.png" border="0" alt="Event Rule Validation - Fix" title="Event Rule Validation - Fix" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">For this example, both Smart Field Columns ASSETPB and ASSETPY have the same column headings "Beginning Accum Depr", however, the Business Function referenced can be different from each other.
+<ul>
+<li>For ASSETPYm the properties for Visible is OFF, so this column does not appear in Report Design Aid</li>
+<li>To have Business Function called,
+<ul>
+<li>Right Mouse button click on column you are working</li>
+<li>Go to Column Inclusion Event</li>
+<li>Or, Go to DD ASSETPY and look for embedded Business Function</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<h4 class="km"><strong><a name="q3"></a>Question 3:&nbsp;</strong> When adding additional level break for columns MCU, RP01 and CO, the value for these columns are treated as RC (Report Constant) and RV (Report Variable).</h4>
+<p>Is there any way to print these values conditionally? For example, for sub-total per Division (F0006.RP01) we do not want to show CO (Company) and for total per Company (F1201.CO) we do not want to write the last Division information in report.</p>
+<p><strong>Answer 3:</strong>&nbsp; The best practice is to handle this is through Group Section reports.</p>
+<hr />
+<h4 class="km"><strong><a name="q4"></a>Question 4:&nbsp;</strong> Is there any way to convert Tabular Report to Group Section Report or Columnar Section Report?&nbsp;&nbsp; If so, what are the considerations?</h4>
+<p><strong>Answer 4:</strong>&nbsp; In a JDE case study, it reads that the Group Section report performs faster than Tabular section reports, thus owing to the number of variables to handle in it. However, users may have the same results by following the below tips and tricks.</p>
+<p style="margin-left: 30px;"><img src="../images/fa02.png" border="0" alt="Change Tabular to Group Section Report" title="Change Tabular to Group Section Report" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">(Ref A) Columns has to be added one by one manually either use DD Alias AA or ASSETPB. Though you choose to use ASSETPB report does not populated associated/embedded BSFN by itself for Group/Columnar Section<br />
+<ul>
+<li>Aggregation column in Level Break Footers can be added automatically in creating Level Break Footer Section</li>
+</ul>
+<ul>
+<li>(Ref B) The event Column Inclusion is equivalant to Do Section event in Group Section which is the event reads row by row based on Business View you reference</li>
+<li>(Ref C) Same business function for example B83000PB - PriorYearEndBalance (FASTR Function - Prior Year End Balance Forward) by assigning BC variables to return RV Beginning Asset Cost</li>
+<li>(Ref D) Data Selection in Smart Field has to be handled through event rule in Do Section event. For example, If BC Ledger Type(F1201)(LT) is equal to "AA" And BC Object Account (F1202)(OBJ) is equal to "2000-2099" based on your business requirement</li>
+<li>(Ref E) Amount written in Tabular is same with the amount aggregation in level break footer of Group Section report</li>
+<li>(Ref F) To get any report variable (RV) assign BC variable in Do Section event of main section in Group Section report</li>
+<li>To get any report variable assign PC variable (Previous column) in Do section event of Level Break Sections. This is because in handling report Level Break Sections (both Header and Detail) comes earlier than main section.<br />Above is just example to explain relationship between two different section types</li>
+<li>Hide main section to have same layout with Tabular Report.&nbsp; If the output is different from what you expect change properties for main section and check data (or you may simulate it using excel export data based on business view you are using. Data can be exported through Databrowser.</li>
+</ul>
+</div>
+<hr />
+<h4 class="km"><strong><a name="q5"></a>Question 5:&nbsp;</strong> How does the R1200002 (Asset Report Writer: Additions and Retirements) determine which assets will be shown on the report?</h4>
+<p><strong>Answer 5:</strong>&nbsp; The assets included in this report are determined by the data selection and processing option setup.&nbsp; If data selection is left blank, any asset that has a record in the F1202 (Asset Account Balances File) during the date range selected in the processing options will be shown on the report.</p>
+
+
+<p>&nbsp; </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AR AAIs</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>AR AAIs</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">AAI Basic Overview Video Presentation (Video)<strong><br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Accounts Receivable AAI Search Sequence</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Set Up Accounts Receivable Automatic Accounting Instructions (P0012)</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section34">Default AAIs</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section35">Receipts Specific AAIs</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section36">Delinquency Fee, Deductions, Drafts, and Netting Specific AAIs</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section37">Intercompany Settlements AAIs</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section38">Multi-currency (including Alternate Currency Receipts) AAIs (Only required in Multi-currency environments)<strong><br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section39"><strong>Support Resource</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#REF">References</A></td></tr></table><hr size=1><p>
+<!-- class=km before applies to --><H2 class=km>Applies to:  </H2>
+JD Edwards EnterpriseOne Accounts Receivable - Version XE and later<br />Information in this document applies to any platform.<br />
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><strong>Overview<br /></strong></p>
+<p>Each time you enter a transaction for which the system creates journal entries, the system needs to locate the appropriate account numbers. It does this by reviewing the AAI table for codes that correspond to the transaction. For example, AAIs direct the system to the accounts receivable trade account to debit when you post invoices or the correct bank account to debit when you post receipts.<br /><br />The name of an AAI item, such as RC, is hard-coded. AAI items for Accounts Receivable always start with the letter 'R'. For example, RC is the AAI item for the receivables class (trade) account, and RB is for the receivables bank account. Each AAI item has account codes consisting of a business unit (optional for some AAIs - see note below), an object, and optionally, a subsidiary, which are mapped to the chart of accounts.</p>
+<p> </p>
+<div class="kmnotebox">Note - To Troubleshoot Accounts Receivable AAI Errors refer to E1: 03B: Troubleshooting Account Receivable Automatic Accounting Instruction AAI Errors (P0012, R09801) <a href='../docs/1983922.html'>Troubleshooting Account Receivable Automatic Accounting Instruction AAI Errors (P0012, R09801)</a></div>
+<p>                   </p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for EnterpriseOne users who are setting up the Accounts Receivable module for use within their organization, or troubleshooting errors related to AAIs.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p>      </p>
+<a name="aref_section31"></a><h3 class="km">AAI Basic Overview Video Presentation (Video)<strong><br /></strong></h3>
+<p>Refer to the attachment section of this knowledge document to download and save the AAI Basic Overview .MP4 video to your desk top.</p>
+<p> </p>
+<a name="aref_section32"></a><h3 class="km">Accounts Receivable AAI Search Sequence</h3>
+<p>Each AAI has a hierarchical sequence by which the system searches for an account number. If you are using multicurrency and enter a transaction in CAD for Co 00001 with a G/L offset INCO, the system searches for the A/R trade account (AAI RCxxxx) using the following sequence, where xxxx represents the currency and/or GL offset:</p>
+<ol>
+<li>The system searches for the AAI item RCCAD for Co 00001 to locate the A/R trade account.</li>
+<li>If the system cannot locate this AAI item, the system searches for item RCCAD for Co 00000. </li>
+<li>If the system cannot locate this AAI item, the system searches for item RCINCO for Co 00001. </li>
+<li>If the system cannot locate this AAI item, the system searches for item RCINCO for Co 00000. </li>
+<li>If the system cannot locate this AAI item, the system returns an error message that the AAI is missing. It will not search for RC for Co 00000.</li>
+</ol>
+<p>The following examples show how the system searches for the account number for an A/R trade account when a G/L offset code is used and when the G/L offset code is not used.<br /><br /><span style="text-decoration: underline;">Example 1: </span><br />Search Sequence for A/R Trade Account with G/L Offset. If you enter an invoice for company 00001 with a G/L offset TRAD, the system searches for the A/R trade account according to this hierarchical sequence:</p>
+<ol>
+<li>The system searches for AAI item RCTRAD for company 00001 to locate the A/R trade account.</li>
+<li>If the system cannot locate this AAI item, the system searches for item RCTRAD for company 00000.</li>
+<li>If the system cannot locate this AAI item, the system returns an error message that the AAI is missing. It will not search for RC for Co 00000.</li>
+</ol>
+<p><br /><span style="text-decoration: underline;">Example 2: </span><br />Search Sequence for A/R Trade Account Without G/L Offset.  If you enter an invoice for company 00001, but do not enter a G/L offset (the G/L Offset field is blank), the system searches for the A/R trade account according to this hierarchical sequence:</p>
+<ol>
+<li>The system searches for AAI item RC for company 00001 to locate the A/R trade account.</li>
+<li>If the system cannot locate this AAI item, the system searches for item RC for company 00000.</li>
+<li>If the system cannot locate this AAI item, the system returns an error message that the AAI is missing.</li>
+</ol>
+<p> </p>
+<div class="kmnotebox">Note: If you do not define a business unit in the AAI items RA, RC, RKD, RFC, and RFD, the system assigns the security business unit from the invoice. The security business unit, which is assigned to the customer Address Book record, is used as a default business unit when you enter invoices. If you do not assign a business unit to the AAI, the business unit from the invoice is concatenated with the object account of the AAI and is used as the account number. This process provides additional flexibility and enables specific accounts to be tracked by the business unit.</div>
+<p> </p>
+<a name="aref_section33"></a><h3 class="km">Set Up Accounts Receivable Automatic Accounting Instructions (P0012)</h3>
+<p>AAIs are set up in Work with Automatic Accounting Instructions (P0012). From here you can add individual AAIs, copy an existing one, or add multiple AAIs at once using the form exit 'Multiple AAIs'.</p>
+<p><img src="../images/aai01.png" border="0" alt="Work with Automatic Accounting Instructions" title="Work with Automatic Accounting Instructions" hspace="0"/> </p>
+<p>Set up the following AAIs using P0012 for Company 00000 and company specific as required, using the account numbers set up in the Chart of Accounts (P0901).</p>
+<a name="aref_section34"></a><h5 class="km">Default AAIs</h5>
+<p>The following AAI's are edited for during Accounts Receivable transaction entry and processing, including the post process:<strong><br /></strong></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li><strong><em>RC Default Trade Account</em></strong><br />A/R Trade (holding) account. Contains Document Type AE transactions created by the GL Post (R09801). Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Business Unit is optional.</li>
+<li><strong><em>RB Default Bank Account</em></strong><br />The bank account is based on the company number entered on the receipt. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Whatever offset are set up for the RCxxxx AAI must also be set up for RBxxxx. For example if RCTRAD is set up, RBTRAD must also be set up. Business Unit is required. </li>
+<li><em><strong>RKD Discount Taken</strong></em><br />Expense account for discounts taken and created when a receipt is posted. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. </li>
+<li><strong><em>RT A/R Taxes</em></strong><br />Tax account for taxes when the invoice is posted to GL. Either RT or RTyyyy (where yyyy = value in G/L Offset field entered in the Tax Rate/Area set up) is used depending on which Tax Explanation Code is used.   Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Use Tax uses RT. VAT tax uses RTyyyy. Tax Explanation Code 'B' (combination of VAT and Use tax) uses both RT and RTyyyy. For this code, in the Tax Rate/Area setup, the first line is used for VAT, which requires a G/L Offset, and the second line is the Use tax, which ignores the G/L Offset field.</li>
+</ul>
+</li>
+</ul>
+<a name="aref_section35"></a><h5 class="km">Receipts Specific AAIs</h5>
+<p>The following AAIs can also be edited for during receipts processing and posting, specifically, depending on the receipts process being performed:<strong><br /></strong></p>
+<ul>
+<ul>
+<li><strong><em>RCUC Unapplied Cash Receipt</em></strong><br />Automatic offset account for unapplied receipts not specific to an invoice. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. If RCUC is not set up, RCxxxx is not used as the default, where xxxx is the G/L Offset. Instead an error will be issued. Business Unit is optional. If left blank, the BU from the customer's Address Book record is used.</li>
+<li><strong><em>RCLC Logged Receipts</em></strong><br />Default asset account for automatic offsets when posting a receipt for a non-identified customer. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><em><strong>RAxx Write-off Reason Code</strong></em><br />Expense account used for write-offs. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. The xx code must be set up in User Defined Code (UDC) table and represents the write-off reason, such as BD for bad debit. (Example: RABD is the AAI.).  Business Unit is optional. If blank, the BU from the invoice that is being written off is used.</li>
+</ul>
+</ul>
+<a name="aref_section36"></a><h5 class="km">Delinquency Fee, Deductions, Drafts, and Netting Specific AAIs</h5>
+<ul>
+<ul>
+<li><strong><em>RFC and RFD Delinquency Fees</em></strong><br />RFC is used to recognize revenue and RFD is used to recognize receivables. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional.</li>
+<li><strong><em>RN Deductions</em></strong><br />Suspense account for an unresolved deduction amount. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. If blank, the BU of the customer on the invoice being deducted is used. </li>
+<li><strong>RD1 through RD5 A/R Drafts - Draft processing </strong>
+<ul>
+<li>RD1 = Draft Receivables </li>
+<li>RD2 = Drafts remitted </li>
+<li>RD3 = Drafts remitted for discount </li>
+<li>RD4 = Contingent Liability </li>
+<li>RD5 = Draft void/NSF (non-sufficient funds) </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+</li>
+<li><strong><em>NC Netting</em></strong><br />Credit Reimbursement Account. Used when closing a credit invoice. Creates an open voucher in Accounts Payable. NC is the receipt that closes the invoice. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+</ul>
+</ul>
+<a name="aref_section37"></a><h5 class="km">Intercompany Settlements AAIs</h5>
+<ul>
+<ul>
+<li><strong><em>ICCC or ICH Intercompany Settlements</em></strong><br />By hub and non-hub methods. See <a href='../docs/1416193.html'>Overview of Intercompany Settlement Methods</a> for complete details about the different intercompany settlement methods and the AAIs required for each.</li>
+</ul>
+</ul>
+<a name="aref_section38"></a><h5 class="km">Multi-currency (including Alternate Currency Receipts) AAIs (Only required in Multi-currency environments)<strong><br /></strong></h5>
+<ul>
+<ul>
+<li><strong><em>RG and RL Multi-currency Gain/Loss</em></strong><br />Used to record realized gains/losses when invoices are paid. </li>
+<ul>
+<li>RG = gain </li>
+<li>RL = loss </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. </li>
+</ul>
+<li><strong><em>RV and RW Multi currency Unrealized Gain/Loss</em></strong><br />Used when an invoice has not been paid to record unrealized gain/loss. </li>
+<ul>
+<li>RV = gain </li>
+<li>RW= loss </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+<li><strong><em>RRyyy Unrealized Gain/Loss Offset Account</em></strong><br />An offset used for unrealized gains/losses if different from the AR trade account. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><strong><em>RY and RZ Alternate Currency Receipt Gain/Loss</em></strong><br />Used when paying an invoice in a third currency.</li>
+<ul>
+<li>RY= gain </li>
+<li>RZ=loss </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+<li><strong><em>R8 A/R Rounding Account</em></strong><br />Records rounding differences that can occur when more than one currency is involved in a transaction. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><strong><em>R7 Alternate Currency Receipt Clearing Acct</em></strong><br />Required when paying an invoice in a third currency. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+</ul>
+</ul>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

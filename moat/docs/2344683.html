@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R47011 Sets F4942.LNID = 0 when F47012.LNID Is Not Specified with Transportation Interface</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R47011 Sets F4942.LNID = 0 when F47012.LNID Is Not Specified with Transportation Interface</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+
+<p><span style="font-size: small;">Why R47011 (EDI Inbound Purchase Order Edit/Create) and P4210 (Sales Order Entry) set different PDDJ (Scheduled Pick Date) when Promised Shipment Date is to be computed during Transportation interface?</span></p>
+<p><span style="font-size: small;">Refer to below knowledge documents on detail, </span></p>
+<ul>
+<li><span style="font-size: small;">&lt;Document 1512008.1&gt; - E1: 42: Sales Order Date Fields (P4210/P42101)</span></li>
+<li><span style="font-size: small;">&lt;Document 625513.1&gt; - E1: 49: Promised Shipment and Delivery Date Calculation </span></li>
+</ul>
+<div class="kmnotebox">
+<p><span style="font-size: small;">Note </span></p>
+<ul>
+<li><span style="font-size: small;">The information in this note is to explain why a specific bug will fix this issue</span></li>
+<li><span style="font-size: small;">This can be useful when you are not familiar with the Transportation (SY49) interface</span></li>
+</ul>
+</div>
+<p><br />&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+
+<p><span style="font-size: small;">This issue is fixed using &lt;Bug 25610951&gt; - SHIPMENT STATUS NOT UPDATED PROPERLY WHEN MULTI ORDER CONSOLIDATION IS TURNED ON. Note that the description of this bug is very much different from what this case study discusses.&nbsp;</span></p>
+<h4 class="km"><span style="font-size: small;">Q1&gt; Why it fails to update?</span></h4>
+<p><span style="font-size: small;">A1&gt; </span><span style="font-size: small;">Direct reason for different dates (where the outcome from P4210 is correct) is that the End Doc routine fails to gets data on below query, </span><br /><span style="font-size: small;">SELECT * FROM PRODDTA.F4942 T0,PRODDTA.F4211 T1 WHERE ( T0.ISSHPN = 4007457.000000 ) AND ( T0.ISKCOO = T1.SDKCOO AND T0.ISDOCO = T1.SDDOCO AND T0.ISDCTO = T1.SDDCTO AND T0.ISLNID = T1.SDLNID ) </span><br /><span style="font-size: small;">&nbsp;&nbsp;: Note that the simple join between F4942 (Shipment Detail) and F4211 (Sales Order Detail File) is based on the primary key of F4211. For this case study, when the sales order is created using R47011, F4942.LNID is set with value 0.</span><br /><br /><span style="font-size: small;">The reason R47011 fails to set F4942.LNID is,</span><br /><span style="font-size: small;">Calling Business function R47011DetailDoSectionProcess from Level 1 for JDE. Application Name [R47011], Version [ZJDE0001] (BSFNLevel = 1)</span><br /><span style="font-size: small;">IN-&gt;[ 1] LastLineNumberUsed [0]</span><br /><span style="font-size: small;">IN-&gt;[ 2] cKitProcessed []</span><br /><span style="font-size: small;">IN-&gt;[ 3] cEdiSuccessfullyProcess []</span><br /><span style="font-size: small;">IN-&gt;[ 4] mnEdiDocNumber [321856]</span><br /><span style="font-size: small;">IN-&gt;[ 5] OrderNumber [0]</span><br /><span style="font-size: small;">IN-&gt;[ 6] szEdiDocCo [00000]</span><br /><span style="font-size: small;">IN-&gt;[ 7] szOrderCompany [ ]</span><br /><span style="font-size: small;">IN-&gt;[ 8] szEdiDocType [SO]</span><br /><span style="font-size: small;">IN-&gt;[ 9] szOrderType [ ]</span><br /><span style="font-size: small;">IN-&gt;[ 10] szalphaName []</span><br /><span style="font-size: small;">IN-&gt;[ 11] szAlphaName2ndRow []</span><br /><span style="font-size: small;">IN-&gt;[ 12] OrderLineNumber [.000] ************* This value sets 0 because F47012.LNID is not specified *****************************</span><br /><span style="font-size: small;">IN-&gt;[ 13] mnEdiLineNumber [1.000]</span><br /><span style="font-size: small;">IN-&gt;[ 14] mnQuantity [1.000]</span><br /><span style="font-size: small;">...</span><br /><span style="font-size: small;">&nbsp;&nbsp;Note that R47011 runs without issuing any error even though F47012.LNID is not specified and this is functioning as designed likewise P4210 where user does not specify order line number. </span></p>
+<p>&nbsp;</p>
+<h4 class="km"><span style="font-size: small;">Q2&gt; How sales order master business functions computes and sets dates guided?</span></h4>
+<p><span style="font-size: small;">A2&gt; The simplified routine which computes the data described in E1: 49: Promised Shipment and Delivery Date Calculation (Doc ID 625513.1) is, </span></p>
+<ul>
+<li><span style="font-size: small;">Computation</span></li>
+</ul>
+<p><span style="font-size: small;">R47011<br />---| R47011DataBaseUpdateSection<br />------| F4211FSEndDoc<br />---------| F4215EndDoc (N4900010, FS F4215 End Doc)<br />------------| RouteShipment (N4900080, RouteShipment)<br />---------------| LoadRoutingOptions (N4900200, Load Routing Options)<br />-----------------| F4950SelectRoutingEntries (B4900400, F4950 Select Routing Entries)<br />---------------------| VerifyRoute (N4900420, Verify Route)<br />------------------------| CalculateDates (N4901350, Calculate Dates)</span></p>
+<p>&nbsp;</p>
+<ul>
+<li><span style="font-size: small;">Update</span></li>
+</ul>
+<p><span style="font-size: small;">B. Update<br />---| R47011DataBaseUpdateSection<br />------| F4211FSEndDoc<br />---------| F4215EndDoc (N4900010, FS F4215 End Doc)<br />------------| RouteShipment<br />---------------| LoadRoutingOptions<br />------------------| UpdateShipmentRouting<br />---------------------| UpdateSalesDetailwithRouting<br />------------------------| UPDATE PRODDTA.F4211 SET SDRSDJ=116077,SDPPDJ=116070,...</span></p>
+<p><span style="font-size: small;">Note: this information can be useful when you need to check all objects associated with a certain issue because your Change Assistant allow you to search ESU based on the object listed here. </span></p>
+<p>&nbsp;</p>
+<h4 class="km"><span style="font-size: small;">Q3&gt; How F4942 gets populated?</span></h4>
+<p><span style="font-size: small;">A3&gt; Then simplified call stack can be, </span><br /><span style="font-size: small;">R47011 (EDI Inbound Purchase Order Edit/Create) which runs based on F47011/F47012 (EDI Purchase Order Header - Inbound/EDI Purchase Order Detail - Inbound)</span><br /><span style="font-size: small;">---| R47011DetailDoSectionProcess (B4700110) which is a wrapper function to call the sales order master business functions (e.g., F4211FSBeginDoc, F4211FSEditLine, F4211FSEditDoc, and F4211FSEndDoc)</span><br /><span style="font-size: small;">------| F4211FSEditLine (B4200311) this function validates the information written in F47012 to validate/defaults and write it into work file F42UI11/F42UI12. </span><br /><span style="font-size: small;">---------| ProcessOrderLine (N4900180) --- this routine comes when SY49 Transportation is ON in P99410 (EnterpriseOne System Control)</span><br /><span style="font-size: small;">------------| ProcessOrderLineAdd (N4900180) the cache for shipment header and detail got initiated from here. </span><br /><span style="font-size: small;">---------------| F4215EditLine (N4900010) which calls cache function below to fetch, add, update and delete</span><br /><span style="font-size: small;">------------------| ProcessShipmentDetailCache (B4900130) *** this is routine to write shipment detail cache which is used in inserting F4942</span></p>
+<p>&nbsp;</p>
+<h4 class="km"><span style="font-size: small;">Q4&gt;What does the mentioned bug do?<br /></span></h4>
+<p><span style="font-size: small;">A4&gt; Then this issue is resolved through It seems likely that your issue is resolved through &lt;Bug 25610951&gt; : SHIPMENT STATUS NOT UPDATED PROPERLY WHEN MULTI ORDER CONSOLIDATION IS TURNED ON. Note that the description of bug is different but actual implementation appears as below,</span><br /><span style="font-size: small;">*** Break In Code B4900130 ***</span><br /><span style="font-size: small;">&nbsp;&nbsp;/* 25610951 - mnLineNumber is replaced with mnWorkLineNumber */</span><br /><span style="font-size: small;">&nbsp;&nbsp;Index-&gt;CacheKey[3].nOffset = offsetof(DSD4900130B, mnWorkLineNumber);</span><br /><span style="font-size: small;">&nbsp;&nbsp;Index-&gt;CacheKey[3].nSize = sizeof(dsCacheKey.mnWorkLineNumber);</span><br /><span style="font-size: small;">&nbsp;&nbsp;Index-&gt;CacheKey[3].idDataType = EVDT_MATH_NUMERIC;</span><br /><span style="font-size: small;">*** End of Code ***</span><br /><span style="font-size: small;">&nbsp;&nbsp;: Without above bug, if the input mnOrderLineNumber is not specified, F4942.LNID remains zero. Through this function, the key for cache will be mnTransportationJobNumber, mnShipmentNumber, mnRoutingStepNumber, and mnWorkLineNumber (without this bug the index for cache - which is identical to the primary key of a certain table - mnLineNumber which is 0 for the cache B490013002).</span></p>
+<p><span style="font-size: small;">&nbsp;<span class="awizStartDelimiter">&nbsp;</span></span></p>
+<div class="kmnotebox"><span style="font-size: small;">Note: The primary purpose of this document is to explain what makes different output between R47011 and P4210. Additionally, it gives the associated object for easier search of issues you may come across.</span></div>
+<p><span style="font-size: small;">&nbsp;<span class="awizEndDelimiter">&nbsp;</span><br /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: small;"></span> <br /><span style="font-size: small;">&nbsp;</span></p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

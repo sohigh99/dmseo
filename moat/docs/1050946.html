@@ -1,0 +1,1077 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Net Change Flag (F4102.MRPC) </title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Net Change Flag (F4102.MRPC) </h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p><br />This document is to explain F4102.IBMRPC - NetChangeFlag (Flag - Net Change) and possible error which may be related with EnterpriseOne business function B4000930 - UpdateF4102MRPNetChg (F4102 Update MRP Net Change) which can be called across systems.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p> </p>
+<h4 class="km"><strong>Question 1.</strong>  Do EnterpriseOne applications try to update this column though the Manufacturing Module not implemented?</h4>
+<p><strong>Answer 1. </strong> Yes. Regardless activation of Manufacturing this flag will get updated.</p>
+<hr />
+<h4 class="km"><strong>Question 2.</strong>  Is there way to update F4102.MRPC using standard application?</h4>
+<p><strong>Answer 2.</strong>  Yes, You may set ' ' (a space) through Net Change Review (P3402); however this column may not be appeared in Item Branch/Plant (P41026).  To set it a blank, highlight the row(s) you want to update and (row exit, click) 'Upd Net Change'.</p>
+<hr />
+<h4 class="km"><strong>Question 3.</strong>  Why this flag F4102.MRPC is important?</h4>
+<p><strong>Answer 3.</strong>  When running R3482 - 'MRP/MPS Requirements Planning' or R3483 - 'Master Planning Schedule - Multiple Plant' there will be at least two versions one is 'Net Change' and the other is 'Gross Regeneration' depends on processing option item #1. Generation Mode from 'Parameters' tab. Currently 1 is Net Change Mode and 2 is Gross Regeneration Mode. <br /> <br /> If you select 'Net Change' Mode Supply/Demand will be computed only for the item Branch Plant records where F4102.IBMRPC='1'. <br /> <br /> At the end of process of R3482/R3483, this flag will be set ' ' so if there is any transaction is related with Supply and Demand this flag is to be set '1'.<br /> The main consideration is that it may take long time in processing R3482/R3483. So exclude item branch if there is no change from last running to as-if now.</p>
+<hr />
+<h4 class="km"><strong>Question 4. </strong> What kind of transaction involves updating the MRPC column?</h4>
+<p><strong>Answer 4.</strong> Any transaction which affect supply/demand has this implementation.  <br /> &lt;Internal_Only&gt;Refer to E1: 34: P4021 - Supply &amp; Demand Technical FAQ <a href="&lt;&lt;INLINE_NOTE:952806.1&gt;&gt;" target="_blank">Document 952806.1</a>.  This is an internal document.&lt;/Internal_Only&gt;</p>
+<hr />
+<h4 class="km"><strong>Question 5.</strong>  How do you track down issues when the process of UpdateF4102MRPNetChg causes Record Locking, Deadlock, blocking (with timeout error or web client exception)?</h4>
+<p><strong>Answer 5.</strong>  Look for the latest ESU which is related with this transaction.  If issue is coming from the application belong to Manufacturing make it sure that Transaction Processing is off.  Refer to E1: 30: FAQ - Transaction Processing in Manufacturing Module <a href="&lt;&lt;INLINE_NOTE:989586.1&gt;&gt;" target="_blank">Document 989586.1</a>.<br /> <br /> In case the issue can be simulated at will; capture the jdedebug log (or callobject kernel log), which shows whether there is any possible code may cause blocking (that is, in a single transaction there can be two different routines to update F4102 so second request may try to get locking information - deadlock).</p>
+<hr />
+<h4 class="km"><strong>Question 6.</strong>  Which Business Functions update F4102.IBMRPC?</h4>
+<p><strong>Answer 6.</strong>  Currently the F4102.MRPC flag can be updated via:</p>
+<ul>
+<li>B4000930 - UpdateF4102MRPNetChg (F4102 Update MRP Net Change)</li>
+<li>B3100170 - SetNetChangeFlag (F4102 Update Net Change Flag): Purchase Order and Manufacturing product family</li>
+<li>B3400600 - MPS_SetNetChangeFlag (MPS, Set Net Change Flag): Limited to MPS (R3484 (MPS Set Net Change Flag) is the only application which is calling this function directly)</li>
+<li>Direct update from a certain routine: For example, XT4111Z1 - F4111EndDocument (F4111 End Document) has own code through <a href="&lt;&lt;INLINE_BUG:11033723&gt;&gt;" target="_blank">Bug 11033723</a> P4114 SLOW PROCESSING -  which used to call B4000930 for performance gain</li>
+</ul>
+<hr />
+<h4 class="km"><strong>Question 7. </strong> Which Master business functions have routines to update F4102.MRPC?</h4>
+<p><strong>Answer 7.</strong>  Listed Master Business Function below is to simplify actual routine which updates F4102.MRPC and this is to give application usage</p>
+<ul>
+<li>Application ID Description (where master business function calls B3100170 - SetNetChangeFlag )</li>
+<ul>
+<li>B3401200 - F3460EditLineAndUpdate (F3460 Edit Line And Update)</li>
+<li>B3401360 - ProcessMessagesEditLine (Process Messages Edit Line) when message type code is 'O - Order', 'B - Order &amp; Expedite', 'D - Defer' or 'E - Expedite'</li>
+<li><strong>B4800210 </strong>- X4801MfgEndDocModule (X4801 Manufacturing End Doc Module) called by B31P0080 and X4801</li>
+<li>N90CD018 - CRMCreatePurchaseOrder (CRM Create Purchase Order)</li>
+<li><strong>XT4311Z1 </strong>- F4311EndDoc (F4311 End Document)</li>
+</ul>
+<li>Application ID Description (where master business function calls B4000930 - UpdateF4102MRPNetChg)</li>
+<ul>
+<li>B3101260 - F3111EditDoc (F3111 Parts List Edit Doc), called by N3001780</li>
+<li>B3102270 - F3111WOIssuesEndDocument (F3111 WO Issues End Document)</li>
+<li>B4205160 - ProcessSOMBFCommitment_Commit (Process Sales Order MBF Commitment - Commit), called by B4200311</li>
+<li>N3002040 - F3002EndDocument (F3002 End Document)</li>
+<li>N3003700 - F3002UpdateIndividualSubstitute (F3002 Update Individual Substitute)</li>
+<li>N3401430 - F3460ForecastMBF (F3460ForecastMBF)</li>
+<li>N4200790 - ShipConfirmEndDoc (Shipment Confirmation End Document)</li>
+<li>N4200860 - BackorderReleaseEndDoc (Backorder Release End Doc)</li>
+<li><strong>XT4312Z1 </strong>- F4312EndDoc (F43121 End Document)</li>
+<li>XT4111Z1 is called by below master business functions depends on input parameter cUpdateMRPNetChange is '1' and list of objects which assigns cUpdateMRPNetChange = '1' are</li>
+<ul>
+<li>B3100770 - B3100770CompletionsEndDoc (F4801 End Document)</li>
+<li>XT4113Z1 - F3113FSEndDoc (F4113 FS End Doc)</li>
+<li>XT4114Z1 - F4114EndDocument (F4114 End Document)</li>
+<li>XT4116Z1 - F4116FSEndDoc (F4116 FS End Doc)</li>
+</ul>
+</ul>
+<li>Application ID Description (where master business function calls B3400600)</li>
+<ul>
+<li>R3484: MPS Set Net Change Flag</li>
+</ul>
+<li>Application ID Description (Which update F4102.MRPC in the routine): List of object written here can JDE APIs to update F4102.MRPC directly</li>
+</ul>
+<p> </p>
+<p> </p>
+<hr />
+<h4 class="km"><strong>Question 8.</strong>  Is there an object list?</h4>
+<p><strong>Answer 8.</strong>  The below objects can be called to update MRP Net Change Flag (F4102.MRPC)<big style="text-decoration: underline;"><big><br /> </big></big></p>
+<p><span style="font-size: small;">Objects List:</span></p>
+<table style="border-collapse: collapse; width: 1046px; height: 2316px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 71pt;" width="94" /><col style="width: 170pt;" width="226" /><col style="width: 52pt;" width="69" /><col style="width: 51pt;" width="68" /><col style="width: 200pt;" width="267" /><col style="width: 243pt;" width="324" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl64" style="background-color: #009900; width: 71pt; height: 15pt; color: white;">Object  Name</th>
+<th class="xl64" style="background-color: #009900; width: 229px; color: white;">Object Description</th>
+<th class="xl64" style="background-color: #009900; width: 75px; color: white;">Calling</th>
+<th class="xl64" style="background-color: #009900; width: 41px; color: white;">Called By</th>
+<th class="xl64" style="background-color: #009900; width: 214px; color: white;">Multi-Level</th>
+<th class="xl64" style="background-color: #009900; width: 288px; color: white;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P13220</td>
+<td class="xl65" style="width: 229px;">Work With Equipment Work Order</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td class="xl65" style="width: 288px;">B4800210 - X4801MfgEndDocModule (X4801 Manufacturing End Doc Module)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P13700</td>
+<td class="xl65" style="width: 229px;">Equipment Work Order Work With</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P13714</td>
+<td class="xl65" style="width: 229px;">CAM - Manage Equipment Work Or</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P13730</td>
+<td class="xl66" style="width: 229px;">CAM - Manage Work Order Parts</td>
+<td class="xl65" style="width: 75px;">N90CD018<br /> XT4311Z1</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N90CD018&gt;XT4311Z1&gt;B3100170<br /> XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;">Object in Calling columns is possible routine which invoke B3100170. Depends on processing option</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P15248</td>
+<td class="xl65" style="width: 229px;">Tenant Work Order Entry</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P17714</td>
+<td class="xl65" style="width: 229px;">Work Order Revisions</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P17714E</td>
+<td class="xl65" style="width: 229px;">Work Order Detail</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P17730</td>
+<td class="xl65" style="width: 229px;">Work Order Parts Detail</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P1777</td>
+<td class="xl65" style="width: 229px;">Warranty Claims</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P17STAT</td>
+<td class="xl65" style="width: 229px;">Component Changeout</td>
+<td class="xl65" style="width: 75px;">N1702430<br /> X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;">N1702430&gt;X4801&gt;B3100170<br /> X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3002</td>
+<td class="xl66" style="width: 229px;">Bill of Material Revisions</td>
+<td class="xl65" style="width: 75px;">N3002040</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl67" style="height: 15pt;" height="20">P3003</td>
+<td class="xl67" style="width: 229px;">Work With Routing Master</td>
+<td class="xl68" style="width: 75px;">N3001780</td>
+<td class="xl69" style="width: 41px;">B4000930</td>
+<td style="width: 214px;">N3001780&gt;B3101260&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P3111</td>
+<td class="xl65" style="width: 229px;">Work Order Parts List</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P31114</td>
+<td class="xl66" style="width: 229px;">Work Order Completions</td>
+<td class="xl65" style="width: 75px;">B3102270<br /> B3100770</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">B3100770&gt;B4000930<br /> B3100770&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P3153</td>
+<td class="xl65" style="width: 229px;">Line Scheduling Workbench</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3157</td>
+<td class="xl66" style="width: 229px;">Kanban Processing</td>
+<td class="xl65" style="width: 75px;">XT4311Z1<br /> X4801<br /> N4200790<br /> XT4312Z1</td>
+<td class="xl65" style="width: 41px;">B3100170<br /> B4000930</td>
+<td class="xl65" style="width: 214px;">N3101850&gt;XT4311Z1&gt;B3100170<br /> X4801&gt;B3100170<br /> N4200790&gt;B4000930<br /> XT4312Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P31P001</td>
+<td class="xl65" style="width: 229px;">Project Workbench</td>
+<td class="xl65" style="width: 75px;">N31P0180<br /> N31P0310<br /> N31P0310<br /> X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N31P0180&gt;X4801&gt;B3100170<br /> N31P0310&gt;X4801&gt;B3100170<br /> N31P0460&gt;X4801&gt;B3100170<br /> X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P31P011</td>
+<td class="xl65" style="width: 229px;">Add/Revise Project</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P3411</td>
+<td class="xl65" style="width: 229px;">MRP/MPS Detail Message Revision</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G30</td>
+<td class="xl66" style="width: 229px;">Grower Harvest and Weigh Tag Revision</td>
+<td class="xl65" style="width: 75px;">N40G0600<br /> XT4311Z1</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N40G0600&gt;XT4311Z1&gt;B3100170<br /> XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P40G300</td>
+<td class="xl65" style="width: 229px;">Final Settllement</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G301</td>
+<td class="xl66" style="width: 229px;">Grower Speed Weigh Tag</td>
+<td class="xl65" style="width: 75px;">N40G0600</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N40G0600&gt;XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4112</td>
+<td class="xl66" style="width: 229px;">Inventory Issues</td>
+<td class="xl65" style="width: 75px;">XT4114Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4114Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4113</td>
+<td class="xl66" style="width: 229px;">Inventory Transfers</td>
+<td class="xl65" style="width: 75px;">XT4113Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4113Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4114</td>
+<td class="xl66" style="width: 229px;">Inventory Adjustments</td>
+<td class="xl65" style="width: 75px;">XT4114Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4114Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4116</td>
+<td class="xl66" style="width: 229px;">Item Reclassifications</td>
+<td class="xl65" style="width: 75px;">XT4116Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4116Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4205</td>
+<td class="xl66" style="width: 229px;">Shipment Confirmation</td>
+<td class="xl65" style="width: 75px;">N4200790</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4210</td>
+<td class="xl66" style="width: 229px;">Sales Order Entry</td>
+<td class="xl65" style="width: 75px;">N4900010</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N4900010&gt;N4901050&gt;X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P42117</td>
+<td class="xl66" style="width: 229px;">Backorder Release</td>
+<td class="xl65" style="width: 75px;">N4200860</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43011</td>
+<td class="xl65" style="width: 229px;">PO Generator</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43032</td>
+<td class="xl65" style="width: 229px;">Purchase Order Generator</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43060</td>
+<td class="xl65" style="width: 229px;">Blanket Order Release</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4310</td>
+<td class="xl65" style="width: 229px;">Purchase Orders</td>
+<td class="xl65" style="width: 75px;">N4301900<br /> XT4311Z1<br /> N4900010</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td style="width: 214px;">N4301900&gt;XT4311Z1&gt;B3100170<br /> XT4311Z1&gt;B3100170<br /> N4900010&gt;N4901050&gt;X4801&gt;B3100170</td>
+<td style="width: 288px;">* Note that XT4311Z1 is calling B3100170 whereas XT4312Z1 is calling B4000930</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43101</td>
+<td class="xl65" style="width: 229px;">Purchase Order Workbench</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4312</td>
+<td class="xl65" style="width: 229px;">PO Receipts</td>
+<td class="xl65" style="width: 75px;">XT4311Z1<br /> XT4312Z1</td>
+<td style="width: 41px;">B3100170<br /> B4000930</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4314</td>
+<td class="xl65" style="width: 229px;">Voucher Match</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P43250</td>
+<td class="xl66" style="width: 229px;">Receipt Routing Movement and Disposition</td>
+<td class="xl65" style="width: 75px;">B3102270<br /> XT4312Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P43250SS</td>
+<td class="xl66" style="width: 229px;">Self-Service - Movement in Routing</td>
+<td class="xl65" style="width: 75px;">XT4312Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43252</td>
+<td class="xl65" style="width: 229px;">Routing Ledger Inquiry</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43253</td>
+<td class="xl65" style="width: 229px;">Routing Disposition</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4371</td>
+<td class="xl65" style="width: 229px;">Suggested Reorder Stock Items</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43E060</td>
+<td class="xl65" style="width: 229px;">Requisition Expeditor</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43S01</td>
+<td class="xl65" style="width: 229px;">SRM - PO Acknowledgement</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P44H711</td>
+<td class="xl66" style="width: 229px;">Lot Start Workfile Maintenance</td>
+<td class="xl65" style="width: 75px;">N44H0113</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N44H0113&gt;XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P48013</td>
+<td class="xl65" style="width: 229px;">Manufacturing Work Order Process</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P48014</td>
+<td class="xl65" style="width: 229px;">Project Task Details</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P48015</td>
+<td class="xl65" style="width: 229px;">Project Setup</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P48020</td>
+<td class="xl65" style="width: 229px;">ECO Entry</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P48201</td>
+<td class="xl65" style="width: 229px;">Work With Work Orders</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P48STAT</td>
+<td class="xl65" style="width: 229px;">Status Change Date Window</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4915</td>
+<td class="xl66" style="width: 229px;">Work with Shipments</td>
+<td class="xl65" style="width: 75px;">N4900010<br /> N4900410<br /> N4901190</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N4900010&gt;N4901050&gt;X4801&gt;B3100170<br /> N4900410&gt;N4901050&gt;X4801&gt;B3100170<br /> N4901190&gt;N4901050&gt;X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P49151</td>
+<td class="xl66" style="width: 229px;">Work with Shipments - Manual Shipment</td>
+<td class="xl65" style="width: 75px;">N4900010</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N4900010&gt;N4901050&gt;X4801&gt;B3100170</td>
+<td class="xl69" style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4980</td>
+<td class="xl66" style="width: 229px;">Routing Options</td>
+<td class="xl65" style="width: 75px;">N4900390</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N4900390&gt;N4901050&gt;X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P5310</td>
+<td class="xl66" style="width: 229px;">Change Request Entry</td>
+<td class="xl65" style="width: 75px;">N5300009</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N5300009&gt;XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P90CD002</td>
+<td class="xl65" style="width: 229px;">CRM - Manage Service Orders</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P90CD015</td>
+<td class="xl66" style="width: 229px;">CRM - Manage Work Order Parts</td>
+<td class="xl65" style="width: 75px;">N90CD018<br /> XT4311Z1<br /> N90CD018</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N90CD018&gt;XT4311Z1&gt;B3100170<br /> XT4311Z1&gt;B3100170<br /> N90CD018&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P90CD020</td>
+<td class="xl65" style="width: 229px;">CRM - WO Work With</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">PCW10</td>
+<td class="xl65" style="width: 229px;">Matrix Entry</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">PCW12B</td>
+<td class="xl66" style="width: 229px;">Bill of Material for Style Items</td>
+<td class="xl65" style="width: 75px;">N3002040</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">PCW46</td>
+<td class="xl66" style="width: 229px;">Work Order Completions Matrix</td>
+<td class="xl65" style="width: 75px;">BCW70</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;">BCW70&gt;X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">PCW46</td>
+<td class="xl66" style="width: 229px;">Work Order Completions Matrix</td>
+<td class="xl65" style="width: 75px;">B3100770</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">B3100770&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">PCW49</td>
+<td class="xl66" style="width: 229px;">Master Work Order Processing f</td>
+<td class="xl65" style="width: 75px;">BCW70<br /> X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;">BCW70&gt;X4801&gt;B3100170<br /> X4801&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R13411</td>
+<td class="xl65" style="width: 229px;">Update PM Projections</td>
+<td class="xl65" style="width: 75px;">B3401200</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R174801Z2I</td>
+<td class="xl65" style="width: 229px;">Inbound Warranty Claims Process</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R17731</td>
+<td class="xl66" style="width: 229px;">Service Order Issues / Time En</td>
+<td class="xl65" style="width: 75px;">B3102270</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R3002Z1I</td>
+<td class="xl66" style="width: 229px;">Process Inbound Bill of Material</td>
+<td class="xl65" style="width: 75px;">N3002040<br /> N3001781</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R30161Z1I</td>
+<td class="xl66" style="width: 229px;">Inbound Kanban Transaction</td>
+<td class="xl65" style="width: 75px;">N3102010</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N3102010&gt;N3101780&gt;XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R30445A</td>
+<td class="xl65" style="width: 229px;">Multi-Level Costed Bill Report</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R30510</td>
+<td class="xl66" style="width: 229px;">ECO - Bill of Material Update</td>
+<td class="xl65" style="width: 75px;">N3002040<br /> N3003700</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R31113Z1I</td>
+<td class="xl66" style="width: 229px;">Inbound Inventory Issues Trans</td>
+<td class="xl65" style="width: 75px;">B3102270<br /> B3102270</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R31410</td>
+<td class="xl65" style="width: 229px;">Order Processing</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R31430</td>
+<td class="xl65" style="width: 229px;">Net Change Processing</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R31F410</td>
+<td class="xl65" style="width: 229px;">Work Order Processing for Styl</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R31P404</td>
+<td class="xl65" style="width: 229px;">Export Project Information</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R31P801</td>
+<td class="xl65" style="width: 229px;">Import Project Information</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R32491</td>
+<td class="xl65" style="width: 229px;">Configured Item Segment Print</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R3411</td>
+<td class="xl65" style="width: 229px;">MRP/MPS Detail Message Process</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R34410</td>
+<td class="xl65" style="width: 229px;">Supplier Schedule Release Gene</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R3460Z1I</td>
+<td class="xl66" style="width: 229px;">Forecast Inbound Processor</td>
+<td class="xl65" style="width: 75px;">N3401430</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">R3484</td>
+<td style="width: 229px;">MPS Set Net Change Flag</td>
+<td style="width: 75px;">B3400600</td>
+<td style="width: 41px;">B3400600</td>
+<td style="width: 214px;">* R3484 is calling B340060 directly</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R34A485</td>
+<td class="xl66" style="width: 229px;">SCP Inbound Forecasts</td>
+<td class="xl65" style="width: 75px;">N3401430</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R34A490</td>
+<td class="xl65" style="width: 229px;">SCP Inbound Planning Messages</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R34A895</td>
+<td class="xl65" style="width: 229px;">SCBM Work Order Cancel</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4051</td>
+<td class="xl65" style="width: 229px;">Supply and Demand Report</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R41413</td>
+<td class="xl66" style="width: 229px;">Cycle Count Update</td>
+<td class="xl65" style="width: 75px;">XT4114Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4114Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R41610</td>
+<td class="xl66" style="width: 229px;">Tag Inventory Update</td>
+<td class="xl65" style="width: 75px;">XT4114Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4114Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4210IC</td>
+<td class="xl65" style="width: 229px;">Create Intercompany Sales Order</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R42118</td>
+<td class="xl66" style="width: 229px;">Backorder Release and Report</td>
+<td class="xl65" style="width: 75px;">N4200860</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R42770</td>
+<td class="xl65" style="width: 229px;">Generate Rebate Claims</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R43092Z1I</td>
+<td class="xl66" style="width: 229px;">Receipt Routing Unedited Trans</td>
+<td class="xl65" style="width: 75px;">B3102270<br /> XT4312Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4311Z1I</td>
+<td class="xl65" style="width: 229px;">PO Unedited Transaction Inbound</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4317</td>
+<td class="xl65" style="width: 229px;">Encumbrance Rollover</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R437001</td>
+<td class="xl65" style="width: 229px;">Sales Order Purchase Order Gen</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R437002</td>
+<td class="xl65" style="width: 229px;">Stocked Item Reorder Point Bat</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R43E060</td>
+<td class="xl65" style="width: 229px;">Batch Requisition Consolidation</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R44H7113</td>
+<td class="xl66" style="width: 229px;">Generate Homebuilder Committment</td>
+<td class="xl65" style="width: 75px;">N4302340</td>
+<td class="xl65" style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N4302340&gt;XT4311Z1&gt;B3100170</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R47011</td>
+<td class="xl65" style="width: 229px;">EDI Inbound Purchase Order Edit</td>
+<td class="xl65" style="width: 75px;">XT4311Z1</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R47061</td>
+<td class="xl65" style="width: 229px;">EDI Planning Schedule Edit/Create</td>
+<td class="xl65" style="width: 75px;">B3401200</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R47071</td>
+<td class="xl66" style="width: 229px;">EDI Receiving Advice Edit/Create</td>
+<td class="xl65" style="width: 75px;">XT4312Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R47071</td>
+<td class="xl66" style="width: 229px;">EDI Receiving Advice Edit/Create</td>
+<td class="xl65" style="width: 75px;">XT4312Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R47121</td>
+<td class="xl66" style="width: 229px;">EDI Product Activity Data Edit</td>
+<td class="xl65" style="width: 75px;">XT4113Z1<br /> XT4114Z1</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;">XT4113Z1&gt;XT4111Z1&gt;B4000930<br /> XT4114Z1&gt;XT4111Z1&gt;B4000930</td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R47500</td>
+<td class="xl66" style="width: 229px;">Inbound Transaction Processor</td>
+<td class="xl65" style="width: 75px;">N4200790</td>
+<td style="width: 41px;">B4000930</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4801ZI</td>
+<td class="xl65" style="width: 229px;">SCP Inbound Work Orders</td>
+<td class="xl65" style="width: 75px;">X4801</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R48803</td>
+<td class="xl65" style="width: 229px;">Order Type Conversion</td>
+<td class="xl65" style="width: 75px;">B3401360</td>
+<td style="width: 41px;">B3100170</td>
+<td style="width: 214px;"> </td>
+<td style="width: 288px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R4942Z1I</td>
+<td class="xl66" style="background-color: white; width: 229px;">Inbound Shipment Creation</td>
+<td class="xl65" style="width: 75px;">N4900010</td>
+<td style="width: 41px;">B3100170</td>
+<td class="xl65" style="width: 214px;">N4900010&gt;N4901050&gt;X4801&gt;B3100170</td>
+<td style="width: 288px;">
+<p> </p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">
+<p>Note</p>
+<ul>
+<li>Deadlock can be occurred when there is any routine (Table Trigger, Procedure, Function in Database) to update F4102 (Item Branch/Plant File)</li>
+<li>In running P4205 (Shipment Confirmation) update f4102.mrpc can take place in B4000930 or B4200370 (CommitSalesOrderToInventory (F41021 Update Order Commitment to Inventory) but  2nd routine does not take place because in calling B4200370 through Edit Line routine the value for parameter cSuppressUpdateMRPFlag is always 1</li>
+</ul>
+</div>
+<hr />
+<h4 class="km"><strong>Question 9.</strong>  How to overcome possible deadlock when two different MBF tries to update F4102.MRPC within a Transaction?</h4>
+<p><strong>Answer 9.</strong>  Multiple applications can call multiple master business functions (MBFs) as listed above, which in return have transaction failed. For example,</p>
+<ul>
+<li>ShipConfirmEndDoc (N4200790 - Shipment Confirmation End Document) can call F4311EndDoc (XT4311Z1 - F4311 End Document) and F4312EndDoc (XT4312Z1 - F4312 End Document) for ST/OT (Transfer Order) transaction</li>
+<li>Purchase Order Receipt for ETO order (where Work Order Number is populated) can call F4312EndDoc and F3111EndDoc (B3101260 - F3111 Parts List End Doc) where both MBF tries to update F4102.MRPC</li>
+</ul>
+<p>In case you face any deadlock (Transaction Failure) for routines explained above, do apply <a href="&lt;&lt;INLINE_BUG:11007632&gt;&gt;" target="_blank">Bug 11007632</a> - ETO DEADLOCK BY PO RECEIPT, included in 9.0, which sets update of F4102.mrpc for B4000930 - UpdateF4102MRPNetChg (F4102 Updata MRP Net Change) and &lt;Bug 13490757&gt;: DATABASE RECORD LOCK UPDATING NET CHANGE FLAG MRPC ON PURCHASE ORDER AND PARTSLIST for B3100170 - SetNetChangeFlag (Set Net Change Flag) at outside Transaction Processing boundaries through below code:</p>
+<p>idJDBReturn = JDB_InitUser((HENV) lpBhvrCom-&gt;hEnv, &amp;hUser, (JCHAR *)NULL,<strong> JDEDB_COMMIT_AUTO</strong>);</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Both F4311EndDocument and F4312Document are called through Table Trigger against F4211 for ST/OT orders</li>
+<li>F4312EndDoc can be called when the processing option of P4205 (Shipment Confirmation) for In-transit account is ON</li>
+</ul>
+</div>
+<hr />
+<div class="kmnotebox">To discuss this information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://communities.oracle.com/portal/server.pt/community/manufacturing_-_jde1/421" target="_blank">E1 Manufacturing Community</a>.<br /> <br /> To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details <a href="&lt;&lt;INLINE_NOTE:1450327.1&gt;&gt;" target="_blank">Document 1450327.1</a> if your topic is not currently scheduled please suggest it.</div>
+<p> </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

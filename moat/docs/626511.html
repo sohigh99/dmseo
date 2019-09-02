@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deploying Data Dictionary Changes</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Deploying Data Dictionary Changes</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11">Data Dictionary Overview</a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Deploying Data Dictionary Changes to Client Workstations</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Deploying Data Dictionary Changes to the Enterprise Server</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Deploying Data Dictionary Changes for the Web (HTML) Client </a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">For release EnterpriseOne 8.12 and higher</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">For releases prior to EnterpriseOne 8.12</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36">Deploying Glossary Text Changes to the Web Client</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37">Deploying Data Dictionary Changes to the Terminal Server (Release 8.10 and prior)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38">Creating a Full Set of Data Dictionary and Global Table Specs (Releases prior to 8.12)</a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km">Data Dictionary Overview</h3>
+<p>Since one Data Dictionary (DD) is recommended for all JD Edwards EnterpriseOne software environments, changing the data dictionary in one environment (such as Development) also affects other environments, e.g. Production and Prototype.  If data dictionary is <strong>implemented by Environment</strong>, it must be <strong>implemented by Pathcode</strong> because data dictionary specs are created per pathcode. If multiple environments share the same path code, they must also share the same data dictionary.<br /> <br /> When a change is made to the data dictionary using the Dictionary Design Application (P92001), the change affects the Data Dictionary master tables which are on the Enterprise Server. A change to a data dictionary item includes changes to the description, row description, column title, selection to allow row security, display decimals for the QTYINV Class and QNTY data item, changes to error message text or level, etc.  Any data dictionary changes of these types require that the data dictionary be deployed.</p>
+<p>A local copy of data dictionary specifications is maintained and used within an environment whenever data dictionary information is needed by interactive or batch applications. When an  interactive or batch application is running, DD item specifications are installed just-in-time (JITI) from the master tables on the enterprise server to the local copy of the DD specifications.  This JITI occurs only once per data item when the item is referenced within the application. Any subsequent changes made to a previously referenced DD item do not JITI again. When making data dictionary changes, it is therefore necessary to deploy them to verify that all workstations and servers have the current and correct information. </p>
+<p>For more information on the Data Dictionary within EnterpriseOne, refer to <a href="../docs/1267422.html" alt="1267422.1" title="1267422.1" target="_blank">Overview of EnterpriseOne Data Dictionary</a></p>
+<p>This document details how to deploy Data Dictionary changes within EnterpriseOne.</p>
+
+
+<p> </p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for the Data Dictionary System Administrator who will be deploying Data Dictionary changes.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Deploying Data Dictionary Changes to Client Workstations</h3>
+<p>To deploy data dictionary changes to a client workstation, delete the global table specs and DD table specs - glbltbl, dddict, ddtext  (.ddb and .xdb) under each pathcode (a total of six files). The files are located in the /pathcode/spec directory. The next time a user signs on to the EnterpriseOne software, these table specs will JITI (Just in Time Install) current data dictionary information to the local workstation specifications from the DD master tables when DD items are referenced in interactive or batch applications.</p>
+<hr />
+<a name="aref_section32"></a><h3 class="km">Deploying Data Dictionary Changes to the Enterprise Server</h3>
+<p>Choose of the following methods to delete the <span>global and data dictionary table specs </span>:-</p>
+<p><strong>1.</strong> Enterprise Server<br /><span>    &bull; End E1 services<br /></span>    &bull; Delete the global and data dictionary table specs (glbltbl, dddict, ddtext - .ddb and .xdb) under each pathcode<br />    &bull; Restart services</p>
+<p><strong>2. </strong><span>Starting with tools release 8.98.3.0 with the Quick Package Deployment Functionality </span>Document 1093018.1<span>, the dddict/ddtext/glbltbl files under the pathcode/spec directory are deleted after an Update Package for the pathcode, containing any object type except an interactive application (Pxxxx), is deployed to the Server</span></p>
+<p><strong>3. </strong>Deploy Full Package for the pathcode which deletes <span>dddict/ddtext/glbltbl files under the pathcode/spec directory</span></p>
+<p>The global and data dictionary table specs are re-created through JITI as UBEs or business functions run on the server and reference DD items</p>
+<hr />
+<a name="aref_section33"></a><h3 class="km">Deploying Data Dictionary Changes for the Web (HTML) Client </h3>
+<a name="aref_section34"></a><h4 class="km">For release EnterpriseOne 8.12 and higher</h4>
+<p>The deployment process is slightly different for EnterpriseOne 8.12 and higher releases that use metadata (XML); there is no need to run R92TAM and R98CRTGL. The eGenerator does not look at any local TAM specs when running against metadata XML specs, including those built by R92TAM and R98CRTGTL (glbltbl, dddict, and ddtext). All data item information comes from the F92xxx Data Dictionary tables. The location of these Data Dictionary tables is governed by OCM.<br /> <br />Choose one of the following methods when DD items are changed on EnterpriseOne 8.12 and above :</p>
+<p class="km"><strong>Method 1 Build and deploy a full server package (<span style="text-decoration: underline;"><em>Preferred Method</em></span>)</strong></p>
+<p>Build and Deploy a full server package. The auto-discovery process or on-demand generation will then occur for the JAS serialized objects to be regenerated automatically. <br /> <br /> <strong>OR</strong></p>
+<p class="km"><strong>Method 2 Run manual generation</strong></p>
+<p>Run a manual generation of the data dictionary data item. After manual generation, clear serialized objects cache in Server Manager. For information on manual generation review section <em>Setup Generation Machine for Tools Release 8.96 and above</em> in Document 1352463.1 E1: GEN: Generation Process Setup, Best Practices and Known Issues When Starting Generation.</p>
+<p><strong>OR</strong></p>
+<p class="km"><strong>Method 3 Build a server update package </strong></p>
+<p>This method applies, starting with tools release 8.98.3.0 with the Quick Package Deployment Functionality Document 1093018.1.  Identify the table that has a column based on the particular data item using UTB or Databrowser over the table F98711 Table Columns. Type in the data dictionary alias in the QBE column <em>TDOBND</em> in UTB or in the QBE column <em>Data Dictionary Object Name</em> in Data Browser.  Deploy an update package of the identified table to the enterprise server. On-demand generation will occur for the table and the data dictionary items referenced in the table.</p>
+<div class="kmnotebox">If jas logs show error messages of columns in table do not match spec after deploying changes, restart the web services.</div>
+<a name="aref_section35"></a><h4 class="km">For releases prior to EnterpriseOne 8.12</h4>
+<p>A full set of the data dictionary and global table specs should be created and installed on the generation machine to deploy data dictionary changes for the web client environment.</p>
+<p>In the HTML environment, data dictionary information is built into the serialized object information for the applications that use the DD items. Therefore, generating only the data dictionary is not enough in the HTML environment when making a data dictionary change. All related objects that use that DD item must also be generated. Rather than attempting to identify all the affected objects, it is easiest to do a full generation or full package build depending on the release level.</p>
+<hr />
+<a name="aref_section36"></a><h3 class="km">Deploying Glossary Text Changes to the Web Client</h3>
+<p>On the Web Client, EnterpriseOne looks for the glossary text in the ddtext specs on the enterprise server that is specified in the JAS INI setting "glossaryTextServer=servername:port#" under [SERVER]. The system does not look into the Data Dictionary serialized objects. <br /> <br /> When glossary text is changed in the Data Dictionary application, it is necessary to refresh the data dictionary specs for all path codes on the enterprise server by deleting the specs tables: dddict.ddb, dddict.xdb, ddtext.ddb, ddtext.xdb, glbltbl.ddb, glbltbl.xdb.</p>
+<hr />
+<a name="aref_section37"></a><h3 class="km">Deploying Data Dictionary Changes to the Terminal Server (Release 8.10 and prior)</h3>
+<p>It is recommended that JITI be disabled in a TSE environment for performance reasons. Without JITI, a full set of global and data dictionary table specs must be installed on the Terminal Server.  Once a full set of data dictionary and global table specs have been created, copy these tables specs (glbltbl, dddict, ddtext - .ddb and .xdb) from the fat client workstation where they were created to the Terminal Server for each pathcode. </p>
+<p>See below for details on creating a full set of data dictionary and global table specs.</p>
+<hr />
+<a name="aref_section38"></a><h3 class="km">Creating a Full Set of Data Dictionary and Global Table Specs (Releases prior to 8.12)</h3>
+<p>This process is necessary to deploy data dictionary changes to the Terminal Server and HTML web environments <strong>prior to release 8.12</strong>.  The global table specs are built based on the DD spec information; it is important to create the data dictionary table specs before creating the global table specs. The process to build these specs is described below and must be executed on a non-TSE fat client workstation.</p>
+<p class="km"><em><strong>Building Data Dictionary Specs</strong></em></p>
+<p>Sign on to an environment, go to Batch Versions, and run the UBE R92TAM version XJDE0001 locally. This UBE creates a new set of replicated data dictionary specs under the b7 or b9 directory.  Ensure that there is plenty of disk space on the C or D drive prior to running this process, which will take approximately four hours to complete.</p>
+<p>After the UBE completes, there will be 4 table specs  (dddict , ddtext - .ddb and .xdb) under the b7 or b9 directory. Move these four table specs on the workstation to the appropriate  pathcode/spec directory for the environment signed onto, replacing the old data dictionary spec files.</p>
+<p class="km"><em><strong>Building Global Table Specs</strong></em></p>
+<p>Sign on to the environment/pathcode where the new data dictionary table specs have been moved. From Batch Versions, run the UBE R98CRTGL locally to build a full set of global table specs (glbltbl - .ddb and .xdb) in the b7 or b9 \pathcode\spec folder. This process takes a couple of hours to complete. After the UBE completes, verify the size of the glbltbl.ddb which should be around 25k. </p>
+<hr />
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

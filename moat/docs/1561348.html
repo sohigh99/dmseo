@@ -1,0 +1,1618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Troubleshoot application P45550 (F4072 Global Update Engine)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Troubleshoot application P45550 (F4072 Global Update Engine)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>Purpose of this document is to guide user how to debug issue in P45550 (F4072 Global Update Engine) and P45510 (Search Agent) by explaining as-is routine of this application. <br /> <br /> Some contents in this document requires developer level knowledge.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>&nbsp;</p>
+<p>&nbsp;Before proceed further, refer below knowledge documents:<br /> &lt;Document 625697.1&gt; E1: 45: Mass Maintenance (P45550/P45501)<br /> &lt;Document 625696.1&gt; E1: 45: Search Agents (P45510) <br /> &lt;Document 625667.1&gt; E1: 45: Pricing Workbench (P45501 / P45550)<br /> &lt;Document 1376252.1&gt; E1: 40: Workfiles in Distribution and Manufacturing<br /> &lt;Document 1366505.1&gt; E1: 45: Advanced Pricing FAQ (P4070/P4071/P4072/R42750)<br /> <br /> Through this document,</p>
+<p>&nbsp;</p>
+<ul>
+<li><a href="#p45550_01" alt="Data manipulation through P45550" title="Data manipulation through P45550">Data Manipulation through P45550 (F4072 Global Update Engine)</a></li>
+<li><a href="#p45550_02" alt="Layout of W45550A" title="Layout of W45550A">Layout of W45550A [Price Adjustments Global Revisions] form</a></li>
+<li><a href="#p45550_03" alt="F4072W" title="F4072W">How data get inserted into F4072W (Price Adjustment Detail Work File)</a></li>
+<ul>
+<li><a href="#case1" alt="Search Agent is not specified" title="Search Agent is not specified">Case 1 - Search Agent is Not used</a></li>
+<li><a href="#case2" alt="Search Agent is specified" title="Search Agent is specified">Case 2 - Search Agent is Used</a></li>
+</ul>
+<li><a href="#p45550_04" alt="Table used in W45550A" title="Table used in W45550A">Tables used for form W45550A</a></li>
+<ul>
+<li><a href="#f4072w" alt="F4072W" title="F4072W">F4072W</a></li>
+<li><a href="#f40941" alt="F40941, F40942 and F40943" title="F40941, F40942 and F40943">F40941 (Item Key ID Master File), F40942 (Customer Key ID Master File) and F40943 (Order Group Key ID Master File)</a>.</li>
+</ul>
+<li><a href="#p45510_01" alt="Data manipulation through P45510" title="Data manipulation through P45510">Data Manipulation through P45510 (Search Agent Maintenance)</a></li>
+<li><a href="#p45510_02" alt="business functions in p45510" title="business functions in p45510">Business Functions used in P45510</a></li>
+<li><a href="#p45510_03" alt="Form information in P45510" title="Form information in P45510">Forms related with data creation for Search Agent</a></li>
+<li><a href="#p45510_04" alt="Tables used for Search Agent" title="Tables used for Search Agent">Tables related with Search Agent</a>
+<ul>
+<li><a href="#p45510_05" alt="Query Example based on F45511" title="Query Example based on F45511">Query Example</a> F45511 and WHERE clause construction</li>
+<li><a href="#p45510_06" alt="F45511W" title="F45511W">F45511W (Search Agent Directives Work File)</a></li>
+<li><a href="#p45510_07" alt="F45511 " title="F45511 ">F45511 (Search Agent Directives Detail)</a></li>
+<li><a href="#p45510_08" alt="F45510" title="F45510">F45510 (Search Agent Directives Header)</a></li>
+<li><a href="#RT" alt="UDC 45/RT" title="UDC 45/RT">UDC 45/RT - Relationship Type</a></li>
+</ul>
+</li>
+<li><a href="#error" alt="Error Implementation" title="Error Implementation">Error Implementation</a></li>
+<li><a href="#conclusion" alt="Conclusion" title="Conclusion">Conclusion</a></li>
+</ul>
+<p>&nbsp;</p>
+<p><br /> <big><a name="p45550_01"></a>Data Manipulation in P45550 (F4072 Global Update Engine):</big></p>
+<table style="border-collapse: collapse; width: 941px; height: 131px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 113pt;" width="151" /> <col style="width: 239pt;" span="3" width="319" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 113pt; background-color: #3366ff; color: white;">Action</th><th style="width: 239pt; background-color: #3366ff; color: white;">Hook up</th><th style="width: 239pt; background-color: #3366ff; color: white;">Key</th><th style="width: 239pt; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;">insert F4072W</td>
+<td>
+<ul>
+<li style="color: #3333ff;">Find button Clicked</li>
+<li>Cancel button Clicked (when Copy is selected)</li>
+</ul>
+</td>
+<td>CTID, JOBS, PEID, TCID, AST, ITM, AN8, IGID, OGID, CGID, CRCD, UOM, MNQ, EXDJ</td>
+<td>&nbsp;Through business function F4072 Search Engine (B4500500 - F4072SearchEngine)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">delete F4072W</td>
+<td>
+<ul>
+<li>Find button Clicked (when there are exiting data for previous action)</li>
+<li><span style="color: #3333ff;">Cancel button clicked</span></li>
+<li>All Grid Recs Updated to DB (when copy is selected)</li>
+</ul>
+</td>
+<td>CTID, JOBS, PEID, TCID</td>
+<td>&nbsp;Through business function F4072W Delete All Records (B4500610 -&nbsp; F4072WDeleteAll</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">insert F4072</td>
+<td>
+<ul>
+<li>Update Grid Rec to DB-Before</li>
+</ul>
+</td>
+<td>ITM, AST, AN8, IGID, CGID, OGID, CRCD, UOM, MNQ, EXDJ, UPMJ, TDAY</td>
+<td>&nbsp;Through Table I/O<br /> Note that the form W45550A is based on F4072W not F4072</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p><br /> Note:</p>
+<ul>
+<li>Addition takes place when you click Find button</li>
+<li>Deletion takes place when you click Cancel button</li>
+</ul>
+</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p><br /> <br /> <big> <a name="p45550_02"></a>Layout of W45550A form</big></p>
+<p>: Grid information is based on F4072W, F40941, F40942 and F40943. You can use any columns for additional filteration.<br /> 
+  <img src="../images/p4555001.png" border="0" alt="W45550A" title="W45550A" hspace="0" vspace="0" /><br /> Explanation on Form Controls:</p>
+<ul>
+<li>a - Search Agent Name: (<span style="color: red;">Do not leave it blank in clicking Find button</span>). Enter the Search Agent you have created. If you do not specify value for this control, it reads all data from F4072 so (if you leave it blank) this will performance heavily. This controls is case sensitive, so if possible, try to use all upper cases.</li>
+<li>b - Table Name: This control is mainly for Search Agent which enable you to create Search Agent dynamically based on whatever table you enter in this control. In case you are not accessing form exits (SA Properties and SA Revisions) and in your clicking Find button the value is to be set 'F4072'.</li>
+<li>c - (Push Button) Refresh Grid</li>
+<li>d - (Push Button) Update Grid Only</li>
+<li>A - <span style="font-weight: bold;">Machine Key: (F4072W.CTID)</span>: this is returned through business method GetAuditInfo (cf., business function b9800100) which is running in JAS (because we defined it through LocalLogicCatalog.xml file in JAS) so this value returns JAS machine name. For detail on business method running in JAS, refer to &lt;Document 1090584.1&gt; E1: BSFN: Frequently Asked Questions on Business Functions/Methods Running on JAS.</li>
+<li>B - <span style="font-weight: bold;">Job Number: F4072W.JOBS)</span>: Internal Job Number&nbsp; (cf., NN 00|4 for server batch job for UBE) this value is returned by JDE API <span style="font-style: italic;">JDB_GetInternalNextNumber()</span> in calling GetInternalNextNumber (B0000564). The value gets stored in memory (not table) and increment 1 whenever this API gets called. A number of business function can call this API to set unique cache name in the routine. For example, if you enter any inventory transaction, this number is to be increased.</li>
+<li>C - <span style="font-weight: bold;">Process ID: (F4072W.PEID)</span>: CallObject Kernel Process ID or, Inter-Process Communication Process ID. There is chance to have same process ID, though you log off/on EnterpriseOne because 15~20 uses share a single CallObject Kernel process though you log out/on again there is chance to have same process ID. This value is returned through JDE API jdeGetPid(). The number returned here is to be same with the process ID you can verify through Task Manager, SAW (serveradministrationworkbench.exe) and Server Manager. We can not guarantee this number is unique per specific users because this ID is determined by the operating system where logic is running.</li>
+<li>D - <span style="font-weight: bold;">Transaction ID: (F4072W.TCID)</span>: This value is determined through business function RetrieveProcessAndTransactionID&nbsp; (B0001060) which calls same API JDB_GetInternalNextNumber(). So TCID = JOBS + 1 because in getting JOBS increment of 1 took place and there is not any other routine which gets internal next number.</li>
+<li>F - (Internet Browser Close button)</li>
+<li>G - Cancel button</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Before press Find button, create Search Agent in advance based on your business requirement</li>
+<li>A, B, C and D are not to be appeared in standard application. These controls are used for filtering data in grid based on F4072W</li>
+<li>Do not click Close button (F - Close Internet Browser button) which resulted in orphaned data into F4072W. Same orphaned data can be found when your session got expired. Meaning that if there is no hook up event data from F4074W will be remained.</li>
+<li>Variables for CTID, JOBS, PEID and TCID is being set through "Dialog is Initialized" event so these value are to be remained till you finish your session by clicking OK or Cancel button in W45550A. In other words, you are not able to update these values at once session started.</li>
+<li>Filtering data through QBE (Query By Example) does not impact selecting data from F4072 (Price Adjustment Detail) Flie. So it is important to set up proper Search Agent and make use of it to minimize any possible problem in this application.</li>
+<li>Deletion takes place based on CTID, JOBS, PEID and TCID which is different from primary key</li>
+<li>In case you click Close windows button or come across session time out (or abandoned transaction) there is high chance to have records from F4072W</li>
+<li>Do truncate table F4072W when no users are accessing data from same table</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><big><a name="p45550_03"></a>How data get inserted into F4072W?</big><br /> <a name="case1"></a>Case 1 - Search Agent is not specified:</p>
+<p><img src="../images/p4555002.png" border="0" alt="No Search Agent" title="No Search Agent" hspace="0" vspace="0" /></p>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Storing the return value of F4072 in a different variable. If there is no matching F4071 record for F4072 then we should not skip the while loop which fetches F4072 instead we should not show that specific record in MassMaintenance(P45550) and show all the other matching record</li>
+<li>Do not fetch from F4071 again if Adjustment Name is the same (performance reason)</li>
+<li>Do not write to F4072W if it is a non-Sales adjustment, Sliding Rate adjustment, Enhanced Basket adjustment, rounding adjustment, rebate records&nbsp; or preference record.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a name="case2"></a>Case 2 - Search Agent is specified:</p>
+<p>The routine are identical except the way it gets data from F4072. By specifying Search Agent before press Find/Refresh button additional where clause is to be appended. Refer below Search Agent Section.</p>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p><big><a name="p45550_04"></a>Table used for form W45550A</big></p>
+<p><a name="f4072w"></a>Table F4072W:</p>
+<table style="border-collapse: collapse; width: 1166px; height: 1339px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 16pt;" width="21" /> <col style="width: 50pt;" width="67" /> <col style="width: 63pt;" width="84" /> <col style="width: 197pt;" width="263" /> <col style="width: 191pt;" width="254" /> <col style="width: 77pt;" width="103" /> <col style="width: 40pt;" width="53" /> <col style="width: 139pt;" width="185" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl63" style="height: 15pt; width: 16pt; background-color: #3366ff; color: white;">&nbsp;</th><th class="xl63" style="width: 50pt; background-color: #3366ff; color: white;">Table</th><th class="xl63" style="width: 63pt; background-color: #3366ff; color: white;">Column</th><th class="xl63" style="width: 197pt; background-color: #3366ff; color: white;">DD Item</th><th class="xl63" style="width: 191pt; background-color: #3366ff; color: white;">Glossary</th><th class="xl63" style="width: 77pt; background-color: #3366ff; color: white;">Value are from&nbsp;</th><th class="xl63" style="width: 40pt; background-color: #3366ff; color: white;">Default</th><th class="xl63" style="width: 139pt; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;">1</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">AST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PriceAdjustmentType [8]<br /> Price Adjustment Name</td>
+<td class="xl63">A user defined code (system 40, type TY) that identifies an adjustment definition. You define adjustments on Price Adjustment Names.</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">UDC 40/TY - Adjustment/Preference Name</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">2</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ITM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">IdentifierShortItem [8]<br /> Item Number - Short</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">3</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">LITM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">Identifier2ndItem [25]<br /> 2nd Item Number</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">4</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">AITM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">Identifier3rdItem [25]<br /> 3rd Item Number</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">5</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">AN8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">AddressNumber [8]<br /> Address Number</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">6</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">IGID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ItemGroupKeyID [8]<br /> Item Group Key ID</td>
+<td class="xl63">A number that identifies an item group or an order detail pricing group. Each pricing group is comprised of either item category codes (for an item group) or sales order detail field values (for an order detail group). For every unique combination of values in the pricing group, the system assigns a number (key ID) to identify the group. The system retrieves this number from the Next Numbers program (P0002) for the system code 40 and the line number 5.</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;F40941.IGID</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">7</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CGID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CustomerGroupKeyID [8]<br /> Customer Group Key ID</td>
+<td class="xl63">A number that identifies a customer pricing group. Each pricing group comprises customer category codes. For every unique combination of values in the pricing group, the system assigns a number (key ID) to identify the group. This number is retrieved from the Next Numbers program (P0002) using system code 45, line number 2.</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;F40942.CGID</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">8</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">OGID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">OrderGroupKeyID [8]<br /> Order Group Key ID</td>
+<td class="xl63">A number that identifies an order detail pricing group. Each group consists of sales order detail values. For each unique combination of values in the order group, the system assigns a number (key ID) to identify the group. The system retrieves this number from the Next Numbers program (P0002) by using system code 45 and line number.</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;F40943.OGID</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">9</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CRCD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CurrencyCodeFrom [3]<br /> Currency Code - From</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">10</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UOM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UnitOfMeasureAsInput [2]<br /> Unit of Measure as Input</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">11</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">MNQ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">QuantityMinimum [15]<br /> Quantity - From</td>
+<td class="xl63">A value that specifies how an adjustment or preference will be applied to a price. This value can be a quantity, weight, or amount, depending on how you have defined the level-break type in the Price Adjustment Detail table (F4072).</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">Edit Code M (No Comma, No -)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">12</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">EFTJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">DateEffectiveJulian1 [6]<br /> Date - Effective</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">13</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">EXDJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">DateExpiredJulian1 [6]<br /> Date - Expired</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">14</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">BSCD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">BasisCode [1]<br /> Basis Code</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">UDC 40/BC - Basis Code</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">15</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">LEDG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">LedgType [2]<br /> Cost Method</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">16</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FRMN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PriceFormulaName [10]<br /> Price Formula Name</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">17</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FVTR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FactorValue [15]<br /> Factor Value</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">18</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FGY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FreeGoodsYN [1]<br /> Free Goods (Y/N)</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">19</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ATID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PriceAdjustmentKeyID [8]<br /> Price Adjustment Key ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">20</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">URCD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UserReservedCode [2]<br /> User Reserved Code</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">21</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">URDT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UserReservedDate [6]<br /> User Reserved Date</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">22</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">URAT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UserReservedAmount [15]<br /> User Reserved Amount</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">23</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">URAB&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UserReservedNumber [8]<br /> User Reserved Number</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">24</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">URRF&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UserReservedReference [15]<br /> User Reserved Reference</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">25</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">NBRORD&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">NumberofOrders [15]<br /> Number of Orders</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">26</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UOMVID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UOMforVolumneIncentives [2]<br /> Unit of Measure - Volumn Incentives</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">27</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FVUM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">FactorValueUM [2]<br /> Factor Value Unit of Measure</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">28</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PARTFG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PricePartialQtyFlag [1]<br /> Price Partial Quantities Flag</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">29</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">APRS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ApprovalStatus [1]<br /> Approval Status</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">30</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">USER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UserId [10]<br /> User ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">31</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ProgramId [10]<br /> Program ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">32</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">JOBN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">WorkStationId [10]<br /> Work Station ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">33</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">UPMJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">DateUpdated [6]<br /> Date - Updated</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">34</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">TDAY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">TimeOfDay [6]<br /> Time of Day</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">35</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">BKTPID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">BasketParentID [8]<br /> Basket Parent ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">36</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CRCDVID&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CurrencyCodeforVolumneIncentives [3]<br /> Currency Code - Volumn Incentives</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">37</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">CTID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ComputerID [15]<br /> Computer ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;this is returned through business method GetAuditInfo (cf., business function b9800100) which is running in JAS (because we defined it through LocalLogicCatalog.xml file in JAS) so this value returns JAS machine name. For detail on business method running in JAS, refer to &lt;Document 1090584.1&gt; E1: BSFN: Frequently Asked Questions on Business Functions/Methods Running on JAS.</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">38</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">JOBS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">JobnumberA [8]<br /> Job Number</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;Internal Job Number&nbsp; (cf., NN 00|4 for server batch job for UBE) this value is returned by JDE API <span style="font-style: italic;">JDB_GetInternalNextNumber()</span> in calling GetInternalNextNumber (B0000564). The value gets stored in memory (not table) and increment 1 whenever this API gets called. A number of business function can call this API to set unique cache name in the routine. For example, if you enter any inventory transaction, this number is to be increased.</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">39</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">PEID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">ProcessID [15]<br /> Process ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;CallObject Kernel Process ID or, Inter-Process Communication Process ID. There is chance to have same process ID, though you log off/on EnterpriseOne because 15~20 uses share a single CallObject Kernel process though you log out/on again there is chance to have same process ID. This value is returned through JDE API jdeGetPid(). The number returned here is to be same with the process ID you can verify through Task Manager, SAW (serveradministrationworkbench.exe) and Server Manager. We can not guarantee this number is unique per specific users because this ID is determined by the operating system where logic is running.</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">40</td>
+<td class="xl63">F4072W&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">TCID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td class="xl63">TransactionID [15]<br /> Transaction ID</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;</td>
+<td class="xl63">&nbsp;This value is determined through business function RetrieveProcessAndTransactionID&nbsp; (B0001060) which calls same API JDB_GetInternalNextNumber(). So TCID = JOBS + 1 because in getting JOBS increment of 1 took place and there is not any other routine which gets internal next number.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>All columns in F4072W are repeating except RULENAME (Rounding Rule Name) based on F4072</li>
+<li>Additional 4 columns CTID, JOBS, PEID and TCID&nbsp; are additional columns for F4072W</li>
+<li>The columns you can see in Grid is based on columns from F4072W, F40941, F40942 and F40943. You can use any columns from these tables to narrow down copy/update based on returned value.</li>
+<li><a name="f40941"></a>Example of actual query: sql&gt; SELECT F40943.OKSDV5,F40942.CKCGP5,F4072W.ADCRCDVID,F4072W.ADFVTR,F40943.OKSDV1,F4072W.ADBKTPID,F40941.IKIGP4,F40941.IKIGP9,F4072W.ADLITM,F4072W.ADPARTFG,F4072W.ADTCID,F40942.CKCGP9,F4072W.ADCRCD,F4072W.ADFRMN,F4072W.ADITM,F40941.IKIGP7,F4072W.ADURAB,F4072W.ADTDAY,F40941.IKIGP6,F40941.IKIGP3,F40941.IKIGP8,F4072W.ADURCD,F4072W.ADAN8,F4072W.ADBSCD,F40941.IKIGP1,F40941.IKPRGR,F4072W.ADLEDG,F40943.OKSDV3,F40942.CKCGP4,F40943.OKSDV6,F4072W.ADJOBN,F4072W.ADAPRS,F4072W.ADURDT,F4072W.ADAITM,F4072W.ADOGID,F40942.CKCGP2,F4072W.ADFVUM,F4072W.ADPID,F4072W.ADIGID,F4072W.ADEXDJ,F4072W.ADUPMJ,F4072W.ADAST,F4072W.ADMNQ,F4072W.ADCGID,F4072W.ADUSER,F40943.OKSDV2,F4072W.ADCTID,F4072W.ADEFTJ,F40943.OKSDGR,F4072W.ADUOMVID,F4072W.ADJOBS,F40941.IKIGP2,F40942.CKCGP8,F4072W.ADATID,F40942.CKCPGP,F40942.CKCGP3,F40942.CKCGP7,F40943.OKSDV7,F4072W.ADUOM,F40943.OKSDV4,F4072W.ADPEID,F40941.IKIGP10,F4072W.ADURAT,F4072W.ADFGY,F40941.IKIGP5,F40942.CKCGP1,F40942.CKCGP6,F40943.OKSDV8,F4072W.ADNBRORD,F40942.CKCGP10,F4072W.ADURRF FROM PRODDTA.F4072W T0, PRODDTA.F40941 T1, PRODDTA.F40942 T2, PRODDTA.F40943 T3&nbsp; WHERE (((((F4072W.ADCTID = MFGJAPAC02&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; AND F4072W.ADJOBS = 17 ) AND F4072W.ADTCID = 18 ) AND F4072W.ADPEID = 13056 ))) AND (F4072W.ADIGID = F40941.IKIGID AND F4072W.ADCGID = F40942.CKCGID AND F4072W.ADOGID = F40943.OKOGID) ORDER BY F4072W.ADCTID ASC&nbsp; , F4072W.ADJOBS ASC&nbsp; , F4072W.ADPEID ASC&nbsp; , F4072W.ADTCID ASC&nbsp; , F4072W.ADAST ASC&nbsp; , F4072W.ADITM ASC&nbsp; , F4072W.ADAN8 ASC&nbsp; , F4072W.ADIGID ASC&nbsp; , F4072W.ADOGID ASC&nbsp; , F4072W.ADCGID ASC&nbsp; , F4072W.ADCRCD ASC&nbsp; , F4072W.ADUOM ASC&nbsp; , F4072W.ADMNQ ASC&nbsp; , F4072W.ADEXDJ ASC</li>
+<li>In case you need to filter it further enter value at QBE (Query By Example)</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><big><a name="p45510_01"></a>Data Manipulation in P45510 (F4072 Global Update Engine):</big><small><big> </big><br /> <big>P45510 handles data as below,</big><br /> </small></p>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 965px; height: 204px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 179pt;" span="4" width="238" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 116px; background-color: #3366ff; color: white;">Action</th><th style="width: 338px; background-color: #3366ff; color: white;">Hook up</th><th style="width: 163px; background-color: #3366ff; color: white;">Key&nbsp;</th><th style="width: 333px; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 116px;" height="17">Insert F45511W</td>
+<td style="width: 338px;">In clicking (in W45550A) form exit,<br />
+<ul>
+<li>SA Revisions</li>
+<ul>
+<li>- ADD: Write all columns of F4072</li>
+<li>- UPDATE: Write only exiting columns from exiting F45511</li>
+</ul>
+<li>SA Properties (same with update from SA Revisions)</li>
+</ul>
+</td>
+<td style="width: 163px;">CTID, JOBS, TCID, PEID, DTAI, SASEQVL</td>
+<td style="width: 333px;">via BSFN B4500580 - F45511WLoadDataItem (F45511W Load Data Item).<br /> CTID, JOBS, TCID, PEID are inherited from W45550A [Price Adjustments Global Revisions] and this is why P45510 is to be trigged by other application</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 116px;">Insert F45511</td>
+<td style="vertical-align: top; width: 338px;">In W45510F [Search Agent Revisions]<br /> - Post OK button clicked</td>
+<td style="vertical-align: top; width: 163px;">SANAME, DTAI, SASEQVL</td>
+<td style="vertical-align: top; width: 333px;">Through business function B4500580 - F45511CopyFromF45511W (F45511 Copy From F45511W)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 116px;">Insert F45510</td>
+<td style="vertical-align: top; width: 338px;">In W45510F [Search Agent Revisions]<br /> - Post OK button clicked (after F45511 recorded correctly)</td>
+<td style="vertical-align: top; width: 163px;">SANAME</td>
+<td style="vertical-align: top; width: 333px;">via BSFN B4500580 - F45510AddUpdateSearchAgent (F45510 Add or Update Search Agent)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 116px;">Delete F45511W</td>
+<td style="vertical-align: top; width: 338px;">In W45510F [Search Agent Revisions]<br /> - Post OK button clicked (work file is used to create F45511 and F45510)<br /> - Post Cancel button clicked (abort work file data)<br /> - (Form Exit) Delete Search Agent clicked</td>
+<td style="vertical-align: top; width: 163px;">CTID, JOBS, TCID, PEID</td>
+<td style="vertical-align: top; width: 333px;">through business function B4500580 - F45511WDelete (F45511W Delete). <br /> In case these action does not take place there is chance ot have orphaned data from F45511W</td>
+</tr>
+</tbody>
+</table>
+<p>Note:</p>
+<ul>
+<li>CTID, JOBS, TCID, PEID are inherited from calling routine of P45550 (F4072 Global Update Engine)</li>
+<li>If you do not invoke delete F45511W there is chance to have orphaned data (Close button clicked or session timeout)</li>
+<li>If you have any orphaned data from F45511W delete it using query tools</li>
+</ul>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><big><a name="p45510_02"></a>Business Functions used in P45510 (Search Agent Maintenance):</big></p>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 1023px; height: 281px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 79pt;" width="105" /> <col style="width: 151pt;" width="201" /> <col style="width: 183pt;" width="244" /> <col style="width: 83pt;" width="110" /> <col style="width: 215pt;" width="287" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl63" style="height: 15pt; width: 85px; background-color: #3366ff; color: white;">Source&nbsp; Module</th><th class="xl63" style="width: 222px; background-color: #3366ff; color: white;">Description</th><th class="xl63" style="width: 81px; background-color: #3366ff; color: white;">Template</th><th class="xl63" style="width: 260px; background-color: #3366ff; color: white;">Purpose</th><th style="width: 215pt; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 85px;" height="20">B4500580</td>
+<td class="xl64" style="width: 222px;">F45511CopyFromF45511W (F45511 Copy From F45511W)</td>
+<td class="xl64" style="width: 81px;">D4500580A</td>
+<td class="xl64" style="width: 260px;">To insert/add or update/change data into F45511W</td>
+<td>New Data Item is selected update takes place</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 85px;" height="20">B4500580</td>
+<td class="xl64" style="width: 222px;">F45511WDelete (F45511W Delete)</td>
+<td class="xl64" style="width: 81px;">D4500580B</td>
+<td class="xl64" style="width: 260px;">To delete workfile F45511W</td>
+<td>&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 85px;" height="20">B4500580</td>
+<td class="xl64" style="width: 222px;">F45511WLoadDataItem (F45511W Load Data Item)</td>
+<td class="xl64" style="width: 81px;">D4500580C</td>
+<td class="xl64" style="width: 260px;">To populate data into F45511W<br /> - Add Mode: all columns in F4072 through table specification (glbltbl, or F98711)<br /> - Update/Inquiry Mode: get it from F45511</td>
+<td>Table specification can be retrieved by calling B4500570 (GetTableSpecifications - Get Table Specifications)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 85px;" height="20">B4500580</td>
+<td class="xl64" style="width: 222px;">F45510DeleteSearchAgent (F45510 Delete Search Agent All)</td>
+<td class="xl64" style="width: 81px;">D4500580D</td>
+<td class="xl64" style="width: 260px;">To delete table F45511 and F45510</td>
+<td>Parameter cDeleteF45511OnlyYN can be used when there is no detail information to delete header only</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 85px;" height="20">B4500580</td>
+<td class="xl64" style="width: 222px;">F45510AddUpdateSearchAgent (F45510 Add or Update Search Agentf)</td>
+<td class="xl64" style="width: 81px;">D4500580E</td>
+<td class="xl64" style="width: 260px;">To update header F45510 based on data created in F45511</td>
+<td>&nbsp;</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 85px;" height="20">B4500580</td>
+<td class="xl64" style="width: 222px;">F45511WGetNextSequence (F45511W Get Next Sequence Number)</td>
+<td class="xl64" style="width: 81px;">D4500580F</td>
+<td class="xl64" style="width: 260px;">To update/get F45511W.SASEQVL base don CTID, JOBS, TCID, PEID and DTAI</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>Note:</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><big><a name="p45510_03"></a>Forms related with data creation for Search Agent:</big></p>
+<p>Below forms are related with maintaining Search Agent,</p>
+<p><img src="../images/p4555003.png" border="0" alt="Search Agent" title="Search Agent" hspace="0" vspace="0" /></p>
+<ul>
+<li>P45550|W45550A [Price Adjustment Global Revisions] This form enables you to create a new Search Agent, or select exiting Search Agent or search Advanced Price Schedule based on filteration (Search Agent) you have set.</li>
+<li>P45510|W45510F [Search Agent Revisions] This form gives you all columns for filteration based on table F4072 (by reading glbltbl or, F98711) and additionally you can set security and Search Agent Description. The value you are seeing in grid is stored in F45511W and remained till you exit from this form.</li>
+<li>P45510|W45510E [List of Values Revisions] Through this form you are able to populate actual value into F45511 which can be used how to filter data from table F4072</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Highlighted columns (Machine Key, Job Number, Process ID, Transaction ID in W45550A and Search Agent Value Sequence in F45510E) are changed to visible for easier understanding</li>
+<li>Only table F4072 can be used to create Search Agent</li>
+<li>Sequence number is handled through form W45510E form</li>
+<li>If you click Close button or session timeout F45511W leaves orphaned data</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><br /> <big><a name="p45510_04"></a>Tables related with Search Agent</big></p>
+<p>Search Agent is maintained through tables,</p>
+<ul>
+<li>F45511W (Search Agent Directives Work File): This is temporary (work file) to hold all columns information of table F4072.</li>
+<li>F45511 (Search Agent Directives Detail): This table records the columns to filter, number of elements and it values</li>
+<li>F45510 (Search Agent Directives Header): This table stores the number of directive (the number of columns to use for constructing WHERE clause) and total number of values</li>
+</ul>
+<p>cf., In computer industry "Directive" can be defined: In computer programming, a directive or pragma (from "pragmatic") is a language construct that specifies how a compiler should process its input. Directives are not part of the language proper  they are not part of the grammar, and may vary from compiler to compiler  but instead function either as an in-band form of a command-line option, specifying compiler behavior, or are processed by a preprocessor. In some cases directives specify global behavior, while in other cases they only affect a local section, such as a block of programming code. In some cases, such as some C pragmas, directives are optional compiler hints, and may be ignored, but normally they are prescriptive, and must be followed. However, a directive does not perform any action in the language itself, only change the behavior of the compiler.</p>
+<p>For this example, directive is JDE specific terms to build data selection against F4072.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><a name="p45510_05"></a>F45511 and WHERE clause construction:</strong></p>
+<table style="border-collapse: collapse; width: 709px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 102pt;" width="136" /> <col style="width: 51pt;" width="68" /> <col style="width: 155pt;" width="206" /> <col style="width: 135pt;" width="180" /> <col style="width: 102pt;" width="136" /> <col style="width: 164pt;" width="218" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 102pt; background-color: #3366ff; color: white;">Search Agent Name (SANAME)</td>
+<td class="xl64" style="width: 51pt; background-color: #3366ff; color: white;" width="68">Data Item (DTAI)</td>
+<td class="xl64" style="width: 155pt; background-color: #3366ff; color: white;" width="206">Search Agent Value Sequence (SASEQVL)</td>
+<td class="xl64" style="width: 135pt; background-color: #3366ff; color: white;" width="180">Search Agent Relationship (SASELTY)</td>
+<td class="xl64" style="width: 102pt; background-color: #3366ff; color: white;" width="136">Search Agent Value (SAVALUE)</td>
+<td class="xl64" style="width: 164pt; background-color: #3366ff; color: white;" width="218">Directive - Number List Elements (SALSTNB)</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">SANAME</td>
+<td class="xl63">AN8</td>
+<td style="background-color: #cccccc; text-align: left;">1</td>
+<td class="xl63">IN</td>
+<td class="xl63">4242</td>
+<td style="background-color: #cccccc; text-align: left;">3</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">SANAME</td>
+<td class="xl63">AN8</td>
+<td style="background-color: #cccccc; text-align: left;">2</td>
+<td class="xl63">IN</td>
+<td class="xl63">4245</td>
+<td style="background-color: #cccccc; text-align: left;">0</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt;" height="20">SANAME</td>
+<td class="xl63">AN8</td>
+<td style="background-color: #cccccc; text-align: left;">3</td>
+<td class="xl63">IN</td>
+<td class="xl63">74242</td>
+<td style="background-color: #cccccc; text-align: left;">0</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">SANAME</td>
+<td style="vertical-align: top;">BSCD</td>
+<td style="vertical-align: top; background-color: #ffff99;">1</td>
+<td style="vertical-align: top;">RE</td>
+<td style="vertical-align: top;">3</td>
+<td style="vertical-align: top; background-color: #ffff99;">2</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">SANAME</td>
+<td style="vertical-align: top;">BSCD</td>
+<td style="vertical-align: top; background-color: #ffff99;">2</td>
+<td style="vertical-align: top;">RE</td>
+<td style="vertical-align: top;">4</td>
+<td style="vertical-align: top; background-color: #ffff99;">0</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>SASEQVL indicates sequence of values (1, 2, ... n)</li>
+<li>SALSTNB indicates total number of rows for same DTAI (the number of element)</li>
+<li>How to set sequence and total number of rows are handled through event rule in P45510</li>
+<li>Expected query for this example: <span style="font-weight: bold;">WHERE ( ( ADAN8 IN (4242, 4245, 74242) AND (ADBSCD &gt; '3' AND ADBSCD &lt; '4'))</span></li>
+</ul>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><big><a name="p45510_06"></a>F45511W - Search Agent Directives Work File </big></p>
+<table style="border-collapse: collapse; width: 1158px; height: 341px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 16pt;" width="21" /> <col style="width: 56pt;" width="75" /> <col style="width: 73pt;" width="97" /> <col style="width: 182pt;" width="243" /> <col style="width: 197pt;" width="262" /> <col style="width: 44pt;" width="59" /> <col style="width: 87pt;" width="116" /> <col style="width: 251pt;" width="334" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 16pt; background-color: #3366ff; color: white;">&nbsp;</th><th style="width: 50px; background-color: #3366ff; color: white;">Table</th><th style="width: 43px; background-color: #3366ff; color: white;">Column</th><th style="width: 247px; background-color: #3366ff; color: white;">DD item</th><th style="width: 356px; background-color: #3366ff; color: white;">Glossary</th><th style="width: 182px; background-color: #3366ff; color: white;">Values are from</th><th style="width: 90px; background-color: #3366ff; color: white;">Default</th><th style="width: 257px; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">1</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px; font-weight: bold;">CTID*</td>
+<td style="width: 247px;">ComputerID [15]<br /> (Computer ID)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">(Hidden) CTID value from W45550A</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;Refer above</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">2</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px; font-weight: bold;">JOBS*</td>
+<td style="width: 247px;">JobnumberA [8]<br /> (Job Number)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">(Hidden) JOBS value from W45550A</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">3</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px; font-weight: bold;">PEID*</td>
+<td style="width: 247px;">ProcessID [15]<br /> (Process ID)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">(Hidden) PEID value from W45550A</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">4</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px; font-weight: bold;">TCID*</td>
+<td style="width: 247px;">TransactionID [15]<br /> (Transaction ID)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">(Hidden) CTID value from W45550A</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">5</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px; font-weight: bold;">DTAI*</td>
+<td style="width: 247px;">DataItem [10]<br /> (Data Item)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">6</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px; font-weight: bold;">SASEQVL*</td>
+<td style="width: 247px;">SeachAgentValueSequence [6]<br /> (Search Agent Value Sequence Numver)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">This is primary key enables you to choose multiple values for relation typeBW, IN, NL, RE.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">7</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px;">DSCA</td>
+<td style="width: 247px;">DescriptionAlpha [40]<br /> Alpha Description</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;This is optional column</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">8</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px;">SARELTY</td>
+<td style="width: 247px;">SeachAgentRelationshipType [2]<br /> (Search Agent Relationship Type)&nbsp;</td>
+<td style="width: 356px;">A Search Agent is a user-defined query over an One World table.<br /> The Search Agent Relationship type represents the comparison criteria for a directive. <br /> Refer UDC 45/RT - Relationship Type below.</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">RE - Range (Exclusive)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">9</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px;">SAVALUE</td>
+<td style="width: 247px;">SeachAgentValue [30]<br /> (Search Agent Value)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">Value for SARELTY</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">10</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px;">SALSTNB</td>
+<td style="width: 247px;">SeachAgentNbrListElements [6]<br /> (Number of List Elements - Directive)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">11</td>
+<td style="width: 50px;">F45511W</td>
+<td style="width: 43px;">SAFLAG</td>
+<td style="width: 247px;">SeachAgentCopyFlag [1]<br /> (Search Agent Copy Flag)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><big><a name="p45510_07"></a>F45511 - Search Agent Directives Detail</big><br /> &nbsp;</p>
+<table style="border-collapse: collapse; width: 1158px; height: 392px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 16pt;" width="21" /> <col style="width: 56pt;" width="75" /> <col style="width: 73pt;" width="97" /> <col style="width: 182pt;" width="243" /> <col style="width: 197pt;" width="262" /> <col style="width: 44pt;" width="59" /> <col style="width: 87pt;" width="116" /> <col style="width: 251pt;" width="334" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 16pt; background-color: #3366ff; color: white;">&nbsp;</th><th style="width: 50px; background-color: #3366ff; color: white;">Table</th><th style="width: 43px; background-color: #3366ff; color: white;">Column</th><th style="width: 247px; background-color: #3366ff; color: white;">DD item</th><th style="width: 356px; background-color: #3366ff; color: white;">Glossary</th><th style="width: 182px; background-color: #3366ff; color: white;">Values are from</th><th style="width: 90px; background-color: #3366ff; color: white;">Default</th><th style="width: 257px; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">1</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; font-weight: bold; background-color: white;">SANAME*</td>
+<td style="width: 247px; background-color: white;">SearchAgentName [10]<br /> (Search Agent Name)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">2</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; font-weight: bold; background-color: white;">DTAI*</td>
+<td style="width: 247px; background-color: white;">DataItem [10]<br /> Data Item</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">3</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; font-weight: bold; background-color: white;">SASEQVL* &nbsp;</td>
+<td style="width: 247px; background-color: white;">SeachAgentValueSequence [6]<br /> (Search Agent Value Sequence Numver)</td>
+<td style="width: 356px; background-color: white;">A Search Agent is a user-defined query over an One World table.<br /> The Search Agent Value sequence number represents the sequence in which the possible values of a directive are stored in the F45511 file.</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">For example, if you select</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">4</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">SARELTY&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">SeachAgentRelationshipType [2]<br /> Search Agent Relationship Type</td>
+<td style="width: 356px; background-color: white;">A Search Agent is a user-defined query over an One World table.<br /> The Search Agent Relationship type represents the comparison criteria for a directive. <br /> Refer UDC 45/RT <a href="#RT" alt="UDC 45/RT" title="UDC 45/RT">below</a>.</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">UDC 45/RT</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">5</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">SAVALUE</td>
+<td style="width: 247px; background-color: white;">SeachAgentValue [30]<br /> (Search Agent Value)</td>
+<td style="width: 356px; background-color: white;">A Search Agent is a user-defined query over an One World table.<br /> The Search Agent Value is the value of the criteria. The value might be a single component, a range (composed of 2 values) or a list (composed of many values).</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">If column specified is date (e.g., F4072.EFTJ, EXDJ) value stored is always dd/mm/yyyy regardless User Profile settings for date format and date separator</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">6</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">DSCA&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">DescriptionAlpha [40]<br /> (Alpha Description)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">7</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">SALSTNB</td>
+<td style="width: 247px; background-color: white;">SeachAgentNbrListElements [6]<br /> (Number of List Elements - Directive)</td>
+<td style="width: 356px; background-color: white;">Directive - Number of List Elements represents the number of elements in a directive list if the relationship type is "IN LIST"&nbsp; or "NOT IN LIST". This number will be stored in F45511 (Search Agent Directives Detail Table) for a given data item when sequence number is 1. This number is necessary to allocate memory for the dynamic select array that will be build when the Search Agent is invoked by an external application.</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">8</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">USER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">UserId [10]<br /> (User ID)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">9</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">PID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">ProgramId&nbsp; [10]<br /> (Program ID)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">10</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">JOBN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">WorkStationId [10]<br /> (Work Station ID)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">11</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">UPMJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">DateUpdated [6]<br /> (Date - Updated)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; background-color: white;" align="right" height="17">12</td>
+<td style="width: 50px; background-color: white;">F45511</td>
+<td style="width: 43px; background-color: white;">TDAY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px; background-color: white;">TimeOfDay [10]<br /> (Time of Day)</td>
+<td style="width: 356px; background-color: white;">&nbsp;</td>
+<td style="width: 182px; background-color: white;" align="right">&nbsp;</td>
+<td style="width: 90px; background-color: white;">&nbsp;</td>
+<td style="width: 257px; background-color: white;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p><big><a name="p45510_08"></a>F45510 - Search Agent Directives Header</big></p>
+<table style="border-collapse: collapse; width: 1158px; height: 427px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 16pt;" width="21" /> <col style="width: 56pt;" width="75" /> <col style="width: 73pt;" width="97" /> <col style="width: 182pt;" width="243" /> <col style="width: 197pt;" width="262" /> <col style="width: 44pt;" width="59" /> <col style="width: 87pt;" width="116" /> <col style="width: 251pt;" width="334" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 16pt; background-color: #3366ff; color: white;">&nbsp;</th><th style="width: 50px; background-color: #3366ff; color: white;">Table</th><th style="width: 43px; background-color: #3366ff; color: white;">Column</th><th style="width: 247px; background-color: #3366ff; color: white;">DD item</th><th style="width: 356px; background-color: #3366ff; color: white;">Glossary</th><th style="width: 182px; background-color: #3366ff; color: white;">Values are from</th><th style="width: 90px; background-color: #3366ff; color: white;">Default</th><th style="width: 257px; background-color: #3366ff; color: white;">Others</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">1</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;"><span style="font-weight: bold;">SANAME*</span></td>
+<td style="width: 247px;">SearchAgentName [10]<br /> (Search Agent Name)</td>
+<td style="width: 356px;">A name that identifies the query. The name is stored in the Search Agent Directives Detail table (F45511).</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">FC Search Agent Name in W45550A</td>
+<td style="width: 90px;">Blank</td>
+<td style="width: 257px;">Do not leave this value blank<br /> Search/Select from W45510D<br /> Case Sensitive</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">2</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">SADESC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">SeachAgentDescription [40]<br /> (Search Agent Description)</td>
+<td style="width: 356px;">The description of a user-defined search agent. The search-agent is a query over a specific table.</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">FC Search Agent Description in W45510F</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">Form W45510F is variable only which is to be populated when user come to this form based on table F4072.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">3</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">OMWTBLNM</td>
+<td style="width: 247px;">TableName999 [11]<br /> (Table Name)</td>
+<td style="width: 356px;">n/a</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">FC Table Name in W45550A</td>
+<td style="width: 90px;">F4072</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">4</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">SASECUR&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">SeachAgentSecurity [1]<br /> (Search Agent Security Code)</td>
+<td style="width: 356px;">A code that indicates whether security restrictions exist for a search agent. Valid values are:<br /> Blank: No security restrictions exist.<br /> 1: Only the originator of the search agent can modify the search agent.</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">Check box for Security in W45510F</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">If you select check box the value 1 is to be populated.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">5</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">SADIRNB&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">SeachAgentNumberDirectives [6]<br /> (Search Agent Number of Directives)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 356px;">The number of directives or relationships that define a specific search agent. A is a user-defined query over a table.</td>
+<td style="width: 182px; text-align: left; vertical-align: top;">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">Number of columns you have selected in W45510F. This is internally how programming set up filtering condition</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">6</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">SAMAXVL&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">SeachAgentMaxValueSize [6]<br /> (Search Agent Maximum Value Size)</td>
+<td style="width: 356px;">A value that indicates the maximum possible size (in bytes) of a comparison value for a specific query. The comparison value can be a single value, a range of values, or a list of values.</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">7</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">SAADDSEL</td>
+<td style="width: 247px;">SearchAgAdditionalSelects [6]<br /> (Search Agent Additional Selection)</td>
+<td style="width: 356px;">The Search Agent Additional Selection represents the number of additional select elements that will be added to the select array that the Search Engine uses. Additional select elements are generated by the NL (Not in List) and the RE (Range - Exclusive) types of relationship in one Search Engine directive.</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">8</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">USER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">UserId [10]<br /> (User ID)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">9</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">PID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">ProgramId [10]<br /> (Program ID)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">10</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">JOBN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">WorkStationId [10]<br /> (Work Station ID)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">11</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">UPMJ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">DateUpdated [6]<br /> (Date - Updated)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" align="right" height="17">12</td>
+<td style="width: 50px;">F45510</td>
+<td style="width: 43px;">TDAY&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td style="width: 247px;">TimeOfDay [6]<br /> (Time of Day)</td>
+<td style="width: 356px;">&nbsp;</td>
+<td style="width: 182px;" align="right">&nbsp;</td>
+<td style="width: 90px;">&nbsp;</td>
+<td style="width: 257px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>In adding a new search agent the sequence tables written are,</p>
+<ol>
+<li>Write F45511W: To give guide for user to select a specific columns, values and relationship</li>
+<li>Write F45511: To store detail information for directive</li>
+<li>Write F45510: To summarize detailed information</li>
+</ol>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p><strong><a name="RT"></a>UDC 45/RT - Relationship Type</strong></p>
+<p>: This is to guide how business function F4072SearchEngine (B4500500, F4072 Search Engine) is constructing WHERE clause to filter data from F4072.</p>
+<table style="border-collapse: collapse; width: 1280px; height: 226px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 35pt;" width="46" /> <col style="width: 126pt;" width="168" /> <col style="width: 88pt;" width="117" /> <col style="width: 62pt;" width="82" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 33px;">Codes</td>
+<td class="xl64" style="width: 214px;">Description 01</td>
+<td class="xl64" style="width: 27px;">Hard Coded</td>
+<td class="xl64" style="width: 943px;">Example of Query</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">&nbsp;</td>
+<td class="xl63" style="width: 214px;">BLANK</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">n/a</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">&lt;</td>
+<td class="xl63" style="width: 214px;">LESS THAN</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 &lt; 4242.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">&lt;=</td>
+<td class="xl63" style="width: 214px;">LESS THAN OR EQUAL</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 &lt;= 4242.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">&lt;&gt;</td>
+<td class="xl63" style="width: 214px;">NOT EQUAL</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 &lt;&gt; 4242.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">=</td>
+<td class="xl63" style="width: 214px;">EQUAL</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 = 4242.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">&gt;</td>
+<td class="xl63" style="width: 214px;">GREATER THAN</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 &gt; 4242.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">&gt;=</td>
+<td class="xl63" style="width: 214px;">GREATER THAN OR EQUAL</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 &gt;= 4242.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; color: red; width: 33px;" height="20">BW</td>
+<td class="xl63" style="width: 214px;">RANGE (INCLUSIVE)</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 BETWEEN 4242.000000 AND 4245.000000</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">IN</td>
+<td class="xl63" style="width: 214px;">IN LIST</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 IN&nbsp; ( 4242.000000,4245.000000 )&nbsp;</span> )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 33px;" height="20">NL</td>
+<td class="xl63" style="width: 214px;">NOT IN LIST</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 NOT IN&nbsp; ( 4242.000000,4245.000000</span> )&nbsp; )&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; color: red; width: 33px;" height="20">RE</td>
+<td class="xl63" style="width: 214px;">RANGE (EXCLUSIVE)</td>
+<td class="xl63" style="width: 27px;">&nbsp;Y</td>
+<td class="xl63" style="width: 943px;">SELECT&nbsp; *&nbsp; FROM PRODDTA.F4072&nbsp; WHERE&nbsp; ( <span style="color: red;">ADAN8 &gt; 4242.000000 AND ADAN8 &lt; 4245.000000 </span>)&nbsp; ORDER BY ADAST ASC,ADATID ASC</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>In case you have defined more than 1 directives, which append additional statement with AND. For example, SELECT * FROM PRODDTA.F4072 WHERE ( ADAN8 = 4242) AND (ADCRCD IN ('USD' AND 'CAD')) ORDER BY ADAST ASC, ADATID ASC.</li>
+<li>Depending on the relational keyword you select, the performance can be vary</li>
+<li>All codes are hard coded so do not change any value above which result in undesired outcome</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p><big><a name="error"></a>Error Implemenation in P45550 and P45510</big></p>
+<p>Below error can be issued,</p>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 1119px; height: 969px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 77pt;" width="102" /> <col style="width: 179pt;" span="3" width="238" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 51px; background-color: #3366ff; color: white;">Error Code</th><th style="width: 404px; background-color: #3366ff; color: white;">Description</th><th style="width: 287px; background-color: #3366ff; color: white;">Cause</th><th style="width: 305px; background-color: #3366ff; color: white;">Resolution</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">0001</td>
+<td style="width: 404px;">(error) Action Invalid<br /> CAUSE . . . The action code entered either is not one of the following codes or you are not authorized to perform this action.&nbsp; Valid action codes are:<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'A' or '1'&nbsp; -Add;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'C' or '2'&nbsp; -Change;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'D'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -Delete;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'I' or '4'&nbsp; -Inquiry.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Some programs may not allow all of the above action codes, (refer to the specific program help instructions), or you may be secured from doing a particular action through action code security.<br /> RESOLUTION. 1)&nbsp; If performing a change or delete, you MUST first inquire.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2)&nbsp; Verify that the program allows the attempted action.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3)&nbsp; Verify that you are not prevented from using this action<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; through action code security.</td>
+<td style="width: 287px;">When cPriceApprovalRequired is ON and try to update F4072</td>
+<td style="width: 305px;">This is generic error. Currently this error can be coming along with action code in calling a certain business function.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">0002</td>
+<td style="width: 404px;">(error) Record Invalid<br /> CAUSE . . . .&nbsp; The record being processed either already exists for an 'ADD' function or does not exist for an 'INQUIRY', 'CHANGE' or 'DELETE' function.<br /> RESOLUTION. .&nbsp; If you are attempting to inquire, change or delete a record you previously added, there may be data base problems in your production library.&nbsp; You should notify your data processing department.</td>
+<td style="width: 287px;">Failed to insert data into F4072<br /> SA Properties button clicked without having valid Search Agent</td>
+<td style="width: 305px;">This is generic error which can be issued when DML statement is failed.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">0013</td>
+<td style="width: 404px;">(error) Entry Invalid<br /> CAUSE . . . .&nbsp; The two fields being processed are mutually exclusive.<br /> RESOLUTION. .&nbsp; Change one of the fields being processed.</td>
+<td style="width: 287px;">szItemPriceGroup szCustomerPriceGroup, or szSalesDetailGroup in calling B4503000.<br /> In calling F4072 Write Price Adjustment Detail (B4500060 - F4072WritePriceAdjustmentDetail), cMode is not in (A, C, I, D)</td>
+<td style="width: 305px;">Error can be issued either by B4503000 (F40941UpdateItemGroupIGID, F40942UpdateCustomerGroupCGID, F40943UpdateOrderGroupOGID) or by B4500060 (F4072WritePriceAdjustmentDetail) when input parameter for cMode is not A - Add, I - Inquiry, C - Change or D - Delete</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">073Q</td>
+<td style="width: 404px;">(error) Column Does Not Exist<br /> Cause&nbsp;&nbsp;&nbsp;&nbsp; : Database operation failed because column does not exist in the table<br /> Resolution: Please contact your administrator to add the column to the table</td>
+<td style="width: 287px;">Failed to get column information from table spec (e.g., glbltbl)</td>
+<td style="width: 305px;">via B4500570 (GetTableNextColumn - Get Table Next Column Info). <br /> Check F4072.h and F98711 (Table Columns) and flush glbltbl.xdb and ddb where error is issued.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078D</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_OpenTable ()</td>
+<td style="width: 305px;">Generic error when it fails to open table. Refer to &lt;Document 1533578.1&gt; E1: BSFN: How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078F</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_InsertTable()</td>
+<td style="width: 305px;">Error can come in your trying to insert F4072W, F4072, F45511W, F45511, F45510<br /> This is a generic error</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078G</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_DeleteTable ()</td>
+<td style="width: 305px;">Error can come in your trying to delete work files (F4074W, F45511W)<br /> This is a generic error code</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078H</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_UpdateTable ()</td>
+<td style="width: 305px;">Error can come in your update F4072, F45511W, F45511, F45510</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078I</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_FetchKeyed ()</td>
+<td style="width: 305px;">This API tries to get data from cache/memory</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078J</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_SelectKeyed ()</td>
+<td style="width: 305px;">This API tries to get data from database server</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">078S</td>
+<td style="width: 404px;">&nbsp;</td>
+<td style="width: 287px;">JDB_InitBhvr ()</td>
+<td style="width: 305px;">Refer to Unparing API section from &lt;Document 1464687.1&gt; E1: BSFN: Case Study on Memory Violation, Memory Corruption, Memory Overwrite, ACCESS VIOLATION and Zombie Kernel</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">1947</td>
+<td style="width: 404px;">(error) Not Authorized to Object<br /> Cause........The user is not authorized to the object.<br /> Resolution...Contact your Data Processing department to obtain authority.</td>
+<td style="width: 287px;">User not authorized to maintain current Search Agent in clicking "SA Revisions"</td>
+<td style="width: 305px;">In W45510F, Security On is checked and SL User ID is different from User ID in F45510/F45511</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">3942</td>
+<td style="width: 404px;">(error) Value Required<br /> Cause . . . . When the PTF field equals 'N', the PTF Library must be *NONE.<br /> Resolution. . Enter *NONE in the PTF Library Name field.</td>
+<td style="width: 287px;">Search Agent is not entered and Table Name is not specified</td>
+<td style="width: 305px;">In W45550A form when FC Table Name is not specified. <br /> This is generic error message which was inherited from World software.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">4363</td>
+<td style="width: 404px;">(error) Null Pointer<br /> CAUSE . . . . The pointer has a null value.<br /> RESOLUTION. . Check to be sure that pointer contains a&nbsp; value.</td>
+<td style="width: 287px;">Failed to get Table Column Pointer through GetTableNextColumn in reading the table specification of F4072</td>
+<td style="width: 305px;">This is generic error from multiple business functions.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A1</td>
+<td style="width: 404px;">(error) Invalid range<br /> CAUSE: The range entered is invalid.<br /> RESOLUTION: In List of Values Revisions, if the relationship is range, the value entered in the first line must be smaller than the value entered in the second line. Either change the values or change the relationship.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In W45510D, when data type (W9210.OWTP) is, <br /> 1 - Character<br /> 2 - String<br /> 9 - Numeric<br /> 11 - Date</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A2</td>
+<td style="width: 404px;">(error) Search Agent name can't be blank.<br /> CAUSE: The Search Agent name is blank for ADD or COPY mode.<br /> RESOLUTION: Enter a valid non-blank, new value for the Search Agent name.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In W45510F, FC Search Agent Name is not specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A3</td>
+<td style="width: 404px;">(error) Invalid number of values entered.<br /> CAUSE: Invalid number of values were entered for range or single relationship.<br /> SOLUTION: The range relationship requires exactly two values; the single relationship requires exactly one value. Enter the correct number of values or change the relationship.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In W45510D, <br /> If relationship is range, number of rows must be 2<br /> If relationship is single, number of grid rows must be 1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A4</td>
+<td style="width: 404px;">(error) User not authorized to Search Agent.<br /> CAUSE: Current user does not have authority to change this Search Agent.<br /> RESOLUTION: Either copy this Search Agent to change it or contact the data processing department.</td>
+<td style="width: 287px;">User not authorized to change this Search Agent when Security is checked.</td>
+<td style="width: 305px;">In W45550A, User click SA Revisions form exit to either modify existing Search Agent or add new Search Agent and Security On is checked but user ID recorded in F45510/F45511 is different from log on user ID.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A5</td>
+<td style="width: 404px;">(error) Invalid number of values entered.<br /> CAUSE: Invalid number of values were entered for range or single relationship.<br /> SOLUTION: The range relationship requires exactly two values; the single relationship requires exactly one value. Enter the correct number of values or change the relationship.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In W45510F, Search Agent Name is in use for Add or Copy mode. Either modify/revise existing search agent or change search agent name.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A6</td>
+<td style="width: 404px;"><span style="font-style: italic; text-decoration: underline;">(information)</span> &amp;1 Records Selected - INFORMATIVE.<br /> CAUSE . . . . This Search Agent&nbsp; selected &amp;1 records. <br /> RESOLUTION. . Search Agent selected records successfully.</td>
+<td style="width: 287px;">After writing F4072W through F4072SearchEngine</td>
+<td style="width: 305px;">This is informative message to show how many records are written into F4072W through Search Agent you have defined. This message is always being issued by B4500500 (F4072SearchEngine - F4072 Search Engine).</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45A7</td>
+<td style="width: 404px;">(warning) No Records Selected in &amp;1 - WARNING.<br /> CAUSE . . . . The Search Agent did not select any records in &amp;1.<br /> RESOLUTION. . Check the Search Agent criteria for validity or change the values to expand the search range.</td>
+<td style="width: 287px;">After writing F4072W through F4072SearchEngine</td>
+<td style="width: 305px;">Through B4500500 when Search Agent did not return any records. To have message '45A6' revise your search agent.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45B0</td>
+<td style="width: 404px;">(error) Amount update type cannot be blank.<br /> CAUSE . . . . When you enter an amount to be updated, you must define the type of update (A - add-on amount, % - percent or $ - override). <br /> RESOLUTION. . Enter a type for the update or remove the update amount.</td>
+<td style="width: 287px;">FVTR =&lt; 0<br /> MNQ =&lt; 0</td>
+<td style="width: 305px;">In your clicking Update Grid Only from W45550A, if QBE Factor value is not correct. Correct Factor Value in QBE or remove QBE filtering.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45B1</td>
+<td style="width: 404px;">(error) 2nd and Short items not compatible.<br /> CAUSE . . . . The 2nd and short item numbers you entered in the update line do not describe the same item. <br /> RESOLUTION. . Define only one of them and the others will default (for example: if you enter the short item number only, the 2nd and 3rd items will be defaulted when the update grid only button is clicked.)</td>
+<td style="width: 287px;">Update Item button<br /> Validate takes places based on QC (QBE values entered)</td>
+<td style="width: 305px;">In W4550A, Issue error: Short Item Number and 2nd Item Number not compatible. Either remove one of them or both from QBE.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45B2</td>
+<td style="width: 404px;">(error) 2nd and 3rd items not compatible.<br /> CAUSE . . . . The 2nd and 3rd item numbers you entered in the update line do not describe the same item. <br /> RESOLUTION. . Define only one of them and the others will default (for example: if you enter the 2nd item number only, the short and 3rd items will be defaulted when the update grid only button is clicked.)</td>
+<td style="width: 287px;">Validate takes places based on QC (QBE values entered)</td>
+<td style="width: 305px;">In W45550A, Issue error: 2nd Item Number and 3rd Item Number not compatible. Either remove both or one of them from QBE.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45B6</td>
+<td style="width: 404px;">(error) Short and 3rd items not compatible.<br /> CAUSE . . . . The 3nd and short item numbers you entered in the update line do not describe the same item. <br /> RESOLUTION. . Define only one of them and the others will default (for example: if you enter the short item number only, the 2nd and 3rd items will be defaulted when the update grid only button is clicked.)</td>
+<td style="width: 287px;">Update Item button<br /> Validate takes places based on QC (QBE values entered)</td>
+<td style="width: 305px;">In W45550A, Issue error: Short Item Number and 3rd Item Number not compatible. Either remove one of QBE or both then press Find button again.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45BA</td>
+<td style="width: 404px;">(error) Invalid Search Agent Table<br /> CAUSE: The Table in the Search Agent is not F4072.<br /> <br /> RESOLUTION: Either enter the correct table name when creating the Seach Agent or select a new Search Agent that is based on F4072.</td>
+<td style="width: 287px;">(Find in W45550A), table name is not F4072. <br /> Currently this application only supports F4072.</td>
+<td style="width: 305px;">In W45550A, in your clicking Find button, if FC Table Name is not F4072</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45BF</td>
+<td style="width: 404px;">(error) Search Agent Not Found<br /> CAUSE: The Search Agent entered does not exist in the Search Agent files (F45510, F45511).<br /> <br /> RESOLUTION: Either add the Search Agent to the Search Agent files (F45510, F45511) or enter a valid Search Agent name.</td>
+<td style="width: 287px;">(Find in W45550A), user has entered search agent name but there is no definitions from F45510.</td>
+<td style="width: 305px;">In W45550A in clicking Mass Maintenance, Search Agent name is specified. Before click Mass Maintenance, remove search agent name.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MM</td>
+<td style="width: 404px;">(warning) Can't update Item/Customer/Order Groups<br /> CAUSE.....Item, Customer, and Order Groups can't be updated using this application.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLUTION.....These columns won't be updated</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A form either one of QBE columns are specified,<br /> - QC Customer Group<br /> - QC Item Group<br /> - QC Order Detail</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMA</td>
+<td style="width: 404px;">(warning) Can't update Adjustment Name<br /> CAUSE.....Adjustment Name can not be updated using the application.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC Adj Name is specified.<br /> Remove QC Adj Name to avoid this warning message.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMB</td>
+<td style="width: 404px;">(warning) Can't update Basis Code<br /> CAUSE.....Basis Code can not be updated using this application.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC B C is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMC</td>
+<td style="width: 404px;">(warning) Can't update Currency Code<br /> CAUSE.....Currency Code can not be updated using this application. <br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC Cur Cod is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMD</td>
+<td style="width: 404px;">(warning) Can't update Cost Method<br /> CAUSE.....Cost Method can not be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC Cost Meth is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MME</td>
+<td style="width: 404px;">(error) Can't update Formula Name<br /> CAUSE.....Formula Name can not be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC Formula Name is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMF</td>
+<td style="width: 404px;">(warning) Can't update Free Goods Flag<br /> CAUSE.....The Free Goods Flag can not be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC F G is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMG</td>
+<td style="width: 404px;">(warning) Can't update VIUM<br /> CAUSE.....VIUM can not be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC VI UM is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMH</td>
+<td style="width: 404px;">(warning) Can't update Basket Parent ID<br /> CAUSE.....Basket Parent ID can not be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC Bskt. Parent ID is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMI</td>
+<td style="width: 404px;">(warning) Can't update VI Currency<br /> CAUSE.....Volume Incentive Currency can not be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC VI Cur is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMJ</td>
+<td style="width: 404px;">(warning) Can't update Number of Orders<br /> CAUSE.....Number of Orders can not be updated using this application.<br /> RESOLUTION..... This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC Number of Orders is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">45MMK</td>
+<td style="width: 404px;">(warning) Can't update FV UM<br /> CAUSE.....FV UM cannot be updated using this application.<br /> RESOLUTION.....This column will not be updated.</td>
+<td style="width: 287px;">&nbsp;</td>
+<td style="width: 305px;">In your clicking "Update Grid Only" in W45550A QC FV UM is specified.</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 51px;" height="17">PCACHEWARN</td>
+<td style="width: 404px;">(warning) APRE is active<br /> The Accelerated Pricing Resolution Engine is active.&nbsp; Changes made to cached pricing tables may not be used in transactions until the cache is reloaded.&nbsp; The reload can be done in P4530 or R45391.</td>
+<td style="width: 287px;">When CacheStatus is ACTIVE through Get&nbsp; Pricing Cache State (B4504650 - GetPricingCacheState)</td>
+<td style="width: 305px;">In W45550A when you have implemented APRE is active. Refer to &lt;Document 760588.1&gt; E1: 45: Accelerated Pricing Resolution Engine (F4072, F4092, F40941, F40942, F40943) for APRE</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: In case you wanted to debug error/warning/information by yourself, capture jasdebug.log and analyze it becaue a number of error messge is handled through event rule</div>
+<p>&nbsp;</p>
+<p><a href="1561348.1_P45550__.html#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;<br /> <big><a name="conclusion"></a>Conclusion:</big></p>
+<ul>
+<li>&nbsp;Understand Search Agent and make use of it</li>
+<li>&nbsp;Do not press find button without specifying Search Agent because,</li>
+<ul>
+<li>&nbsp;Excessive processing time by reading all data from F4072</li>
+<li>&nbsp;Unnecessary errors</li>
+</ul>
+<li>Truncate work file (or, temporary data repository) regular basis</li>
+<ul>
+<li>F45511W (Search Agent Directives Work File)</li>
+<li>F4072W (Price Adjustment Detail Work File)</li>
+<li>These files can be remained as orphaned data by terminating session (either click Close button or Session timeout)</li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

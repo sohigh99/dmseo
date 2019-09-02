@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Transactions to Batch Headers Integrity Report In EnterpriseOne (R007021)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Transactions to Batch Headers Integrity Report In EnterpriseOne (R007021)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Setup</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">Processing Options</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Data Selection</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34"><strong>Reviewing the Report</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Resolving the Integrity</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Reasons for Integrity</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview</strong></h3>
+<p>The Transactions To Batch Headers integrity report (R007021) provides following transaction level information on integrity issues:</p>
+<ul>
+<li>Unposted and posted transactions without a batch header record in the F0011 table.</li>
+<li>Unposted transactions with batch header status of 'D' (Posted).</li>
+<li>Posted transactions with batch header status of  either Approved or Pending.</li>
+</ul>
+<p>The Transactions To Batch Headers report (R007021) compares batches in the Batch Header table (F0011) with its associated detailed transactions (in tables listed below) &amp; identifies following discrepancies:<strong><br /></strong></p>
+<ul>
+<li>The report lists unposted or posted transactions that do have a missing batch header record in F0011 table.</li>
+<li>It lists transactions for which F0011 batch header record is marked as 'D' (Posted) but it has the corresponding detail records as ' '(Unposted). For example, if there is a Journal Entry with Batch Status F0011.ICIST = D (Posted) whereas the corresponding F0911 detail transactions have F0911.GLPOST = ' '(Unposted), it would show up as discrepancy on integrity report.</li>
+<li>It also lists transactions for which F0011 record is marked as Unposted but it has the corresponding detail records as Posted. For example, if there is a Journal Entry with Batch Status as Unposted whereas the corresponding F0911 detail transactions have F0911.GLPOST = 'P' (Posted), it would also show up as discrepancy.</li>
+</ul>
+<p><strong>General Accounting Tables:</strong></p>
+<ul>
+<li>Account Ledger (F0911)</li>
+</ul>
+<p><strong>Accounts Receivables Tables:</strong></p>
+<ul>
+<li>Customer Ledger (F03B11)</li>
+<li>Receipts Header (F03B13)</li>
+<li>Receipts Detail (F03B14)</li>
+</ul>
+<p><strong>Accounts Payable Tables:</strong></p>
+<ul>
+<li>Accounts Payable Ledger (F0411)</li>
+<li>Accounts Payable - Matching Document (F0413)</li>
+<li>Accounts Payable Matching Document Detail (F0414)</li>
+</ul>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document provides an overview of the Transactions to Batch Headers Integrity Report (R007021) including the overview, program functionality, setup, and information on reviewing and resolving the integrity report.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Setup</strong></h3>
+<a name="aref_section32"></a><h4 class="km">Processing Options</h4>
+<p class="km"><strong>Post/Unposted Tab</strong></p>
+<p>1. Posted/Unposted Transactions</p>
+<ul>
+<li>Enter '1' to limit the integrity check to only unposted transactions.</li>
+<li>A default of blank will cause the report to process both posted and unposted transactions.</li>
+</ul>
+<p class="km"><strong>Select Tab</strong></p>
+<p>1. Date Range (From &amp; Thru Date):</p>
+<ul>
+<li>Enter a date range (From &amp; Thru) to limit the records, system selects for processing.</li>
+<li>A default of blank will run over the entire table unless a value for Prior Days is entered below.</li>
+</ul>
+<p>2. Prior Days:</p>
+<ul>
+<li>Enter the number of prior days (to the current date) to limit the records, system selects for processing.</li>
+<li>A default of blank will use the From Date and Thru Date. For example, if you specify 30 for this processing option, the system selects records starting 30 days ago through today.</li>
+</ul>
+<div class="kmnotebox">NOTE: Since R007021 is a batch header report, the system uses the batch date (F0011.ICDICJ), not the general ledger date, to select records.</div>
+<p>3. Batch Type Range (From &amp; Thru Batch Type):</p>
+<ul>
+<li>Enter a batch type range (from UDC 98/IT) to limit the integrity check.</li>
+<li>A default of blank will select all Batch Types.</li>
+</ul>
+<p>4. Batch Number Range (From &amp; Thru Batch Number):</p>
+<ul>
+<li>Enter a batch number range to limit the integrity check.</li>
+<li>A default of blank will select all the batch numbers.</li>
+</ul>
+<p>5. User ID Range (From &amp; Thru User ID):</p>
+<ul>
+<li>Enter a range of user IDs to limit the integrity check.</li>
+<li>A default of blank will select all the User Ids.</li>
+</ul>
+<p class="km"><strong>G/L Tab</strong></p>
+<p>1. G/L Integrity check Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to include the Account Ledger file (F0911).</li>
+<li>Blank does not include the F0911 records for comparison with F0011.</li>
+</ul>
+<div class="kmnotebox">NOTE:<br />
+<ul>
+<li>If you specify a range of batch types or batch numbers in the Batch processing options and specify '1' for this GL processing option, the system identifies the batches and then compares the corresponding records in the F0911 table to the F0011 table.</li>
+<li>If you specify a range of batch types or batch numbers in the Batch processing options and leave this GL processing option blank, the system does not perform an integrity check between the F0911 and F0011 tables.</li>
+</ul>
+</div>
+<p class="km"><strong>A/R Tab</strong></p>
+<p>1. A/R Ledger File F03B11 Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to include the Accounts Receivable Ledger file (F03B11).</li>
+<li>Blank does not include the F03B11 records for comparison with F0011.</li>
+</ul>
+<p>2. A/R Receipts Header File F03B13 Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to include the Receipt Header file (F03B13).</li>
+<li>Blank does not include the F03B13 records for comparison with F0011.</li>
+</ul>
+<p>3. Compare Receipts Header and Detail Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to compare the Receipt Header file (F03B13) with the Receipts Detail file (F03B14).</li>
+<li>Blank does not include the comparison between F03B13 &amp; F03B14 records for with F0011.</li>
+</ul>
+<div class="kmnotebox">NOTE: If you specify a range of batch types or batch numbers in the processing options and leave any of these AR processing options blank, the system does not perform an integrity check between the specified table and the F0011 table. For example, assume that you specify the batch type range IB through RB in the processing options. Then you specify '1' for the GL and AP processing options and leave the AR processing options blank. The system will perform an integrity check on the batches within the IB through RB range that exist in the F0911 table and compare them to the F0011 table.</div>
+<p class="km"><strong>A/P Tab</strong></p>
+<p>1. A/P Ledger File F0411 Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to include the Accounts Payable Ledger file (F0411).</li>
+<li>Blank does not include the F0411 records for comparison with F0011.</li>
+</ul>
+<p>2. A/P Matching Document File F0413 Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to include the Accounts Payable Matching Document file (F0413).</li>
+<li>Blank does not include the F0413 records for comparison with F0011.</li>
+</ul>
+<p>3. Compare A/P Header and Detail Flag</p>
+<ul>
+<li>Enter '1' to expand the integrity check to compare the Accounts Payable Matching Document file (F0413) with the Accounts Payable Matching Document Detail file (F0414).</li>
+<li>Blank does not include the F0413 &amp; F0414 records for comparison with F0011.</li>
+</ul>
+<div class="kmnotebox">ENHANCEMENT NOTE: In 8.10 &amp; subsequent EnterpriseOne releases, a new Processing Option Tab "Options" is added that allows the report to rebuild batch headers automatically for missing batch headers, and also provides an option to set the default status of newly created Batch Header as either Pending or Approved.</div>
+<p class="km"><strong>Options Tab</strong></p>
+<p>1. Rebuild Missing Batch Header F0011 Flag</p>
+<ul>
+<li>Enter '1' to rebuild missing F0011 batch header records. A message would appear on the report Missing batch header record was added.</li>
+<li>Blank would not rebuild the missing batch header record. A message would appear on the report No batch header record.</li>
+</ul>
+<p>2. Manager Approval Flag</p>
+<ul>
+<li>Enter '1' in case Manager Approval is required for newly added batch header records. The system would create the batch header with batch status as ' ' (Pending).</li>
+<li>Enter Blank, in case Manager Approval is not required for newly added batch header records. The batch status will be created with status as 'A' (Approved).</li>
+</ul>
+<a name="aref_section33"></a><h4 class="km">Data Selection</h4>
+<p>Do not specify any data selection criteria for this report.</p>
+<div class="kmnotebox">NOTE:<br />
+<ul>
+<li>This report can be lengthy at times. For example, if a 200-line journal entry has an integrity issue, for instance, the batch header shows missing, the system would print all the 200 lines. For this reason, you might want to create different versions of this report and use processing options to specify whether to compare general ledger, accounts payable, or accounts receivable transactions with the batch records.</li>
+<li>You must set at least one of the GL, AR, or AP processing options for the system to process records for data discrepancies. Otherwise, the system prints the message No Data Selected on the report.</li>
+<li>When missing batch headers are rebuilt, they may need to be updated to a batch status of "D" if the supporting detail records (GA, AR, AP) have already been posted.  The Batch to Detail Integrity Report (R007031) can be used to make this update.  Please see E1: 09: Overview of Batch to Detail Integrity Report (R007031) in EnterpriseOne Financial Management (Doc ID 1378537.1) for more information about this functionality.</li>
+</ul>
+</div>
+<a name="aref_section34"></a><h3 class="km"><strong>Reviewing the Report</strong></h3>
+<p><img src="../images/int010.png"/></p>
+<p><strong>*</strong> The report categorizes the discrepancies (if any) under different headings owing to comparison of batch header table with each detail transaction table, depending upon the Integrity Check flag specified under different Processing options tab. The R007021 report would print following messages:</p>
+<p> </p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km">No.</th>
+<th class="km">Error Message</th>
+<th class="km">Cause of Error Message</th>
+</tr>
+<tr>
+<td class="km">1*</td>
+<td class="km">No Batch Header (F0011) Record</td>
+<td class="km">This would appear if a batch header for any detail transactions is missing from F0011 Batch Header table.</td>
+</tr>
+<tr>
+<td class="km">2*</td>
+<td class="km">Batch Header (F0011) Unposted / Detail (XYZ) Posted<br />(where XYZ could be either of F0911/F03B11/F03B13/F03B14/F0411/F0413/F0414 tables)</td>
+<td class="km">If a particular batch number has Batch Status Unposted whereas the corresponding detail transactions have Post Status as Posted.</td>
+</tr>
+<tr>
+<td valign="top">3*</td>
+<td valign="top">Batch Header (F0011) Posted / Detail (XYZ) Unposted<br />(where XYZ could be either of F0911/F03B11/F03B13/F03B14/F0411/F0413/F0414 tables)</td>
+<td valign="top">This would appear if a particular batch number has Batch Status F0011.IST = 'D' (Batch header shows Posted) whereas the corresponding detail transactions have Post Status as Unposted.</td>
+</tr>
+<tr>
+<td class="km">4*</td>
+<td class="km">Header (F03B13/F0413) Posted / Detail (F03B14/F0414) Unposted</td>
+<td class="km">If F03B13/F0413 header record is Posted and all of the corresponding F03B14/F0414 detail records are Unposted. Please note that F03B13 is always associated with F03B14 and F0413 with F0414 table.</td>
+</tr>
+<tr>
+<td class="km">5*</td>
+<td class="km">Header (F03B13/F0414) Unposted / All Detail (F03B14/F0414) Posted</td>
+<td class="km">If F03B13/F0413 header record is Unposted and all of the corresponding F03B14/F0414 detail records are Posted.</td>
+</tr>
+<tr>
+<td class="km">6*</td>
+<td class="km">No Records in Error</td>
+<td class="km">This message would appear if the Integrity check flag is enabled for a particular table and none of the above mentioned discrepancies are found.</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section35"></a><h3 class="km"><strong>Resolving the Integrity</strong></h3>
+<p class="km"><em><strong>No Batch Header (F0011) Record</strong></em></p>
+<p class="km">To correct this discrepancy, please follow either of the methods to create the missing batch header:</p>
+<p class="km">Automatically:</p>
+<p>Re-run R007021 by setting the processing option under Options Tab Rebuild Missing Batch Header as '1' to rebuild missing batch header. After it creates a batch header, it would print message: <em>Missing Batch Header (F0011) record was Added</em>.</p>
+<p><img src="../images/int011.png"/></p>
+<p class="km">Manually:</p>
+<ol>
+<li>Open P0011 Work with Batches form.</li>
+<li>Select Form-exit --&gt; Create.</li>
+<li>In Batch header revisions, add the batch header related information. Specify information in all fields except Input Total, Batch Status, and Number of Documents Expected.</li>
+</ol>
+<div class="kmnotebox">
+<p>NOTE:</p>
+<ul>
+<li>If actual Amount is unknown, Oracle recommends that you enter 100 or more in the Amount Entered field.</li>
+<li>If the actual number of documents is unknown, Oracle recommends that you enter 10 or more in the Documents Entered field. For example, if you enter only 1 and later delete a single document, the system updates the Documents Entered field to zero and deletes the batch header when you run the Correcting Out-of-Balance integrity report.</li>
+</ul>
+</div>
+<p class="km"><em><strong>Batch Header (F0011) Unposted / Detail (XYZ) Posted</strong></em></p>
+<p class="km">Run Batch to Detail (R007031) Integrity report to update the Batch Header Status to 'D'.</p>
+<p class="km">Please see <a href='../docs/1378537.html'>Overview of Batch to Detail Integrity Report (R007031) in EnterpriseOne Financial Management</a> Overview of Batch to Detail Integrity Report (R007031) for additional information.</p>
+<p class="km"><em><strong>Batch Header (F0011) Posted / Detail (XYZ) Unposted</strong></em></p>
+<p>To correct this discrepancy, please follow the below steps:-</p>
+<ol>
+<li>Inquire the batch in P0011 Work with Batches form.</li>
+<li>Select the Batch header record in grid and Row-Exit -&gt; Revise.</li>
+<li>Change the status of the batch to 'A' (Approved) on the Batch Header Revisions form.</li>
+<li>Post the batch.</li>
+</ol>
+<p class="km"><em><strong>Header (ABC) Posted / Detail (XYZ) Unposted and 5* Header (F03B13/F0414) Unposted / All Detail (F03B14/F0414) Posted</strong></em></p>
+<p class="km">For both 4* &amp; 5* error messages, it would be required to export and review the data as follows:</p>
+<ol>
+<li>Inquire by PYID Payment Id corresponding to the batch number in question and export the data from respective Header (F03B13/F0413) &amp; Detail (F03B14/F0414)</li>
+<li>Export the data from F0011 and F0911 for the batch number</li>
+<li>Review the batch status in all the tables collectively and update the Post Status as desired via SQL. There could be numerous possibilities for this scenario. For instance - reset the F03B13 Header table status to Blank, if corresponding F0011/F03B14 records are unposted and there are no corresponding F0911 entries or reset the F03B13 Header table status to Posted, if corresponding F0011/F03B14/F0911 records have status as Posted.</li>
+</ol>
+<a name="aref_section36"></a><h3 class="km"><strong>Reasons for Integrity</strong></h3>
+<p class="km"><strong>Missing batch header records</strong></p>
+<div align="left">Following may be the probable reasons for this error to appear on R007021 report:</div>
+<ul>
+<li>Computer failure.</li>
+<li>Conversion or interface program created a batch header incorrectly.</li>
+<li>User created a batch header incorrectly.</li>
+<li>User did not enter the actual number of documents on the Batch Header Revisions form.</li>
+</ul>
+<p class="km"><strong>Posted Batch Header Record, No Posted Detail</strong></p>
+<p>This error appears on the R007021 report, if a user incorrectly changes a batch header record to a posted status.<br /><br /></p>
+<div class="kmnotebox">NOTE: To prevent future discrepancies, consider assigning responsibility for batch revisions to a single super-user.</div>
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MathDivide API sets wrong Unit Cost, Extended Price and Transaction Quantities in Linux/Unix</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>MathDivide API sets wrong Unit Cost, Extended Price and Transaction Quantities in Linux/Unix</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose</BIG></span></big></big></h2>
+
+
+<p>The purpose of this document is to demonstrate case study on MathDivide issue in Linux/Unix environment, however this document is not meant to encompass all rounding issues in EnterpriseOne. </p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Troubleshooting Steps</BIG></span></big></big></h2>
+
+
+<h2>Symptoms</h2>
+<p>Wrongly computed Unit Cost, Extended Price and Transaction Quantity issue can be coming from multiple applications and transaction. Some example are, </p>
+<ul>
+<li>Extended cost is rounded up as a result it issues error <span style="text-decoration: underline;">ERROR INFO JDEERR - ID= 22, Error= 0252 - b4100030.c, Line= 353</span>. As a result, mnExtendedCost &lt;&gt; mnTransactionQuantity * mnTransactionUnitCost</li>
+<li>Average Cost is updated rounded up nearest 100 from multiple inventory transaction applications</li>
+<li>R31410 (Work Order Processing) is rounding the part list quantity if component quantity in BOM is less than '1'</li>
+<li>In MRP, there is a looping issue with Mathdivide. This can cause the UBE to never end (terminate)</li>
+</ul>
+<p>This issue is specific to,</p>
+<ul>
+<li>Linux Environment (In running same application in Non-J* environment through Local HTML instance, it is working fine)</li>
+<li>Display Decimal for QTYINV class DD items are not zero</li>
+<li>Business function is making use of MathDivide() API</li>
+</ul>
+<p> </p>
+<h2>Changes</h2>
+<p>N/A</p>
+<p> </p>
+<p> </p>
+<h2>Cause</h2>
+<p>JDE API Mathdivide issue may occur when the Linux server operating system is installed with a non-English language. In such situations calculations for unit costs can be incorrect. For example, if a unit cost is 0.38 and there are 10 units, the extended cost is calculated as 0.00 rather than the expected 3.8. This issue occurs when BSFN logic runs on a Linux/UNIX Enterprise/Logic Server.</p>
+<p> </p>
+<p> </p>
+<h2>Solution</h2>
+<p>&lt;Document 1126694.1&gt; E1: OS: Known Issues When Running JDE Services on UNIX/Linux Enterprise Servers <br /><br />Excerpt:<br /><br />&bull; Type locale on the server command line. This will list all the locale settings currently in place on your server.<br />&bull; The LC_LANG should be set to US English.<br />&bull; To set the language locale to US English,<br />    o For csh/tcsh (C-shell): type the setenv command as follows:<br />        setenv LANG en_US.UTF-8<br />    o For ksh (korn shell) or sh (bash shell):<br />        export LANG=en_US.UTF-8<br />Put this command in the shell initialization script to be executed at login time (.profile, .bashrc, .kshrc, etc.) It may require rebooting the Enterprise Server for the change to take effect.</p>
+<p> </p>
+<h2>Troubleshooting</h2>
+<p>Either error 0252 (Extended Price Invalid) is represented in HTML client or the value computed by a certain business function is wrong.</p>
+<p>When you observe this type of issue,</p>
+<p>1. Test it in your Local Web Environment (where it is applicable)</p>
+<p>2. In case the outcome is different between Local Web client and HTML client, capture call object kernel log (namely, jdedebug.log) and compare it.</p>
+<p> </p>
+<h2>Example</h2>
+<p><span style="text-decoration: underline;">Call Object Kernel log example:</span></p>
+<p>Two different applications (P4114 and P4312) return different outcome thought it is calling same business functions.</p>
+<p>A. <strong>P4114(Inventory Adjustment). User has not populated Extended Cost</strong></p>
+<p style="margin-left: 30px;">Calling Business function VerifyQuantityCostExtended from F4111EditLine for JDE. Application Name [P4114], Version [ZJDE0001] (BSFNLevel = 3)<br />IN-&gt;[  1] mnTransactionQuantity            [100.0000]<br />IN-&gt;[  2] mnTransactionUnitCost            [.1500]<br />IN-&gt;[  3] mnExtendedCost                   [0] <em>*** Called function VerifyQuantityCostExtended has to compute mnExtendedCost ***</em><br />IN-&gt;[  4] mnPrimaryUnitCost                [0]<br />IN-&gt;[  5] mnConversionFactorFromToPrimry   [1]<br />IN-&gt;[  6] mnConversionFactorPriceToPrim    [1]<br />IN-&gt;[  7] cCurrencyControl                 [N]<br />IN-&gt;[  8] mnForeignUnitCost                [.525]<br />IN-&gt;[  9] mnForeignExtendedCost            [0]<br />IN-&gt;[ 10] mnPrimaryTransactionQuantity     [100]<br />IN-&gt;[ 11] mnQuantityConvertedToPrimary     [100]</p>
+<p style="margin-left: 60px;">Entering MathDivide <em>*** Any API called is to be represented in jdedebug.log ***</em><br />Entering MathDivide<br />Entering MathDivide<br />Entering MathDivide<br />Calling Business function GetDataDictionaryDefinition from VerifyQuantityCostExtended for JDE. Application Name [P4114], Version [ZJDE0001] (BSFNLevel = 4)<br />Return value is 0 for GetDataDictionaryDefinition. (BSFNLevel = 4)</p>
+<p style="margin-left: 30px;">OUT-&gt;[  1] mnTransactionQuantity            [100.0000]<br />OUT-&gt;[  2] mnTransactionUnitCost            [.500]<br />OUT-&gt;[  3] mnExtendedCost                   [.] <em>*** Note that this parameter is not populated as a result, F43121.ECST = 0 ***</em><br />OUT-&gt;[  4] mnPrimaryUnitCost                [0]<br />OUT-&gt;[  5] mnConversionFactorFromToPrimry   [1]<br />OUT-&gt;[  6] mnConversionFactorPriceToPrim    [1]<br />OUT-&gt;[  7] cCurrencyControl                 [N]<br />OUT-&gt;[  8] mnForeignUnitCost                [.525]<br />OUT-&gt;[  9] mnForeignExtendedCost            [0]<br />OUT-&gt;[ 10] mnPrimaryTransactionQuantity     [100]<br />OUT-&gt;[ 11] mnQuantityConvertedToPrimary     [100]<br />Return value is 0 for VerifyQuantityCostExtended. (BSFNLevel = 3)</p>
+<p>B. <strong>P4312 (PO Receipt): Computed value is to be validated</strong></p>
+<p style="margin-left: 30px;">Calling Business function VerifyQuantityCostExtended from F4111EditLine for JDE. Application Name [P4312], Version [JDE001] (BSFNLevel = 3)<br />IN-&gt;[  1] mnTransactionQuantity            [1000,0000]<br />IN-&gt;[  2] mnTransactionUnitCost            [.1500]<br />IN-&gt;[  3] mnExtendedCost                   [150.00] <em>*** this value is populated, so called function VerifyQuantityCostExtended verifies whether mnExtendedCost = mnTransactionQuantity * mnTransactionUnitCost ***</em><br />IN-&gt;[  4] mnPrimaryUnitCost                [0]<br />IN-&gt;[  5] mnConversionFactorFromToPrimry   [1]<br />IN-&gt;[  6] mnConversionFactorPriceToPrim    [1]<br />IN-&gt;[  7] cCurrencyControl                 [N]<br />IN-&gt;[  8] mnForeignUnitCost                [.525]<br />IN-&gt;[  9] mnForeignExtendedCost            [.00]<br />IN-&gt;[ 10] mnPrimaryTransactionQuantity     [1000]<br />IN-&gt;[ 11] mnQuantityConvertedToPrimary     [1000]</p>
+<p style="margin-left: 60px;">Entering MathDivide<br />Entering MathDivide<br />Entering MathDivide<br />Entering MathDivide</p>
+<p style="margin-left: 90px;">Calling Business function GetDataDictionaryDefinition from VerifyQuantityCostExtended for JDE. Application Name [P4312], Version [JDE001] (BSFNLevel = 4)<br />Return value is 0 for GetDataDictionaryDefinition. (BSFNLevel = 4)</p>
+<p style="margin-left: 60px;">Entering MathDivide<br />Entering MathDivide</p>
+<p style="margin-left: 90px;">Calling Business function GetDataDictionaryDefinition from VerifyQuantityCostExtended for JDE. Application Name [P4312], Version [JDE001] (BSFNLevel = 4)<br />Return value is 0 for GetDataDictionaryDefinition. (BSFNLevel = 4)</p>
+<p style="margin-left: 60px;">ERROR INFO JDEERR - ID= 22, Error= 0252 - b4100030.c, Line= 353</p>
+<p style="margin-left: 30px;">OUT-&gt;[  1] mnTransactionQuantity            [1000.0000]<br />OUT-&gt;[  2] mnTransactionUnitCost            [.1500]<br />OUT-&gt;[  3] mnExtendedCost                   [150.00] <em>*** As outcome of P4114 above reads, internally it determines the value to be is zero so above error 0252 is to be issued ***</em><br />OUT-&gt;[  4] mnPrimaryUnitCost                [0]<br />OUT-&gt;[  5] mnConversionFactorFromToPrimry   [1]<br />OUT-&gt;[  6] mnConversionFactorPriceToPrim    [1]<br />OUT-&gt;[  7] cCurrencyControl                 [N]<br />OUT-&gt;[  8] mnForeignUnitCost                [.525]<br />OUT-&gt;[  9] mnForeignExtendedCost            [.00]<br />OUT-&gt;[ 10] mnPrimaryTransactionQuantity     [1000]<br />OUT-&gt;[ 11] mnQuantityConvertedToPrimary     [1000]<br />Return value is 2 for VerifyQuantityCostExtended. (BSFNLevel = 3)</p>
+<div class="kmnotebox"> Note: If the first two parameters (mnTransactionQuantity, mnTransactionUnitCost) are specified then it returns 3rd parameter (mnExtendedCost). If all three parameters (mnTransactionQuantity, mnTransactionUnitCost, mnExtendedCost) are specified then it computes 3rd parameter again and compare it with given value. Some case study shows it returns <span id="form1:panelPage1">Integer.MAX_VALUE ( 2147483647).</span></div>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Add a Leading Zero and Comma for a Numeric Value with a Four Display Decimal Value</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Add a Leading Zero and Comma for a Numeric Value with a Four Display Decimal Value</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>I have a numeric value with four decimal places that I need to display with a leading zero when the value is less then 1 and if the value is greater then 1000, I need to add an appropriate comma (or period) separator. </p>
+<ul>
+<li>The standard business function to convert a Math Numeric to String may not support more than two Display Decimals.</li>
+<li>If the value is less than 1, the result does not include a leading zero in the report (for example, for some organizations it is required to put a leading zero in front of a decimal).</li>
+<li>If the value is greater than 1000 I need to include a separator (Comma or Period).</li>
+</ul>
+<p>How can I  implement this?</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p> </p>
+<p> </p>
+<p>Supposing that,</p>
+<ul>
+<li>Input parameter: Unit Price with 4 Display Decimals</li>
+<li>Output parameter: String 20 characters in length</li>
+</ul>
+<p> </p>
+<table style="border-collapse: collapse; width: 1002px; height: 279px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 87pt;" width="116" /><col style="width: 224pt;" width="299" /><col style="width: 270pt;" width="360" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="background-color: #009900; width: 126px; height: 15pt; color: white;">Size of Input</th>
+<th style="background-color: #009900; width: 166px; color: white;">Example</th>
+<th style="background-color: #009900; width: 678px; color: white;">Implementation</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="text-align: right; width: 126px; height: 15pt;" height="20">        0   </td>
+<td style="width: 166px;">Set output 0.0000</td>
+<td style="width: 678px;">Hardcode it</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="text-align: right; width: 126px; height: 15pt;" height="20">0&lt; mnInput &lt;1  </td>
+<td style="width: 166px;">Set Leading Zero 0.1230</td>
+<td style="width: 678px;">1. Multiply input value by 10000<br />2. Convert it to String<br />3. lpad with 0 (to handle value .0123, 0012 or 0001)<br />4. Concatenation (or <em>concat()</em>) 0 and DECT(<em>DecimalFormat</em> - Decimal Format Character) and string value<br /><br />Example:<br />mnNum_temp = [mnInputNumber]*10000     <span style="font-style: italic;">/* store temp value into mnNum_temp */</span><br />Convert Math_Numeric To String  <span style="font-style: italic;"> /* B8000094 - ConvertMath_NumericToString */</span><br />        mnNum_Temp -&gt; BF mnMathNumeric01<br />        szString_temp &lt;- BF szString  <br />szString_temp = lpad([szString_temp],"0",4)  <span style="font-style: italic;">/* fill in zero till it for characters */</span><br />szOutputString = concat('0',concat('.',[szString_temp])) <span style="font-style: italic;">/* concat 3 components (0 + DECT + String value) */</span></td>
+</tr>
+<tr style="height: 15pt;">
+<td style="text-align: right; width: 126px; height: 15pt;" height="20">&gt;=1  </td>
+<td style="width: 166px;">Set output 1,234,567.8900 (Comma Separator)</td>
+<td style="width: 678px;">A. Decimal Notation 1234567<br />
+<blockquote>
+<ol>
+<li>Floor input value and return</li>
+<li>Convert it into String (B8000094 - <em>ConvertMath_NumericToString: Convert Math_Numeric To String</em>)</li>
+<li>Divide it by 3 characters to put Comma (e.g., 1 and 234 and 567)</li>
+<li>Concatenation with comma</li>
+</ol>
+</blockquote>
+B. Decimal Fraction 8900<br />
+<blockquote>      1. Multiple 10000 then get the last 4 digit for Decimal Fraction<br />      2. Convert it to String<br />      3. lpad with 0 for 4 digits string</blockquote>
+C. Concatenation Decimal Notation and DECT (<em>DecimalFormat - Decimal Format Character</em>) and Decimal Fraction</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">NOTE: <br />
+<ul>
+<li>In case you need this repeatedly create NER (Named Event Rule) to call</li>
+<li>f the separator should be a period, rather then a comma, change the example from a comma to a period.</li>
+<li>If this functionality needs to be implemented in multiple places or in multiple reports, then creating a NER business function can be good option.</li>
+<li>In Option 3,</li>
+<ul>
+<li>Decimal Notation can be returned by floor() (e.g., floor(1234567.8900) = 1234567</li>
+<li>Decimal Fraction can be computed by minus away floored value = 1234567.8900 - 1234567 = 0.8900</li>
+<li>To concatenate 1234567 with comma (e.g., 1,234,567)</li>
+<ul>
+<li>Get the length of Decimal Notation (e.g., length(1234567) = 7)</li>
+<li>Divide it by 3 (e.g., 7/3 = 2 + 1/3 so this value needs 2 comma). Concatenation can be performed either manual coding or while loop if the value is greater than 1 (that is bigger than 1000)</li>
+<li>The last 3 digits can be computed substr(InputString, (total length - 3), 3) = substr(1234567, 4,3) = 567 (.. then concat comma in front)</li>
+<li>2nd last 3 digits can be substr(InputString, {(total length - 3)-3}, 3) = substr(1234567, 1, 3) = 234 (.. then concat comma in front of string)</li>
+<li>Balance can be returned substr(InputString, 0, {(total length -3)-3}) = substr(1234567, 0, 1) = 1</li>
+<li>So this can be handled either with an IF condition or in a WHILE loop</li>
+</ul>
+</ul>
+</ul>
+</div>
+<p> </p>
+<p> </p>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

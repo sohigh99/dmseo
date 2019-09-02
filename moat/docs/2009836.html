@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Business Function B0900114 (Retrieve F0901 Info Without Cache) and Retrieve B0900104 (F0901 - Retrieve Account Master Infor for GL Post)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Business Function B0900114 (Retrieve F0901 Info Without Cache) and Retrieve B0900104 (F0901 - Retrieve Account Master Infor for GL Post)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>Question 1&gt; What is Business Function B0900114 (Retrieve F0901 Info without Cache) for? <br /><br />Question 2&gt; Is there any similar business function which returns basic Chart of Account (F0901, Account Master) information like B0900114?<br /><br /><br />&nbsp;</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Question 1&gt; What is Business Function B0900114 (Retrieve F0901 Info without Cache) for?</p>
+<p>Answer 1&gt;</p>
+<p>The business function RetrieveF0901InfowithoutCach (B0900114, Retrieve F0901 Info without Cache) can be described as below,</p>
+<ul>
+<li>&nbsp;&nbsp;<strong>Purpose</strong>: This function is to get Account Master (F0901) not from Cache but from database by issuing JDB_SelectKeyed(). The reason we have this business function is that the table F0901 is to be cached (database cache) because we have defined it in P98613 (Database Cache). In return this can cause Dirty Read (return value before it gets update) or Phantom read (return data which was deleted) until you flush/reset database cache (For deletion of cache, see &lt;Document&nbsp;944015.1&gt; E1: ENV: Frequently Asked Questions on Caching in EnterpriseOne). So benefit of this function is, it returns only limited columns and it reads table directly (not through cache) and drawback is it may perform slower because it has to make a trip to the database.</li>
+</ul>
+<div class="kmnotebox">
+<p>Note: There are other business functions which read database cache by issuing API JDB_FetchKeyed() and which returns all columns from F0901. For example,</p>
+<ul>
+<li>ValidateAccountNumber (XX0901, F0901 Edit Account Number)</li>
+<li>GetF0911Information (B4100470, F0911 Get Account Information)</li>
+<li>RetrieveAccountMasterInfoGLPost (B0900104, F0901 - Retrieve Account Master Infor for GL Post)&nbsp;</li>
+</ul>
+</div>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; Detail routine:
+<ul>
+<li>&nbsp; (IN) szAccountId (to select data on F0901.gmaid = (input) Account ID</li>
+<li>&nbsp; (OUT) szCompany (F0901.gmco)</li>
+<li>&nbsp;&nbsp;(OUT) szCostCenter (F0901.gmmcu)</li>
+<li>&nbsp;&nbsp;(OUT) szObjectAccount (F0901.gmobj)</li>
+<li>&nbsp;&nbsp;(OUT) szSubsidiary (F0901.gmsub)</li>
+<li>&nbsp;&nbsp;(OUT) szDescription001 (F0901.gmdl01)</li>
+<li>&nbsp;&nbsp;(OUT) szCurrencyCodeFrom (F0901.gmcrcd)</li>
+<li>&nbsp;&nbsp;(OUT) cPostingEdit (F0901.gmpec) for E1 application release 9.0 and 9.1</li>
+</ul>
+</li>
+</ul>
+<p><br />Standard Application calls B0900114</p>
+<p>: Currently 3 batch applications is calling same function as listed below,</p>
+<ul>
+<li>R097021 (Transaction w/o Account Master)</li>
+<li>R097031 (Account Balance w/o Account Master)</li>
+<li>R11414A (Currency Restatement Compute)</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : In case you want to make use of this function, refer how standard application is calling it</p>
+<p>&nbsp;</p>
+<p>Question 2&gt; Is there any similar business function which returns basic Chart of Account (F0901, Account Master) information like B0900114?</p>
+<p>Answer 2&gt;<br />XX0901 is hard to use because it performs too many things (See, &lt;Document 1372342.1&gt; E1: BSFN: XX0901 - Business Function Detail Information). So you may make use of RetrieveAccountMasterInfoGLPost (B0900104, F0901 - Retrieve Account Master Infor for GL Post) which performs same but this function reads database cache.</p>
+<p>B0900104 handled data from F0901 as below,</p>
+<ul>
+<li>szCostCenter (F0901.mcu)</li>
+<li>szObjectAccount (F0901.obj)</li>
+<li>szSubsidiary (F0901.sub)</li>
+<li>szAccountNumber3rd (F0901.ans)</li>
+<li>szAccountDescription (F0901.dl01)</li>
+<li>szAccountCompany ((F0901.co)</li>
+<li>szAccountCurrencyCode (F0901.crcd)</li>
+<li>cPostingEditCode (F0901.pec;</li>
+<li>cAdjustmentEntry (F0901.adjent)</li>
+<li>cFAR_UnAllowableFlag (F0901.uafl)</li>
+<li>based on szAccountId (F0901.aid)&nbsp;</li>
+</ul>
+<p>and multiple applications are calling this.</p>
+<p><br /><br /></p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

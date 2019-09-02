@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mail Merge FAQs</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Mail Merge FAQs</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Question 1:</strong>&nbsp; Does the system provide the ability to add logos to a Mail Merge document?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 2:</strong>&nbsp; When using the Mail Merge Workbench why are some of the toolbar features disabled?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 3:</strong>&nbsp; Why does the Edit Template Button on the Web Mail Merge Details Screen (P05WMMWB) not work?&nbsp; Unable to edit and update the document.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 4:</strong>&nbsp; When&nbsp;Mail Merge is processed to generate letters, why is the the generated letter losing its initial formatting?&nbsp; The font formatting is lost, columns are not aligned and words are running together.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Question 5:</strong>&nbsp; Duplicate Key Error - "JAS_MSG317:Duplicate Key Not Allowed.&nbsp; Please correct the duplicate key field" is received when adding data items to P05WMMWB, Web Mail Merge Workbench.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 6</strong>: What Microsoft Office Word version is supported with Mail Merge?</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>&nbsp;This document address frequently asked questions regarding the mail merge process.</p>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<a name="aref_section21"></a><h4 class="km"><strong>Question 1:</strong>&nbsp; Does the system provide the ability to add logos to a Mail Merge document?</h4>
+<p><strong>Answer 1:</strong>&nbsp; Currently mail merge document does not support picture or logo.&nbsp; Unfortunately this limitation is common throughout the JDE E1 system mail merges including Human Resources. The basis of the problem is that using Word to build the template and then save off as a .html form you will have visibility as within the Windows regime and outside of JDE constraints. The Middleware will only use rich text outside of the desktop Windows operating environment (on AS/400 / AIX / Unix / Windows server edition), the OLE is therefore ignored completely and is not incorporated into the output document. Even though you may have this emailing direct, because the UBE is routed via the server, the capability for OLE objects is not there.</p>
+<a name="aref_section22"></a><h4 class="km"><strong>Question 2:</strong>&nbsp; When using the Mail Merge Workbench why are some of the toolbar features disabled?</h4>
+<p><strong>Answer 2:</strong>&nbsp;&nbsp; That is correct.&nbsp;&nbsp;Everything is grayed out except the Insert Merge Field button because this is a Microsoft Word tool bar and the only part that integrates with EnterpriseOne is the Insert Merge Field button.&nbsp;&nbsp;The rest of the tool bar is disabled.<br />It is necessary to set this up through a Word Document outside of J.D. Edwards EnterpriseOne.&nbsp;&nbsp;Perform the following:</p>
+<ol>
+<li>Open Microsoft Word Document</li>
+<li>Go to "Add and Remove Buttons"</li>
+<li>Choose "Mail Merge"</li>
+<li>Put a check in the following menu option:<br />Insert Merge Fields<br />Insert Merge Field<br />NOTE:&nbsp;&nbsp;There are 2 menu options, one with "Field" and the Other with "Fields". Select Both</li>
+</ol>
+<a name="aref_section23"></a><h4 class="km"><strong>Question 3:</strong>&nbsp; Why does the Edit Template Button on the Web Mail Merge Details Screen (P05WMMWB) not work?&nbsp; Unable to edit and update the document.</h4>
+<p><strong>Answer 3:</strong>&nbsp;The Active X Options may not be set correctly.&nbsp; In Internet Explorer go to Tools &amp; Select Internet Options and select the Security Tab.&nbsp;&nbsp;All of the ActiveX options need to be set at either Enable or Prompt.</p>
+<a name="aref_section24"></a><h4 class="km"><strong>Question 4:</strong>&nbsp; When&nbsp;Mail Merge is processed to generate letters, why is the the generated letter losing its initial formatting?&nbsp; The font formatting is lost, columns are not aligned and words are running together.</h4>
+<p><strong>Answer 4:</strong>&nbsp; If the template has the columns aligned, the problem comes when the merge fields are replaced and the replacement values are smaller than the merge fields. This is causing the rest of the line to shift to the left. It is recommended to use a table to force column alignment.&nbsp; Edit the HTML template(BENEFIT.htm) in MS Word. Insert a standard table with as many rows and columns as needed and then copy and paste each item into the correct cell in the table. Users can set the table so that the table grid lines do not display.&nbsp; With this template users may want to insert 4 tables one for each section, each containing 3 columns. Then copy the existing data into the table as in the example below. Once all of the data has been entered into the table, set the table properties to hide the lines. This is done by selecting the entire table and right clicking, then selecting borders and shading and selecting none.</p>
+<a name="aref_section25"></a><h4 class="km"><strong>Question 5:</strong>&nbsp; Duplicate Key Error - "JAS_MSG317:Duplicate Key Not Allowed.&nbsp; Please correct the duplicate key field" is received when adding data items to P05WMMWB, Web Mail Merge Workbench.</h4>
+<p><strong>Answer 5:</strong>&nbsp; More than one data structure in the Data Structure Field will cause this JAS error.&nbsp; Remove multiple data structures in the data structure field for P05WMMWB.</p>
+<a name="aref_section26"></a><h4 class="km"><strong>Question 6</strong>: What Microsoft Office Word version is supported with Mail Merge?</h4>
+<p>Answer 6:&nbsp; It is recommended to edit the Mail Merge template directly from Microsoft Word.&nbsp; Regardless of Word version after making changes choose File, Export, Change File Type, choose Save as type to Web Page, Filtered (click Yes to the pop-up to remove Office-specific tags).</p>
+<p>&nbsp;</p>
+</span></div></div></td>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Override and Retain Secondary Quantity Update Using P4210 Before Ship Confirm</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Override and Retain Secondary Quantity Update Using P4210 Before Ship Confirm</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></big></big></h2>
+
+<p>Is it possible to have P4210 retained GC Secondary Quantity (SQOR) when user override it for Dual UOM item?</p>
+<p> </p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>First of all, there is the existing enhancement request for the expectation described here. Please refer to &lt;Bug 10974357&gt; : UNABLE TO OVERRIDE SECONDARY Q - SAR: 8653305.<br /><br />As you can see in the section 'Applications Affected by Dual UOM' in &lt;Document 625673.1&gt; - E1: 41: Dual Unit of Measure (P4101, P4310, R41411, R41610, R41413), only Shipment Confirmation and PO Receipt allows you to override it (when goods are leaving/arriving warehouse for instance). For this reason, there is the enhancement request in procurement as well. &lt;Document 2366383.1&gt; - E1: 43: Enhancement to Allow Manual Entry or Change of Secondary Quantity SQOR in P4310 For Dual UOM Items. </p>
+<p>Supposing that I go to grocery stores,</p>
+<ol>
+<li>Picking up a piece of cabbage (commit) which is priced per pound </li>
+<li>(During checking out - ship confirmation) Weigh it, which computes price </li>
+</ol>
+<p>So the price has to be computed (possibly using R42950) before printing out invoice (between ship confirmation and print invoice).</p>
+<p>Meanwhile, in case your business does not require ship confirmation (e.g., interface with Oracle Transportation Management (OTM), or other 3rd party integration), you need to modify B4200311 and XT4312Z2 accordingly. Note that actual code example is set as 'Internal Only'. </p>
+<p> </p>
+<p>&lt;Internal_Only&gt;</p>
+<p>Then, is there way to retain the secondary quantity in Sales Order Entry and Purchase Order Entry?</p>
+<p>In case, this functionality is a showstopper (for instance, the document requires for export of goods need entering exact weight before print invoice), possibly, <br /><br /><br /><h4>[As - Is] of B4200311.c</h4>
+
+<div class="kmcodeblock">
+  <br />/* SAR 7866755 - Only do inventory transction process for order that has qty shipped */<br />
+    if ((lpDS-&gt;szSOEMBFInternalFlags[EL_CALLED_FROM_SOEL16] == R42950_8_SOEL16) &amp;&amp;<br />
+     (MathZeroTest(&amp;lpDS-&gt;mnQtyShipped)))<br />
+     {<br />
+     &nbsp;&nbsp;&nbsp;&nbsp;dsN4101440.cInventoryTransactionProcess = _J('1');<br />  }<br />
+   </div>
+
+<h4>[To - Be]</h4><div class="kmcodeblock">  <br />
+if (MathZeroTest(&amp;lpDS-&gt;mnQtyShipped))<br />  {<br />        dsN4101440.cInventoryTransactionProcess = _J(' ');<br />  }<br /><br />*** Break In Code ***<br />  idReturnValue = jdeCallObject(_J("DualUnitOfMeasure"),<br />  NULL, lpBhvrCom,lpVoid,(LPVOID)&amp;dsN4101440,<br />  (CALLMAP *)NULL,(int)0,(JCHAR *)NULL,<br />  (JCHAR *)NULL,(int)0);<br />*** Break In Code ***<br /><br />
+</div>
+
+<h4>Purchase Order:</h4>
+<div class="kmcodeblock">
+<br />*** Break In Code ***<br /> /*SAR 7807122 - Begin*/<br /> if ( ((dsFetchFromF4311Z-&gt;pwdual == _J('1')) ||<br /> (dsFetchFromF4311Z-&gt;pwdual == _J('2'))) &amp;&amp;<br /> MathZeroTest(&amp;lpDS-&gt;mnSecondaryQty) &amp;&amp; <br /> MathZeroTest(&amp;lpDS-&gt;mnQuantityOrdered) &amp;&amp; <br /> (jdeStrcmp(lpDS-&gt;szProgramID,_J("EP4205")) == 0 ||<br /> jdeStrcmp(lpDS-&gt;szProgramID,_J("EP49645")) == 0 ||<br /> jdeStrcmp(lpDS-&gt;szProgramID,_J("EP49640")) == 0 ||<br /> jdeStrcmp(lpDS-&gt;szProgramID,_J("ER42500")) == 0 ||<br /> jdeStrcmp(lpDS-&gt;szProgramID,_J("ER49500")) == 0 /* SAR 8482841 */<br /> /* Bug# 17904890 Begin */<br /> || cDualUoMSecQtyBypass == _J('1'))) /* Bug# 17904890 End */<br /> {<br />     dsGetDualUnitOfMeasure.cInventoryTransactionProcess = _J('1');<br /> }<br /> else<br /> {<br /> /*SAR 7807122 - End*/<br /> dsGetDualUnitOfMeasure.cInventoryTransactionProcess = _J(' ');<br /> /*SAR 7807122 - Begin*/<br /> }<br /> /*SAR 7807122 - End*/<br />*** Break In Code ***</p>
+<p> </p>
+<p>&lt;/Internal_Only&gt;</p>
+</div>
+<p>&nbsp; </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

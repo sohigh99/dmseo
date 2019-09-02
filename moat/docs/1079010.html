@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Application Level Business Functions Built into JDEKRNL.dll</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Application Level Business Functions Built into JDEKRNL.dll</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>What standard EnterpriseOne business functions are built into the JDEKRNL.dll?</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p> </p>
+<p>This table lists the application level Business Functions which are built into the JDEKRNL.DLL which belongs to the tools foundation code. The extension .dll is for the Windows platform; .so or .sl for Unix; and iSeries does not have an extension.</p>
+<table class="km" style="width: 827px; height: 123px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; color: white;">Object ID</th>
+<th class="km" style="background-color: #009900; color: white; width: 259px;">Function Name</th>
+<th class="km" style="background-color: #009900; color: white; width: 342px;">Description</th>
+<th class="km" style="background-color: #009900; color: white; width: 157px;">Parent<br />DLL</th>
+</tr>
+<tr>
+<td class="km">X00023</td>
+<td class="km" style="width: 259px;">F00023GetDistributedNextNumber_T</td>
+<td class="km" style="width: 342px;">INTERNAL USE ONLY - DO NOT USE</td>
+<td class="km" style="width: 157px;">CFIN</td>
+</tr>
+<tr>
+<td class="km">X0005</td>
+<td class="km" style="width: 259px;">GetUDC</td>
+<td class="km" style="width: 342px;">GetUDC</td>
+<td class="km" style="width: 157px;">CRUNTIME</td>
+</tr>
+<tr>
+<td class="km">X0010</td>
+<td class="km" style="width: 259px;">X0010GetNextNumber</td>
+<td class="km" style="width: 342px;">X0010 - Get Next Number</td>
+<td class="km" style="width: 157px;">CALLBSFN</td>
+</tr>
+</tbody>
+</table>
+<p><br />Although the Parent DLL of the above business functions defined in F9860 is not JDEKRNL.DLL, for example, X0005 GetUDC business function is defined in OMW using Parent DLL CRUNTIME and data structure D0005, the business function is built in to JDEKRNL.DLL</p>
+<ul>
+<li>Data Structure is defined at \e1release\system\include\JDEKSTRT.H</li>
+<li>Function Prototype is defined at \e1release\system\include\JDEKPRTO.H</li>
+<ul>
+<li>That is X0005.h (header file) does not contain this information.</li>
+</ul>
+</ul>
+<p>The Source folder contains a DummyFunction() as below</p>
+<div class="kmcodeblock" style="width: 95%; margin-left: 80px;">/* This definition is now included in JDEKRNL.DLL */<br />void dummyFunction(void)<br />{<br />  return;<br />}</div>
+<p> </p>
+<h4 class="km">Additional Notes</h4>
+<ul>
+<li>UDC value will be validated through the Server Component in JAS not through X0005.</li>
+<li>When GetUDC gets called from an application or Business Function, JDEKRNL.dll is used instead of CRUNTIME.dll.</li>
+<li>BSFN X00022 - GetNextUniqueKeyID (Get Next Unique Key ID) does not belong to the JDEKRNL.dll, thus it is still built into its parent DLL CALLBSFN.</li>
+<li>Business functions built into the JDEKRNL.dll cannot be modified because the source code is not delivered with the software.</li>
+</ul>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

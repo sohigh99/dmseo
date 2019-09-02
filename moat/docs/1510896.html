@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Address Book Setup - FAQ </title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Address Book Setup - FAQ</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Country Constant Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 1:</strong> Why is the country name not showing in the vendor address portion of accounts payable check?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 2:</strong> Why does the Formatted Address with Who's Who (B0100067) incorrectly formatting the Mailing Name to print after Address Line number 1?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 3: </strong>Which programs are impacted when changing the address format for a country in the Country Constants (P0070)?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section25"><strong>Address Book User Defined Code (UDC) Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 1: </strong>What is the purpose of the special handling code in UDC 00/CN?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Question 2: </strong>How can UDC 00/S be used for states from different countries, if these states have the same abbreviation, e.g. AL is Alabama (US) but is also Alagoas (Brazil)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Question 3:</strong> When an Address Book record contains a space in the Alpha Name, why is this space value included in the Description Compressed&rsquo; field (ABDC) in the Address Book Master (F0101)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Question 4:</strong> Error: Why does the system trigger error &lsquo;Not found in User Defined Code xx/xx&rsquo; for various Address Book UDC values although there is no value in the specified field?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section210"><strong>Address Book Category Code Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Question 1:</strong> How can Category Codes in the Address Book be made mandatory for the user to input a value?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Question 2:</strong> Can Address Book Master Category Codes (P01012) be updated to the Customer Master Category Codes (P03013) after a customer AB record has been created?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section213"><strong>Question 3:</strong> How does a user update the processing options or data selection for Global Category Code Update UBE (R01490) when receiving the error, 'Security Error - User restricted from selection process'?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section214"><strong>Question 4: Is it possible increase the length of the category code fields?</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section215"><strong>Next Number Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section216"><strong>Question 1:</strong> Why are Address Book Next Numbers Skipping Sporadically? Next Numbers by Company is not active and Check Digit functionality is not active.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section217"><strong>Question 2</strong>: What happens when the maximum next number is reached in Address Book?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section218"><strong>Audit Log Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section219"><strong>Question 1:</strong> Is it possible to keep an audit trail log for the Address Book system to track changes?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section220"><strong>Question 2:</strong> Does JD Edwards EnterpriseOne provide reports showing Address Book Audit Log information?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section221"><strong>Question 3: </strong>When you have A/B interoperability activated in MBF P0100041 so that the system creates records in the F0101Z2 table, should the system be creating entries in the Subsystem Waiting Jobs?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section222"><strong>Question 4: </strong>Can user-defined Transaction Types be used for outbound Address Book Audit Log functionality?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section223"><strong>Question 5: </strong>When a phone number whose line ID is greater than 2 is changed, the changes are not recorded in interoperability table F0101Z2?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section224"><strong>Question 6: </strong>Why does the system trigger error &ldquo;Records not selected. (Verify selection criteria), and Next Numbers not found&rdquo; when changing Address Book information when Address Book Audit logging has been turned on (Outbound Interoperability) in the Address Book Master Business Function (BSFN) P0100041?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section225"><strong>Question 7:</strong>When CREDLIMIT is implemented to send Credit Limit Amount changes through the JDE workflow, why is there no before/after image created in table F03012 when selecting the 'Approval' button through work center?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section226"><strong>Question 8:</strong> When a change is made to an address book record in World, the system updates the F0101A table to reflect the changes. Why is this table not being updated in EnterpriseOne?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section227"><strong>Question 9</strong>: What are the different types of Transaction Action codes (TNAC) used for Address Book or Customer Master Outbound Interoperability?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section228"><strong>Question 10:</strong> Can Outbound Interoperability records be purged?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section229"><strong>Effective Address Date Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section230"><strong>Question 1:</strong> Why can the address on the mailing tab (P01012) not be changed if the Effective Address Date option&nbsp;was initially selected in the Address Book Constants&nbsp; (P0000) and then turned off? The change&nbsp;is reflected in the Address By Date table (F0116), but&nbsp;not in the Address Book Revisions application (P01012).</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section231"><strong>Question 2: Why does t</strong>he Update Effective Address UBE (R01840) produces a blank report (only the headers are printed)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section232"><strong>Question 3:</strong> Why is it necessary to run the Update Effective Address UBE (R01840) with data selection "Where effective date existence (F0116) is not equal to 1"?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section233"><strong>Question 4:</strong> Why does the system trigger error &lsquo;Fetch from Table F0116 Failed&rsquo; (error number 078I) when trying to update an existing Address Book record in the Address Book Master application (P01012)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section234"><strong>Question 5:</strong> Does the Effective Date functionality work for name changes in the address book as well as address changes?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section235"><strong>Question 6:</strong> Does the Update Effective Address UBE (R01840) automatically call R730101 to update invalid geocodes when vertex is being used?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section236"><strong>Question 7: </strong>Why is the Update Effective Address UBE R01840 updating F42140 end date&nbsp;and expiring customer master commission records?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section237"><strong>Question 8:</strong> Under what circumstances does the Update Effective Address (R01840) update the Tax Rate Area in the Customer or Supplier Master tables?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section238"><strong>Address Book Word Search, Word Search Build (R01BDWRD) Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section239"><strong>Question 1: </strong>What is User Defined Code (UDC) H95|SC used for?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section240"><strong>Question 2: </strong>Which Business Functions (BSFNs)&nbsp; use UDC H95/SC?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section241"><strong>Question 3: </strong>What&nbsp; settings are required to get expected results in the stripping of a string?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section242"><strong>Question 4: </strong>During runtime, what kind of BSFNs make use of this settings?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section243"><strong>Question 5: </strong>How is BSFN "B0100009 - CompressCharacterString strips special characters" defined in the Description001 column in UDC H95/SC?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section244"><strong>Question 6:</strong> Can its definition change? Will there be any impact?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section245"><strong>Question 7: </strong>Is there any batch application which can update F0101.ABDC and F0111.WWDC columns?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section246"><strong>Question 8:</strong> Are there any other considerations when setting up Word Search?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section247"><strong>Question 9:</strong> When searching by the first letter of the Alpha Name, why are not all&nbsp; records displayed?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section248"><strong>Question 10:</strong> Which fields are included when running the Address Book Word Search Build (R01BDWRD)?&nbsp;</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section249"><strong>Address Book Word Search Common Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section250"><strong>Question 1: </strong>Searching for Address Book records using the Alpha Name field at the top of the Address Book Master form (P01012) provides different results than using the application&rsquo;s QBE (Query By Example) line.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section251">For example: Enter Denver C* in the Alpha Name field, no results are displayed. Enter the same search criteria in the Alpha Name field in the QBE line, the system retrieves: Denver County, Denver Club, Denver Complex, etc.</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section252"><strong>External Mail Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section253"><strong>Question 1: </strong>The system has been set up&nbsp;to send messages to an external e-mail address instead of the EnterpriseOne workcenter. In addition to workflow message and submitted job messages, will the system send any other type of messages?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section254"><strong>Question 2: </strong>Where can&nbsp;I store external e-mail addresses for contacts, such as suppliers and customers, within Address Book?</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides answers to frequently asked questions about initial Address Book set up.</p>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<p><a name="constants"></a></p>
+<a name="aref_section21"></a><h3 class="km"><strong>Country Constant Questions</strong></h3>
+<a name="aref_section22"></a><h4 class="km"><strong>Question 1:</strong> Why is the country name not showing in the vendor address portion of accounts payable check?</h4>
+<p class="km"><strong>Answer 1:</strong> The issue may be caused by one of the following setup being incorrect:</p>
+<ul>
+<li>The country code needs to exist in User Defined Code (UDC) 00/CN and also in Country Constants (P0070).</li>
+<li>To print country code (name) on checks, the 'print country code' flag must be set in the country code constants (P0070)&nbsp;for that country.</li>
+<li>The Address Book format must contain "country" in the ID format and print country code check box must be checked. (P0070).</li>
+</ul>
+<hr />
+<a name="aref_section23"></a><h4 class="km"><strong>Question 2:</strong> Why does the Formatted Address with Who's Who (B0100067) incorrectly formatting the Mailing Name to print after Address Line number 1?</h4>
+<p><strong>Answer 2:</strong> The order in which the Mailing Name and Address Lines are formatted by the&nbsp;Formatted Address with Who's Who (B0100067) BSFN is determined by the Attention Placement (ATTP) field in the related Country Code's Country Constants (P0070). If you want the Mailing Name to print prior to the rest of the address, this field needs to be set to a 2. For more information on this business function and this set up, please see&nbsp;E1: BSFN: Information on Business Function B0100067-Formatted Address With Who's Who (Doc ID <a href="../docs/1173464.html" alt="doc link" title="doc link" target="_blank">Information on Business Function B0100067-Formatted Address With Who's Who</a>).</p>
+<p><a name="UDC"></a></p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Question 3: </strong>Which programs are impacted when changing the address format for a country in the Country Constants (P0070)?</h4>
+<p><strong>Answer 3:</strong> Please find below a list of programs that are impacted by the change:</p>
+<ul>
+<li>R03574 - A/R Drafts - NSF Notification</li>
+<li>R04572 - Print Automatic Payments - Standard Format</li>
+<li>R04572B - Create A/P Bank Tape - BACS - UK</li>
+<li>R04572C - Print Automatic Payments - Check - Canada</li>
+<li>R04572DB1 - Print Automatic Payments - Check - Brazil</li>
+<li>R04572F2 - Print Automatic Payments - Check - France</li>
+<li>R04572G3 - Print Automatic Payments - Check - Germany</li>
+<li>R04572I2 - Print Automatic Payments - Check - Italy</li>
+<li>R04572J - Print Automatic Payments - Subcontract Processing</li>
+<li>R04572N - Print Automatic Payments - Draft Format</li>
+<li>R04572U1-&nbsp; Print Automatic Payments - Cheque - UK</li>
+<li>R07869 - W2 Benefit Statements</li>
+<li>R42565 - Print Invoices</li>
+<li>R74S572E - Print Automatic Payments - Transf. Order, (Foreign) - 74</li>
+<li>R74S572FA - Print Automatic Payments - Tape Format, (CSB 34/1) - - 74</li>
+<li>R74S6728 - Draft Remittance File Format AEB 58 - Spain - 03B</li>
+<li>R75I128 -- Quarterly Deduction Of Tax (Form No 27Q)-P2P- IND</li>
+<li>R76E0001 - Print Automatic Payments Check - ECU - 04 - 76E</li>
+<li>R76VLO01 - Withholding Temporary Loaded - VEN - 04</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<a name="aref_section25"></a><h3 class="km"><strong>Address Book User Defined Code (UDC) Questions</strong></h3>
+<a name="aref_section26"></a><h4 class="km"><strong>Question 1: </strong>What is the purpose of the special handling code in UDC 00/CN?</h4>
+<p class="km"><strong>Answer 1&nbsp;</strong> The special handling codes in UDC 00/CN are the ISO 3166-1 numeric (or numeric-3) codes which are 3-digit country codes in the ISO 3166-1 standard to represent countries and dependent areas. They are published by the International Organization for Standardization (ISO) as part of its ISO 3166 standard, and correspond to the 3-digit country codes developed and maintained by the United Nations Statistics Division.&nbsp; See the following website for more information on the ISO 3166-1 standard:&nbsp; <a href="http://www.iso.org/iso/country_codes.htm" alt="ISO - Maintenance Agency for ISO 3166 country codes:" title="ISO - Maintenance Agency for ISO 3166 country codes:" target="_blank">ISO - Maintenance Agency for ISO 3166 country codes</a>.</p>
+<p class="km">Example: For Singapore the 3-digit code is set as 702. For United States it is 840. These special handling codes defined in 00/CN are hard coded and should not be amended. The system needs this information when validating for country specific bank accounts, tax accounts, etc. It is needed for the system to recognize which country specific algorithm to use.&nbsp;</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong>Question 2: </strong>How can UDC 00/S be used for states from different countries, if these states have the same abbreviation, e.g. AL is Alabama (US) but is also Alagoas (Brazil)?</h4>
+<p class="km"><strong>Answer 2</strong>: This&nbsp;issue has been documented in the following enhancement&nbsp;bugs and may&nbsp;be considered in future releases:&nbsp;&nbsp;</p>
+<ul>
+<li>Bug 10918269 - 00/S UDC AL TWICE</li>
+<li>Bug 11040665 - 00/S UDC - CONFLICT WITH US VS</li>
+<li>Bug 10916170 - 00/S UDC AL TWICE</li>
+<li>Bug 10918298 - 00/S UDC AL TWICE</li>
+</ul>
+<p>Workaround: Since the System allows entering 3 characters, the UDC code can be defined in such a way that one distinguishes the other. Eg. AL is Alabama (US) and A.L Alagoas (Brazil),</p>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Question 3:</strong> When an Address Book record contains a space in the Alpha Name, why is this space value included in the Description Compressed&rsquo; field (ABDC) in the Address Book Master (F0101)?</h4>
+<p><strong>Answer 3:</strong> For Example: Address Book record &lsquo;Dominic Abbot&rsquo; is written in the Compressed field (ABDC) as &lsquo;Dominic Abbot&rsquo; instead of &lsquo;DominicAbbot&rsquo; (no spaces). The Address Book Master (F0101) Compressed field (ABDC) will contain spaces if UDC H95/SC does not have a space (blank) value as a special character. To correct this issue, add a space to the UDC table. Note &ndash; the UDC table is limited to 30 special characters; it may be necessary to delete one of the special characters to insert a space (blank) value.&nbsp; Alternatively, apply the two ESUs per the instructions of Knowledge Article <a href="https://support.us.oracle.com/oip/faces/secure/km/DocumentDisplay.jspx?id=834004.1">Document 834004.1</a> E1: FDA: Spaces Being Included in Description Compressed Field (ABDC) in F0101 Table Cause Issues with Address Book Search, to correct the business function Create Compressed Description (B0100009), and to correct and add to UDC table H95|SC.</p>
+<p>To correct existing F0101 records, you need to inquire on individual records and select them, then click OK.</p>
+<p>To update the Description Compressed(ABDC) after changing the UDC H95/SC run the R01302 - F0101 Description Compressed Conversion.</p>
+<hr />
+<a name="aref_section29"></a><h4 class="km"><strong>Question 4:</strong> Error: Why does the system trigger error &lsquo;Not found in User Defined Code xx/xx&rsquo; for various Address Book UDC values although there is no value in the specified field?</h4>
+<p><strong>Answer 4:</strong> The system may trigger this error if blank is not a valid value in the UDC table. Add blank to the UDC table to be the default value.</p>
+<p><a name="Cat_Code"></a></p>
+<a name="aref_section210"></a><h3 class="km"><strong>Address Book Category Code Questions</strong></h3>
+<a name="aref_section211"></a><h4 class="km"><strong>Question 1:</strong> How can Category Codes in the Address Book be made mandatory for the user to input a value?</h4>
+<p><strong>Answer 1:</strong> As with other User Defined Code (UDC) tables, many of the address book category code UDCs allow a blank value as a default. In order to make an entry mandatory for that Category Code the blank value should be deleted from the corresponding UDC table to force the user to select a valid value.</p>
+<hr />
+<a name="aref_section212"></a><h4 class="km"><strong>Question 2:</strong> Can Address Book Master Category Codes (P01012) be updated to the Customer Master Category Codes (P03013) after a customer AB record has been created?</h4>
+<p><strong>Answer 2:</strong> The Copy Category Codes to Customer Master (R01050) can be run to update the category codes for Customer Master records with changes that you make to Category Codes in the Address Book for existing records.</p>
+<hr />
+<a name="aref_section213"></a><h4 class="km"><strong>Question 3:</strong> How does a user update the processing options or data selection for Global Category Code Update UBE (R01490) when receiving the error, 'Security Error - User restricted from selection process'?</h4>
+<p><strong>Answer 3:</strong> Global Category Code Update UBE (R01490) is delivered with Version XJDE0001 with 1 Medium Security for User Exclusive (EXCL) field.&nbsp; By definition, 1 Medium Security: Only the "Last Modified By" user can design, change processing option values, change detail values, check in, check out, or delete the version. Anyone can install, copy, transfer, or run the version.</p>
+<p>Create a copy of the version XJDE0001 to modify the processing option or data selection.</p>
+<hr />
+<a name="aref_section214"></a><h4 class="km"><strong>Question 4: Is it possible increase the length of the category code fields?</strong></h4>
+<p><strong>Answer 4:</strong> As per knowledge articles "E1: DD: Impact of Changing the Size of a Standard Data Dictionary Item (<a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=643221.1" alt="doc link" title="doc link" target="_blank">Document 643221.1</a>), and "E1: DD: UDC Values, Code Length and its Impact on How UDC Values are Stored, Displayed and Retrieved (<a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1153684.1" alt="doc link" title="doc link" target="_blank">Document 1153684.1</a>), it is not recommended nor supported by GCS to change either the length of a UDC code or the size of a Standard DD item.</p>
+<p>&nbsp;<a name="NN"></a></p>
+<a name="aref_section215"></a><h3 class="km"><strong>Next Number Questions</strong></h3>
+<a name="aref_section216"></a><h4 class="km"><strong>Question 1:</strong> Why are Address Book Next Numbers Skipping Sporadically? Next Numbers by Company is not active and Check Digit functionality is not active.</h4>
+<p><strong>Answer 1:</strong> Unused Next Number values should not be deleted from the Next Numbers table (F0002). Numerous programs retrieve default numbers from the first position in Address Book Next Numbers (Line Number 01 of System Code 01) if the program cannot find a Next Number defined for the originating system code. Custom programs may also use the default if the appropriate Next Number value cannot be determined. <br />For example, if the Next Number value for Accounts Payable Debit Stmt Chk# (System Code 04, Line Number 04) is blank and debit statements are processed, the debit statements will be assigned the next available Address Book number. Address Book Next Numbers (System Code 01, Line Number 01) will be incremented.</p>
+<p><br />Additionally if a Data Dictionary Item with a Next Number attached is used incorrectly on a form it may trigger a next number increment. A number of BUGs were raised for multiple applications were this was happening like those documented in:<br />E1: 01: Address Book Next Numbers Skip When the System Calls Parent/Child Program (P0150/W0150A/P0002) (Doc ID <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1634340.1" alt="Bug Document" title="Bug Document" target="_blank">1634340.1</a>)<br />E1: 09: Address Book Next Numbers Skip When System Calls the Tax Revision Program (P0018/W0018C/P0002) (Doc ID <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1634328.1" alt="Bug Document" title="Bug Document" target="_blank">1634328.1</a>)<br />E1: 04: Address Book Next Numbers Skip When System Calls P0411S/W0411SC AN8 (Doc ID <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1632848.1" alt="Bug Document" title="Bug Document" target="_blank">1632848.1</a>)</p>
+<p><br />PROCESS FOR RESOLUTION: Monitor the Next Numbers for Address Book (System Code 01) on a regular basis. Keep a log of the Address Book value in Next Numbers. If the Next Numbers value appears to skip substantially, take note of the new number and the time frame when the number advanced. <br />Determine which programs were executed during this time frame. Remember to review custom programs. Communication with other areas within the company, such as Accounting, Procurement or Fixed Assets, may be necessary. It will be important to know which programs were run and if the values skipped in the Address Book Next Numbers were assigned to documents in another area. <br />When the program(s), other than Address Book programs, using Address Book Next Numbers have been identified, set up a Next Number value for the corresponding system code and Next Number line within the system code.</p>
+<p>&nbsp;</p>
+<hr />
+<a name="aref_section217"></a><h4 class="km"><strong>Question 2</strong>: What happens when the maximum next number is reached in Address Book?</h4>
+<p><strong>Answer 2:</strong> If the maximum number is reached (99,999,999), the system will roll over to 1 and start using any unused number.</p>
+<hr />
+<p><a name="audit"></a></p>
+<a name="aref_section218"></a><h3 class="km"><strong>Audit Log Questions</strong></h3>
+<a name="aref_section219"></a><h4 class="km"><strong>Question 1:</strong> Is it possible to keep an audit trail log for the Address Book system to track changes?</h4>
+<p><strong>Answer 1: </strong>Within the Address Book system, JD Edwards EnterpriseOne provides functionality to keep track of actions such as Add, Change and Delete of Address Book records via outbound processing. By enabling&nbsp;the Outbound Processing Options in the Address Book Master Business Function (P0100041), the system will start storing "after" or "before and after" images of records into&nbsp;the Address Book - Interoperability table (F0101Z2). Similar functionality is available in other modules - see KM Doc <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1275030.1" alt="doc link" title="doc link" target="_blank">1275030.1</a> for more information.&nbsp;</p>
+<hr />
+<a name="aref_section220"></a><h4 class="km"><strong>Question 2:</strong> Does JD Edwards EnterpriseOne provide reports showing Address Book Audit Log information?</h4>
+<p><strong>Answer 2:</strong>JD Edwards EnterpriseOne does not provide a standard report that reads the information from the Address Book - Interoperability table (F0101Z2).</p>
+<hr />
+<a name="aref_section221"></a><h4 class="km"><strong>Question 3: </strong>When you have A/B interoperability activated in MBF P0100041 so that the system creates records in the F0101Z2 table, should the system be creating entries in the Subsystem Waiting Jobs?</h4>
+<p><strong>Answer 3: </strong>The A/B Audit Logging feature is designed to use the Subsystem Processing to create the 'before' and 'after' records. Whilst doing this, the system creates a 'W' status record in the F986113.<br />This may cause the F986113 to increase in size.&nbsp; If you do not use Subsystem Processing, it is safe to delete those records.&nbsp; Records need to be cleared manually.&nbsp; it is not recommend to use the R00460 UBE to delete these records: the reason you use R00460 is to call another UBE or 3rd party DLL automatically.</p>
+<hr />
+<a name="aref_section222"></a><h4 class="km"><strong>Question 4: </strong>Can user-defined Transaction Types be used for outbound Address Book Audit Log functionality?</h4>
+<p><strong>Answer 4: </strong>This functionality is currently unavailable. However, Enhancement Bug <a href="https://support.us.oracle.com/oip/faces/secure/km/BugSearch.jspx?bugId=10842548">10842548</a> has been entered and may be considered for future releases.</p>
+<hr />
+<a name="aref_section223"></a><h4 class="km"><strong>Question 5: </strong>When a phone number whose line ID is greater than 2 is changed, the changes are not recorded in interoperability table F0101Z2?</h4>
+<p><strong>Answer 5:&nbsp;</strong> This is working as designed. Only the first two phone numbers for an Address Book are updated in F0101Z2 table. Please see <a href="https://support.us.oracle.com/oip/faces/secure/km/BugSearch.jspx?bugId=10953745">Bug 10953745</a> for more details</p>
+<hr />
+<a name="aref_section224"></a><h4 class="km"><strong>Question 6: </strong>Why does the system trigger error &ldquo;Records not selected. (Verify selection criteria), and Next Numbers not found&rdquo; when changing Address Book information when Address Book Audit logging has been turned on (Outbound Interoperability) in the Address Book Master Business Function (BSFN) P0100041?</h4>
+<p><strong>Answer 6: &nbsp;</strong>Setup the outbound interoperability for JDEAB in P47002/G47261:</p>
+<ol>
+<li>Go to G47261 menu.</li>
+<li>Run P47002 Flat File Cross-Reference application.</li>
+<li>Add a Record as follows:<br /> Transaction = JDEAB <br />Direction Indicator = 2 <br />Record Type =1 <br />File Name=F0101Z2</li>
+</ol><hr />
+<a name="aref_section225"></a><h4 class="km"><strong>Question 7:</strong>When CREDLIMIT is implemented to send Credit Limit Amount changes through the JDE workflow, why is there no before/after image created in table F03012 when selecting the 'Approval' button through work center?</h4>
+<p><strong>Answer 7: </strong>When F03012 data gets changed through Approval of workflow 'CREDLIMIT' the system does not write a records to the F03012Z1 table. Interoperability can be used for auditing as a workaround.</p>
+<p>A. Interoperability <br />1. Click OK button on P03013 - Customer Master <br />2. Call N0100042 - Customer Master - MBF <br />3. If JDECM is defined at P0100042 for Customer Master MBF Version is defined then write F03012Z1 <br /><br />B. CREDLIMIT workflow <br />1. When a user change Credit Limit Amount in P03013 send workflow message to Approver <br />2. Approver clicks 'Approve' button <br />3. Call NER N03B0159 - F0301UpdateCreditLimitUpdateCreditLimit_Workflow which update table F03012 directly per Customer/Company combination. Since this process does not call P03013 (or N0100042) it is not responsible for writing information into F03012Z1 <br /><br /></p>
+<hr />
+<a name="aref_section226"></a><h4 class="km"><strong>Question 8:</strong> When a change is made to an address book record in World, the system updates the F0101A table to reflect the changes. Why is this table not being updated in EnterpriseOne?</h4>
+<p><strong>Answer 8:</strong> The F0101A table is no longer used in EnterpriseOne. Instead outbound interoperability is available to create a before and after image in the F0101Z2 table. To activate this functionality, you will need to set the interoperability processing option in the AB MBF P0100047 (in EnterpriseOne). For coexistence customers, the two tables are not linked and do not contain the same information. If a change is made to an address book record (F0101), the change can be seen on both sides. However, to find out who changed the record would require the users to check both audit tables. <br />It is recommended that clients make all changes either in world or EnterpriseOne to work with consistent audit data.</p>
+<hr />
+<a name="aref_section227"></a><h4 class="km"><strong>Question 9</strong>: What are the different types of Transaction Action codes (TNAC) used for Address Book or Customer Master Outbound Interoperability?</h4>
+<p><strong>Answer 9: </strong>Following are the Transaction Action codes (TNAC) used for Address Book/Customer Master/Supplier Master Outbound Interoperability:</p>
+<p>&nbsp;* 'A' - Add</p>
+<p>&nbsp;* 'D' - Delete</p>
+<p>* 'UA' - After Update</p>
+<p>* 'UB' - Before Update</p>
+<hr />
+<a name="aref_section228"></a><h4 class="km"><strong>Question 10:</strong> Can Outbound Interoperability records be purged?</h4>
+<p><strong>Answer 10: </strong>There is no specific report available to purge the&nbsp; Outbound Interoperability records, but you may consider to review and use Address Book Batch Purge program (R0101Z1P) in order to purge the records created via Outbound Interoperability. Please do note that the R0101Z1P report is generally used to purge the Inbound Interoperability records (records from third party or legacy) but can also be used to purge the Outbound Interoperability records.</p>
+<hr />
+<p><a name="dates"></a></p>
+<a name="aref_section229"></a><h3 class="km"><strong>Effective Address Date Questions</strong></h3>
+<a name="aref_section230"></a><h4 class="km"><strong>Question 1:</strong> Why can the address on the mailing tab (P01012) not be changed if the Effective Address Date option&nbsp;was initially selected in the Address Book Constants&nbsp; (P0000) and then turned off? The change&nbsp;is reflected in the Address By Date table (F0116), but&nbsp;not in the Address Book Revisions application (P01012).</h4>
+<p><strong>Answer 1:</strong> The Address Book Master Business Function&nbsp;(P0100041) uses the Effective Date as part of the primary key to fetch corresponding records from the Address By Date table (F0116). Therefore, if an Address Book record is added to the system using an effective date, that date will be used to fetch the address information from the F0116 table for any subsequent inquiries.&nbsp;</p>
+<p>To update the Address Book Record, follow the steps below:<br />a. Enable Address by Effective Date in Address Book in the Address Book Constants (P0000)<br />b. Clear the cache for the changes to become effective.&nbsp; To clear the cache: the JDE service needs to be restarted on the Enterprise Server, or all running call object kernel processes need to be recycled. See document E1: ENV: Frequently Asked Questions on Caching in EnterpriseOne (Doc ID <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=944015.1" alt="doc link" title="doc link" target="_blank">944015.1</a>) for more information<br />c. Inquire on the Address Book record (P01012)<br />d. Scroll through existing addresses using the Effective Date 'Previous' and 'Next' buttons<br />e. Add an effective date for the 'new' address<br />f. Click OK to update record in the database<br />g. Run the Update Effective Address UBE (R01840)</p>
+<hr />
+<a name="aref_section231"></a><h4 class="km"><strong>Question 2: Why does t</strong>he Update Effective Address UBE (R01840) produces a blank report (only the headers are printed)?</h4>
+<p><strong>Answer 2: </strong>The report is designed to only print addresses in error when&nbsp;performing the update.</p>
+<hr />
+<a name="aref_section232"></a><h4 class="km"><strong>Question 3:</strong> Why is it necessary to run the Update Effective Address UBE (R01840) with data selection "Where effective date existence (F0116) is not equal to 1"?</h4>
+<p><strong>Answer 3: </strong>The Update Effective Address UBE (R01840) updates the ALEFTF field with a "1" in the Address by Date table (F0116) for Address Book records that have become effective.&nbsp;&nbsp;The data selection ensures that only addresses that have not previously been processed, are considered by the UBE</p>
+<hr />
+<a name="aref_section233"></a><h4 class="km"><strong>Question 4:</strong> Why does the system trigger error &lsquo;Fetch from Table F0116 Failed&rsquo; (error number 078I) when trying to update an existing Address Book record in the Address Book Master application (P01012)?</h4>
+<p><strong>Answer 4: </strong>The error may be caused by the &lsquo;Date Beginning Effective&rsquo; (field EFTB) having a different value in the Address Book Master table (F0101) and the Address by Date table (F0116) for the same record. <br /><br />The Business Function CheckDuplicateABRecords (B0100088) will perform the following validations:</p>
+<p>a. Search the Address Book Master table (F0101) for all records where the &lsquo;Description Compressed&rsquo; value (field ABDC) is starting with the &lsquo;Description Compressed&rsquo; value of the record you want to update. <br />For example: The ABDC field for Address Book record 1001 is equal to &lsquo;JDEdwards&rsquo; in the F0101 table. When you update Address Book record 1001, the system will search the entire F0101 table for all records where the ABDC field starts with &lsquo;JDEdwards&rsquo; and it may find for instance &lsquo;JDEdwards&rsquo; and 'JDEdwards EnterpriseOne'. <br /><br />b. For each of the records retrieved in step a, the system will search the Address by Date table (F0116) for records with the same Address Book number (AN8) and Date Beginning Effective&nbsp;(EFTB). The error &lsquo;Fetch from Table F0116 Failed&rsquo; (error number 078I) may be caused when an Address Book Master (F0101) record does not have a corresponding Date Beginning Effective (F0116) record. Usually, the Address Book Master record may have the Date Beginning Effective field (EFTB) set to 0, and no matching Address by Date table&nbsp; record exist. To resolve this issue, you should either update the record in the Address Book Master table (F0101) or the Address by Date table (F0116) so that the system will find the matching record. <br />Note: Each address number in the F0101 table can have multiple F0116 records for different effective dates. The system will search for the record where the F0101.EFTB is equal to the F0116.EFTB. In order to update the Address Book Effective date, you need to run the Effective Address Update UBE (R01840). This UBE sets the field &lsquo;Effective Date Existence&rsquo; (field ALEFTF) to &lsquo;1&rsquo; in the F0116 table if the &lsquo;Date Beginning Effective&rsquo; (ALEFTB) has been passed. The field will remain blank if the effective date is in the future. Along with this field, the system updates the ABEFTB field in the Address Book Master (F0101) with the effective date for the current address.</p>
+<hr />
+<a name="aref_section234"></a><h4 class="km"><strong>Question 5:</strong> Does the Effective Date functionality work for name changes in the address book as well as address changes?</h4>
+<p>Answer 5: No. The Address Book application does not store Alpha Name, Mailing Name, or Secondary Mailing Name changes by Effective Date. There is only one Mailing name and Alpha Name for an Address Number irrespective of the Effective Date and so past names cannot be referenced. The F0116 (Address By Date) table only stores the following details: Address Number, Effective date, Address Line 1, Address Line 2, Address Line 3, Address Line 4, City, State, Postal Code, Country, County and Audit details.</p>
+<hr />
+<a name="aref_section235"></a><h4 class="km"><strong>Question 6:</strong> Does the Update Effective Address UBE (R01840) automatically call R730101 to update invalid geocodes when vertex is being used?</h4>
+<p><strong>Answer 6:</strong> Although the Update Effective Address UBE (R01840) does validate the geocode for suppliers and customers when the address is updated, it does not call the R730101 UBE. The geocode is validated and updated within a business function called directly from the Update Effective Address UBE (R01840).</p>
+<hr />
+<a name="aref_section236"></a><h4 class="km"><strong>Question 7: </strong>Why is the Update Effective Address UBE R01840 updating F42140 end date&nbsp;and expiring customer master commission records?</h4>
+<p>&nbsp;<strong>Answer 7: </strong>Whenever a sales team member is manually assigned to the customer, the Sales Team Override Flag has to be set. The Sales Team Override check box is present in Customer Master on the Additional Info form exit on the Customer Segmentation tab.On checking this flag, the sales team can be manually assigned to the customer. To remove the sales team from the customer this flag can be unchecked.<br />&nbsp;<br />If this flag is set the issue will not duplicate (i.e. the expiration date will not be overridden with today's date). On un-checking this flag the expiry date will be set to system date.</p>
+<hr />
+<a name="aref_section237"></a><h4 class="km"><strong>Question 8:</strong> Under what circumstances does the Update Effective Address (R01840) update the Tax Rate Area in the Customer or Supplier Master tables?</h4>
+<p>&nbsp;<strong>Answer 8: </strong>The Tax Rate / Area gets verified when Vertex is On and the address gets changed for a customer/supplier. The report validates the geocode for all the customer and supplier records for which the &ldquo;Date Beginning Effective&rdquo;(EFTB)in (F0116) less than today&rsquo;s date i.e on the date which report is run. The system uses VERTEX to determine if the current tax rate area for a customer/supplier is invalid (based on address and vertex set up) and if it should update it with the new geocode based on the new address provided. When the Update Effective Addresses (R01840) is run, it initially checks if the vertex is active and updates the customer/supplier&nbsp; for which the address is changed with the help of VERTEX.</p>
+<p>This program adds GeoCodes to existing address book records. The system stores the GeoCode in the Tax Rate/Area field of either the Customer Master by Line of Business (F03012) or the Supplier Master (F0401) tables. When you run the Update Address Book GeoCodes program, the system updates the</p>
+<p>Tax Rate/Area field with the appropriate GeoCode. The system does not update the field if any of these are true:</p>
+<p>-The customer master or supplier master does not have a tax explanation code of E, U, or S.</p>
+<p>- An address book record crosses multiple tax jurisdictions.</p>
+<p>- Not enough information is available for the address in order to find a GeoCode.</p>
+<p>-The country code on the address does not match the codes that are set up in the constants for the United States and Canada.</p>
+<hr />
+<p><a name="search"></a></p>
+<a name="aref_section238"></a><h3 class="km"><strong>Address Book Word Search, Word Search Build (R01BDWRD) Questions</strong></h3>
+<a name="aref_section239"></a><h4 class="km"><strong>Question 1: </strong>What is User Defined Code (UDC) H95|SC used for?</h4>
+<p><strong><strong>Answer </strong>1. </strong>This UDC value will be used when processing an input string of ALPH - NameAlpha that contains any defined characters in the Word Search Build (R01BDWRD) or at runtime. 'Value to strip' is defined at column Description 01 (or if there are more than 30 characters defined Description 02 can be used). The Alpha Name stripped of the special characters is stored in the Address Book Master (F0101) in column Description Compressed (ABDC). And when searches are made by Alpha Name the system will strip the special characters from the search string and the search will be made over the ABDC column. NOTE: Default setting starts with A SPACE followed by ~!@#^&amp;*()_+`-={}|[]\:";'&lt; &gt;?,.</p>
+<hr />
+<a name="aref_section240"></a><h4 class="km"><strong>Question 2: </strong>Which Business Functions (BSFNs)&nbsp; use UDC H95/SC?</h4>
+<p class="km"><strong>Answer 2: </strong>The UDC(H95|SC) will be used mainly by:&nbsp;</p>
+<ul>
+<li>&nbsp;B0100009 - CompressCharacterString': In adding/changing address book Alpha Description it will add/change Address Book Master F0101.ABDC - Description Compressed.</li>
+<li>B0100068 - AddressBookWordSearchBuild: In running R01BDWRD it will create SRTX after stripping off the defined special characters and the value will be stored at F01815 - AB Word Search Master which can be accessed through A/B Word Search (P01BDWRD). This gets Address Book information from various search key</li>
+<li>B9501302 - ParseStringIntoWords: This BSFN can be called from any custom application if needed. For this case (Space/-.,()_&amp;:;?+%$@") will be stripped regardless of the UDC(H95|SC) definition.This configuration is affected by the following setting.</li>
+</ul>
+<hr />
+<a name="aref_section241"></a><h4 class="km"><strong>Question 3: </strong>What&nbsp; settings are required to get expected results in the stripping of a string?</h4>
+<p><strong><strong>Answer 3: </strong>This configuration is affected by the following settings</strong></p>
+<ul>
+<li>Set up UDC 01/LP to determine if double byte language is used or not (though Unicode is double byte which needs 2 bytes to store a character, unless special handling code is 2 or 3 it just strips off special characters and change lower case to upper case)</li>
+<li>Address Book Constant (P0000) to determine which key to search (Symbol to Identify A/B Short Number, * Symbol to Identify A/B Long ID or / Symbol to Identify A/B Tax ID)<br />* Branch/Plant Constants (P41001) to determine what identifier to use in search for Item (/ Short Item Number Identifier, (Blank) Second Item Number Identifier, * Third Item Number Identifier, # Symbol Customer/Supplier, @ Symbol to Identify Segmented Item)</li>
+<li>Set up UDC 01/LP&nbsp; to determine if double byte language is used or not (though Unicode is double byte which needs 2 bytes to store a character, unless special handling code is 2 or 3 it just strips off special characters and change lower case to upper case)</li>
+<li>Address Book Constant (P0000) to determine which key to search (Symbol to Identify A/B Short Number, * Symbol to Identify A/B Long ID or / Symbol to Identify A/B Tax ID)</li>
+<li>Branch/Plant Constants (P41001) to determine what identifier to use in search for Item (/ Short Item Number Identifier, (Blank) Second Item Number Identifier, * Third Item Number Identifier, # Symbol Customer/Supplier, @ Symbol to Identify Segmented Item)</li>
+</ul>
+<hr />
+<a name="aref_section242"></a><h4 class="km"><strong>Question 4: </strong>During runtime, what kind of BSFNs make use of this settings?</h4>
+<p><strong>Answer 4:</strong> N0100061 - ScrubAddressNumberNER: Usually in distribution module the reason they implement NER is to call P0101SL (as C Code can't call Interactive application)<br />and B0100016 - ScrubAddressNumber: Except P4210/P4310 this C Code gets called but validation logic will be same</p>
+<hr />
+<a name="aref_section243"></a><h4 class="km"><strong>Question 5: </strong>How is BSFN "B0100009 - CompressCharacterString strips special characters" defined in the Description001 column in UDC H95/SC?</h4>
+<p><strong>Answer 5: </strong>How it handles input value:<br /><br />* Adding/Changing of F0101.ABDC will be handled by N0100041 which strip off any character define<br />* During runtime (for example, user has typed in "Cap~" and ~ is defined from UDC (H95|SC))<br /><br /></p>
+<ol>
+<li>Determine Language preference (for this example default language)</li>
+<li>Read 1st character 'C' and validate against defined character in UDC (H95|SC). C is not defined here and it is upper case to store it into CharacterArray(String) so the value is 'C'</li>
+<li>Read 2nd Character 'a' (repeat step 2) and change it to upper case 'A' then concatenate it 'CA'</li>
+<li>Read 3rd character 'p' (repeat step 2) and change it to update case 'P' then store it 'CAP'</li>
+<li>Read 4th character '~' and this belongs to special character defined at UDC(H95|SC) so strip it. So far value handled is 'CAP'</li>
+<li>Concatenate '%' at the end of string to issue query as below,</li>
+</ol>
+<p>SQL&gt; SELECT * FROM PRODDTA.F0101 WHERE ( ABDC LIKE 'CAP%' ) ORDER BY ABDC ASC<br /><br /></p>
+<div class="kmnotebox">* Based on above information UDC(H95|SC) will get called as many as string input (4 times)</div>
+<p>&nbsp;</p>
+<hr />
+<a name="aref_section244"></a><h4 class="km"><strong>Question 6:</strong> Can its definition change? Will there be any impact?</h4>
+<p><strong>Answer 6: </strong>The definition can be changed. However, do not change value unless there are special instructions installing ESU, upgrading or your are using a special type of keyboard.</p>
+<hr />
+<a name="aref_section245"></a><h4 class="km"><strong>Question 7: </strong>Is there any batch application which can update F0101.ABDC and F0111.WWDC columns?</h4>
+<p><strong>Answer 7:&nbsp;</strong>R01302 - F0101 Description Compressed Conversion will update column(s) after getting szDescriptionCompressed through B0100009.</p>
+<hr />
+<a name="aref_section246"></a><h4 class="km"><strong>Question 8:</strong> Are there any other considerations when setting up Word Search?</h4>
+<p><strong>Answer 8:</strong> If there is any change in UDC (H95|SC) run R01302 again to minimize possible inconsistency. Space in between words will be stripped for double byte language settings whereas it will be maintains when special handling code of UDC (01|LP) is not in (2 or 3)</p>
+<ul>
+<li>Case 1 Special Handling Code of a certain language(in User Profile) is defined 2 or 3 (e.g., Japanese, Korean and Chinese): Space will be stripped</li>
+<li>Case 2: Special Handling code is not 2 or 3: Space is to be retained in between words and the result will be set UPPER case characters.</li>
+</ul>
+<p>NOTE: Though Unicode is double byte encoding it belongs to Case 2 implementation</p>
+<ul>
+<li>Set clear rule in naming Address Book (as this will be legal entity which can be country specific)</li>
+<li>Similar logic is implemented to strip Item Number (2nd item number) description by utilizing UDC(41|SC) for this case the number of special characters defined will be much smaller.</li>
+</ul>
+<hr />
+<a name="aref_section247"></a><h4 class="km"><strong>Question 9:</strong> When searching by the first letter of the Alpha Name, why are not all&nbsp; records displayed?</h4>
+<p><strong>Answer 9:</strong>&nbsp;If the first character in front of the first letter of the Alpha Name is a space, those records will not be displayed. The extra space before the Alpha Name needs to be removed for all records to be displayed.</p>
+<hr />
+<a name="aref_section248"></a><h4 class="km"><strong>Question 10:</strong> Which fields are included when running the Address Book Word Search Build (R01BDWRD)?&nbsp;</h4>
+<p><strong>Answer 10:</strong> The R01BDWRD UBE is driven by function B0100068 - Address Book Word Search Build.&nbsp; The function follows the processing options set for the UBE.<br /><br /><strong>38 Columns in F0101 &ndash; Address Book Master</strong><br />AN8, ALKY, ALPH, TAX, AT1,&nbsp; TX2,&nbsp; AC01, AC02, AC03, AC04, AC05, AC06, AC07, AC08, AC09, AC10, AC11, AC12, AC13, AC14, AC15, AC16, AC17, AC18, AC19, AC20, AC21, AC22, AC23, AC24, AC25, AC26, AC27, AC28, AC29, AC30, ALP1, EFTB<br /><br /><strong>5 columns in F0115 - Address Book - Phone Numbers</strong><br />AN8, IDLN, RCK7,AR1, PH1<br /><br /><strong>4 columns in F0111 - Address Book - Who's Who</strong><br />AN8, IDLN, MLNM, MLN1<br /><br /><strong>11 columns in F0116 - Address by Date</strong><br />AN8, EFTB, ADD1, ADD2, ADD3, ADD4, ADDZ, CTY1, ADDS, COUN, CTR<br /><br /><strong>3 columns in F0150 - Address Organization Structure</strong><br />OSTP, PA8, AN8<br /><br />The above mentioned fields are use to build:</p>
+<ul>
+<li>F01815 AB Word Search Master</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<a name="aref_section249"></a><h3 class="km"><strong>Address Book Word Search Common Errors</strong></h3>
+<a name="aref_section250"></a><h4 class="km"><strong>Question 1: </strong>Searching for Address Book records using the Alpha Name field at the top of the Address Book Master form (P01012) provides different results than using the application&rsquo;s QBE (Query By Example) line.</h4>
+<ul>
+<li>
+<a name="aref_section251"></a><h4 class="km">For example: Enter Denver C* in the Alpha Name field, no results are displayed. Enter the same search criteria in the Alpha Name field in the QBE line, the system retrieves: Denver County, Denver Club, Denver Complex, etc.</h4>
+</li>
+</ul>
+<p><strong>Answer 1:</strong> The alpha name in the header and QBE line performs slightly different searches:<br /><br />The setup in User Defined Code (UDC) table H95/SC will determine how the Compressed field (ABDC) is populated in the Address Book Master table (F0101).&nbsp;&nbsp;UDC table H95/SC contains a list of special characters.&nbsp;&nbsp;For the purpose of this UDC, blank is considered a special character.<br /><br />If blank is a valid value in UDC H95/SC, then the Address Book records are compressed in the Compressed field (ABDC)&nbsp; in the Address Book Master table (F0101). For example Denver County, will be written as DenverCounty.<br /><br />If blank is not a valid value in UDC H95/SC, then the Address Book records are not compressed in the Compressed field (ABDC)&nbsp;in the Address Book Master table (F0101).&nbsp;For example Denver County will be written as Denver County.</p>
+<div class="kmnotebox">Note -The description 01 field in UDC H95/SC is 30 characters long.&nbsp;&nbsp;If there are less than 30 characters, space (blank) will be included.</div>
+<p>When the Alpha Name field in the header of the form (P01012) is used to search for a record, Business Function (BSFN) Create Compressed Description (B0100009) will validate the compressed field and UDC H95/SC.</p>
+<p>If you have both compressed and non-compressed records, the system will only show part of the record (depending on how UDC H95/SC&nbsp;is set up). <br /><br />If you want to be able to search on special characters, add the special character to UDC H95/SC. If&nbsp;you have existing &nbsp;Address Book records containing this special character, go back into the Address Book Master&nbsp;record (P01012)&nbsp;and press OK without making any changes. This will write a new compressed description (ABDC) to the Address Book Master table (F0101), and you will now be able to search on this special character. Keep in mind you have to&nbsp;re-save every record you have with this special characters in order to search on it.</p>
+<hr />
+<p>&nbsp;<a name="email"></a></p>
+<a name="aref_section252"></a><h3 class="km"><strong>External Mail Questions</strong></h3>
+<a name="aref_section253"></a><h4 class="km"><strong>Question 1: </strong>The system has been set up&nbsp;to send messages to an external e-mail address instead of the EnterpriseOne workcenter. In addition to workflow message and submitted job messages, will the system send any other type of messages?</h4>
+<p><strong>Answer 1:</strong> In addition to e-mail messages&nbsp;from workflow and submitted jobs, you may also get e-mail from Object Management Workbench (OMW). However, this option can be&nbsp;de-activated. See KM <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1508543.1" alt="1508543.1" title="1508543.1">Document 1508543.1</a>&nbsp;for further information on setting up external e-mail.</p>
+<hr />
+<a name="aref_section254"></a><h4 class="km"><strong>Question 2: </strong>Where can&nbsp;I store external e-mail addresses for contacts, such as suppliers and customers, within Address Book?</h4>
+<p><strong>Answer 2:&nbsp;</strong>E-mail addresses can be stored on the Email/Internet Revisions form (P01111) by selecting the individual&rsquo;s record on the Who's Who form (P0111), and then selecting Email/Internet from the Row menu. Prior to 8.11 this field was called &lsquo;Electronic Address&rsquo;.</p>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note: For further information on Address Book set up please refer to <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1510896.1&id=1508543.1" alt="1508543.1" title="1508543.1">Document 1508543.1</a> E1: 01: Overview and Set Up of Address Book (P0000, P0007, P0004A, P0002, P0117, P0100041, P0100042, P0100043, P01138, P95922, P01BDWRD, R01BDWRD.</p>
+</div>
+<p>&nbsp;</p>
+
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

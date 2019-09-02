@@ -1,0 +1,1267 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R43500 and language override - Case Study</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R43500 and language override - Case Study</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document discusses how languages can be handled in print R43500 (Print Purchase Order). It also provides information on tables that contains language settings.</p>
+<p> </p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p> </p>
+<ul>
+<li>Table of Contents:</li>
+<ul>
+<li><a href="#scenario" alt="Business Scenario" title="Business Scenario">Business Scenario</a></li>
+<li><a href="#layout" alt="The layout of R43500" title="The layout of R43500">Layout of R43500</a></li>
+<li><a href="#explanation" alt="Explanation on Layout" title="Explanation on Layout">Explanation on representation</a></li>
+<li><a href="#table" alt="List of tables with Language Option" title="List of tables with Language Option">Tables with Language option</a></li>
+</ul>
+</ul>
+<p><br /><big><a name="scenario"></a>Business scenario:</big><br />There is a business requirement to print Purchase Order in Simplified Chinese. How can this be fullfilled?</p>
+<ul>
+<li>Title, column heading has to be in Simplified Chinese</li>
+<li>Supplier's address has to be written in Chinese</li>
+<li>Item Description has to be written in Chinese</li>
+</ul>
+<p> </p>
+<p>First of all, verify basic setup</p>
+<ul>
+<li>- (Package) Have they installed language pack for Chinese Simplified and do they have package for language 'CS - Chinese Simplified'</li>
+<li>- (Fonts) Have they installed valid fonts and is it defined correctly in P98980 (Language Fonts). For this example, STSong-Light_Acro</li>
+<li>- Have they set valid language for the supplier in Address Book Master (F0101.LNGP)</li>
+<li>- Have they populated  UDC codes for language 'CS' (in F0005D) and Item Description in Chinese (in F4101D)</li>
+</ul>
+<p> <br />Note address lines will be printed as it is stored in F0116 (Address By Date) except Country Description (Alternatively, you may populate F4006 (Order Address Information) order by order from Purchase Order Header). For further detail, refer:-</p>
+<ul>
+<li>&lt;Internal_Only&gt;&lt;Document 1158210.1&gt; E1: 43: Print Mailing Address in Print Purchase Order (R43500)&lt;/Internal_Only&gt;</li>
+<li>&lt;Document 1157643.1&gt; - E1: 40: Labeling/Formatting Mailing Address in EnterpriseOne (R42565/R43500/R47011)</li>
+<li>&lt;Document 1173464.1&gt; - E1: BSFN: Information on Business Function B0100067-Formatted Address With Who's Who</li>
+</ul>
+<hr />
+<p> </p>
+<p><big><a name="layout"></a>Layout of R43500:</big></p>
+<p><img src="&lt;&lt;INLINE_ATTACHMENT:1466100.1:R43500&gt;&gt;" border="0" alt="R43500 layout" title="R43500 layout" hspace="0" vspace="0"/></p>
+<p> </p>
+<hr />
+<p> </p>
+<p><big><a name="explanation"></a>Explanation:</big></p>
+<p>Below explanation is focus on Report Variables which are represented as "XXXXXX ..." from above picture because these variables are representation of string values in Report Design Aid (RDA).</p>
+<table style="border-collapse: collapse; width: 1183px; height: 1016px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 21pt;" width="28" /> <col style="width: 40pt;" width="53" /> <col style="width: 49pt;" width="65" /> <col style="width: 48pt;" width="64" /> <col style="width: 89pt;" width="119" /> <col style="width: 56pt;" width="74" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 4px; background-color: #009900; color: white;">Ref</th>
+<th style="width: 98px; background-color: #009900; color: white;">Section</th>
+<th style="width: 242px; background-color: #009900; color: white;">Name</th>
+<th style="width: 45px; background-color: #009900; color: white;">Type</th>
+<th style="vertical-align: top; background-color: #009900; color: white; width: 24px;">Based</th>
+<th style="width: 361px; background-color: #009900; color: white;">Source</th>
+<th style="width: 413px; background-color: #009900; color: white;">Comments</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 4px;" height="20">A</td>
+<td style="width: 98px;">Report Header</td>
+<td style="width: 242px;">Report ID</td>
+<td style="width: 45px;">Constant</td>
+<td style="vertical-align: top; width: 24px;">N/A</td>
+<td style="width: 361px;">Hard Coded Value</td>
+<td style="width: 413px;">In case you are running copied report template, modify it accordingly. This is important because this has to reflect actual report ID which can be traced in WSJ (Work with Submitted Job Search)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">B</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top; width: 242px;">szCompanyDescription_ALPH</td>
+<td style="vertical-align: top; width: 45px;">RV</td>
+<td style="vertical-align: top; width: 24px;">ALPH</td>
+<td style="vertical-align: top; width: 361px;"> B4305230 - GetReportAndCompanyDescription (Get Report And Company Description - Language) based on F4311.KCOO<br /><br />
+<ul>
+<li>F0010.NAME (Name)</li>
+</ul>
+</td>
+<td style="vertical-align: top;">
+<ul>
+<li> cf., B0000051 - GetCompanyName (F0010 Get Company Name) and (runtime variable) Get Company, which returns Company Description for Default Company '00000'.</li>
+<li>In case you need to describe it in Chinese, write it in Chinese</li>
+<li>This has to be legal entity (or registed company name)</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">C</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top; width: 242px;">szReportDescription_ALPH</td>
+<td style="vertical-align: top; width: 45px;">RV</td>
+<td style="vertical-align: top; width: 24px;">ALPH</td>
+<td style="vertical-align: top; width: 361px;"> B4305230 - GetReportAndCompanyDescription (Get Report And Company Description - Language) based on F4311.KCOO<br />
+<ul>
+<li>This value is coming from TAMSpec RDATEXT</li>
+</ul>
+</td>
+<td style="vertical-align: top;">If there is language specific package and user profile language is 'CS' the description of this report is to be written in Chinese</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">D</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top; width: 242px;">Runtime : Report Date</td>
+<td style="vertical-align: top; width: 45px;">System</td>
+<td style="vertical-align: top; width: 24px;"> </td>
+<td style="vertical-align: top; width: 361px;"> F00921.FRMT</td>
+<td style="vertical-align: top;">Based on UDC 00/DF - Date Format</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #cccccc;">E</td>
+<td style="vertical-align: top; background-color: #cccccc;">Level Break Header</td>
+<td style="vertical-align: top; width: 242px; background-color: #cccccc;">Sold To</td>
+<td style="vertical-align: top; width: 45px; background-color: #cccccc;">RV</td>
+<td style="vertical-align: top; width: 24px; background-color: #cccccc;">MLNM</td>
+<td style="vertical-align: top; width: 361px; background-color: #cccccc;">Refer to:<br />&lt;Document 1157643.1&gt; - E1: 40: Labeling/Formatting Mailing Address in EnterpriseOne (R42565/R43500/R47011)<br /> &lt;Document &lt;Internal_Only&gt;1158210.1&lt;/Internal_Only&gt;&gt; E1: 43: Print Mailing Address in Print Purchase Order (R43500)<br /><br />
+<ul>
+<li>F0101, F0116 and/or F4006</li>
+</ul>
+</td>
+<td style="vertical-align: top; background-color: #cccccc;">
+<ul>
+<li>Level Break Header On 'Ship To' so in the routine this event comes earlier than main section.</li>
+<li>So whenever there is change in Ship To Number (F4311) this section is to be printed again</li>
+<li>This section is to be re-print at page-break (meaning that each and every page will repeat this information when it exceeds a page)</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top; background-color: #cccccc;">F</td>
+<td style="vertical-align: top; background-color: #cccccc;"> </td>
+<td style="vertical-align: top; width: 242px; background-color: #cccccc;">Sold To Address Line 1<br />~<br />Sold To Address Line 7</td>
+<td style="vertical-align: top; width: 45px; background-color: #cccccc;">RV</td>
+<td style="vertical-align: top; background-color: #cccccc;">TAD1 ~TAD6<br />Q064</td>
+<td style="vertical-align: top; background-color: #cccccc;"> </td>
+<td style="vertical-align: top; background-color: #cccccc;">In order to write address line in a specific language, the value in F0116 has to be populated in that language</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">G</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top; width: 242px;">TextDescription [138]</td>
+<td style="vertical-align: top; width: 45px;">RV</td>
+<td style="vertical-align: top;">DL01</td>
+<td style="vertical-align: top;">GT4301 (Generic Text for Order Header)</td>
+<td style="vertical-align: top;">When PO PrintPurchaseOrderNote= '1'</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">ProcOptGlobalPrintMessage3 [138]</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">n/a</td>
+<td style="vertical-align: top;">GT4016A (based on "PO szPrintmessage1") Ref#1<br />Based on Supplier's prefered language (F0101.LNGP)</td>
+<td style="vertical-align: top;">If processing option has the value (Language specific)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">PrtMsgNotes1 [138]</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">n/a</td>
+<td style="vertical-align: top;">GT4016A (based on "F4301.INMG") based on Supplier's prefered language (F0101.LNGP)</td>
+<td style="vertical-align: top;">If F4301.INMG is not blank (Language Specific)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">H</td>
+<td style="vertical-align: top;">Order Revision</td>
+<td style="vertical-align: top;">OrderRevisionNotes_DL01 [138]</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">DL01</td>
+<td style="vertical-align: top;">GT4301A</td>
+<td style="vertical-align: top;">
+<ul>
+<li>Conditional section</li>
+<li>When PO PrintPurchaseOrderNote = '1'</li>
+<li>Report should print revision tracking notes, If Processing option is set to print the purchase order notes and it is also set to display all or last or specified revision.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">I</td>
+<td style="vertical-align: top;">Purchase Order Print</td>
+<td style="vertical-align: top;">Description</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">DSC1</td>
+<td style="vertical-align: top;">
+<ul>
+<li>For English F4311.DSC1</li>
+<li>For Foreign language <span style="color: red;">F4101D.DSC1 based on F0101.LNGP</span></li>
+</ul>
+</td>
+<td style="vertical-align: top;">
+<ul>
+<li>Columna Section</li>
+<li>Main Section where Data Selection and Data Sequence take place</li>
+<li>Note that language preference is coming from Adress Book Master not User Profile</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">J</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Purchasing UOM</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">UOM3</td>
+<td style="vertical-align: top;"> F4311.UOM3</td>
+<td style="vertical-align: top;"> This is a code not UDC description. So in case you need to describe it for a specific language the code has to be changed accordingly</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">K</td>
+<td style="vertical-align: top;">Level Break Footer</td>
+<td style="vertical-align: top;">UITMItemNumberLedger<br />Description 2 Ledger<br />Customer/Supplier Item Number Ledger</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">UITM<br />DSC2<br />CITM</td>
+<td style="vertical-align: top;">F43199.LITM<br />F43199.DSC2<br />F4104.CITM</td>
+<td style="vertical-align: top;">Main Section has Sub-section join with V43199E (Purchasing Ledger Inquiry - Pur43). <br />Simply pull data from F43199 (Purchae Order Ledger)<br />When PO PrintOurItemOrOurAndSupplier = '2'</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">L</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Item Notes Ledger [138]<br />F4311 Print Message Ledger [138]<br />Generic Text Ledger [138]</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">Q017<br />Q017<br />Q017<br />n/a</td>
+<td style="vertical-align: top;"> GT4016B (based on Supplier's preferred language)<br />GT4016B (on F43199.INMG per supplier's preferred language)<br />GT4311 (based on Key of F43199)</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">M</td>
+<td style="vertical-align: top;">Item Notes</td>
+<td style="vertical-align: top;">Item Notes</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">Q017</td>
+<td style="vertical-align: top;">GT4016B (on F4311.ITM per supplier's preferred language)</td>
+<td style="vertical-align: top;">Conditional Section<br />
+<ul>
+<li>When order is not on hold (F4301.HOLD is Blank)</li>
+<li>If Status is out of the range selected in the Processing Option, suppress section from printing</li>
+<li>When F4311.STTS NOT IN (' ', 'R')</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">F4311 Print Message</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Q017</td>
+<td style="vertical-align: top;">GT4016A (on F4311.INMG per supplier's preferred language)</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Generic Text</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Q017</td>
+<td style="vertical-align: top;">GT4311 (based on primary key of F4311)</td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Config Generic Text</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Q017</td>
+<td style="vertical-align: top;">GT3201 (based on F3201.CFGID and F3201.CFGCID)</td>
+<td style="vertical-align: top;">F3201.CFGID and F3201.CFGCID can be retrieved based on primary key of F4311</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">N</td>
+<td style="vertical-align: top;">Clauses Print</td>
+<td style="vertical-align: top;">Clause Message [145]</td>
+<td style="vertical-align: top;">RV</td>
+<td style="vertical-align: top;">n/a</td>
+<td style="vertical-align: top;">GT4016A based on PO szClausePrintMessage</td>
+<td style="vertical-align: top;">Conditional Section<br />Government Contract</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">O</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">Heading for Variables in Report<br />Column Heading in Columnar Section</td>
+<td style="vertical-align: top;">Constant</td>
+<td style="vertical-align: top;">N/A</td>
+<td style="vertical-align: top;">RDATEXT which contains UBE/Version text information (Ex: including section name, control text, etc)<br />Contains override text for batch reports</td>
+<td style="vertical-align: top;">
+<p>Refer to E1: ENV: Overview of Specification (SPEC) in EnterpriseOne (Doc ID 1142313.1)<br /><br />Vocabulary Override or Translation can be happening only when a certain report variable has associated DD item and/or Constant.</p>
+<p>For this example, xxxx is treated as Text Variable and Column Heading is treated as Constant</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Business view for R43500 is V43500JA which is joined business view between F4301 (Purchase Order Header) and F4311 (Purchase Order Detail)</li>
+<li><strong>There is NOT repository to store address lines information (F0116) per language</strong>. Hence, either you change Address Lines description as your business requirement or override it again through P4006 (Order Address Information)</li>
+<li>Ref #1. ProcOptGlobalPrintMessage3 is determined by BSFN N4002340 - CheckIfNotesPrintOnReport (F4017 Check If Notes Print On Report). Table F4016 can store data for multiple languages</li>
+<li>Supplier's Preferred Language is F0101.LNGP where AN8 = SHAN</li>
+<li>In case you need to set a certain constant different from translation, you may override is through Language Override for a specific version</li>
+</ul>
+</div>
+<hr />
+<p><br /><br /><br /><big><a name="table"></a>List of tables with Language Option:</big></p>
+<p>Tables which contain Language Preference Information.</p>
+<table style="border-collapse: collapse; width: 942px; height: 3186px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 56pt;" width="74" /> <col style="width: 312pt;" width="416" /> <col style="width: 357pt;" width="476" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 101px; background-color: #ffcc00;">Table ID</th>
+<th style="width: 356px; background-color: #ffcc00;">Description</th>
+<th style="width: 357pt; background-color: #ffcc00;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00041    </td>
+<td style="width: 356px;">User Defined Code Types Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F0004D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">User Defined Codes - Alternate Language Descriptions</td>
+<td style="background-color: #e6e6e6;">Correspond to F0004</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00051    </td>
+<td style="width: 356px;">User Defined Codes Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F0005D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">User Defined Codes - Alternate Language Descriptions</td>
+<td style="background-color: #e6e6e6;">Correspond to F0005</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F0006D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Business Unit Alternate Description Master</td>
+<td style="background-color: #e6e6e6;">Correspond to F0006</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F00090D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Supplemental Database Language Preferences</td>
+<td style="background-color: #e6e6e6;">Correspond to F0090</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F0012D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">AAI Alternate Description Master</td>
+<td style="background-color: #e6e6e6;">Correspond to F0012</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00165    </td>
+<td style="width: 356px;">Media Objects storage</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F001651   </td>
+<td style="width: 356px;">Generic Text Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00165T   </td>
+<td style="width: 356px;">Media Object Conversion Table</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F0039M    </td>
+<td style="width: 356px;">Generated Document Media Object History</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F0083     </td>
+<td style="width: 356px;">Menu Text Override File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00831    </td>
+<td style="width: 356px;">Menu Text Overrides Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; font-weight: bold;" height="20">F00921    </td>
+<td style="width: 356px; font-weight: bold;">User Display Preferences</td>
+<td style="font-weight: bold;">F00921.LNGP controls in getting specification</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00926    </td>
+<td style="width: 356px;">Anonymous User Access Table</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F00941    </td>
+<td style="width: 356px;">Environment Detail - One World</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; font-weight: bold;" height="20">F0101     </td>
+<td style="width: 356px; font-weight: bold;">Address Book Master</td>
+<td style="font-weight: bold;">F0101.LNGP determines the languag preference of csutomer/supplier but this is not a key rather this is to indicate customer/supplier's language preference which in turn affect in getting item description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F0101Z2   </td>
+<td style="width: 356px;">Address Book - Interoperability  </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F03B28    </td>
+<td style="width: 356px;">Letter Text</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F051124   </td>
+<td style="width: 356px;">Director Text Setup File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F051421   </td>
+<td style="width: 356px;">Word Index</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F05401    </td>
+<td style="width: 356px;">Self-Service Process Flow Director Text</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F05430    </td>
+<td style="width: 356px;">ESS User Defined Text</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F060117   </td>
+<td style="width: 356px;">Employee Master - International Data</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F069016T  </td>
+<td style="width: 356px;">Payroll Tax Area Profile - Tag File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F0800612  </td>
+<td style="width: 356px;">User Defined Job Competency Description Reference</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F08460    </td>
+<td style="width: 356px;">Job Posting Fields by Tab</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F08461    </td>
+<td style="width: 356px;">Standard Phrases</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F08466    </td>
+<td style="width: 356px;">eRecruit General Constants</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F08473    </td>
+<td style="width: 356px;">Job Posting Sort Workfile</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F085518   </td>
+<td style="width: 356px;">Benefit Confirmation Statement Options</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F085540   </td>
+<td style="width: 356px;">Benefits Enrollment Plan/Option URL Address</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F087711B  </td>
+<td style="width: 356px;">Performance Appraisal Header Template Keys</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F08776    </td>
+<td style="width: 356px;">CBPA Appraisal Templates</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F0901D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Account Master - Alternate Description</td>
+<td style="background-color: #e6e6e6;">Correspond to F0901</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1201D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Asset Master - Alternate Description</td>
+<td style="background-color: #e6e6e6;">Correspond to F1201</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F1215     </td>
+<td style="width: 356px;">Specification Cross Reference</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F150120D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">Tenant Exclusion - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F150122D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">Share Factor Denominator - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F15019D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Billing Frequency - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1501BD   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Lease Master Header - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1502BD   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Recurring Billings Master - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1506D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Floor Master - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1507D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Unit Master - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1512D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Billing Code Extension - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1514D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Area Master - Alternate Description                         </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1521D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Log Detail Master - Alternate Description                   </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1523D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Log Standards Master - Alternate Description                </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1530HD   </td>
+<td style="width: 356px; background-color: #e6e6e6;">E.P. Class Master Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1531D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Expense Participation Class Adj. - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F1544BD   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Sales Analysis Control - Alternate Description              </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F157011D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">Lease Option Type Header - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F157012D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">Lease Option Type Detail - Alternate Description            </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F15702D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Legal Clause Space Detail - Alternate Description           </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F159071D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">Market/Potential/Renewal Rent Master - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F1754     </td>
+<td style="width: 356px;">Case Provider Group Routing Rules</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F1755     </td>
+<td style="width: 356px;">Case Master</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4001Z    </td>
+<td style="width: 356px;">Batch Receiver File - Order Headings</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4016     </td>
+<td style="width: 356px;">Print Messages</td>
+<td>@check this again</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F410014D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">Template Master - Alternative Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F41008D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Matrix Detail Alternate Language</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F4101D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Item Master - Alternative Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F4101HD   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Item Hierarchy - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4201     </td>
+<td style="width: 356px;">Sales Order Header File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F42019    </td>
+<td style="width: 356px;">Sales Order Header History File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4201Z1   </td>
+<td style="width: 356px;">Sales Order Header Unedited Transaction File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F42UI01   </td>
+<td style="width: 356px;">SO Header Cache File (MBF)</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4301     </td>
+<td style="width: 356px;">Purchase Order Header</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4301Z    </td>
+<td style="width: 356px;">PO Header Work File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4301Z1   </td>
+<td style="width: 356px;">Purchase Order Header Unedited Transaction Table</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47011    </td>
+<td style="width: 356px;">EDI Purchase Order Header - Inbound   </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47016    </td>
+<td style="width: 356px;">EDI Purchase Order Header - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47021    </td>
+<td style="width: 356px;">EDI P.O. Acknowledgment Header - Inbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47026    </td>
+<td style="width: 356px;">EDI P.O. Acknowledgment Header - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47031    </td>
+<td style="width: 356px;">EDI Shipping Notice Header - Inbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F470373   </td>
+<td style="width: 356px;">EDI ASN Shipping</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47046    </td>
+<td style="width: 356px;">EDI Invoice Header (Sales) - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47071    </td>
+<td style="width: 356px;">EDI Receiving Advice Header - Inbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47076    </td>
+<td style="width: 356px;">EDI Receiving Advice Header - Outbound  </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47091    </td>
+<td style="width: 356px;">EDI Request for Quote Header - Inbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47096    </td>
+<td style="width: 356px;">EDI Request for Quote Header - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47101    </td>
+<td style="width: 356px;">EDI Response to RFQ Header - Inbound </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47106    </td>
+<td style="width: 356px;">EDI Response to RFQ Header - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47131    </td>
+<td style="width: 356px;">EDI Purchase Order Change Header - Inbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47136    </td>
+<td style="width: 356px;">EDI Purchase Order Change Header - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47141    </td>
+<td style="width: 356px;">EDI P.O. Change Acknowledgment Header - Inbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47146    </td>
+<td style="width: 356px;">EDI P.O. Change Acknowledgment Header - Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F47156    </td>
+<td style="width: 356px;">EDI Shipping Schedule Header - Outbound </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4716     </td>
+<td style="width: 356px;">EDI Item Text - Inbound/Outbound</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4801ST   </td>
+<td style="width: 356px;">Purge - Work Order Master Tag File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4801T    </td>
+<td style="width: 356px;">Work Order Master Tag File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4801TZ2  </td>
+<td style="width: 356px;">Warranty Claim/Supplier Recovery processing   </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F48161    </td>
+<td style="width: 356px;">Failure Analysis Codes</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F4817     </td>
+<td style="width: 356px;">Service Order Extension</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F5192D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Supplier Analysis Alternate Language Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F7430030  </td>
+<td style="width: 356px;">Legal Document Header (Print Info) - COMM - 03B</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F7901     </td>
+<td style="width: 356px;">Language Master</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F7910     </td>
+<td style="width: 356px;">Translations Suggestions</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F7920     </td>
+<td style="width: 356px;">Resource Text Translation Work File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F79201    </td>
+<td style="width: 356px;">Resource Text Translation Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F79750    </td>
+<td style="width: 356px;">Forms Design Aid Extracted Text   </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F797501   </td>
+<td style="width: 356px;">Forms Design Aid Extracted Text Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F79760    </td>
+<td style="width: 356px;">Report Design Aid Extracted Text</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F797601   </td>
+<td style="width: 356px;">Report Design Aid Extracted Spec Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F81A10    </td>
+<td style="width: 356px;">DW Log File - OneWorld   </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F81A122   </td>
+<td style="width: 356px;">Dream Writer Processing Option Interim File F59012 - F81A122</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F83100    </td>
+<td style="width: 356px;">Date Title</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F831001   </td>
+<td style="width: 356px;">FASTR Date/Title Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F83110    </td>
+<td style="width: 356px;">Column Headings</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F831101   </td>
+<td style="width: 356px;">FASTR Column Headings Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F83110B   </td>
+<td style="width: 356px;">52 Period Column Headings</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F89000    </td>
+<td style="width: 356px;">Translation Contant</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F9002     </td>
+<td style="width: 356px;">Task Alternate Descriptions</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90021    </td>
+<td style="width: 356px;">Task Master Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90051    </td>
+<td style="width: 356px;">Variant Description Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F9005D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Variant Description Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90061    </td>
+<td style="width: 356px;">Variant Detail Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F9006D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Variant Detail Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F9030     </td>
+<td style="width: 356px;">Documentation Cross Reference  </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90601    </td>
+<td style="width: 356px;">Component Definition Language Status    </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F9060D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Component Definition - Alternate Description     </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90611    </td>
+<td style="width: 356px;">Workspace Definition Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F9061D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Workspace Definition - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90621    </td>
+<td style="width: 356px;">Top Navigation Definition Language Status  </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F9062D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Top-Level Navigation Icon Definition - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F9063D    </td>
+<td style="width: 356px; background-color: #e6e6e6;">Secondary Navigation Definition - Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F90CA24E  </td>
+<td style="width: 356px;">Simple Template Alternate Key</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F911001   </td>
+<td style="width: 356px;">Favorites Language Status</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F91100D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Favorites - Alternative Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F9202     </td>
+<td style="width: 356px; background-color: silver;">Data Field Display Text</td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F92021    </td>
+<td style="width: 356px; background-color: silver;">Data Dictionary Row Description Language Status</td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F9203     </td>
+<td style="width: 356px; background-color: silver;">Data Item Alpha Descriptions</td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F92031    </td>
+<td style="width: 356px; background-color: silver;">Data Dictionary Alpha Description Language Status</td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F9500002  </td>
+<td style="width: 356px;">Reason Codes</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F95900D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM System Definition Language (PSPMSYSDEFN_LNG)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959310D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Event Set Language (PSPMEVENTSET_LN)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959311D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Event Definition Language (PSPMEVENT_LNG)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959320D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Transaction Set Language (PSPMTRANSSET_LN)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959321D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Transaction Definition Language (PSPMTRANS_LNG)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959331D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Metric Definition Language (PSPMMETRIC_LNG)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959332D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Metric Value Language (PSPMMETRICVALUE_LN)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F959341D  </td>
+<td style="width: 356px; background-color: #e6e6e6;">PM Context Defenition Language (PSPMCONTEXTDEFN_LNG)</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F964726   </td>
+<td style="width: 356px;">Special Instructions DD Glossary</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F96491    </td>
+<td style="width: 356px;">Language_OMW groupings detail </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F967611   </td>
+<td style="width: 356px;">Software Update Language Table</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F969002   </td>
+<td style="width: 356px;">Change Table - Task Translation   </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F9757     </td>
+<td style="width: 356px;">Change Table - Data Item Alpha Description      </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F98220D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">OMW Project Descriptions</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F98306    </td>
+<td style="width: 356px; background-color: silver;">Processing Option Text </td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F983061   </td>
+<td style="width: 356px; background-color: silver;">Processing Option Text Language Status</td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F984031   </td>
+<td style="width: 356px;">Language Plan by Environment</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F98750    </td>
+<td style="width: 356px; background-color: silver;">Forms Design Aid Text Information</td>
+<td style="background-color: silver;">Central Object</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F98760    </td>
+<td style="width: 356px; background-color: silver;">Report Design Aid Text Information</td>
+<td style="background-color: silver;">Central Object</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F98800D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Process Master Alternate Description                        </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F98800DN  </td>
+<td style="width: 356px;">Process Master Alternate Description - Net Change</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F98810D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">Task Master Alternate Description</td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F98810DN  </td>
+<td style="width: 356px;">Task Master Alternate Description - Net Change</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F98950    </td>
+<td style="width: 356px;">User Overrides Table</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F989501   </td>
+<td style="width: 356px;">User Override Language Translation Table                    </td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: #e6e6e6;">F98950D   </td>
+<td style="width: 356px; background-color: #e6e6e6;">User Overrides Language Table                               </td>
+<td style="background-color: #e6e6e6;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F98980</td>
+<td style="width: 356px;">Font Override by Language</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver; color: red;">F989999</td>
+<td style="width: 356px; background-color: silver;">Java Persistent Objects table</td>
+<td style="background-color: silver;">LNGPREF<br />This table contains serialized object table which JAS can understand. Depends on F00921.LNGP, (if it exists) language specific description will be shown on form or other objects.</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px;" height="20">F99301    </td>
+<td style="width: 356px;">Interleaf Processing Option Download Work File</td>
+<td> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F99302    </td>
+<td style="width: 356px; background-color: silver;">Processing Options Text Table                               </td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F993022   </td>
+<td style="width: 356px; background-color: silver;">Processing Options Error Table                              </td>
+<td style="background-color: silver;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 101px; background-color: silver;">F993023   </td>
+<td style="width: 356px; background-color: silver;">Translated Processing Options Text Table                    </td>
+<td style="background-color: silver;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<p><br /><br />Note: This document is created based on EnterpriseOne Application Release 9.1. Some funtionality may differ in other application releases.</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of EnterpriseOne Data Dictionary</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of EnterpriseOne Data Dictionary</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11">Overview</a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Defining a Data Dictionary Item</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32">Changes to Standard EnterpriseOne Data Items</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33">Data Dictionary Triggers</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section34">Data Dictionary Tables</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35">Deploying Data Dictionary</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36">Data Dictionary Reports</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37">Diagnosing Data Dictionary Issues</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Finding Character Data Item Changes</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Determining Data Items that have been Modified</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Comparing the Values of Data Items in the Data Dictionary Master Tables and Spec Tables</a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides an overview of the EnterpriseOne Data Dictionary.</p>
+<a name="aref_section11"></a><h3 class="km">Overview</h3>
+<p>The EnterpriseOne Data Dictionary is used to create or modify Data Dictionary items for use in JD Edwards EnterpriseOne applications. Data Dictionary items not only define and describe data, but they also can trigger the runtime engine to react or process in certain ways by nature of their types. Furthermore, online help, error messages, term substitutions for different industries, and translations are all tied to Data Dictionary items.</p>
+<p>Just as a dictionary contains word definitions, the EnterpriseOne Data Dictionary is a central repository that contains all of the database data items that are used in all of the EnterpriseOne applications. Each data item in the dictionary is defined by a number of attributes that describe parameters such as the data type, data length, and so forth. The system performs automatic error checking against these parameters when users enter values during runtime.</p>
+<p>Additionally, data dictionary item attributes define how the data dictionary item should appear when placed on a form or report, including its title and whether to display default values. Also, all data dictionary items have an associated glossary in which you can enter text. If the data dictionary item is included on a form, this text appears when the user presses F1 of uses the Item Help option. The system also displays the glossary text under certain circumstances, such as for the content of an error message.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for the System Administrator who is responsible for maintaining the Data Dictionary and troubleshooting Data Dictionary issues. </p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p><br /> Data Dictionary items are the foundation of JD Edwards EnterpriseOne objects. You create Data Dictionary items for use as fields on a form, columns in a table, fields in a business view, members of a data structure, and fields on a report. <br /> <br /> This is a list of the parameters that define DD items:</p>
+<ul>
+<li>Display Decimals</li>
+<li>File Decimals</li>
+<li>Alpha Description</li>
+<li>Data Type</li>
+<li>Size</li>
+<li>Glossary</li>
+<li>Allow Blank Entry<span style="color: red;">*<span style="color: black;"></span></span></li>
+<li>Upper Case Only<span style="color: red;">*<span style="color: black;"></span></span></li>
+<li>All Triggers<span style="color: red;">*<span style="color: black;"></span></span></li>
+<li>Row and Column Headings<span style="color: red;">*<span style="color: black;"></span></span></li>
+</ul>
+<p><br /> The application retrieves field information from the Data Dictionary. Fields marked with <strong><span style="color: red;">*<span style="color: black;"></span></span></strong> can be overridden in Form Design Aid (FDA) and Report Design Aid (RDA).</p>
+<div class="kmnotebox">NOTE:  The recommended and supported configuration for the Data Dictionary is one centralized Data Dictionary that is shared by all EnterpriseOne path codes and environments. </div>
+<p><br /> Prior to EnterpriseOne Release 9.0, the Data Dictionary application must be run on Windows fat client.  <strong>Beginning with release 9.0 and above</strong>, some functionality is available to run Data Dictionary application on Web client. This includes most functionality within the Data Dictionary application other than <span style="text-decoration: underline;">updates to glossary text</span>. <span style="color: red;"><strong>Updates to Glossary text must still be performed on the Windows client at release 9.0 and above</strong><span style="color: black;">. For known issues with <span style="color: red;"><span style="color: black;">Viewing Glossary Text using Data Dictionary on the Web in release 9.0</span></span> review Document 865514.1. </span></span></p>
+<p class="km">For additional information on Data Dictionary, refer to the following guides located on the <a href="http://www.oracle.com/technetwork/documentation/jdedent-098169.html" target="_blank">Oracle Technology Network</a>.  </p>
+<ul>
+<li>JD Edwards EnterpriseOne Tools 8.98 Development Tools: Data Dictionary Guide</li>
+<li>JD Edwards EnterpriseOne Tools 8.98 Development Guidelines for Application Design Guide for information on Data Dictionary Naming Conventions</li>
+</ul>
+<p class="km">In addition, refer to <a href="../docs/626537.html" alt="Document 626537.1" title="Document 626537.1" target="_blank">Frequently Asked Questions on Data Dictionary</a></p>
+<a name="aref_section31"></a><h3 class="km">Defining a Data Dictionary Item</h3>
+<p>Data Dictionary items are entered within the Data Dictionary application P92001. <br /> <br /> <img src="../images/dd02.png"/><br /> <br /> The following table details provides an explanation for the most common fields on this form.</p>
+<table class="km" style="width: 647px; height: 1100px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 30%;">Field</th>
+<th class="km" style="width: 70%;">Usage</th>
+</tr>
+<tr>
+<td style="vertical-align: top;">Data Item</td>
+<td style="vertical-align: top;">Enter a text string used to identify the Data Dictionary item. The text string can be up to 32 characters long. Blanks and the characters %, &amp; , and + are not allowed. The field cannot be changed after you save the Data Dictionary item. <br /> <br /> When creating a custom data item, the recommended naming convention is to use a Y or Z in the first character of the data item name to distinguish an external data dictionary item from a JD Edwards EnterpriseOne data dictionary item.  The data item name can be a maximum of 32 alphanumeric characters, and should adhere to this format:<br /> <br /> Ysssdddddddddddddddddddddddddddd, where:<br />
+<ul>
+<li>Y or Z = This character indicates that the data dictionary item is external.</li>
+<li>sss = The system code number, which should be 55x-59x for enterprise-level development of new modules.</li>
+<li>ddddddddddddddddddddddddddddd = The name of the data item.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Alias</td>
+<td class="km" style="width: 70%;">Enter a code that identifies and defines a data dictionary item.  The Alias is an alphanumeric code up to eight characters long.  Create new DD items using system codes 55-59. Once defined, you cannot change the alias of a data dictionary item.  <br /> <br /> Within the Data Dictionary, all Data Dictionary items are referenced by the alias. As they are used in database tables, a two-character prefix is added to create unique data names in each table specification.  Special characters are not allowed as part of the DD item name, with the exception of #, @, $. <br /> <br /> When creating a custom data item, the recommended naming convention is to use a Y or Z in the first character of the data item alias to distinguish an external data dictionary item from a JD Edwards EnterpriseOne data dictionary item.  The data item name can be a maximum of 8 alphanumeric characters, and should adhere to this format:<br /> <br /> Ysssdddd, where:<br />
+<ul>
+<li>Y or Z = This character indicates that the data dictionary item is external.</li>
+<li>sss = The system code number, which is 55x-59x for enterprise-level development of new modules.</li>
+<li>dddd = The name of the data item.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Glossary Group</td>
+<td class="km" style="width: 70%;">Enter a code that indicates the type of Data Dictionary item. The field is validated against UDC H95/DG.  Items that belong to glossary group D or S can be included in database tables. Items in other glossary groups (for example, Data Item Class) cannot be added to a table.</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Description</td>
+<td class="km" style="width: 70%;">Enter a description for the Data Dictionary item.</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Product Code</td>
+<td class="km" style="width: 70%;">The related system code for the Data Dictionary item.  For custom data dictionary items, use system codes 55 - 59.</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Product Code Reporting</td>
+<td class="km" style="width: 70%;">The related system code used for reporting and jargon purposes.  For custom data dictionary items, use system codes 55- 59.</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Data Type</td>
+<td class="km" style="width: 70%;">Enter an identifier of the style or classification of data, such as numeric, string, or date. Available data types include the following:<br />
+<ul>
+<li>Character</li>
+<li>Date</li>
+<li>Integer</li>
+<li>Character (Blob)</li>
+<li>Binary (Blob)</li>
+<li>String</li>
+<li>Variable String</li>
+<li>UTime</li>
+<li>Identifier (ID)</li>
+<li>Numeric</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Size</td>
+<td class="km" style="width: 70%;">Enter a value that indicates the field size of the Data Dictionary Item</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">File Decimals</td>
+<td class="km" style="width: 70%;">Enter a value that indicates the number of stored positions to the right of the decimal for the Data Dictionary item.</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Display Decimals</td>
+<td class="km" style="width: 70%;">Enter a value that designates the number of decimals in the amount or quantity fields the system displays. The system performs automatic formatting of amount fields based on the currency when working in a Multi-Currency environment.</td>
+</tr>
+<tr>
+<td class="km" style="width: 30%;">Class</td>
+<td class="km" style="width: 70%;">Enter a code that defines the Data Dictionary item class. The class defines the essential attributes and characteristics of a Data Dictionary item. </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Control Type</td>
+<td style="vertical-align: top;">Enter a code that defines the type control that is associated with the Data Dictionary item.  The control type is used by Form Design Aid (FDA) to automatically add the correct control to a form for a specific Data Dictionary item. The available Control Types are the following:<br />
+<ul>
+<li>User Defined Code Edit</li>
+<li>Check Box</li>
+<li>Radio Button</li>
+<li>Generic Edit</li>
+<li>Push Button</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Item Occurrences</td>
+<td style="vertical-align: top;">Enter a value that indicates the number of child data dictionary items to create.  Item occurrences allows you to create an item as a child of another item. The Data Dictionary verifies that attributes are consistent between the parent and the child. If you change the parent item, the changes are duplicated in the child items. The DD item names use the parent DD item name and a number, such as a parent item ABC and child items ABC1, ABC2, and so on.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Row Description</td>
+<td style="vertical-align: top;">The row description that identifies a field on a form or report.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Column Title</td>
+<td style="vertical-align: top;">The column heading description used for the field on a form or report.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Upper Case Only</td>
+<td style="vertical-align: top;">Set this flag to indicate whether the Data Dictionary item will accept lowercase text. If the value of this field is a Y, the user cannot enter lowercase characters into a control based on this data item.</td>
+</tr>
+<tr>
+<td valign="top">Row Security</td>
+<td valign="top">Set this flag to indicate whether the field can be used in setting up Row Security in Security Workbench (P00950).</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Allow Blank Entry</td>
+<td style="vertical-align: top;">Set this flag to indicate whether blank values can be written to the database. Select this option to allow blank entry under these conditions:<br />
+<ul>
+<li>If the field is edited against a user-defined code (UDC) table, a blank value will be allowed regardless of whether a blank value is valid for the table.</li>
+<li>If the field is specified to be a mandatory entry, a blank value will be allowed as a valid entry.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Auto Include</td>
+<td style="vertical-align: top;">Set this flag to indicate whether this column should be automatically included in all database fetches to tables that contain this item. This option should only be selected for items that are essential for certain database trigger processes or security validation. This item will automatically be selected when choosing the option for Row Security.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Do Not Total</td>
+<td style="vertical-align: top;">The system makes this flag available for entry if the Data Dictionary item is of type numeric. When you select this option, the data item is marked Not to Total. When this item is used in a report, the item property, <em>Suppress At Total</em>, is automatically selected.</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <br /> Glossary items, Error Messages and Workflow Messages are entered within the Data Dictionary Glossary application P92002. The Glossary Group differentiates between the different types of messages.</p>
+<div class="kmnotebox">NOTE:   The Data Dictionary does not verify whether a Data Dictionary item is used by an application when you delete it. If you delete a Data Dictionary item that an application uses, that application will fail.</div>
+<p> </p>
+<a name="aref_section32"></a><h3 class="km">Changes to Standard EnterpriseOne Data Items</h3>
+<p><a name="Changes"></a>The following items may be changed on a standard EnterpriseOne data dictionary item :</p>
+<ul>
+<li>Description</li>
+<ul>
+<li>When making a change to the description of the data item, this change is reflected in the Business View column description in the Data Selection/Sequence screens and in the Event Rules.</li>
+</ul>
+<li>Row Description</li>
+<li>Column Title</li>
+<li>Selections to Allow Row Security (Row Security and Auto Include)</li>
+<li>Display Decimals only for the QTYINV Class and QNTY data item.</li>
+<ul>
+<li>For additional details, review <a href="../docs/626475.html" alt="Document 626475.1" title="Document 626475.1" target="_blank">Display Decimals Update</a>.</li>
+</ul>
+</ul>
+<p>Some DD items, e.g. category codes, may be shipped with default values. These may be modified by creating Vocabulary Overrides. Review Document 626466.1 E1: DD: Vocabulary Overrides for more detailed information.</p>
+<p> </p>
+<p>The following items should <strong>NEVER </strong>be changed on a standard EnterpriseOne Data Dictionary item:</p>
+<ul>
+<li>Glossary Group</li>
+<ul>
+<li>For example, changing from D to C will not JITI the data item.</li>
+</ul>
+</ul>
+<ul>
+<li>Data Type</li>
+<ul>
+<li>This will affect table definitions and business functions. Doing so will create data integrity issues and affect upgrades to future releases.</li>
+</ul>
+</ul>
+<ul>
+<li>Size</li>
+<ul>
+<li>Specifications for tables, business views, applications, business functions, etc. are based on the defined data dictionary size. A change in the size can result in data integrity issues and impact future upgrades. For additional details, review <a href="../docs/643221.html" alt="Document 643221.1" title="Document 643221.1" target="_blank">Impact of Changing the Size of a Standard Data Dictionary Item</a></li>
+</ul>
+</ul>
+<ul>
+<li>Class</li>
+<ul>
+<li>EnterpriseOne has identified groups of like data items and assigned them to a class to ensure they share a particular attribute (i.e. display decimals for QTYINV class). A data item should not be removed from its class or changed to a different class.</li>
+</ul>
+</ul>
+<ul>
+<li>File Decimals</li>
+</ul>
+<ul>
+<li>Next Numbers</li>
+</ul>
+<ul>
+<li>Display Decimals other than the supported change of data items in the QTYINV class and data item QNTY.</li>
+</ul>
+<ul>
+<li>Upper Case Only</li>
+<ul>
+<li>For additional details, review Document 642923.1 E1: DD: Upper case only checkbox in Data Dictionary</li>
+</ul>
+<li>Edit Rule</li>
+</ul>
+<p> </p>
+<a name="aref_section33"></a><h3 class="km">Data Dictionary Triggers</h3>
+<p>A trigger is an editing or display routine that is attached at the data dictionary item level and initiated at runtime. Triggers are reusable objects and, therefore, automatically associated with each application that uses the Data Dictionary item. Triggers save time and increase the usefulness of the code because you can create the business logic only once and then use it within multiple applications. Triggers ensure accuracy and integrity of data across all applications.<br /> <br /> Use triggers to perform these tasks:</p>
+<ul>
+<li>Establish field default values.</li>
+<li>Link Data Dictionary items to a user-defined code (UDC) table of values.</li>
+<li>Activate a visual assist search program when a user positions the cursor in a field.</li>
+<li>Establish rules and procedures that are embedded in the editing and formatting of the data for a field.</li>
+<li>Determine a next number scheme that developers should use when assigning a number to data.</li>
+</ul>
+<p><br /> Although you can override any of these triggers in Form Design Aid (FDA), you should anticipate how the Data Dictionary item will most often be used to reduce the need for overrides.<br /> <br /> The following triggers are available within the Data Dictionary.</p>
+<ul>
+<li>Default Value Triggers</li>
+<ul>
+<li> The value assigned to the object based on that Data Dictionary item when the object is blank.</li>
+</ul>
+<li> Visual Assist Triggers</li>
+<ul>
+<li> A data dictionary item associated with a Visual Assist trigger displays the visual assist button at runtime. The following types of Visual Assist triggers are available within the Data Dictionary: Search Form, Calculator, Calendar, Universal Time.</li>
+</ul>
+<li> Edit Rule Triggers</li>
+<ul>
+<li> Used to validate fields based on rules or an edit rule business function.</li>
+</ul>
+<li>Display Rule Triggers</li>
+<ul>
+<li>Used to format data based on rules or a display rule business function.</li>
+</ul>
+<li>Next Number Triggers</li>
+<ul>
+<li>Used to enable automatic Next Numbering on a data item.</li>
+</ul>
+</ul>
+<a name="aref_section34"></a><h3 class="km">Data Dictionary Tables</h3>
+<p>The Master Data Dictionary is stored in relational tables on the enterprise server:</p>
+<ul>
+<li>F9200 - Data Item Master</li>
+<li>F9202 - Data Field Display Text</li>
+<li>F9203 - Data Item Alpha Description/Glossary Overrides Information</li>
+<li>F9207 - Error/Workflow Message Information</li>
+<li>F9210 - Data Field Specifications</li>
+<li>F9211 - Smart Fields</li>
+<li>F9212 - Smart Fields Criteria-Setup Rules</li>
+<li>F00165 -Media Object Storage (Data Item Glossary Text)</li>
+</ul>
+<p>Local specifications tables exist on every EnterpriseOne software Client and the Logic Server</p>
+<ul>
+<li>By path code under the /pathcode/spec directory</li>
+<li>On a Windows Fat client and the Enterprise (Logic) Server, the local specifications are a replicated local copy of the data dictionary stored in the dddict and ddtext (.ddb and .xdb) files.  Data Dictionary information does a Just in Time install (JITI) from the Master Data Dictionary tables to the Data Dictionary specification files the first time a data item is accessed by an interactive or batch application. This is true except for glossary group C data items that never JITI.</li>
+</ul>
+<p>Global Tables - glbltbl (.ddb and .xdb)</p>
+<ul>
+<li>Part of the local specifications stored under the /pathcode/spec directory</li>
+<li>Stores data item definitions for every EnterpriseOne software table.</li>
+<li>Data item definition is dependent on Data Dictionary specs.</li>
+<li>JITI happens only the first time a table is accessed by EnterpriseOne software.</li>
+<li>Used at Runtime by interactive and batch applications.</li>
+</ul>
+<p>In the Web client environment, data dictionary information is built into the serialized object information for the applications that use the data dictionary items.<br /> <br /> The Data Dictionary Item Glossary is stored in the F00165 Media Object Table. This table exists in its own Data Dictionary data source generally named Data Dictionary - <em>E1 Release</em>. The glossary information is stored using the Media Object data structure GT92002. This data structure is mapped to the Data Dictionary data source via Object Configuration Manager (OCM).</p>
+<a name="aref_section35"></a><h3 class="km">Deploying Data Dictionary</h3>
+<p>When using the Data Dictionary applications to add new or update existing Data Dictionary items, the change is made in the Data Dictionary relational database tables.  Since Data Dictionary specification files exist locally on the Windows workstation, on the Enterprise Server and within the serialized object information on the Web Client, any data dictionary change must be deployed throughout the EnterpriseOne environment.  Refer to the following documents for details on deploying Data Dictionary changes:</p>
+<ul>
+<li><a href="../docs/626511.html" alt="Document 626511.1" title="Document 626511.1" target="_blank">Deploying Data Dictionary Changes</a></li>
+</ul>
+<a name="aref_section36"></a><h3 class="km">Data Dictionary Reports</h3>
+<p class="km">The following reports are available to report on information within the Data Dictionary. </p>
+<ul>
+<li>R92400 Data Dictionary Items Report</li>
+<ul>
+<li>This report will print full detail including glossary text for a data dictionary item with a Glossary Group of D or C.</li>
+</ul>
+<li>R92401 Error/Workflow Messages Report</li>
+<ul>
+<li>Print Specifications of Error/Workflow messages including the error level and Data Structure Templates. It does not print the glossary text, which has been requested in Enhancement Bug 11044336.</li>
+</ul>
+<li>R9200 Invalid Characters in Data Item.</li>
+<ul>
+<li>This report will provide a listing of Data Items that contain an invalid special character.  A processing option exists to run the report in proof or final mode.  When run in final mode, the report will delete the data items that contain special characters.</li>
+</ul>
+<li>R00165 Glossaries with no Data Items</li>
+<ul>
+<li>This report will print any glossary text that exists in the F00165 table for data structure GT92002 without a corresponding data item existing in the Data Dictionary master tables.</li>
+</ul>
+</ul>
+<a name="aref_section37"></a><h3 class="km">Diagnosing Data Dictionary Issues</h3>
+<p>Occasionally a change to a data dictionary item can result in memory violations within applications or cause applications to return invalid results. These situations can be difficult to diagnose. The following are some troubleshooting techniques to determine if the issue is truly caused by a Data Dictionary change and what items have been changed.</p>
+<a name="aref_section38"></a><h4 class="km">Finding Character Data Item Changes</h4>
+<p>Any data item defined as a character should have a length of 1. If this has been changed, it can cause issues with the character data item. It first must be determined if the issue is being caused because of a character data item being changed to a value other than 1 by following the steps below:</p>
+<ul>
+<li>Go into UTB and open F9210. Filter on FROWTP = 1 AND FRDTAS &lt;&gt; 1.</li>
+</ul>
+<p>If one or more items are returned that means this is a character data item with a size other than 1. If an item was returned, use the following steps to correct the character data item.</p>
+<ol>
+<li>Access the EnterpriseOne Data Dictionary and search for that data item.</li>
+<li>Change the data type to 2 (this allows the size field to no longer be disabled)</li>
+<li>Change the size to 1.</li>
+<li>Change the type back to a character and save the data item.</li>
+<li>If more than one data item was returned, you will need to change each item.</li>
+<li>After making the change, deploy the Data Dictionary change.</li>
+</ol>
+<a name="aref_section39"></a><h4 class="km">Determining Data Items that have been Modified</h4>
+<p>A change to a standard EnterpriseOne data item can result in issues within an application using the data item.  Report R920022 Print All Data Dictionary Adds and Changes can be used to determine data items within the Data Dictionary that have been modified. </p>
+<ol>
+<li>Run report R920022 - Print All Data Dictionary Adds and Changes.</li>
+<li>Add a new Batch Version with</li>
+<ul>
+<li>Data Selection on BC Date-Updated (F9200) greater than or equal to &lt;desired date&gt;</li>
+<li>Data Sequence on Glossary Group (ascending), Date Updated (descending), Data Item (ascending)</li>
+</ul>
+</ol>
+<p>The report displays the following fields from the F9200 - Data Item Master : Date Updated, DD Alias, User ID, Program ID, Workstation ID, Time Updated. <br /> <br /> Adding additional fields of Glossary Group, Product Code to the report and a Page Break on Glossary Group can be done by modifying the report using Report Design Aid:</p>
+<ol>
+<li>Section|Quick Section - move &amp; position Glossary Group, Product Code under Selected Columns</li>
+<li>Section|Data Sequence - section data sequencing tab: move Glossary Group, Date Updated, Data Item in this order; define sort properties tab : check level break and page break for Glossary Group</li>
+</ol>
+<p>If a full detailed listing of the Data Item is required, run report R92400 with data selection for the specific data item. </p>
+<a name="aref_section310"></a><h4 class="km">Comparing the Values of Data Items in the Data Dictionary Master Tables and Spec Tables</h4>
+<p>If a Data Dictionary change is not deployed correctly within the EnterpriseOne environment, this can result in Data Dictionary related issues.  To compare the values of Data Items in the Data Dictionary Master Tables and the values in the Spec Tables, use the following steps</p>
+<ol>
+<li>Add the entry below in the Fat Client JDE.INI in the [Interactive Runtime] section (XE/ERP8.0 release) :</li>
+<ul>
+<li>TAMMenus=Show</li>
+</ul>
+<li>In FastPath, key in UTB for the Universal Table Browser:</li>
+<li>Click File|Open Table to find and view the Data Dictionary master tables. Key in the Data Dictionary Alias in the QBE column FRDTAI.</li>
+<li>Click File|Open Local TAM to view the list of Spec tables, double click on DDDICT.DDB or DDTEXT.DDB, key in the Data Dictionary Alias in the QBE column szDict.</li>
+</ol>
+<p> </p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

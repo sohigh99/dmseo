@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Software Design</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+
+    th, td {
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {background-color: #f2f2f2;}
+
+    th, td {
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #B0C4DE; 
+    }
+
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Software Design - Decomposition of JD Edwards</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<p><h1>Software Design Document for PT Matahari</h1></p>
+<p><h2>Table of Contents</h2></p>
+<!-- <ul>
+  <li><span>Project Outline</span>
+    <ul>
+      <li><a href="#_Toc513609876">Company Overview</a></li>
+      <li><a href="#_Toc513609877">Goals</a></li>
+    </ul>
+  </li>
+</ul> -->
+<div LINE-HEIGHT:10px>
+  <p>1&nbsp;<a href="#_Toc513609875">Project Outline</a></p>
+  <p>1.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609876">Company Overview</a></p>
+  <p>1.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609877">Goals</a></p>
+
+  <p>2&nbsp;<a href="#_Toc513609878">Software Design Methodology</a></p>
+  <p>2.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609879">Big Picture</a></p>
+  <p>2.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609880">Good Software</a></p>
+  <p>2.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609881">Design Method &ndash; Function-Oriented Design</a></p>
+
+  <p>3&nbsp;<a href="#_Toc513609882">Requirements Analysis and Software Architecture</a></p>
+  <p>3.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609883">Requirements Analysis</a></p>
+  <p>3.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609884">Customer Management</a></p>
+  <p>3.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609885">Inventory Management</a></p>
+  <p>3.1.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609886">Sales Order Management</a></p>
+  <p>3.1.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609887">Nonfunctional Requirement</a></p>
+  <p>3.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609888">Use-Cases</a></p>
+  <p>3.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609889">Customer Management Use Case</a></p>
+  <p>3.2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609890">Inventory Management Use Case</a></p>
+  <p>3.2.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609891">Sales Order Management Use Case</a></p>
+  <p>3.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609892">Software Architecture of PT Matahari</a></p>
+  <p>3.3.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609893">Client-Server Architecture</a></p>
+
+  <p>4&nbsp;<a href="#_Toc513609894">Sequence and State Transition Diagrams</a></p>
+  <p>4.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609895">Sequence Diagram</a></p>
+  <p>4.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609896">Sequence Diagram &ndash; Inventory</a></p>
+  <p>4.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609897">Sequence Diagram &ndash; Sales</a></p>
+  <p>4.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609898">State Transition Diagram</a></p>
+  <p>4.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609899">State Transition Diagram &ndash; Inventory</a></p>
+  <p>4.2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609900">State Transition Diagram &ndash; Sales</a></p>
+
+  <p>5&nbsp;<a href="#_Toc513609901">Class and Activity Diagrams</a></p>
+  <p>5.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609902">Class Diagram</a></p>
+  <p>5.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609903">Class Diagram &ndash; Sales Order Entry for PT Matahari</a></p>
+  <p>5.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609904">Software Design Pattern &ndash; Composite Design Pattern</a></p>
+  <p>5.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609905">Activity Diagram</a></p>
+  <p>5.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609906">Activity Diagram &ndash; Inventory Management</a></p>
+  <p>5.2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609907">Activity Diagram &ndash; Sales Order Management</a></p>
+
+  <p>6&nbsp;<a href="#_Toc513609908">Verification and Validation</a></p>
+  <p>6.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609909">Validation</a></p>
+  <p>6.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609910">Validation Technique &ndash; Review and Inspection</a></p>
+  <p>6.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609911">Verification</a></p>
+  <p>6.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609912">Verification Technique &ndash; Inspection</a></p>
+  <p>6.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609913">Traceability Matrix</a></p>
+
+  <p>7&nbsp;<a href="#_Toc513609914">Multithreading Opportunities</a></p>
+  <p>7.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609915">Benefit of threads</a></p>
+  <p>7.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609916">3 Areas to Implement Multithread</a></p>
+  <p>7.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609917">Thread-safe Code for PT Matahari</a></p>
+  <p>7.4&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609918">Performance Matrix for PT Matahari</a></p>
+
+  <p>8&nbsp;<a href="#_Toc513609919">Constraints</a></p>
+  <p>8.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609920">Technical constraints</a></p>
+  <p>8.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609921">Design Constraints</a></p>
+  <p>8.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609922">Business constraints</a></p>
+  <p>9&nbsp;<a href="#_Toc513609923">Summary</a></p>
+  <p><a href="#_Toc513609924">References</a></p>
+</div>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609875"></a>Project Outline</h1>
+<h2><a name="_Toc513609876"></a><a name="_Toc495337473"></a>Company Overview</h2>
+<p>A paint product distributer in Indonesia, PT Matahari, has more than 25 years of business with over 100 employees in many cities in Indonesia. In recent years, the demand for paint products are rising rapidly because the city councils in many cities mandated to paint commercial buildings every five years. At the same time, the rising disposable income in private sectors is elevating the demand for paint products as well. Naturally, lots of new competitors come into the market with advanced information technology as the network infrastructure in this region evolves quickly.</p>
+<h2><a name="_Toc513609877"></a><a name="_Toc495337475"></a>Goals</h2>
+<p>It is high time for Matahari to build efficient and effective software system, a light Enterprise Resource Planning (ERP), to tackle the impending challenges. This light ERP software to develop shall enable PT Matahari to store all business entities using address book management; to maintain accurate and real-time inventory through inventory management, and to manage sales order effectively using sales order management system. This project is intended to be short and cost effective since this initiative of project is resulted from the research that most of commercial ERP software are heavy to customize and expensive to maintain.</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609878"></a>Software Design Methodology</h1>
+<p>Software Development Life Cycle (SDLC) covers all software engineering project from start to finish. Since the waterfall model is one version of SDLC, both waterfall and SDLC are alike each other. Figure 1 depicts the cycle, where the end of one project feed into another project directly (Stephens, 2015).</p>
+
+<p><img src="../images/ctu00901.png" border="0" alt="SLDC" title="SLDC" hspace="0" vspace="0"/></p>
+
+<p>Figure 1. Software Development Life Cycle</p>
+<p>The design phases comprise the high-level design and the low-level design, where the former includes to specify major subsystems, data flow, database, and other high-level structure at an abstract level on what to build. On the other hand, low-level design is about how to build application&rsquo;s pieces entailing the detail of applications on how. Both high-level and low-level design is to meet the requirements of stakeholders from PT Matahari.</p>
+<h2><a name="_Toc513609879"></a>Big Picture</h2>
+<p>This project aims to meet the requirements in the area of the entity management, real-time inventory management, and sales order management system. The light Enterprise Resource Planning (ERP) for sales order management is depicted in figure 2 which is event driven and function specific since the ERP synchronize the flow of inventory and cash with the data in the database system.</p>
+<p><img src="../images/ctu00902.png" border="0" alt="System Overview" title="System Overview" hspace="0" vspace="0"/></p>
+
+<p>Figure 2. System Overview</p>
+<h2><a name="_Toc513609880"></a>Good Software</h2>
+<p>The design document bridges gap between elicited and analyzed requirements and software development. Hence, it is imperative to understand the nature of good software by reviewing fundamental principles. Common factors of good software are (Barbin, 2013),</p>
+<ul>
+<li>Separation of Concerns (SoC) &ndash; divide the application into distinct units not to overlap each other;</li>
+<li>(Loose) Coupling &ndash; the degree of corelation between components to reuse and test;</li>
+<li>(High) Cohesion &ndash; the degree of relationship between components with good reason to be working together to maintain and reuse; and</li>
+<li>Information Hiding &ndash; the separation of design decisions that will likely change during maintenance phase.</li>
+</ul>
+<p>Since the enterprise solution, or software for business, requires all above characteristics, the choice of design method is function-oriented design with some other methodologies.</p>
+<h2><a name="_Toc513609881"></a>Design Method &ndash; Function-Oriented Design</h2>
+<p>The primary goal of selecting a right design model is to enable developers to create high-quality software reasonably close to on time and without exceeding the budget given. The purpose of this light ERP software is to accomplish productivity, collaboration, flexibility, streamlined process with efficiency, integration, planning, and forecasting. These attribute are achievable only when storing transaction data into database properly. Hence, the choice of design method for this project is function-oriented design method which leads to functional programming. In this approach, the architecture follows the Generally Accepted ERP software in the market as depicted in figure 3. For this project, the software design remains at the logic server for business functions and Java Application Server (JAS) for the specification using forms for interface. These pieces are essential factors when PT Matahari dealing with the daily transaction. The benefit of function-oriented architecture is that it is platform independent let alone it comes up with loose coupling between different modules and high cohesion for interfaces between the modules to implement.</p>
+
+<p><img src="../images/ctu00903.png" border="0" alt="Light ERP Architecture" title="Light ERP architecture" hspace="0" vspace="0"/></p>
+
+<p>Figure 3. Light ERP Architecture</p>
+<p>A function-oriented design method depends on decomposing the system into a set of interacting functions using a centralized system shared by these functions. Functions (or, sub-routine) can maintain local state information but only for execution of it locally. In comparing this approach with Object-oriented design method, function-oriented approach has benefits (Sommerville, 1994),</p>
+<ul>
+<li>Most of enterprise solutions follows this approach for better maintainability and reliability though it may not be superior to the Object-oriented design method;</li>
+<li>Many design methods and associated Computer-Aided Software Engineering (CASE) are functionally oriented;</li>
+<li>The needs and suitability of Transaction Processing (TP) since the integrity is one of main concern; and,</li>
+<li>Most of enterprise solutions for daily transactions are naturally functional.</li>
+</ul>
+<p>The function-oriented design process involves how to identify data transformation in the system to develop, how to decompose functions into a hierarchy of sub-functions, how to describe the operation and interface of entities, and how to document the flow of control within system. In practice, the iterative prototype method has to be in place along with the functional-oriented approach above to have rapid feedback and high-quality software through test. Figure 4 represents possible consistent approach from requirement gathering through software design. &nbsp;</p>
+
+<p><img src="../images/ctu00904.png" border="0" alt="Iterative Prototyping" title="Iterative Prototyping" hspace="0" vspace="0"/></p>
+
+<p>Figure 4. Iterative Prototyping</p>
+<p>The prototyping design model pairs up well with functional-oriented method because this design approach is to provide PT Matahari with the tailored light ERP software which comprises multiple subsystems. This approach follows component-based software engineering (CBSE), which makes system as a loosely coupled collection of components to provide the services each other as described in good software.</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609882"></a>Requirements Analysis and Software Architecture</h1>
+<h2><a name="_Toc513609883"></a>Requirements Analysis</h2>
+<p>PT Matahari needs business software to manage customer, inventory, and sales order accurately in real-time basis. This software shall enable PT Matahari to plan and forecast better than its competitors in the paint distribution market.</p>
+<h3><a name="_Toc513609884"></a>Customer Management</h3>
+<p>Users shall enter, retrieve, and update all business parties&rsquo; information to the designated database system, which includes address book master, employee master, supplier master, business partners, and organizational entities.</p>
+<h3><a name="_Toc513609885"></a>Inventory Management</h3>
+<p>It is crucial to have centralized database system to manage information on item master, item branch, item location, item cost, item price, item as-of quantities, and item ledger. Item location needs updating whenever there is any movement in inventory, and item ledger gets written when there is any change of item quantity and item cost.</p>
+<h3><a name="_Toc513609886"></a>Sales Order Management</h3>
+<p>Sales order shall control the sales of item using header and detail relationship. The customer information contributes for the header, and the item information converts to the detail information. This group of application validates both customer and item, defaults value from customer management system and inventory management system, check availability, soft commit inventory, suggest the best sales price, hold orders, and check the margin of a specific sales. The sales detail repeats the sales header to override the header information in detail lines.</p>
+<h3><a name="_Toc513609887"></a>Nonfunctional Requirement</h3>
+<p>The functional suitability and usability are focal points in this light ERP project. According to ISO/IEC 27000:2014, functional suitability is degree to which a system provides functions to meet stated/implied the functional requirements needs. These attributes affirm that the software to develop performs what the stakeholders requested, but also it performs three characteristics which are functional completeness, functional correctness, and functional appropriateness as shown in figure 5 (Rodriguez et al., 2016).</p>
+
+<p><img src="../images/ctu00905.png" border="0" alt="Functional Suitability" title="Functional Suitablility" hspace="0" vspace="0"/></p>
+
+<p>Figure 5. Functional Suitability</p>
+<p>Software usability is a measure of how well users can take advantage of some of systems&rsquo; functionality (Barbacci, 2004). This attribute defines how usable a software is to learn to operate, prepare inputs for, and interpret outputs of a system. The intersection in figure 6 depicts simplified definition of a good usability.&nbsp;</p>
+
+<p><img src="../images/ctu00906.png" border="0" alt="Software usability" title="Software Usability" hspace="0" vspace="0"/></p>
+
+<p>Figure 6. Software Usability</p>
+
+<h2><a name="_Toc513609888"></a>Use-Cases</h2>
+<p>A Use Case Diagram user&rsquo;s interaction with the system (Stephens, 2015). Three use cases below follows the annotation &lt;&lt;include&gt;&gt; to mean the task includes the subtask and &lt;&lt;extend&gt;&gt; when a subtask might occur only under some circumstances.</p>
+<h3><a name="_Toc513609889"></a>Customer Management Use Case</h3>
+<p>Figure 5 depicts the use case of customer management system. The actors are the account manager who review and create customer. All entities have the address book master which includes mailing address, who&rsquo;s who, phone information, and email information. The account manager can create a customer information when there is a specific address book number given to each entities.</p>
+
+<p><img src="../images/ctu00907.png" border="0" alt="Customer Management Use Case" title="Customer Management Use Case" hspace="0" vspace="0"/></p>
+
+<p>Figure 7. Customer Management Use Case</p>
+<p>In many project, some other representation can give better idea to the developer and stakeholders. Business Process Model and Notation (BPMN) gives better understanding through given example as depicted in figure 6.</p>
+
+<p><img src="../images/ctu00908.png" border="0" alt="Customer Master BPMN" title="BPMN - Customer Master" hspace="0" vspace="0"/></p>
+
+<p>Figure 8. Customer Master - BPMN</p>
+<h3><a name="_Toc513609890"></a>Inventory Management Use Case</h3>
+<p>PT Matahari focusing on real-time inventory managements. As figure 7 represents, all available system are actors. Each transaction performs checking availability, add inventory, or subtract inventory.</p>
+
+<p><img src="../images/ctu00909.png" border="0" alt="Inventory Management Use Case" title="Inventory Management Use Case" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 9. Inventory Management Use Case</p>
+<p>Same can be represented using Business Process Model and Notation (BPMN)</p>
+
+<p><img src="../images/ctu00910.png" border="0" alt="BPMN - Inventory Management" title="BPMN - Inventory Management" hspace="0" vspace="0"/></p>
+
+<p>Figure 10. Inventory Management - BPMN</p>
+<h3><a name="_Toc513609891"></a>Sales Order Management Use Case</h3>
+<p>Sales system and warehouse interact with sales management system to fulfill the request made by the business partner. Use case in figure 9 simply represents high level interface between actors.</p>
+
+<p><img src="../images/ctu00911.png" border="0" alt="Sales Order Management Use Case" title="Sales Order Management Use Case" hspace="0" vspace="0"/></p>
+
+<p>Figure 11. Sales Order Management Use Case</p>
+<p>Above use case can be translated into figure 10 using Business Process Model and Notation (BPMN).</p>
+
+<p><img src="../images/ctu00912.png" border="0" alt="BPMN - Sales Order Management" title="BPMN - Sales Order Management" hspace="0" vspace="0"/></p>
+
+<p>Figure 12. Sales Order Management - BPMN</p>
+<h2><a name="_Toc513609892"></a>Software Architecture of PT Matahari</h2>
+<p>The architecture is the highest level of abstraction of system, which shows how the major pieces of the finished software will fit together and interact with each other (Stephens, 2015). The choice of style varies depending on the actual software to build. Since my project for this course is building a light Enterprise Resource Planning (ERP) software, the design model is to be the function-oriented design method in distributed environment. A simplified software is to be rebuilt similar to the commercial enterprise solutions in the market using the architectural style of Client-Server Architecture style.</p>
+<h3><a name="_Toc513609893"></a>Client-Server Architecture</h3>
+<p>Most of enterprise solutions including ERP software follows the client-server architecture style which the client sends a request, and the server returns a response. Clients and serves exchange messages in a request-response pattern using inter-process communication (IPC). A simple communication channel or, topology will be HTML client with replicated specification, (using HTTP), Java Application Server for presentation, (via JDBC), Logic server to perform logics and functions, (through ODBC), and database server in highly distributed environment. In this communication layer, Java application server is server for the HTML client, but at the same time, it is the client for the logic server. Figure 13 depicts how each servers interact with each other.</p>
+
+<p><img src="../images/ctu00913.png" border="0" alt="Client-Server Architecture" title="Client-Server Architecture" hspace="0" vspace="0"/></p>
+
+<p>Figure 13. Client-Server Architecture</p>
+<p>The advantage of this well know client-server architecture style is PT Matahari can have centralized data repository (Database Server), better security making use of Lightweight Directory Access Protocol (LDAP), and a single logic server is sufficient to handle all request made by clients. On the other hand, the disadvantage of this architecture is that the failure of logic server causes whole system down, the high usage of network between the application server and HTML clients.</p>
+<p>The majority of enterprise Solutions for huge organization follows this styles including E-Business Suites (EBS), JD Edwards, and PeopleSoft. Since the primary goal of enterprise solutions is to record all transaction data into database for better planning and forecasting, the centralization and segregation nature of this style is suitable for the enterprise solutions.</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609894"></a>Sequence and State Transition Diagrams</h1>
+<p>The purpose of Computer Aided Software Engineering (CASE) is to make the software development project and its maintenance easier and more reliable by putting all software development processes into the repository (Galin, 2004). Here are the Sequence and State Transition Diagrams based on the use-cases on inventory and sales management.&nbsp;</p>
+<h2><a name="_Toc513609895"></a>Sequence Diagram</h2>
+<p>A sequence diagram shows how objects collaborate in a particular scenario. It represents the collaboration as a sequence of messages with the timing of messages between collaborating objects. (Stephens, 2015).</p>
+<h3><a name="_Toc513609896"></a>Sequence Diagram &ndash; Inventory</h3>
+<p>Real-time on-hand quantity gets maintained using both Item Location and Item Leger. Both files gets updated whenever there is any transaction which affects the quantity as depicted in figure 14.</p>
+
+<p><img src="../images/ctu00914.png" border="0" alt="Sequence Diagram" title="Sequence Diagram" hspace="0" vspace="0"/></p>
+
+<p>Figure 14. Sequence Diagram &ndash; Inventory</p>
+<p>The light ERP system to develop for PT Matahari is highly dynamic to control real-time inventory. Figure 15 depicts how replenish happens through procurement activity when the inventory level is low or below the safety stock defined.</p>
+
+<p><img src="../images/ctu00915.png" border="0" alt="Sequence Diagram - Replenish" title="Sequence Diagram - replenish" hspace="0" vspace="0"/></p>
+
+<p>Figure 15. Sequence Diagram &ndash; Replenish</p>
+<p>Note that above sequence diagram does not include the update of item location and insert of item ledger information which occurs during purchase order receipt activity.</p>
+<h3><a name="_Toc513609897"></a>Sequence Diagram &ndash; Sales</h3>
+<p>Figure 15 depicts the sequence of activity takes place from placing sales order through shipment confirmation.</p>
+
+<p><img src="../images/ctu00916.png" border="0" alt="Sequence Diagram - Sales Process" title="Sequence Diagram - Sales Process" hspace="0" vspace="0"/></p>
+
+<p>Figure 16. Sequence Diagram - Sales Process</p>
+<p>Sales order starts when a customer call PT Matahari with information inventory, request date, quantity requested and so on. All commitment is sub-function of availability check. In real scenario, the status of sales order detail varies depending on the credit level, inventory availability, and work day calendar.</p>
+<p>A vertical lines underneath participants is a lifeline which represents the participant sitting there and waiting for something happen. And execution specification (for example, enter Order) represents a participant is doing something. Labeled arrows with solid arrowheads (for instance, acknowledge Order) indicates synchronous message, where open arrow header (e.g., enter Order) indicates asynchronous message. And naturally dashed arrows with open arrowheads represent return messages sent in reply to a calling message.</p>
+<h2><a name="_Toc513609898"></a>State Transition Diagram</h2>
+<p>A state-transition diagram presents a sequence of states that an object goes through during its lifecycle. This diagram is to describe the changes of states for an object or a component. Here review the objects the Item Location in Inventory Management system and the Sales Order Detail file in Sales Order Management.</p>
+<h3><a name="_Toc513609899"></a>State Transition Diagram &ndash; Inventory</h3>
+<p>Figure 17 depicts how the status of Item Location changes through addition (commonly, purchase order receipt) and subtraction (sales order shipment) of inventory. Below diagram represents all possible status of item location including held/frozen and disposal as an action.</p>
+
+<p><img src="../images/ctu00917.png" border="0" alt="State Transition Diagram - Item Location" title="State Transition Diagram - Item Location" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 17. State Transition Diagram - Item Location</p>
+<h3><a name="_Toc513609900"></a>State Transition Diagram &ndash; Sales</h3>
+<p>In any ERP application, Sales module is one of heaviest suite to implement. Figure 18 is the representation of the change of sales order detail. From the capturing the customer&rsquo;s purchase order through sales update which interfaces with Account Receivable and General Ledger which are basic modules to generate multiple financial reports.</p>
+
+<p><img src="../images/ctu00918.png" border="0" alt="State Transition Diagram - Sales Detail" title="Stete Transition Diagram - Sales Detail" hspace="0" vspace="0"/></p>
+
+<p>Figure 18. State Transition - Sales Detail</p>
+<p>Figure 19 below supports the detail activities and events of figure 18 including interface with other objects in the system.</p>
+
+<p><img src="../images/ctu00919.png" border="0" alt="State Transition and Interface" title="State Transition and Interface" hspace="0" vspace="0"/></p>
+
+<p>Figure 19. State Transition and Interface</p>
+<p>There are multiple forks to represent the separation of system. Likewise, other ERP system, the system to develop for PT Matahari is focusing on the integration between modules. In this diagram, the change of status is controlled using columns order quantity (= shipped quantity + cancelled quantity + backordered quantity), and dates (order date, shipped date, cancelled date, and backordered date).</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609901"></a>Class and Activity Diagrams</h1>
+<p>The Unified Modeling Language (UML) 2.0 defined 13 diagrams which comprise the Structure Diagram and Behavior Diagram. Class Diagram and Activity Diagram are two basic diagrams to understand the objects and classes in object-oriented modeling approach. Regardless the actual model to use, both Class Diagram and Activity Diagram entails the representation of a certain component in a system.</p>
+<h2><a name="_Toc513609902"></a>Class Diagram</h2>
+<p>A Class Diagram represents the classes, their properties and methods, and their relationship. A class diagram couples the function-oriented design method which is the basic approach for this project as shown in the table 1.</p>
+<p><i>Table 1. Object-Oriented vs. Function-Oriented</i></p>
+
+<table style="width:50%">
+  <tr>
+    <th>Components in Object-Oriented Methodology</th>
+    <th>Function-Oriented Model</th> 
+  </tr>
+  <tr>
+    <td>Class</td>
+    <td>Module or Subsystem</td> 
+  </tr>
+  <tr>
+    <td>Properties</td>
+    <td>Application specification</td> 
+  </tr>
+    <tr>
+    <td>Methods</td>
+    <td>Business Functions written in C</td> 
+  </tr>
+  <tr>
+    <td>Relationship</td>
+    <td>Hierarchy</td> 
+  </tr>
+</table>
+
+
+
+<p><em>Note</em>: Above relationship is highly simplified relationship.</p>
+<h3><a name="_Toc513609903"></a>Class Diagram &ndash; Sales Order Entry for PT Matahari</h3>
+<p>Sales order entry is one of major application request by PT Matahari. Sales order is made up of Sales Order Header in relation with the customer and Sales Order Detail to hold information on the item ordered by the customer. Figure 20 depicts detail on the relationship between classes. In this figure, a rectangle represents class on top in bold. Two sections below give the class&rsquo;s properties and methods respectively.</p>
+
+
+<p><img src="../images/ctu00920.png" border="0" alt="Class Diagram - Sales Order Entry" title="Class Diagram - Sales Order Entry" hspace="0" vspace="0"/></p>
+
+<p>Figure 20. Class Diagram - Sales Order Entry</p>
+<p>One customer can have multiple sales orders, and a single sales order comprises multiple items. Depending on the item location, both item price and cost can be vary. All methods are public for reuse in other module. However, item location, item cost, and item price is depending on the item branch information.</p>
+<h3><a name="_Toc513609904"></a>Software Design Pattern &ndash; Composite Design Pattern</h3>
+<p>The design pattern is a description for how to solve commonly occurring program in software development life cycle. The complexity of Enterprise Resource Planning (ERP) software, even when it is a slimming down version, requires loose coupling and high cohesion, hence the choice of software design pattern is composite design pattern. The composite design pattern composes objects into tree structure to represent its hierarchies. This composite allow clients to treat individual objects and the composition of objects uniformity. This pattern can be useful when the relationship of objects are 1 to many (GeeksforGeeks, n.d.).</p>
+
+<p><img src="../images/ctu00921.png" border="0" alt="Composite Design Pattern" title="Composite Design Pattern" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 21. Composite Design Pattern</p>
+<p>In figure 21, Cs and Ls represent Composite and Leaf respectively. This pattern suitable when categorizing business functions with master business functions, minor functions and so on. For example, Sales Order Master business function include minor function check availability but at the same time check availability is composite function which calls sub-function which can read user defined availability, safety stock, and generate supply and demand information. Hence, this composite design pattern suits for function-oriented design method as well for the enterprise solutions. &nbsp;</p>
+<h2><a name="_Toc513609905"></a>Activity Diagram</h2>
+<p>An activity diagram represents workflow for activities which optionally includes the objects. In activity diagram, arrows represents the direction of workflow. As a result, the activity diagram is a bit like a flowchart showing how work flows. This diagram will give clear flow of work to PT Matahari. In this diagram, the thick bar or fork represents parallel activities.</p>
+<h3><a name="_Toc513609906"></a>Activity Diagram &ndash; Inventory Management</h3>
+<p>Figure 22 depicts the activities of item availability checking.</p>
+
+<p><img src="../images/ctu00922.png" border="0" alt="Activity Diagram - Availability" title="Activity Diagram - Availability" hspace="0" vspace="0"/></p>
+
+<p>Figure 22. Activity Diagram - Availability Checking</p>
+<p>Real-time inventory movement is recorded in the item location file whereas the history of supply and demand records are written in item ledger file.</p>
+<h3><a name="_Toc513609907"></a>Activity Diagram &ndash; Sales Order Management</h3>
+<p>The sales activity records both customer and item which result in shipment in warehouse and account receivable for invoice. Figure 23 represents the sales order activities in detail.</p>
+
+<p><img src="../images/ctu00923.png" border="0" alt="Activity Diagram - Sales Order" title="Activity Diagram - Sales Order" hspace="0" vspace="0"/></p>
+
+<p>Figure 23. Activity Diagram - Sales Order Management</p>
+<p>For easier reading, the objects/tables are added in these activity diagrams.</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609908"></a>Verification and Validation</h1>
+<p>A simple representation of verification and validation during different stages of software development life cycle is depicted in figure 24 using V-model. The v-model represents clear semantics though this project does not follow same. In this figure, the top represents validation where below validation processes show verification (Mehle, 2017).&nbsp;</p>
+
+<p><img src="../images/ctu00924.png" border="0" alt="V-Model Representation of Verification and Validation" title="V-Model Representation of Verification and Validation" hspace="0" vspace="0"/></p>
+
+<p>Figure 24. V-Model Representation of Verification and Validation</p>
+<h2><a name="_Toc513609909"></a><a name="_Toc509340975"></a>Validation</h2>
+<p>Validation is to check whether &ldquo;we build the right software&rdquo; which satisfied the functional requirements by PT Matahari. Figure 25 represents in different swim lane to have better view for the V-V approach (Boehm, 1979).</p>
+
+<p><img src="../images/ctu00925.png" border="0" alt="V & V Sequence" title="V&V Sequence" hspace="0" vspace="0"/></p>
+
+<p>Figure 25. Software Design V &amp; V Sequence</p>
+<p>This project aims for building a light ERP software tailored for PT Matahari which will be the backbone enterprise solution in the future. The validation step in figure 25 is to ensure that this software design document is consistent, complete, traceable, and modifiable to meet high quality requirement. &nbsp;</p>
+<h3><a name="_Toc513609910"></a>Validation Technique &ndash; Review and Inspection</h3>
+<p>As depicted in figure 26, the review and inspection is iterative steps to validate the document and outcome with the stakeholders. This review takes place against the analysis made using use case, sequence diagram, state transition diagram, class diagram, and activity diagram in the area of customer master management, inventory management, and sales order management. This validation technique goes through 3 different steps as depicted in figure 26. &nbsp;(Kotonya et al., 2008).</p>
+
+<p><img src="../images/ctu00926.png" border="0" alt="Review and Inspection" title="Review and Inspection" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 26. Review and Inspection for Software Design Validation</p>
+<p>Other validation technique in software design to consider are prototyping, traceability, and testing.</p>
+<h2><a name="_Toc513609911"></a><a name="_Toc509340980"></a>Verification</h2>
+<p>Verification is to conform its specification to meet &ldquo;we are building the software right.&rdquo; Verification ensures every steps followed in the process of implementing the software to result in the right product. It is imperative to check consistency of the software requirements specification artifacts and other software development procedures (Jackson et al., 2008).</p>
+<h3><a name="_Toc513609912"></a>Verification Technique &ndash; Inspection</h3>
+<p>The inspection is commonly used as verification technique to audit in detail and to review software codes and its documentation. This code review is effective technique to discover errors as shown in figure 27.</p>
+
+<p><img src="../images/ctu00927.png" border="0" alt="Inspection and Testing" title="Inspection and Testing" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 27. Inspection and Testing for Software Design Verification</p>
+<p>In inspecting the real-time inventory management for PT Matahari, make it sure that there are multiple entries for Item Master, Item Branch, Item Location, Item Cost, Item Price, and Item Ledger with all necessary columns in it including easier search of each controls. Other available techniques for verification are testing, demonstration, analysis, and cleanroom process as depicted in figure 28 (Al Saeed, 2018).</p>
+
+<p><img src="../images/ctu00928.png" border="0" alt="Cleanroom Process" title="Cleanroom Process" hspace="0" vspace="0"/></p>
+
+<p>Figure 28. Cleanroom Process</p>
+<h2><a name="_Toc513609913"></a><a name="_Toc509340986"></a>Traceability Matrix</h2>
+<p>Throughout validation process, the requirements Traceability Matrix links requirements to ensure that all defined requirements are being tested and verified. Table 2 and table 3 show the relationship between two matrix to enable forward and backward track and trace (Ludwig Consulting Services, 2010).</p>
+<p><i>Table 2. User Requirements Matrix for PT Matahari</i></p>
+
+<table style="width:50%">
+  <tr>
+    <th>ID</th>
+    <th>User Requirements</th> 
+    <th>Forward Traceability</th>
+  </tr>
+  <tr>
+    <td>U1</td>
+    <td>A user shall enter customer master record</td> 
+    <td>S10</td>
+  </tr>
+    <tr>
+    <td>U2</td>
+    <td>A user shall enter address book master</td> 
+    <td>S11</td>
+  </tr>
+    <tr>
+    <td>U3</td>
+    <td>A user shall enter item master</td> 
+    <td>S12</td>
+  </tr>
+    <tr>
+    <td>U4</td>
+    <td>A user shall register item branch information</td> 
+    <td>S12</td>
+  </tr>
+    <tr>
+    <td>U5</td>
+    <td>A user shall update item cost</td> 
+    <td>S13</td>
+  </tr>
+    <tr>
+    <td>U6</td>
+    <td>A user shall delete item price</td> 
+    <td>S14</td>
+  </tr>
+  <tr>
+    <td>U7</td>
+    <td>A user shall select customer for sales order header and item branch for sales order detail</td> 
+    <td>S15,S16</td>
+  </tr>
+</table>
+
+
+<p><em>Note: The numbering is simplified for easier reading</em></p>
+<p>Table 3. Functional Requirements Matrix for PT Matahari</p>
+
+<table style="width:50%">
+  <tr>
+    <th>ID</th>
+    <th>System Requirements</th> 
+    <th>Backword Traceability</th>
+  </tr>
+  <tr>
+    <td>S10</td>
+    <td>The system shall manipulate the entity (add, change, delete, and view)</td> 
+    <td>U1</td>
+  </tr>
+    <tr>
+    <td>S11</td>
+    <td>The system shall manipulate customer master information</td> 
+    <td>U2</td>
+  </tr>
+    <tr>
+    <td>S12</td>
+    <td>The system shall manipulate item master, item branch, and location master</td> 
+    <td>U3</td>
+  </tr>
+    <tr>
+    <td>S13</td>
+    <td>The system shall calculate average cost and validate the cost of item</td> 
+    <td>U4</td>
+  </tr>
+    <tr>
+    <td>S14</td>
+    <td>The system shall return the best item price for sales with combination of customer information</td> 
+    <td>U5</td>
+  </tr>
+    <tr>
+    <td>S15</td>
+    <td>The system shall validate and default sales order header information based on customer master in adding/changing the sales order header</td> 
+    <td>U6</td>
+  </tr>
+  <tr>
+    <td>S16</td>
+    <td>The system shall validate, default, and create cache for sales order detail in selecting item branch information</td> 
+    <td>U7</td>
+  </tr>
+</table>
+
+
+
+
+<p><i>Table 4. Traceability Matrix with Iterative Testing</i></p>
+
+<table style="width:50%">
+  <tr>
+    <th>Req. ID</th>
+    <th>Description</th> 
+    <th>TC001</th>
+    <th>TC002</th>
+    <th>TC003</th>
+  </tr>
+  <tr>
+    <td>...</td>
+    <td></td> 
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>U4</td>
+    <td>User can add/change/delete item cost</td> 
+    <td>Yes</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>...</td>
+    <td></td> 
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>U6</td>
+    <td>User can add/change/cancel sales order header and detail</td> 
+    <td></td>
+    <td>Yes</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>...</td>
+    <td></td> 
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>  
+  <tr>
+    <td>U7</td>
+    <td>Sales order basic functionality</td> 
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td>...</td>
+    <td></td> 
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>  
+
+</table>
+
+
+
+<p><em>Note: Above table only included limited number of requirements. Same traceability document can be expanded to include Business Requirements, Functional Design, High Level Design, and Detail Design (Al Saeed, 2018).</em></p>
+
+<p>Above traceability matrix shows,</p>
+<ul>
+<li>TC001, TC002, and TC003 covers basic sales order functionality (Requirement S16)</li>
+<li>The requirement U6 is covered by TC002</li>
+<li>The coverage/scope of testing</li>
+</ul>
+<p>If a Test case fails, traceability helps determine the corresponding functionality easily. It helps ensure that all requirements are tested (Al Saeed, 2018). Figure 23 depicts traceability matrix which demonstrates how traciability traces and tracks. Generally, tracking to describe all change made based on the initial status. On the other hand, tracing go backward based on the end component.</p>
+
+<p><img src="../images/ctu00929.png" border="0" alt="Iterative Relationship for Testing" title="Iterative Relationship for Testing" hspace="0" vspace="0"/></p>
+
+<p>Figure 29. Iterative Relationship for Testing in Matrix</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609914"></a>Multithreading Opportunities&nbsp;&nbsp;&nbsp;</h1>
+<p>The performance of a certain software is highly dependent on both hardware and software. Multithread programming is approach to maximize the performance of a certain software using computer operating system resources including CPU, main memory, bus, and so on. Computer operating system comprises process management, I/O management, main memory management, file management, networking, security, and command interpreter when limiting the interface with software. The process is simply the program in execution making use of the computer resources. A thread, a Light Weight Process is a fundamental units of CPU utilization which are made up of program counter (PC) registers and stack space. A thread shares these resources with other threads (open files and signals for instance). This mechanism does not require each threads to deal with memory management (Tong, 2010). As depicted in figure 30, multithreading in the user space which deals with the software to develop gives great benefit against a single threaded kernel.</p>
+
+<p><img src="../images/ctu00930.png" border="0" alt="Threads" title="Threads" hspace="0" vspace="0"/></p>
+
+<p>Figure 30. a) Three Processes with one thread. and b) One Process with One Three Threads</p>
+<p>Each threads has its lifecycle as depicted in figure 31.&nbsp;</p>
+
+<p><img src="../images/ctu00931.png" border="0" alt="Thread Lifecycle" title="Thread Lifecycle" hspace="0" vspace="0"/></p>
+
+<p>Figure 31. Thread Lifecycle</p>
+<h2><a name="_Toc513609915"></a>Benefit of threads</h2>
+<p>Commonly, the benefits of using threads are huge especially for the enterprise solutions as below (Tong, 2010),</p>
+<ul>
+<li>Gaining performance in multiprocessing hardware because it can handle multiple task in parallel (or, concurrent processing);</li>
+<li>Better throughput and responsiveness;</li>
+<li>Faster Inter-Process Communication (IPC);</li>
+<li>Efficient use of system resources including multi-core CPUs;</li>
+<li>Enable to build better program to make use of these resources; and</li>
+<li>The source code can be platform independent.</li>
+</ul>
+<h2><a name="_Toc513609916"></a>3 Areas to Implement Multithread</h2>
+<p>The light ERP software developing for PT Matahari requires multiple kernels to support various functionality it requires. Some of kernels required are: Universal Batch Engine (UBE) Kernel, Security Kernel for authentication, Lock Manager Kernel, Call Object Kernel to call business function written in C/C++, Network Kernel to maintain connection, Management Kernel, Scheduler Kernel, Queue Kernel to make jobs wait in the job queue, Workflow Kernel, Metadata Kernel to distribute the specification, and so on.</p>
+
+<p><img src="../images/ctu00932.png" border="0" alt="Sales Order Entry using Multithreading" title="Sales Order Entry using Multithreading" hspace="0" vspace="0"/></p>
+
+<p>Figure 32. Sales Order Entry using Multithread</p>
+<p>Above figure 32 depicts general routine for the application which has header and detail relationship. Users shall enter detail information row by row manually or hundreds of records using excel import or copy/paste options. As a result, these applications may cause bottleneck for the performance in general. To have maximum performance as a whole system, call object kernel which deals with business function in the interactive applications and network kernel to maintain connection among multiple kernels in logic server, and java/xml codes in Java Application Server are the best candidate for multithreading. The program logic to code for PT Matahari need building with care because supposing multithreading is crucial factor to maximize the benefit of the use of thread for the engineered light ERP system for PT Mathari.</p>
+<h2><a name="_Toc513609917"></a>Thread-safe Code for PT Matahari</h2>
+<p>It is essential the functions to build are thread safe since these functions are managed by all object kernel with multithread configuration. To make each program code thread safe,</p>
+<ul>
+<li>Do not use global variables and statics in the function. Because any thread can access and modify it, which yields the undesired output</li>
+<li>If possible, put the variable as a member of data structure and assign it locally</li>
+<li>Maximize the use of database cache for the data are concise and require low maintenance. If needed, this database cache stores same Statics</li>
+<li>Make use of existing standard APIs in C Library</li>
+</ul>
+<h2><a name="_Toc513609918"></a>Performance Matrix for PT Matahari</h2>
+<p>Figure 33 depicts general performance testing process (tutorialspoint, n.d.).</p>
+
+<p><img src="../images/ctu00933.png" border="0" alt="Performance Testing" title="Performance Testing" hspace="0" vspace="0"/></p>
+
+<p>Figure 33. Performance Testing Process</p>
+<p>Performance testing is essential requirement from PT Matahari to determine whether the software was built right without affecting daily business which requires speed, scalability, stability, and reliability. Table 3 represents the sytems&rsquo;s ffunctional requirement with test case as shown in table 5. &nbsp;</p>
+<p>Table 5. Test Case Matrix for Performance Test</p>
+
+<table style="width:60%">
+  <tr>
+    <th>System Requirement</th>
+    <th>Test Case ID</th> 
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>S16</td>
+    <td>Test001</td> 
+    <td>
+      <p>Verity if user can set thread dynamically?</p>
+      <li>NetTimeout – to determine Transaction Processing Timeout</li>
+      <li>LogicServerTimeout – to give error when a called function takes up too much time</li>
+      <li> SingleThreaded – TRUE/FALSE for business continuity</li>
+    </td>
+  </tr>
+  <tr>
+    <td>S16</td>
+    <td>Test002</td> 
+    <td>Verify if user can copy/paste 100 rows of sales order detail information within 60 seconds</td>
+  </tr>
+  <tr>
+    <td>S17</td>
+    <td>Test003</td> 
+    <td>Verity if 15 users can enter sales order at the same time without hitting commit fail error</td>
+  </tr>
+  <tr>
+    <td>S17</td>
+    <td>Test004</td> 
+    <td>Verify if a user can enter 100 order detail within 60 seconds in single-threaded mode</td>
+  </tr>
+</table>
+
+
+<hr width="80%">
+
+<h1><a name="_Toc513609919"></a>Constraints&nbsp;&nbsp;&nbsp;&nbsp;</h1>
+<p>In any project, budget, time, and scope of work are general constraints as depicted in figure 34. So software engineering is science to build software without exceeding budget nearly on time. &nbsp;Other factors affect project can be resources and risk.</p>
+
+<p><img src="../images/ctu00934.png" border="0" alt="Project Constraints" title="Project Constraints" hspace="0" vspace="0"/></p>
+
+
+<p>Figure 34. Project Constraints</p>
+<h2>&nbsp;<a name="_Toc513609920"></a>Technical constraints</h2>
+<p>Technical constraints are rigid technical design decision which is not supposed to be changed commonly given by stakeholders (Keeling, 2014).</p>
+<ul>
+<li>Programming language: this constraints affects both development and maintenance. For this project, C and C++ for business functions and Java Programming language for interface;</li>
+<li>Platform: the software must be running in Windows and Oracle WebLogic for application server; And</li>
+<li>Use of specific library: standard C library and Java library.</li>
+</ul>
+<h2><a name="_Toc513609921"></a>Design Constraints</h2>
+<p>Many design goals translated into non-functional requirements, the application domain, or quality attribute to meet performance, dependability, cost, maintenance, and end-user requirements. Commonly, these quality requirements are design constraints for the project (UWA, n.d.).</p>
+<ul>
+<li>User interface: the software to develop must have same look and feel across the systems;</li>
+<li>Documentation;</li>
+<li>Hardware constraints;</li>
+<li>Performance constraints: network bandwidth;</li>
+<li>Error handling constraints: the error must be intuitive;</li>
+<li>Interoperability: the software should interface with 3<sup>rd</sup> party software without changing its architecture;</li>
+<li>Quality constraints: including allowed downtime to fix, easy to deploy, and portable;</li>
+<li>Modification constraints: as maintenance factor it must be easy to modify to fix the issue and extend the modules; and</li>
+<li>Security constraints: the authentication need performing in the application layer;</li>
+</ul>
+<h2><a name="_Toc513609922"></a>Business constraints</h2>
+<p>Business constraint is the business decision which cannot be changed during project life cycle.</p>
+<ul>
+<li>Project schedule: time constraint is biggest concern in any software development project;</li>
+<li>Budget: this factor is directly related with time factor above;</li>
+<li>Team composition: make up whole project team is crucial because experience software engineer in high demand; and</li>
+<li>Software licensing restriction: this factor is related with architecture of software itself.</li>
+</ul>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609923"></a>Summary</h1>
+<p>This software design document bridges the gap between stakeholders and developers by adhering to the software engineering methodology to build successful a light Enterprise Resources Planning solution for PT Matahari. This document focuses on the entity management, real-time inventory management, and sales order processing in detail.</p>
+<p>This document suggests function-oriented design methodology in client-server architecture because this is proven approach for the enterprise solutions in the mark. In detail, reverse engineering is heavily used to make a workable software based on commercial software. In turn, this procedural effort of analyzing, understanding, duplicating an existing product including its components. In building core products, UML diagramming (Use Case Diagram, Sequence Diagram, State Transition Diagram, Class Diagram, and Activity Diagram) will help to communicate the project team better.</p>
+<p>&nbsp;Lastly, this document reviews multithread opportunities in Call Object Kernel, network kernel, and Java application server. This document reviews assumptions and constraints in this project. Across phases the verification and validation tools are used to comply with contains in various layers.</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc513609924"></a>References</h1>
+<ul>
+<li>Al Saeed, I. (2018). <em>Software Engineering Process</em>. Retrieved April 5, 2018, from the presentation material of Software Engineering (CS649-1802A-01)</li>
+<li>Al Saeed, I. (2018). <em>CS649 &ndash; Software Design. 4<sup>th</sup> Live Chat Session</em>. Retrieved April 25, 2018, from the presentation material of Software Engineering (CS649-1802A-01)</li>
+<li>Barbacci, M. R., (2004). <em>Software Quality Attributes: Modifiability and Usability</em>. Retrieved April 16, 2018, from http://www.ieee.org.ar/downloads/Barbacci-05-notas1.pdf</li>
+<li>Barbin, L. (2013). <em>Software Design Principles</em>. [Kindle Edition]. ISBN: 978-0-9920839-0-8</li>
+<li>Boehm, B. W. (1979). <em>Guideline for Verifying and Validating Software Requirements and Design Specifications</em>. Retrieved May 1, 2018, from http://csse.usc.edu/TECHRPTS/1979/usccse79-501/usccse79-501.pdf</li>
+<li>Galin, D. (2004). <em>Software Quality Assurance: From Theory to Implement</em>. Retrieved power pointer presentation material on April 17, 2018, from www.unf.edu/~broggio/cen6070/CEN6070-Chapter13.ppt</li>
+<li>Jackson, M. and Heymans, P. (2008). <em>Requirements Verification and Validation</em>. Retrieved May 1, 2018, from csis.pace.edu/~marchese/CS775/Lectures/775L12.ppt</li>
+<li>Keeling, M. (2014). <em>Reflection on Software Engineering</em>. Retrieved May 7, 2018, from http://www.neverletdown.net/2014/10/dealing-with-constraints-in-software-architecture.html</li>
+<li>Kotonya, G. and Sommerville, I. (2013). <em>Requirements Validation &amp; Verification</em>. Retrieved May 1, 2018, from https://ivi.fnwi.uva.nl/fcn/teaching/Project_Analysis_2013/Slide%20%20Sets/Analysis%20and%20Validation/Requirement%20Validation%20and%20Verification%201.pdf</li>
+<li>Ludwig Consulting Service. (2010). <em>Requirements Traceability Matrix.</em> Retrieved May 1, 2018, from http://www.jiludwig.com/Traceability_Matrix_Structure.html</li>
+<li>Mehle, M. E. (2017). <em>Particle Accelerators as Medical Devices</em>. Retrieved April 29, 2018, from https://www.linkedin.com/pulse/particle-accelerators-medical-devices-marcos-e-mehle</li>
+<li>Rodriguez, M., Oviedo, J. R., and Piattini, M. (2016). <em>Evaluation of Software Product Functional Suitability</em>: A Case Study. Retrieved April 16, 2018, from http://www.aqclab.es/images/AQCLab/Noticias/SQP/software-quality-management-evaluation-of-software-product-functional-suitability-a-case-study.pdf</li>
+<li>Sommerville, I. (1994). <em>Function-oriented Design</em>. Retrieved April 09, 2018, from https://ifs.host.cs.st-andrews.ac.uk/Resources/Notes/Design/FunctionDesign.pdf</li>
+<li>Stephens, R. (2015). <em>Beginning software engineering</em>. Indianapolis, IN. Wrox, a Wiley Brand.</li>
+<li>Tong, L.Y., (2010). <em>Operating Systems</em>. Lecture note. Retrieved May 6, 2018, from http://cse.csusb.edu/tongyu/courses/cs460/notes/process.php</li>
+<li>Tutorialspoint. (n.d.). <em>Performance Testing</em>. Retrieved May 7, 2018, from https://www.tutorialspoint.com/software_testing_dictionary/performance_testing.htm</li>
+<li>UWA. (n.d.). <em>Design Constraints</em>. Software Engineering Design. Retrieved May 7, 2018, from http://www.neverletdown.net/2014/10/dealing-with-constraints-in-software-architecture.html</li>
+</ul>
+
+
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+
+  </body>
+</html>

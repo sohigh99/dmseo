@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JP420000 and Prepayment</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>JP420000 and Prepayment</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></span></big></big></h2>
+
+<h3>JP420000 - Sales Order Manager and prepayment</h3>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+
+
+<p>The columns - valueObject you are related with the prepayment process (those columns can be populated only when you take additional step in P4210/P42101). The document &lt;Document 625528.1&gt; - E1: 42: Prepayment in Sales Order Processing (P4210/P42101/R42800/P004201/R004201/R004202/R03B671) will give you better idea.<br /><br />First of all, you can access the business service mapping detail, <br />1. Go to Oracle &lt;Document 1361438.1&gt; - JD Edwards Technical Catalog then click the hyper link for Technical Catalog<br />2. Select the product 'JD Edwards EnterpriseOne'<br />3. (Additional Information) Business Interfaces - review Business Services, Real Time Events and Batch<br />4. Search object using JP420000 (Published business service), which yields "Pricing" and "Sales Order". Choose the latter.<br />5. Select the hyperlink for Sales Order, then click Input and Output<br /><br />Then, search for tag/parameters below, <br />creditCardAccountName<br />creditCardAccountNumber<br />creditCardTypeCode<br />checkNumber<br />dateExpiration<br />Note that the output mapping does not indicate the file to store these value even when you may see data in P004201 (on menu G42131). <br /><br />Supposing that you have setup the prepayment (including the payment instrument and processing option of referencing P4210|Version), issue the request.<br /><br />Example of request:<br /><br />&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orac="http://oracle.e1.bssv.JP420000/"&gt;<br />&lt;soapenv:Header&gt;<br />  &lt;wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"<br />    xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"<br />    xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"<br />    soapenv:mustUnderstand="1"&gt;<br />    &lt;wsse:UsernameToken xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"<br />      xmlns="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"&gt;<br />      &lt;wsse:Username&gt;jde&lt;/wsse:Username&gt;  <br />      &lt;wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"&gt;jde&lt;/wsse:Password&gt;  <br />    &lt;/wsse:UsernameToken&gt;<br />  &lt;/wsse:Security&gt;<br />&lt;/soapenv:Header&gt;<br />   &lt;soapenv:Body&gt;<br />      &lt;orac:processSalesOrderV6&gt;<br />         &lt;header&gt;<br />            &lt;billing&gt;<br />               &lt;carrier&gt;<br />                  &lt;entityId&gt;74242&lt;/entityId&gt;<br />               &lt;/carrier&gt;<br />               &lt;checkNumber&gt;123-45678910&lt;/checkNumber&gt;<br />               &lt;creditCardAccountName&gt;&lt;/creditCardAccountName&gt;<br />               &lt;creditCardAccountNumber&gt;4540XXXXXXXX9864&lt;/creditCardAccountNumber&gt;<br />               &lt;creditCardTypeCode&gt;VISA&lt;/creditCardTypeCode&gt;<br />               &lt;dateExpiration&gt;&lt;/dateExpiration&gt;<br />               &lt;paymentInstrumentCode&gt;?&lt;/paymentInstrumentCode&gt;<br />            &lt;/billing&gt;<br />            &lt;businessUnit&gt;30&lt;/businessUnit&gt;<br />            &lt;company&gt;00001&lt;/company&gt;<br />            &lt;customerPO&gt;idpedidoVtex03&lt;/customerPO&gt;<br />            &lt;dateOrdered&gt;05/09/2018&lt;/dateOrdered&gt;<br />            &lt;deliverTo&gt;<br />               &lt;entityId&gt;74242&lt;/entityId&gt;<br />            &lt;/deliverTo&gt;<br />            &lt;detail&gt;<br />               &lt;billing&gt;<br />                  &lt;carrier&gt;<br />                     &lt;entityId&gt;74242&lt;/entityId&gt;<br />                  &lt;/carrier&gt;<br />                  &lt;paymentInstrumentCode&gt;?&lt;/paymentInstrumentCode&gt;<br />               &lt;/billing&gt;<br />               &lt;businessUnit&gt;30&lt;/businessUnit&gt;<br />               &lt;dateRequested&gt;30/09/2018&lt;/dateRequested&gt;<br />               &lt;processing&gt;<br />                  &lt;actionType&gt;A&lt;/actionType&gt;<br />               &lt;/processing&gt;<br />               &lt;product&gt;<br />                  &lt;item&gt;<br />                    &lt;itemId&gt;60003&lt;/itemId&gt;<br />                &lt;/item&gt;<br />               &lt;/product&gt;<br />               &lt;quantityOrdered&gt;1&lt;/quantityOrdered&gt;<br />               &lt;reference&gt;L1 MISMO ITEM/DIF.PRECIO&lt;/reference&gt;<br />               &lt;unitOfMeasureCodeTransaction&gt;EA&lt;/unitOfMeasureCodeTransaction&gt;<br />            &lt;/detail&gt;   <br />            &lt;invoicedTo&gt;<br />               &lt;entityId&gt;74242&lt;/entityId&gt;<br />            &lt;/invoicedTo&gt;<br />            &lt;processing&gt;<br />               &lt;actionType&gt;A&lt;/actionType&gt;<br />               &lt;processingVersion&gt;ZJDE0017&lt;/processingVersion&gt;<br />            &lt;/processing&gt;<br />            &lt;shipTo&gt;<br />               &lt;addressLine1&gt;Mi Casa add1&lt;/addressLine1&gt;<br />               &lt;addressLine2&gt;numero 1234 add2&lt;/addressLine2&gt;<br />               &lt;addressLine3&gt;1167891122 add3&lt;/addressLine3&gt;<br />               &lt;addressLine4&gt;34853414&lt;/addressLine4&gt;<br />               &lt;city&gt;Kongo Belga&lt;/city&gt;<br />               &lt;countryCode&gt;AR&lt;/countryCode&gt;<br />               &lt;countyCode&gt;&lt;/countyCode&gt;<br />               &lt;customer&gt;<br />                  &lt;entityId&gt;74242&lt;/entityId&gt;<br />               &lt;/customer&gt;<br />               &lt;mailingName&gt;El pela - enviado&lt;/mailingName&gt;<br />               &lt;postalCode&gt;1629&lt;/postalCode&gt;<br />               &lt;stateCode&gt;GBA&lt;/stateCode&gt;<br />            &lt;/shipTo&gt;<br />            &lt;soldTo&gt;<br />               &lt;addressLine1&gt;velu add1&lt;/addressLine1&gt;<br />               &lt;addressLine2&gt;34853414&lt;/addressLine2&gt;<br />               &lt;addressLine3&gt;1166032293&lt;/addressLine3&gt;<br />               &lt;addressLine4&gt;rodrigo.delfante@bgh.com&lt;/addressLine4&gt;<br />               &lt;city&gt;Pilar&lt;/city&gt;<br />               &lt;countryCode&gt;AR&lt;/countryCode&gt;<br />               &lt;countyCode&gt;&lt;/countyCode&gt;<br />               &lt;customer&gt;<br />                  &lt;entityId&gt;74242&lt;/entityId&gt;<br />               &lt;/customer&gt;<br />                &lt;mailingName&gt;Armando E. Quito&lt;/mailingName&gt;<br />               &lt;postalCode&gt;1629&lt;/postalCode&gt;<br />               &lt;stateCode&gt;GBA&lt;/stateCode&gt;<br />            &lt;/soldTo&gt;<br />         &lt;/header&gt;<br />      &lt;/orac:processSalesOrderV6&gt;<br />   &lt;/soapenv:Body&gt;<br />&lt;/soapenv:Envelope&gt;<br /><br /></p>
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

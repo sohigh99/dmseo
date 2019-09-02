@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>F986113 Subsystem Job Master Table Contains Multiple Records for R00460, R42950 and R09801</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>F986113 Subsystem Job Master Table Contains Multiple Records for R00460, R42950 and R09801</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The Subsystem Job Master (F986113) contains a huge number of records with a Job Status of 'W' (F986113.SSOPCR='W') for the UBE reports R00460|ZJDE0001, R42950|ZJDE0005 and R09801|ZJDE0011.  Can we delete this data? If so, how can we delete it?</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Refer to the following documents before you take any action as these documents explain Subsystem Processing in detail.</p>
+<ul>
+<li>&lt;Document 1265778.1&gt; - E1: SS: Subsystem Jobs</li>
+<li>&lt;Document 625418.1&gt; - E1: 40: Subsystem Processing</li>
+</ul>
+<p>All the data written in the F986113 Subsystem Master tables are records of reports executed through the subsystem and contain business logic information.  Therefore, before deleting the records, you need to verify whether these reports/versions are needed for your business.</p>
+<ul>
+<li><big><span style="font-weight: bold;">Table of Contents:</span> </big></li>
+<ul>
+<li><big><a href="#r00460" alt="example of R00460" title="example of R00460">R00460|ZJDE0001 - Interoperability Generic Outbound Subsystem UBE</a> </big></li>
+<li><big><a href="#r42950" alt="Example of R42950" title="Example of R42950">R42950|ZJDE0005 - Sales Order Batch Price/Cost Update (subsystem submission of Price Cost Update) </a></big></li>
+<li><big><a href="#r09801" alt="Example of R09801" title="Example of R09801">R09801|ZJDE0011 - General Ledger Post (G/L Post Subsystem Version) </a></big></li>
+<li><big><a href="#conclusion" alt="Conclusion" title="Conclusion">Conclusion:</a></big></li>
+</ul>
+</ul>
+<p> </p>
+<p><big><big><a name="r00460"></a>R00460|ZJDE0001 - Interoperability Generic Outbound Subsystem UBE</big></big><br /> This report/version is meant for dealing with the Interoperability Outbound process which is to create Z files per your needs. The Z file can be implemented purely for interoperability or auditing purposes.  As per the processing options, it will write UB - Update Before Image and UA - Update After Image. The definition can be done either through P90701A/P90701 - Interoperability Event Definition and then form exit - Z File Events or P47002 - Flat File Cross-Reference where Transaction Type starting with 'JDE*' are definitions for the Interoperability Process.</p>
+<p>The way you can check this is the following:</p>
+<ol>
+<li>Check data from each listed tables (for example F0101Z2)</li>
+<li>Check all the defined version of last Interactive application (2nd Level or 3rd level, P01012)</li>
+<li>Check how it has definition for P0100041</li>
+<li>If you do not need outbound interoperability against table F0101 - Address Book Master remove the defined version from the processing option parameter </li>
+</ol>
+<table style="border-collapse: collapse; width: 964px; height: 767px;" border="3" summary="" cellspacing="2" cellpadding="2"><colgroup><col style="width: 66pt;" width="88" /> <col style="width: 149pt;" width="199" /> <col style="width: 20pt;" width="26" /> <col style="width: 48pt;" width="64" /> <col style="width: 26pt;" width="34" /> <col style="width: 91pt;" width="121" /> <col style="width: 48pt;" width="64" /> <col style="width: 72pt;" width="96" /> <col style="width: 60pt;" span="2" width="80" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="height: 15pt; width: 66pt; background-color: #ffcc00;">Trans </th>
+<th class="xl63" style="width: 149pt; background-color: #ffcc00;">Trans Description</th>
+<th class="xl63" style="width: 20pt; background-color: #ffcc00;">Dir</th>
+<th class="xl63" style="width: 48pt; background-color: #ffcc00;">Desc</th>
+<th class="xl63" style="width: 26pt; background-color: #ffcc00;">Type</th>
+<th class="xl63" style="width: 91pt; background-color: #ffcc00;">Record </th>
+<th class="xl63" style="width: 48pt; background-color: #ffcc00;">z file</th>
+<th class="xl63" style="width: 72pt; background-color: #ffcc00;">1st Level</th>
+<th class="xl63" style="width: 60pt; background-color: #ffcc00;">2nd Level</th>
+<th class="xl63" style="width: 60pt; background-color: #ffcc00;">3rd Level</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEAB</td>
+<td class="xl63" style="width: 149pt;" width="199">Address Book</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F0101Z2</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0100041</td>
+<td class="xl63" style="width: 60pt;" width="80">P01012</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEBOM</td>
+<td class="xl63" style="width: 149pt;" width="199">Bill of Material Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F3002Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P3002</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDECM</td>
+<td class="xl63" style="width: 149pt;" width="199">Customer Master</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F03012Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0100042</td>
+<td class="xl63" style="width: 60pt;" width="80">P03013</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEFA</td>
+<td class="xl63" style="width: 149pt;" width="199">Fixed Assets</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F1201</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P1201</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEFC</td>
+<td class="xl63" style="width: 149pt;" width="199">Forecast Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F3460Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P3460</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEII</td>
+<td class="xl63" style="width: 149pt;" width="199">Inventory Issues</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F3111Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P31113</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEINV</td>
+<td class="xl63" style="width: 149pt;" width="199">Invoices</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F03B11Z2</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P03B0011</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B11</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B2002</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEINV</td>
+<td class="xl63" style="width: 149pt;" width="199">Invoices</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F0911Z4</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0900049</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B11</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B2002</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEITEM</td>
+<td class="xl63" style="width: 149pt;" width="199">F4101 Process Item Master</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F4101Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4101</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEITEM</td>
+<td class="xl63" style="width: 149pt;" width="199">F4101 Process Item Master</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F4101Z1A</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4101</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEJE</td>
+<td class="xl63" style="width: 149pt;" width="199">Journal Entry</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F0911Z4</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0900049</td>
+<td class="xl63" style="width: 60pt;" width="80">P0911</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPL</td>
+<td class="xl63" style="width: 149pt;" width="199">WO Parts List Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F4801Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4801</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPL</td>
+<td class="xl63" style="width: 149pt;" width="199">WO Parts List Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F3111Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P3111</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Purchase Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F47016</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4310</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Purchase Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F47017</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4311</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Purchase Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">6</td>
+<td class="xl63" style="width: 91pt;" width="121">Address</td>
+<td class="xl63" style="width: 48pt;" width="64">F4706</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4312</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Purchase Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">7</td>
+<td class="xl63" style="width: 91pt;" width="121">Header Text</td>
+<td class="xl63" style="width: 48pt;" width="64">F4714</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4313</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Purchase Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">8</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail Text</td>
+<td class="xl63" style="width: 48pt;" width="64">F4715</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4314</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPYMNT</td>
+<td class="xl63" style="width: 149pt;" width="199">Outbound Payments</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F0413Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0400047</td>
+<td class="xl63" style="width: 60pt;" width="80">P0411</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEPYMNT</td>
+<td class="xl63" style="width: 149pt;" width="199">Outbound Payments</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F0414Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0400047</td>
+<td class="xl63" style="width: 60pt;" width="80">P0411</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEREC</td>
+<td class="xl63" style="width: 149pt;" width="199">Receipts</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F03B13Z2</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P03B0190</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B0011</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B11</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEREC</td>
+<td class="xl63" style="width: 149pt;" width="199">Receipts</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F03B14Z2</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P03B0190</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B0011</td>
+<td class="xl63" style="width: 60pt;" width="80">P03B11</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEROU</td>
+<td class="xl63" style="width: 149pt;" width="199">Routing Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F3003Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P3003</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDERTG</td>
+<td class="xl63" style="width: 149pt;" width="199">WO Routings Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F4801Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P48013</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDERTG</td>
+<td class="xl63" style="width: 149pt;" width="199">WO Routings Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F3112Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P3112</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDESM</td>
+<td class="xl63" style="width: 149pt;" width="199">Supplier Master</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F0401Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0100043</td>
+<td class="xl63" style="width: 60pt;" width="80">P04012</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDESOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Sales Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F4201Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4210</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDESOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Sales Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F4211Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4210</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDESOOUT</td>
+<td class="xl63" style="width: 149pt;" width="199">Sales Order Outbound</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">3</td>
+<td class="xl63" style="width: 91pt;" width="121">Additional Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F49211Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P4210</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEVOUCH</td>
+<td class="xl63" style="width: 149pt;" width="199">Inbound/Outbound Vouchers</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F0411Z3</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0400047</td>
+<td class="xl63" style="width: 60pt;" width="80">P0411</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEVOUCH</td>
+<td class="xl63" style="width: 149pt;" width="199">Inbound/Outbound Vouchers</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F0911Z4</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P0900049</td>
+<td class="xl63" style="width: 60pt;" width="80">P0911</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEWC</td>
+<td class="xl63" style="width: 149pt;" width="199">Work Center Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F30006Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P3006</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEWDC</td>
+<td class="xl63" style="width: 149pt;" width="199">Work Day Calendar Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">2</td>
+<td class="xl63" style="width: 91pt;" width="121">Detail</td>
+<td class="xl63" style="width: 48pt;" width="64">F0007Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P00071</td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+<td class="xl63" style="width: 60pt;" width="80"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl63" style="height: 15pt; width: 66pt;" width="88" height="20">JDEWO</td>
+<td class="xl63" style="width: 149pt;" width="199">Work Order Header Transaction</td>
+<td class="xl65" style="width: 20pt;" width="26">2</td>
+<td class="xl63" style="width: 48pt;" width="64">Outbound</td>
+<td class="xl65" style="width: 26pt;" width="34">1</td>
+<td class="xl63" style="width: 91pt;" width="121">Header</td>
+<td class="xl63" style="width: 48pt;" width="64">F4801Z1</td>
+<td class="xl63" style="width: 72pt; background-color: #cccccc;">P48013</td>
+<td class="xl64"> </td>
+<td class="xl64"> </td>
+</tr>
+</tbody>
+</table>
+<p><br /> <a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p><span style="font-weight: bold;"><br /> </span></p>
+<p><big><big><a name="r42950"></a>R42950|ZJDE0005 - Sales Order Batch Price/Cost Update (subsystem submission of Price Cost Update)</big></big><br /> First determine the functionality of this report R42950 which is to update cost/price/exchange rate after Sales Order Entry and this report updates the Transaction Files (F4211 - Sales Order Detail) based on Master files (F4205 - Item Cost, F4106 - Item Price and F0015 - Exchange Rate and so on). In a typical business environment, we can update Cost/Price before we run R42565 - Print Invoice or R42800 - Sales Update. Whereas subsystem job will be called after Shipment Confirmation is done through P4205 - Shipment Confirmation.</p>
+<p>In case you do not  need to update Cost/Price information from F4211 - Sales Order Detail, you may remove it from Processing Option of P4205 as below:</p>
+<ol>
+<li>Check each versions you are running for P4205</li>
+<li>Go to 'Process' tab</li>
+<li>Remove parameter '1-Update Cost/Price' for item #6. Sales Order Batch Price/Cost Update</li>
+</ol>
+<div class="kmnotebox">Note: Subsystem may serve your purpose only when you handle small transactions and if you do not need the resulting PDF file as detailed in the Knowledge Document &lt;Document 625418.1&gt; - Subsystem Processing.</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p> </p>
+<p><big><big><a name="r09801"></a>R09801|ZJDE0011 - General Ledger Post (G/L Post Subsystem Version)</big></big><br /> Unlike other subsystem configuration, currently R09801|ZJDE0011 can be submitted to server only through P0011 - <em>Work With Batch</em>(Row Exit) Subsystem G/L Post. The risk of this subsystem job is that after the JDE service gets restarted and forgot to submit to server R09801|ZJDE0001, the report could end up with an out of balance situation between the F0911/F0902. </p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p> </p>
+<p><big><big><a name="conclusion"></a>Conclusion:</big></big><br /> In short, there may not be streamlined answer whether the records from F986113 can be deleted or not.</p>
+<p>If any of the above configuration meets your daily/periodic business requirements then, submit the same version to the server.  Once the JDE service gets started it will create one record into the F986113 with Job Status 'R - Running' (F986113.SSOPCR='R') along with inserting a new record into F986110 - Job Master table which the Queue Kernel can pick up and handle for the usual Batch Processing.</p>
+<p>If you do not need the records, then you may delete them manually. Be noted that the table F986113 - Subsystem Job Master File is a system file which is sitting in Server Map, so the table owner is SVM812 not SYS812 for example. This file is also not governed by OCM mapping.</p>
+<p>Currently there is no batch deletion of F986113 records available, so the records can be deleted either through P986113 - Subsystem Jobs row by row or through external database tools for batch deletion.</p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Client Exception in P4210 after upgrading Tools Release</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Web Client Exception in P4210 after upgrading Tools Release</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>The purpose of this document is to guide possible issue in Sales Order Entry (P4210) application through Case Study. However this document is not to encompass commonly reported issue in this application.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+<p>&nbsp;</p>
+<p><big>Table of Contents:</big></p>
+<ul>
+<li><big>Case Study 1 - All users are not able to add/update Sales Order after upgrading tools release</big>
+<ul>
+<li><a href="#symptom" alt="Error on Screen" title="Error on Screen">Symptom</a></li>
+<li><a href="#change" alt="Change made in system" title="Change made in system">Change</a></li>
+<li><a href="#cause" alt="Cause of Web Client Exception" title="Cause of Web Client Exception">Cause</a></li>
+<li><a href="#try" alt="Possible debugging" title="Possible debugging">Try</a></li>
+<li><a href="#solution" alt="Solution" title="Solution">Solution</a></li>
+<li><a href="#considerations" alt="Considerations - Not to fix all issue in P4210" title="Considerations - Not to fix all issue in P4210">Considerations</a></li>
+</ul>
+</li>
+<li>Case Study 2<big> - Intermittely user are getting Transaction Failure error message in P42101 after implenting customer Purge routine</big><br />
+<ul>
+<li><a href="#symptom2" alt="Symptom 2" title="Symptom 2">Symptom</a></li>
+<li><a href="#change2" alt="Change 2" title="Change 2">Change</a></li>
+<li><a href="#cause2" alt="Cause 2" title="Cause 2">Cause</a></li>
+<li><a href="#try2" alt="Try 2" title="Try 2">Try</a></li>
+<li><a href="#solution2" alt="Solution 2" title="Solution 2">Solution</a></li>
+<li><a href="#condierations2" alt="Considerations 2" title="Considerations 2">Considerations</a></li>
+</ul>
+</li>
+<li></li>
+</ul>
+<p>&nbsp;</p>
+<p><big><big>Case Study 1 - All users are not able to add/update Sales Order after upgrading tools release</big></big></p>
+<p><big><big><a name="symptom"></a>Symptom</big></big></p>
+<p>After upgrading tools release from 8.98.3.2 to 9.1.3.1, all users are not able to enter Sales Order.<br />Web Client Exception error message appears on HTML client but it does not show Transaction Failure or Asynchronous business function error message in it.</p>
+<p>For example,</p>
+<ul style="font-weight: bold;">
+<li>Error message on Web/HTML Client:-</li>
+</ul>
+<p style="margin-left: 80px;">WEB CLIENT EXCEPTION<br />An exception has been caught by the Web client. Please contact your system administrator. See log for details. Exception id<br />= Exception 2013-09-22 16:41:41.022_USERID&nbsp; There was a problem with the server while running the business function F4211FSEndDoc.<br />The sever may still be available, but because of state information, the entire unit of work must be resubmitted.<br />Please exit the application and restart it.<br />Post Button clicked Line number 87<br />P4210_W4210A</p>
+<div class="kmnotebox" style="margin-left: 80px;">Note: Message represented in HTML/Web Client has to be repeated in e1root_mmddyy.log (mmddyy is the date when JAS Service started) so get/review e1root_*.log</div>
+<p style="margin-left: 80px;">&nbsp;</p>
+<ul style="font-weight: bold;">
+<li>Mesage in e1root_*.log:-</li>
+</ul>
+<p style="margin-left: 80px;">22 Sep 2013 16:38:11,018 [WARN&nbsp; ]&nbsp; - [RUNTIME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *ERROR* CallObject@179b0cd7: <strong><span style="color: red;">COSE#1000 Request timeout</span></strong>: timeout after <span style="font-weight: bold; color: red;">90000ms</span> host EnterprisServerMachineID:6015(51643) SocID:58369 PID:4576 BSFN:<span style="font-weight: bold;">F4211FSEndDoc</span> user:USERID Env:JPD900 <br />22 Sep 2013 16:38:11,019 [WARN&nbsp; ]&nbsp; - [RUNTIME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *ERROR* CallObject@179b0cd7: Server problem. The server may still be available, but because of state information, the entire unit-of-work must be resubmitted user:USERID Env:JPD900 <br />22 Sep 2013 16:38:29,440 [WARN&nbsp; ]&nbsp; - [RUNTIME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTMLClientHandler:doService: Abnormal error: Silent post request can not be processed due to busy status <br /><br />22 Sep 2013 16:38:39,001 [SEVERE]&nbsp; - [RUNTIME]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FormEngine.doEvent(): BSFN failed and need roll back!! | Form Name : P4210_W4210A com.jdedwards.runtime.base.SystemException: There was a problem with the server while running the business function F4211FSEndDoc.\nThe server may still be available, but because of state information, the entire unit of work must be resubmitted.\nPlease exit the application and restart it.\nPost Button Clicked Line number 87\nP4210_W4210A</p>
+<div class="kmnotebox" style="margin-left: 80px;">Note: Refer to <br />
+<ul>
+<li>&lt;Document 1094464.1&gt; - E1: JAS: Exception/Error Code in JAS when Call Object Kernel Fails on Logic Server</li>
+<li>&lt;Document 1307451.1&gt; - E1: BSFN: Troubleshooting Tips and Techniques on Asynchronous Business Function Commit Fail Error in EnterpriseOne</li>
+<li>For this example, above error COSE#1000 may come earlier than JDB_RollbackUser() in Call Object Kernel log (namely, JDEDEBUG.log)</li>
+</ul>
+</div>
+<p style="margin-left: 80px;">&nbsp;</p>
+<ul style="font-weight: bold;">
+<li>JDEDEBUG_*.log (namely Call Object Kernel log):-</li>
+</ul>
+<p>This log does not contain any error message and F4211FSEndDoc returns 0 but after F4211FSEndDoc is returned it calls "Entering JDB_RollbackUser (UserHandle 05284580)" and this user handle (pointer) is same with user handle initialized in calling F4211FSEndDoc.</p>
+<p style="margin-left: 80px;">Sep 22 16:36:42.440295 - 4576/3268 WRK:Init Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Entering <span style="color: red;">JDB_InitUser with (MANUAL commit mode)</span> <br />Sep 22 16:36:42.440296 - 4576/3268 WRK:Init Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Entering JDB_BeginTransaction (<span style="color: #3333ff;">UserHandle 05284580</span>) <br />Sep 22 16:36:42.440297 - 4576/3268 WRK:Init Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Starting Commit Point No : 1 for Transaction ID : 419434668_4576_3268_422634946 <br />Sep 22 16:36:42.440298 - 4576/3268 WRK:Init Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Exiting JDB_BeginTransaction with Success (UserHandle 05284580) <br />Sep 22 16:36:42.440330 - 4576/3268 WRK:Starting jdeCallObject&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<span style="text-decoration: underline;">Calling Business function F4211FSEndDoc from Level 1 for USERID. Application Name [P4210], Version [ZJDE0001] (BSFNLevel = 1) </span><br />...<br />Sep 22 16:39:25.398959 - 4576/3268 WRK:Starting jdeCallObject&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<span style="text-decoration: underline;">Return value is 0 for F4211FSEndDoc. (BSFNLevel = 1)</span> <br />Sep 22 16:39:25.398969 - 4576/3268 WRK:Call Object&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Error count: Sent back - Server new #Error[0], #Warning[0]: Both Server&amp;Client #Error[0] #Warning[0] <br />Sep 22 16:39:25.398997 - 4576/3268 WRK:Rollback Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Entering <span style="color: red;">JDB_RollbackUser</span> (<span style="color: #3333ff;">UserHandle 05284580</span>) <br />Sep 22 16:39:25.398998 - 4576/3268 WRK:Rollback Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Rolling back commit point 1 of the transaction : 419434668_4576_3268_422634946 <br />Sep 22 16:39:25.398999 - 4576/3268 WRK:Rollback Remote User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ORACLE DBRollbackCon envr=05459718 conn=07BAC5F0</p>
+<div class="kmnotebox" style="margin-left: 80px;">Note: <br />
+<ul>
+<li>Refer to &lt;Document 1513147.1&gt; E1: DB: JDEDB_COMMIT_MANUAL, JDEDB_COMMIT_AUTO, Transaction Processing Boundaries and Deadlock</li>
+<li>JDB_InitUser with (MANUAL commit mode) is issued by system level (connection level) code</li>
+<li>Check time flag from calling to return business function for problematic business function</li>
+</ul>
+</div>
+<p style="margin-left: 80px;">&nbsp;</p>
+<ul style="font-weight: bold;">
+<li>INI settings:</li>
+</ul>
+<p style="margin-left: 80px;">JDE.INI</p>
+<p style="margin-left: 80px;">[NETWORK QUEUE SETTINGS]<br />JDENETTimeout=60</p>
+<p style="margin-left: 80px;">JAS.INI</p>
+<p style="margin-left: 80px;">[JDENET]<br />enterpriseServerTimeout=90000</p>
+<div class="kmnotebox" style="margin-left: 80px;">Note: <br />
+<ul>
+<li>JDENETTimeout is allowed time between Logic Server and Database Server when MANUAL commit is issued by ODBC. Currently 60 seconds (1 minute is default value). Unless it is requested by Oracle, do not modify this parameter because there is high chance of Database blocking by setting Transaction Processing boundaries till it receive message JDB_CommitUser() or JDB_RollbackUser() APIs.</li>
+<li>enterprisServerTimeout is permitted time between JAS server to logic server. So any request by JAS is expected to receive message from logic server within 90 seconds. This value can be increased up to 720000 milliseconds in case user receive timeout error message in viewing data from, for instance, P4021, P09200 and so on.</li>
+<li>Timeout settings are described at document &lt;Document 1307451.1&gt; - E1: BSFN: Troubleshooting Tips and Techniques on Asynchronous Business Function Commit Fail Error in EnterpriseOne</li>
+</ul>
+</div>
+<p style="margin-left: 80px;">&nbsp;<span class="awizEndDelimiter">&nbsp;</span></p>
+<p>&nbsp;</p>
+<p><big><big><a name="change"></a>Change</big></big></p>
+<p>Tools release upgrade from 8.98.4.5 to 9.1.4.2</p>
+<div class="kmnotebox">Note: This case study shows that the only change made in system is upgrade of tools release and full package deployment for followup action, but actual cause is not related with this change made. Refer cause section</div>
+<p>&nbsp;</p>
+<p><big><big><a name="cause"></a>Cause</big></big></p>
+<p>Probable cause is Index file for the table F42199 (Sales Order Detail Ledger) file is corrupted. Because it takes 2 minute 40 seconds in inserting a single record into F42199 as below,</p>
+<div style="margin-left: 80px;">Sep 22 <span style="color: red;">16:36:43.438026</span> - 4576/3268 WRK:Starting jdeCallObject&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Entering JDB_InsertTable (Table F42199) (hRequest 07BCEFE8) <br />Sep 22 16:36:43.438165 - 4576/3268 WRK:Starting jdeCallObject INSERT INTO PRODDTA.F42199 (SLKCOO, SLDOCO, SLDCTO, SLLNID, SLSFXO, SLMCU, SLCO, SLOKCO, SLOORN, SLOCTO, SLOGNO, SLRKCO, SLRORN, SLRCTO, SLRLLN, SLDMCT, SLDMCS, SLAN8, SLSHAN, SLPA8, SLDRQJ, SLTRDJ, SLPDDJ, SLADDJ, SLIVD, SLCNDJ, SLDGL, SLRSDJ, SLPEFJ, SLPPDJ, SLVR01, SLVR02, SLITM, SLLITM, SLAITM, SLLOCN, SLLOTN, SLFRGD, SLTHGD, SLFRMP, SLTHRP, SLEXDP, SLDSC1, SLDSC2, SLLNTY, SLNXTR, SLLTTR, SLEMCU, SLRLIT, SLKTLN, SLCPNT, SLRKIT, SLKTP, SLSRP1, SLSRP2, SLSRP3, SLSRP4, SLSRP5, SLPRP1, SLPRP2, SLPRP3, SLPRP4, SLPRP5, SLUOM, SLUORG, SLSOQS, SLSOBK, SLSOCN, SLSONE, SLUOPN, SLQTYT, SLQRLV, SLCOMM, SLOTQY, SLUPRC, SLAEXP, SLAOPN, SLPROV, SLTPC, SLAPUM, SLLPRC, SLUNCS, SLECST, SLCSTO, SLTCST, SLINMG, SLPTC, SLRYIN, SLDTBS, SLTRDC, SLFUN2, SLASN, SLPRGR, SLCLVL, SLCADC, SLKCO, SLDOC, SLDCT, SLODOC, SLODCT, SLOKC, SLPSN, SLDELN, SLTAX1, SLTXA1, SLEXR1, SLATXT, SLPRIO, SLRESL, SLBACK, SLSBAL, SLAPTS, SLLOB, SLEUSE, SLDTYS, SLNTR, SLVEND, SLCARS, SLMOT, SLROUT, SLSTOP, SLZON, SLCNID, SLFRTH, SLSHCM, SLSHCN, SLSERN, SLUOM1, SLPQOR, SLUOM2, SLSQOR, SLUOM4, SLITWT, SLWTUM, SLITVL, SLVLUM, SLRPRC, SLORPR, SLORP, SLCMGP, SLGLC, SLCTRY, SLFY, SLSO01, SLSO02, SLSO03, SLSO04, SLSO05, SLSO06, SLSO07, SLSO08, SLSO09, SLSO10, SLSO11, SLSO12, SLSO13, SLSO14, SLSO15, SLACOM, SLCMCG, SLRCD, SLGRWT, SLGWUM, SLSBL, SLSBLT, SLLCOD, SLUPC1, SLUPC2, SLUPC3, SLSWMS, SLUNCD, SLCRMD, SLCRCD, SLCRR, SLFPRC, SLFUP, SLFEA, SLFUC, SLFEC, SLURCD, SLURDT, SLURAT, SLURAB, SLURRF, SLTORG, SLUSER, SLPID, SLJOBN, SLUPMJ, SLTDAY, SLSO16, SLSO17, SLSO18, SLSO19, SLSO20, SLIR01, SLIR02, SLIR03, SLIR04, SLIR05, SLSOOR, SLVR03, SLDEID, SLPSIG, SLRLNU, SLPMDT, SLRLTM, SLRLDJ, SLDRQT, SLADTM, SLOPTT, SLPDTT, SLPSTM, SLXDCK, SLXPTY, SLDUAL, SLBSC, SLCBSC, SLCORD, SLDVAN, SLPEND, SLRFRV, SLMCLN, SLSHPN, SLRSDT, SLPRJM, SLOSEQ, SLMERL, SLHOLD, SLHDBU, SLDMBU, SLBCRC, SLODLN, SLOPDJ, SLXKCO, SLXORN, SLXCTO, SLXLLN, SLXSFX, SLPOE, SLPMTO, SLANBY, SLPMTN, SLNUMB, SLAAID, SLPRAN8, SLSPATTN, SLPRCIDLN, SLCCIDLN, SLSHCCIDLN, SLOPPID, SLOSTP, SLUKID, SLCATNM, SLALLOC, SLFULPID, SLALLSTS, SLOSCORE, SLOSCOREO, SLCMCO, SLKITID, SLKITAMTDOM, SLKITAMTFOR, SLKITDIRTY, SLOCITT, SLOCCARDNO) VALUES ('00002',2.000000,'SO',2000.000000,'000',' H01','00002',' ',' ',' ',0.000000,' ',' ',' ',0.000000,' ',0.000000,10847.000000,10847.000000,10847.000000,108105,108105,108105,0,0,0,0,108105,108105,108105,' ',' ',64.000000,'002101001Y1 ','002101001Y1 ',' ',' ',' ',' ',0.000000,0.000000,0.000000,'xxxxx=1.0MM ','1250*2500/1250*3050 ','S ','540','520',' H01',' ',0.000000,0.000000,0.000000,0.000000,' ',' ',' ',' ',' ','A49',' ',' ',' ',' ','SD',100.000000,100.000000,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,'S',' ',100000.000000,1000.000000,0.000000,'1',' ',' ',0.000000,0.000000,0.000000,'0',0.000000,' ',' ',' ',' ',0.000000,0.000000,' ','P ',' ',0.000000,' ',0.000000,' ',0.000000,' ',' ',0.000000,0.000000,'Y','VAT17 ','V ',' ','0',' ','Y','Y','Y',' ',' ',' ',' ',9855.000000,0.000000,' ',' ',' ',' ',' ',' ',' ',' ',' ','SD',100.000000,'SD',100.000000,'SD',0.000000,'LB',0.000000,'GA',' ',' ',' ','07','IN10',20.000000,8.000000,' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',0.000000,' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','CNY',0.000000,0.000000,0.000000,0.000000,0.000000,0.000000,' ',0,0.000000,0.000000,' ','USERID','USERID','EP4210','JDE',113265,163633.000000,' ',' ','0',' ',' ',' ',' ',' ',' ',' ',0,' ',0.000000,' ',' ',0.000000,0.000000,0,0.000000,0.000000,0.000000,0.000000,0.000000,'0',0.000000,' ',' ',' ',0.000000,10847.000000,' ',' ',0.000000,0.000000,0.000000,0.000000,0.000000,' ',' ',' ',' ',' ',0.000000,108105,' ',0.000000,' ',0.000000,' ',' ',' ',11119.000000,' ',0.000000,0.000000,0.000000,' ',0.000000,0.000000,0.000000,0.000000,' ',0.000000,' ',' ',0,' ',0.000000,' ',' ',2000.000000,0.000000,0.000000,' ',' ',0.000000)<br />Sep 22 16:39:23.932000 - 4576/3268 WRK:Starting jdeCallObject ORACLE usage 16:36:43 (32 FTCH 16 rows 12 LOBs) (0 UPD) (1 INS 1 rows) (0 DEL) (0 MISC)<br />Sep 22 16:39:23.932001 - 4576/3268 WRK:Starting jdeCallObject ORACLE speed 16:36:43 ( 223 usec per call, 67 FTCH+LOB calls)<br />Sep 22 <span style="color: red;">16:39:23.932002</span> - 4576/3268 WRK:Starting jdeCallObject Exiting JDB_InsertTable with Success (Table F42199)</div>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: Overall time take is computed from Entering JDB_InsertTable (Table F42199) (hRequest 07BCEFE8) through Exiting JDB_InsertTable with Success (Table F42199)</div>
+<p>&nbsp;</p>
+<p><big><big><a name="try"></a>Try</big></big></p>
+<p>Possibly,</p>
+<ul>
+<li>Run it in Windows Client (strictly testing purpose only): It does not issue any error but it takes long time to see data created</li>
+<li>Issue above query through query tool (e.g., SQLPlus), it takes 2minutes 40 seconds. So we can conclude that issue is coming from database.</li>
+</ul>
+<div class="kmnotebox">Note: <br />
+<ul>
+<li>The first try is made to isolate possible problem in JAS or Local HTML server so we can avoid COSE#1000 error</li>
+<li>The second try shows that issue is coming from database server.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><big><big><a name="solution"></a>Solution</big></big></p>
+<p>Since we determined issue is coming from database level. Interestingly INSERT takes long time to commit. So probable cause can be corrupted index for data files. Then only option we have is drop table and create it again with index information.&nbsp;</p>
+<ol>
+<li>Capture jdedebug.log</li>
+<li>Check any DML statement which takes longer time</li>
+<li>In case time is taking long time against INSERT most probable cause is corrupted index file</li>
+<li>Try to generate index</li>
+<li>If 4 does not fix issue, then generate table through OMW</li>
+</ol>
+<p>&nbsp;</p>
+<p><big><big><a name="considerations"></a>Considerations</big></big></p>
+<p>Before take any Table Operation through OMW, make it sure you have backed up as-is data using query tool.</p>
+<p>Currently, a few option is available for this type of issue and general routine can be:-</p>
+<p>A. Generate Table</p>
+<div style="margin-left: 40px;">1. DropTable<br />
+<div style="margin-left: 40px;">&nbsp;&nbsp; Entering JDB_DropTable( Table = F42199 ) <br />&nbsp;&nbsp; Entering JDB_DropTableOvrWithSpecs( Table = F42199 )<br />&nbsp;&nbsp; sql&gt; DROP TABLE PRODDTA.42199</div>
+<br />2. CreateTable<br />
+<div style="margin-left: 40px;">&nbsp;&nbsp; Entering JDB_TableExists (Table F42199 )<br />&nbsp;&nbsp; Exiting JDB_TableExists with Failure(Table F42199)<br />&nbsp;&nbsp; Entering JDB_CreateTable for (Table F42199) <br />&nbsp;&nbsp; Entering JDB_CreateTableX (Table F42199)<br />&nbsp;&nbsp; sql&gt; CREATE TABLE PRODDTA.F42199 (...with data size and type...) <br />&nbsp;&nbsp; sql&gt; GRANT ALL ON PRODDTA.F42199 TO PUBLIC<br />&nbsp;&nbsp; Entering JDB_CreateIndex (Table = F42199)<br />&nbsp;&nbsp; Entering JDB_AddPrimaryKeyX (Table F42199)<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ALTER COLUMN SLKCOO nchar(5) NOT NULL<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ALTER COLUMN SLDOCO float NOT NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... (repeat for all columns in Primary Key)<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ADD CONSTRAINT F42199_PK PRIMARY KEY (SLKCOO, SLDOCO, ...) for primary key<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ADD CONSTRAINT F42199_2 PRIMARY KEY (SLKCOO, SLDOCO, ...) for secondary key</div>
+</div>
+<p><br />B. Copy Table</p>
+<div style="margin-left: 40px;">1. CopyTable<br />
+<div style="margin-left: 40px;">&nbsp;&nbsp; Entering JDB_TableExists (Table F42199)<br />&nbsp;&nbsp; sql&gt; SELECT&nbsp; COUNT(*)&nbsp; FROM CRPDTA.F42199<br />&nbsp;&nbsp; Entering JDB_DropIndex (Table = F42199)<br />&nbsp;&nbsp; sql&gt; DROP INDEX CRPDTA.F42199.F42199_1<br />&nbsp;&nbsp; sql&gt; DROP INDEX CRPDTA.F42199.F42199_2<br />&nbsp;&nbsp; sql&gt; ALTER TABLE CRPDTA.F42199 DROP CONSTRAINT F42199_PK <br />&nbsp;&nbsp; Entering JDB_DropTable( Table = F41001 ) <br />&nbsp;&nbsp; sql&gt; DROP TABLE CRPDTA.F42199<br />&nbsp;&nbsp; Entering JDB_GetTableProperties<br />&nbsp;&nbsp; sql&gt; CREATE TABLE PRODDTA.F42199 (...with data size and type...) <br />&nbsp;&nbsp; sql&gt; GRANT ALL ON PRODDTA.F42199 TO PUBLIC<br />&nbsp;&nbsp; sql&gt; SELECT&nbsp; *&nbsp; FROM PRODDTA.F42199<br />&nbsp;&nbsp; Entering JDB_InsertTable (Table F42199)<br />&nbsp;&nbsp; sql&gt; INSERT INTO CRPDTA.F42199 VALUES (...) <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... (repeat this for all data from PRODDTA.F42199 (source) to CRPDTA.F42199 (target)<br />&nbsp;&nbsp; Entering JDB_CreateIndex (Table = F42199)<br />&nbsp;&nbsp; Entering JDB_AddPrimaryKeyX (Table F42199)<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ALTER COLUMN SLKCOO nchar(5) NOT NULL<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ALTER COLUMN SLDOCO float NOT NULL<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... (repeat for all columns in Primary Key)<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ADD CONSTRAINT F42199_PK PRIMARY KEY (SLKCOO, SLDOCO, ...) for primary key<br />&nbsp;&nbsp; sql&gt; ALTER TABLE PRODDTA.F42199 ADD CONSTRAINT F42199_2 PRIMARY KEY (SLKCOO, SLDOCO, ...) for secondary key</div>
+</div>
+<p><br /><br />C. Create Index: Drop Index and Create Index</p>
+<p>&nbsp;</p>
+<p>Below case study is to be added in the future.</p>
+<h2>Case Study 2 - Intermittently P42101 issues "Transaction Failure Message"</h2>
+<p><big><big><a name="symptom2"></a>Symptom: </big></big><br />Intermittently users are getting Transaction Failure error in running P42101 with error in e1root_*.log as below,</p>
+<div style="margin-left: 40px;"><span id="form1:panelPage1">26 9 2013 12:59:16,834 [WARN &nbsp;] USERID - [RUNTIME] &nbsp; &nbsp; &nbsp; &nbsp; *ERROR* CallObject@5eab5eab: CallObject.executeRequest(): Problem executing function [SalesOrderApplCtrlEX] lib [CSALES] <span style="color: red; font-weight: bold;">TM_TRAN_CANCELLED</span> was received from CallObject user:USERID Env:JPD910</span><br /><span id="form1:panelPage1">26 9 2013 12:59:17,519 [SEVERE] USERID - [RUNTIME] &nbsp; &nbsp; &nbsp; &nbsp; AsynFormState.executeAsync(): async BSFN failed and need roll back!! .There was a problem with the sever while running the business function SalesOrderApplCtrlEX.\nThe server may still be available, but because of state information, the entire unit of work must be resubmitted.\nPlease exit the application and restart it.</span><br /><span id="form1:panelPage1">Post Button Click - Asynch Line number 0 | Form Name : P42101_W42101D</span></div>
+<p><br /><big><big><a name="change2"></a>Change</big></big><br />Through customer query they have implemented purging of Sales Order Files including related tables.<br /><br /><big><big><a name="cause2"></a>Cause</big></big><br />Orphaned records from F49211 (Sales Order Detail File - Tag File) and F49219 (Sales Order Detail - Tag History). Commonly owing to table naming convention, you may miss out to handle this table from your custom routine. Make it sure all data from F4211 vs F49211 are a pair and F42119 vs F49219 are a pair. <br /><br />If possible, try to simulate issue by adding same order number. For this case study, jdedebug.log (namely, Call Object Kernel log) reads as below,</p>
+<div style="margin-left: 40px;"><span id="form1:panelPage1">INSERT INTO PRODDTA.F49211 VALUES (13000033.000000,'SO','00016',1000.000000,' ',0.000000,0,' &nbsp; ','P',0.000000,' ',' ',0.000000,0.000000,0.000000,0.000000,0.000000,0,' ',0,0.000000,0,0.000000,' ',0.000000,' ',0.000000,' ',0.000000,' ',0.000000,'A',' ',0.000000,0.000000,' ',0.000000,' ',0.000000,' ',' ',' ',0.000000,0.000000,' ',' ',' ',' ',' ',' ',' ',0.000000,0.000000,364753.000000,' ',0.000000,' ',' ',-1.000000,' ','PPN &nbsp; &nbsp; &nbsp; ','V',' ',' ',' ',' ',' ',' ',' ',0.000000,0.000000,' ',0.000000,0.000000,' ',0.000000,0.000000,0,0.000000,0,0.000000,0,0.000000,0,0.000000,' ',' ',' ',' ',' ',' ',0.000000,0,' ','USERID','EP42101','jasmachineID',113270,175832.000000,' ',' ',' ',' ',0,0,0,' ',' ',' ',' ',' ',' ','Y',' ',' ',' ',' ',0.000000,' ',' ',0.000000,' ',' ',' ',0.000000,' ',' ',' ',0.000000,' ',' ',0.000000,'Y','Y','Y','Y',' ',' ',' ','N',' ',' ',' ',' ',' ') </span><br /><span id="form1:panelPage1">Entering DBPerformRequest </span><br /><span id="form1:panelPage1">ODBC:W DBPerformRequest req=33b340b8 con=34954da8 env=00000001 dbc=00000004 spid=0 jddv-db1 M (JDE@JDE_PY16) </span><br /><span id="form1:panelPage1">ODBC[jdbodbc.c,4023] wSQLExecute failure. rc = -1 </span><br /><span id="form1:panelPage1">ODBC[jdbodbc.c,4023] STMT:00 [23505][-803] [IBM][CLI Driver][DB2/AIX64] <span style="color: red; font-weight: bold;">SQL0803N</span> &nbsp;One or more values in the INSERT statement, UPDATE statement, or foreign key update caused by a DELETE statement are not valid because the primary key, unique constraint or unique index identified by "1" constrains t </span><br /><span id="form1:panelPage1">ODB0000163 - wSQLExecute failure. rc=-1 </span><br /><span id="form1:panelPage1">ODB0000164 - STMT:00 [23505][-803][2] [IBM][CLI Driver][DB2/AIX64] SQL0803N &nbsp;One or more values in the INSERT statement, UPDATE statement, or foreign key update caused by a DELETE statement are not valid because the primary key, unique constraint or unique index identified by "1" constrains t </span><br /><span id="form1:panelPage1">Exiting DBPerformRequest </span><br /><span id="form1:panelPage1">JDB9900401 - Failed to execute db request </span><br /><span id="form1:panelPage1">JDB3400009 - Failed to perform Insert for F49211 </span><br /><span id="form1:panelPage1">JDB9901232 - Canceling transaction because: TC052 InsertTable: &nbsp;Insert failed </span><br /><span id="form1:panelPage1">Cancelling Transaction : 2886801884_15925452_423015921 </span><br /><span id="form1:panelPage1">Exiting JDB_InsertTable with Failure(Table F49211) </span><br /><span id="form1:panelPage1"></span></div>
+<p><br /><br /><big><big><a name="try2"></a>Try</big></big><br />The reason it appears to be intermittent is that at once order number is retrieved next number is to get updated. So by chance, same order does not exist from F49211 user shall not hit same error. <br /><br />For this type of issue,</p>
+<div style="margin-left: 40px;">1. Get e1root_*.log from JAS (this will give you PID for Call Object Kernel)<br />2. Get JDE_PID.log from log folder in your logic server. In case error message in e1root_*.log does not contain any PID (Process Identifier) then get all JDE_*.logs in your logic server<br />3. (if you know how to simulate) capture/trace jdedebug.log</div>
+<p><br /><br /><big><big><a name="solution2"></a>Solution</big></big><br />Delete orphaned data from F49211 and F49219.<br /><br /><big><big><a name="considerations2"></a>Considerations</big></big><br />In case you need to implement your custom Purge/Archive routine, refer to &lt;Document 625602.1&gt; E1: 42: Data File Purges in Sales (R42119P / R42199P / R4201P / R4211P / R42800). If possible, analyze how purge is working in R42800 and make it sure all tables related with Sales Order are handled correctly<br /><br /><br /></p>
+<h2>&nbsp;</h2>
+<p>&nbsp;</p>
+<p><br />&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

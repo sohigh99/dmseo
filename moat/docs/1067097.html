@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P3002 As of Date in Bill of Material Shows 1 Day Behind Until 10:00 AM</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P3002 As of Date in Bill of Material Shows 1 Day Behind Until 10:00 AM</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>User is in Sydney (Australia ) where current time is (GMT +10:00). <br /> There is a problem in '<em>Work with bill of Material </em>(P3002)' because <em><strong>As of Date</strong></em> shows 1 day behind until 10.00AM, then the correct date is displayed.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Time flag in Enterprise Manager appears as GMT time: Page Refreshed <strong>Feb 16, 2010 1:07:53 AM GMT</strong> (<strong><em>Current Local time is 11:07:53 AM</em></strong>)</p>
+<ul>
+<li>Time flag in JAS debug shows GMT Time not GMT +10:00</li>
+<li>System date (date_today) in JAS reflects GMT, not local time (= GMT +10:00)</li>
+<li>Time zone in Server Manager reflects GMT timezone, not local time displayed in the Deployment Server</li>
+<li><em>As of Date</em> in Form "<em>Work with Bill of Material</em>" (P3002) appears one day earlier</li>
+<li>Transaction Dates in <em>Sales Order Entry</em> (P4210) and <em>Purchase Order Entry</em> (P4310) are also incorrect</li>
+</ul>
+<p><br /> To fix this issue, refer &lt;Bug 11025827&gt;: SMMC TIME STAMP AGENT LOG FILE - SAR: 8944806</p>
+<p><br /> <strong>Final resolution for this SAR</strong>:-<br /> The issue is with the <strong><em>GetDefaultTimezone</em></strong> method of <strong><em>java.util.TimeZone</em></strong> class. This returns the timezone as GMT on <em>windows 2008 machines</em>.&nbsp; This issue is fixed in jre 1.5.0_10.&nbsp; Issue was reproduced with this version of jre.&nbsp; When tested with 1.5.0_18 the issue was no longer reproducible.<br /> <br /> What this message reads is that GMT time description is a bug of JDK rather than wrong setting/input. <br /> <br /> For this example, the way it set As of Date in P3002 is by through system function date_today</p>
+<div class="kmcodeblock" style="width: 95%;">&nbsp;// Assign today's date if proc option demands<br /> &nbsp;If PO cDefaultDate is equal to "1"<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Effective From Date = <em><strong>date_today()</strong></em><br /> &nbsp;Else<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; FC Effective From Date = "*"<br /> &nbsp;End If</div>
+<p>&nbsp;</p>
+<div class="kmnotebox">Same routines are to be found in defaulting Order Date (TRDJ - <em>Date - Transaction</em>)&nbsp; through Sales Order Entry (P4210) and Purchase Order Entry (P4310)
+<ul>
+<li>Order Date can be different from Audit Date (e.g., PMT/TDAY (<em>Time - Last Updated/Time of Day</em>)). &lt;Document 1083571.1&gt; E1: 42: Audit Information in Sales Order Processing</li>
+<li>This issue is specific to Oracle Application Server (OAS), not Webshpere Application Server (WAS)</li>
+<li>In capturing jas debug.log, time flag may not reflect machine time of HTML/JAS server</li>
+<li>If similar issue occurs in Server Manager, check the JRE/JDK version in the deployment server (in a typical configuration)</li>
+<li>In some applications, Today's Date will be assigned by the business function GetAuditInfo which is running in JAS.&nbsp; The reason is that GetAuditInfo in JAS will be business method (another set of function in JAS).&nbsp; For details refer to E1: BSFN: Frequently Asked Questions on Business Functions Running on JAS&nbsp;<a href="&lt;&lt;INLINE_NOTE:1090584.1&gt;&gt;" target="_blank">Document&nbsp;1090584.1</a></li>
+<li>This solution does not cover when the physical time of the HTML server is different from the timezone of Java Instance. If a different time zone for JAS instance is needed (e.g.,a machine is in the US but an end-user who accesses JAS is in Australia) then the timezone of JAS instance must be Australian Timezone) <br /> Refer to E1: JAS: How to Change HTML server TimeZone <a href="&lt;&lt;INLINE_NOTE:1260014.1&gt;&gt;" target="_blank">Document 1260014.1</a>?</li>
+<li>Refer to minimum technical requirements when any upgrade to a tools release is performed.</li>
+</ul>
+</div>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

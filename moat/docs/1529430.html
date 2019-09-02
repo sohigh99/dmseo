@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P4210 issues TRANSACTION ERROR for the first order (subsequent transactions get committed successfully)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>P4210 issues TRANSACTION ERROR for the first order (subsequent transactions get committed successfully)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p> </p>
+<p>P4210 (Sales Order Entry) always ends error as below,</p>
+<p style="margin-left: 60px;"><big><strong>TRANSACTION ERROR</strong></big><br /> Transaction can not be commited. It was cancelled.</p>
+<p><img src="../images/p421004.png" border="0" alt="Error Screen" title="Error Screen" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>The error occurs in HTML client does not reflect usual error ASYNCHRONOUS BUSINESS FUNCTION ERROR or WEB CLIENT EXCEPTION with business function F4211FSEndDoc.</li>
+<li>CallObject Kernel associated with this error falls into zombie kernel.</li>
+<li>e1root_*.log may contain error like "[KERNEL]          *ERROR* Associated kernel 19660 not found  host SERVERNAME:PortNumber(9414) SocID:56355, freeLocal com.jdedwards.system.net.JdeNetAssociatedKernelException: <strong>Kernel for associated message not exist</strong>"</li>
+<li>JDE_ProcessID.log shall contain message as below,
+<ul>
+<li>jtp_lm.c192    JDB9909011 - Failed to create transaction log xxxx</li>
+<li>jtp_lm.c1175    JDB9909058 - Fales to initialize the log manager for transaction xxxx</li>
+<li>jtp_tpc.c154    JDB9909127 - Failed to force write log : idTransaction</li>
+<li>jdb_exet.c11429    <strong>JDB9900387 - Failed to prepare transaction</strong></li>
+<li>jdb_exet.c8110    JDB9901232 - Canceling transaction because: TC058 JDB_PrepareToCommitUser: local prepare failed</li>
+<li>INFO: Entering kernel signal handler, process exiting soon: iParam: 99999999</li>
+<li>INFO: Done setting IPC Handle State structures to abandoned, process exiting immediately: iParam: 99999999</li>
+</ul>
+</li>
+</ul>
+</div>
+<p> </p>
+<p> </p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p> </p>
+<p> EnterpriseOne tools release and JDE.INI settings are not in synch.</p>
+<p>&lt;Bug 13526979&gt;: UBE FAILS WITH TRANSACTION LOG REACHES 2GB SIZE: this document explain actual cause of issue 'TransactionLog" parameter.<br /> &lt;Internal_Only&gt;&lt;Bug 14173242&gt;: TRANSACTION ERROR ON FIRST P4210 TRANSACTION: This document contains workaround for issue&lt;/Internal_Only&gt;<br /> Example of error message in JDEDEBUG.log (CallObject Kerne Log):-</p>
+<hr />
+<p style="margin-left: 60px;">Entering <span style="color: red;">JDB_CommitUser</span> (UserHandle 34309868) <br /> Checking for the pending real time events (UserHandle 34309868) <br /> Finished checking for the pending real time events (UserHandle 34309868) <br /> Entering JDB_PrepareToCommitUser (UserHandle 34309868) <br /> <span style="color: red;"> JDB9909165 - Failed to initialize the log manager, buffer is empty</span> <br /> JDB9909127 - Failed to force write log : idTransaction <br /> JDB9900387 - Failed to prepare transaction <br /> <span style="font-weight: bold;"> JDB9901232 - Canceling transaction because: TC058 JDB_PrepareToCommitUser: local prepare failed</span> <br /> Cancelling Transaction : 2886731613_9240800_403419000 <br /> Exiting JDB_PrepareToCommitUser with Failure (UserHandle 34309868) <br /> Rolling back commit point 1 of the transaction : 2886731613_9240800_403419000 <br /> ORACLE DBRollbackCon envr=3013d2a8 conn=327ca6c8 <br /> ORACLE DBRollbackCon envr=3013d2a8 conn=312c4b68 <br /> Starting Commit Point No : 2 for Transaction ID : 2886731613_9240800_403419000 <br /> JDB9900849 - Failed to commit user <br /> Exiting JDB_CommitUser with Failure (UserHandle 34309868) <br /> <span style="font-weight: bold;"> KNT0000191 - CommitUser failed</span>, userh=34309868, client=172.16.7.93, pid=54670, mId=381498</p>
+<hr />
+<p><br /> To debug this type of issue,</p>
+<ol>
+<li>Capture JDEDEBUG_*.log where problem occurs</li>
+<li>Analyze JDE_*.log and JDEDEBUG_*.log</li>
+<li>Optionally check dump file (e.g., jde_2886731613_9240800_403419000_dmp.log). For this example, 2886731613_9240800_403419000 is transaction ID</li>
+<li>Look for statement Like "%with Failure%", "JDB99%", "Cancelling Transaction%", "JDB_CommitUser" and so on</li>
+</ol>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>For this example, the BSFN F4211FSEndDoc returns 0 (SUCCESS). From log, which is represented "Return Value is 0 for F4211FSEndDoc (BSFNLevel = 1).</li>
+<li>Since SUCCESS flag returns to JAS (Java Application Server) you do not get ASYNCHRONOUS BUSINESS FUNCTION ERROR or WEB CLIENT EXCEPTION in HTML client</li>
+<li>For some cases, this issue can be coming only after build/deployed full package for new tools release (either 8.98.4.7 or 8.98.4.8)</li>
+</ul>
+</div>
+<p> </p>
+<p> </p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

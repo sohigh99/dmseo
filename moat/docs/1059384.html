@@ -1,0 +1,1798 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 15">
+<meta name=Originator content="Microsoft Word 15">
+<link rel=File-List href="1059384_files/filelist.xml">
+<link rel=Edit-Time-Data href="1059384_files/editdata.mso">
+
+
+<title> How to Implement User Reserved Columns in P4312 </title>
+
+
+<link rel=themeData href="1059384_files/themedata.thmx">
+<link rel=colorSchemeMapping href="1059384_files/colorschememapping.xml">
+
+<style>
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Courier;
+	panose-1:2 7 4 9 2 2 5 2 4 4;
+	mso-font-charset:0;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-alt:"\FF2D\FF33 \660E\671D";
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-alt:"\FF2D\FF33 \660E\671D";
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-536859905 -1073732485 9 0 511 0;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:-1610610945 1073750107 16 0 415 0;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-language:EN-US;}
+h1
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"MS Mincho";
+	mso-fareast-language:EN-US;
+	font-weight:bold;}
+h2
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"MS Mincho";
+	mso-fareast-language:EN-US;
+	font-weight:bold;}
+h3
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"MS Mincho";
+	mso-fareast-language:EN-US;
+	font-weight:bold;}
+h5
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:5;
+	font-size:10.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"MS Mincho";
+	mso-fareast-language:EN-US;
+	font-weight:bold;}
+p.MsoBodyText, li.MsoBodyText, div.MsoBodyText
+	{mso-style-noshow:yes;
+	mso-style-unhide:no;
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:Courier;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:"Courier New";
+	mso-fareast-language:EN-US;}
+a:link, span.MsoHyperlink
+	{mso-style-noshow:yes;
+	mso-style-unhide:no;
+	color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-noshow:yes;
+	mso-style-unhide:no;
+	color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-link:"Plain Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:9.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Verdana",sans-serif;
+	mso-fareast-font-family:Calibri;
+	mso-bidi-font-family:Arial;
+	color:#0000CC;
+	mso-fareast-language:EN-US;}
+p
+	{mso-style-noshow:yes;
+	mso-style-unhide:no;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman",serif;
+	mso-fareast-font-family:"Times New Roman";
+	mso-fareast-language:EN-US;}
+span.PlainTextChar
+	{mso-style-name:"Plain Text Char";
+	mso-style-noshow:yes;
+	mso-style-priority:99;
+	mso-style-unhide:no;
+	mso-style-locked:yes;
+	mso-style-link:"Plain Text";
+	mso-ansi-font-size:9.0pt;
+	font-family:"Verdana",sans-serif;
+	mso-ascii-font-family:Verdana;
+	mso-fareast-font-family:Calibri;
+	mso-hansi-font-family:Verdana;
+	mso-bidi-font-family:Arial;
+	color:#0000CC;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 63.0pt 1.0in 63.0pt;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:16852942;
+	mso-list-type:hybrid;
+	mso-list-template-ids:836820884 67698703 -571806840 67698715 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l0:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+@list l0:level3
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:4.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l1
+	{mso-list-id:65033318;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1367428482 67698703 1187945116 753318862 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l1:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:\F06E;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+@list l1:level3
+	{mso-level-start-at:7;
+	mso-level-number-format:bullet;
+	mso-level-text:\F0E8;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	margin-left:117.0pt;
+	text-indent:-.25in;
+	font-family:Wingdings;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+@list l1:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l1:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:4.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l2
+	{mso-list-id:1023749226;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1613113496 67698703 67698713 67698715 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l2:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level2
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level3
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l2:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l2:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:4.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l3
+	{mso-list-id:1394237262;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1197744084 67698703 67698713 67698715 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l3:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3:level2
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3:level3
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l3:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l3:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:4.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l4
+	{mso-list-id:1801222310;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1968323146 1517056502 67698691 67698693 67698689 67698691 67698693 67698689 67698691 67698693;}
+@list l4:level1
+	{mso-level-start-at:7;
+	mso-level-number-format:bullet;
+	mso-level-text:\F0E8;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;
+	mso-fareast-font-family:"Times New Roman";
+	mso-bidi-font-family:Arial;}
+@list l4:level2
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l4:level3
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l4:level4
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4:level5
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l4:level6
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l4:level7
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Symbol;}
+@list l4:level8
+	{mso-level-number-format:bullet;
+	mso-level-text:o;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:"Courier New";}
+@list l4:level9
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:none;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	font-family:Wingdings;}
+@list l5
+	{mso-list-id:2091537099;
+	mso-list-type:hybrid;
+	mso-list-template-ids:122970584 67698703 -36256850 67698715 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l5:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l5:level2
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:12.0pt;}
+@list l5:level3
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:1.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l5:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l5:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l5:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:3.0in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l5:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l5:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l5:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:4.5in;
+	mso-level-number-position:right;
+	text-indent:-9.0pt;}
+@list l6
+	{mso-list-id:2136022138;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-908135930 67698703 67698713 67698715 67698703 67698713 67698715 67698703 67698713 67698715;}
+@list l6:level1
+	{mso-level-tab-stop:.25in;
+	mso-level-number-position:left;
+	margin-left:.25in;
+	text-indent:-.25in;}
+@list l6:level2
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:.75in;
+	mso-level-number-position:left;
+	margin-left:.75in;
+	text-indent:-.25in;}
+@list l6:level3
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:1.25in;
+	mso-level-number-position:right;
+	margin-left:1.25in;
+	text-indent:-9.0pt;}
+@list l6:level4
+	{mso-level-tab-stop:1.75in;
+	mso-level-number-position:left;
+	margin-left:1.75in;
+	text-indent:-.25in;}
+@list l6:level5
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:2.25in;
+	mso-level-number-position:left;
+	margin-left:2.25in;
+	text-indent:-.25in;}
+@list l6:level6
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:2.75in;
+	mso-level-number-position:right;
+	margin-left:2.75in;
+	text-indent:-9.0pt;}
+@list l6:level7
+	{mso-level-tab-stop:3.25in;
+	mso-level-number-position:left;
+	margin-left:3.25in;
+	text-indent:-.25in;}
+@list l6:level8
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:3.75in;
+	mso-level-number-position:left;
+	margin-left:3.75in;
+	text-indent:-.25in;}
+@list l6:level9
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:4.25in;
+	mso-level-number-position:right;
+	margin-left:4.25in;
+	text-indent:-9.0pt;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+</head>
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Implement User Reserved Column in P4314</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<body lang=EN-US link=blue vlink=purple style='tab-interval:.5in'>
+
+<div class=WordSection1>
+
+<h1><span style='font-size:16.0pt;mso-bidi-font-size:24.0pt;font-family:"Arial",sans-serif'>Title:
+How to add User Reserved columns in P4314 – Voucher Match<o:p></o:p></span></h1>
+
+<p><i><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:"MS Mincho"'>Abstract:&nbsp;This
+document is to explain how User Reserved Columns can be added into F0411 –
+Account Payable Ledger through P4314 <span
+style='mso-spacerun:yes'> </span>Voucher Match application<o:p></o:p></span></i></p>
+
+<p><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:"MS Mincho";
+mso-bidi-font-style:italic'>This is just example code so actual implementation may
+vary.<o:p></o:p></span></p>
+
+<p class=MsoPlainText><span style='font-size:10.0pt;color:red'>Caution: This
+document may contain information, software, products or services which are not
+supported by Oracle Support Services and are being provided ‘as is’ without
+warranty. Please refer to the following site for My Oracle Support Terms of
+Use: <a href="https://support.oracle.com/CSP/ui/TermsOfUse.html"><span
+style='color:red'>https://support.oracle.com/CSP/ui/TermsOfUse.html</span></a><o:p></o:p></span></p>
+
+<p><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:"Verdana",sans-serif;
+color:red;mso-bidi-font-style:italic'>Before implementing ensure that a back-up
+of all the objects to be modified has been run.</span><span style='font-size:
+10.0pt;mso-bidi-font-size:12.0pt;font-family:"Verdana",sans-serif;mso-fareast-font-family:
+"MS Mincho";mso-bidi-font-family:Arial;color:red;mso-bidi-font-style:italic'><o:p></o:p></span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Arial",sans-serif'>
+
+<hr size=3 width="100%" align=center>
+
+</span></div>
+
+<h3><a name=top><span style='font-family:"Arial",sans-serif'>Table of Contents</span></a><span
+style='font-family:"Arial",sans-serif'> <o:p></o:p></span></h3>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif;color:black'><a
+href="#Introduction"><b>Introduction</b><span style='color:windowtext;
+text-decoration:none;text-underline:none'><br>
+</span></a></span><b><span style='font-family:"Arial",sans-serif'>User
+Interface<o:p></o:p></span></b></p>
+
+<p class=MsoNormal><b><span style='font-family:"Arial",sans-serif'>Action Plan</span></b><span
+style='font-family:"Arial",sans-serif'><o:p></o:p></span></p>
+
+<p class=MsoNormal><span class=MsoHyperlink><b><span style='font-family:"Arial",sans-serif'>Example
+of Implementation</span></b></span><span class=MsoHyperlink><span
+style='font-family:"Arial",sans-serif;color:windowtext;text-decoration:none;
+text-underline:none'><o:p></o:p></span></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Arial",sans-serif'>
+
+<hr size=3 width="100%" align=center>
+
+</span></div>
+
+<h2><a name=Introduction><span style='font-family:"Arial",sans-serif'>Introduction
+</span></a><span style='font-family:"Arial",sans-serif'><o:p></o:p></span></h2>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'>The given columns/controls in P4314 –
+Voucher Match may not be sufficient to hold information for your daily
+business. <o:p></o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'>Unlike other major applications (<span
+class=SpellE>e.g</span> P4210 Sales Order Entry, P4310 Purchase Order Entry, or
+P4312 Purchase Order Receipt) P4314 Voucher Match has a unique structure in
+dealing with data.<o:p></o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'>In major application in Distribution
+module, it handles data as below,<o:p></o:p></span></p>
+
+<ol style='margin-top:0in' start=1 type=1>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in;
+     mso-layout-grid-align:none;text-autospace:none'><span style='font-family:
+     "Arial",sans-serif'>The business View for both Header and Detail are same
+     with target tables you want to insert/update<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l1 level1 lfo3;tab-stops:list .5in;
+     mso-layout-grid-align:none;text-autospace:none'><span style='font-family:
+     "Arial",sans-serif'>In running application it calls Master Business
+     Functions directly :<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in;mso-layout-grid-align:none;text-autospace:none'><![if !supportLists]><span
+style='font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp;
+</span></span></span><![endif]><span style='font-family:"Arial",sans-serif'>Call
+F0411FSBeginDoc at header level to initialize/validate header information<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in;mso-layout-grid-align:none;text-autospace:none'><![if !supportLists]><span
+style='mso-bidi-font-size:9.0pt;font-family:Wingdings;mso-fareast-font-family:
+Wingdings;mso-bidi-font-family:Wingdings'><span style='mso-list:Ignore'>n<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>Call F0411FSEditLine at Grid to validate
+Grid Data and store it into Cache</span><span style='mso-bidi-font-size:9.0pt;
+font-family:"Arial",sans-serif'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in;mso-layout-grid-align:none;text-autospace:none'><![if !supportLists]><span
+style='mso-bidi-font-size:9.0pt;font-family:Wingdings;mso-fareast-font-family:
+Wingdings;mso-bidi-font-family:Wingdings'><span style='mso-list:Ignore'>n<span
+style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>Call F0411FSEndDoc at OK button clicked
+to commit cache to table F0411 – Account Payable Ledger</span><span
+style='mso-bidi-font-size:9.0pt;font-family:"Arial",sans-serif'><o:p></o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='mso-layout-grid-align:none;text-autospace:none'><span
+style='font-family:"Arial",sans-serif'>But in P4314, Business Function B0400047
+- F0411FSEditLine is not called directly rather it gets called through XT4314Z2
+– F4314EditLineInternalFunctions and the business view is defined at F4314Z
+which is a temporary/work file in matching voucher.<o:p></o:p></span></p>
+
+<h5><span style='font-family:"Arial",sans-serif'><a href="#top">Back to Top</a><o:p></o:p></span></h5>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='font-family:"Arial",sans-serif'>
+
+<hr size=3 width="100%" align=center>
+
+</span></div>
+
+<h2><span style='font-family:"Arial",sans-serif'>User Interface<o:p></o:p></span></h2>
+
+<h3><span style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;
+font-weight:normal'>This will describe simple and standard functionality based
+on 3-Way voucher match (which detail information is coming from F43121 –
+Purchase Order Receiver File). Through the transaction it will update the files
+(Purchase Order Detail, and Purchase Order Receiver file) and creates a single
+record into F0411 – Account Payable Ledger. Therefore the relationship between
+A/R Ledger to PO Receipt will be 1 to many.<o:p></o:p></span></h3>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo4;
+tab-stops:list .5in'><![if !supportLists]><span style='font-size:12.0pt;
+mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;mso-fareast-font-family:
+Arial;font-weight:normal'><span style='mso-list:Ignore'>1.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span
+style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;
+font-weight:normal'>Launch ‘Match Voucher to Open Receipt’ P0411/W0411G –
+[Supplier Ledger Inquiry]<o:p></o:p></span></h3>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo4;
+tab-stops:list .5in'><![if !supportLists]><span style='font-size:12.0pt;
+mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;mso-fareast-font-family:
+Arial;font-weight:normal'><span style='mso-list:Ignore'>2.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span
+style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;
+font-weight:normal'>In clicking ADD button, P4314/W4314A – [Voucher Match] is
+called depending on the processing option set in P0411. Note that the data for
+F0411 is determined at Header Level<o:p></o:p></span></h3>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo4;
+tab-stops:list .5in'><![if !supportLists]><span style='font-size:12.0pt;
+mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;mso-fareast-font-family:
+Arial;font-weight:normal'><span style='mso-list:Ignore'>3.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span
+style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;
+font-weight:normal'>Populate Header Information and (Form Exit) Receipt To
+Match to call P4314/W4314B – [Select Receipt To Match]<o:p></o:p></span></h3>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo4;
+tab-stops:list .5in'><![if !supportLists]><span style='font-size:12.0pt;
+mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;mso-fareast-font-family:
+Arial;font-weight:normal'><span style='mso-list:Ignore'>4.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span
+style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;
+font-weight:normal'>Select (multiple grid) and click OK. At this level, cache
+(it does not write physical file) of F4314Z – Voucher Match Selection File to
+display selected receipt (of F43121) into Grid of W4314A – [Voucher Match]<o:p></o:p></span></h3>
+
+<h3 style='margin-left:.5in;text-indent:-.25in;mso-list:l0 level1 lfo4;
+tab-stops:list .5in'><![if !supportLists]><span style='font-size:12.0pt;
+mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;mso-fareast-font-family:
+Arial;font-weight:normal'><span style='mso-list:Ignore'>5.<span
+style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span
+style='font-size:12.0pt;mso-bidi-font-size:13.5pt;font-family:"Arial",sans-serif;
+font-weight:normal'>Now Header and Detail information in W4314A get populated. To
+validate and commit the data, click the OK button<o:p></o:p></span></h3>
+
+<h2><span style='font-family:"Arial",sans-serif'>Action Plan<o:p></o:p></span></h2>
+
+<ol style='margin-top:0in' start=5 type=1>
+ <ul style='margin-top:0in' type=disc>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='font-family:"Arial",sans-serif'>Verify existing logic in creation
+      of F0411 (User Input value has to be handled through B0400047 –
+      F0411FSEditLine)<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='font-family:"Arial",sans-serif'>Validation has to be done in
+      clicking OK button in W0411A<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='font-family:"Arial",sans-serif'>Business Function XT4314ZN –
+      F4314EditLine gets called in clicking OK button<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='font-family:"Arial",sans-serif'>Actual BSFN creates Voucher Cache
+      is XT4314Z2 – F4314EditLineInternalFunctions<o:p></o:p></span></li>
+ </ul>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=1 type=1>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Modify source business view of
+     V4314ZA – Voucher Match Workfile Browse. Note that since F4314Z is an empty
+     table and it does not deliver data through Business View. Columns can be
+     added using Data Dictionary Item (not Business View Columns)<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Add additional Grid Column (to
+     handle multiple rows with different information) controls in W4314A<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Add additional parameters into Data
+     Structure of DXT4314ZB – F4314 Edit Line<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Verify that the change made in
+     DXT4314ZB affect XT4314ZN.h file correctly<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Modify event rule of W4314A in
+     clicking OK button<o:p></o:p></span></li>
+ <li class=MsoNormal style='mso-list:l2 level1 lfo5;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Modify business function of
+     XT4314Z2 to assign User Input value <o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal style='margin-left:.25in'><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:.25in'><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<h2><span style='font-family:"Arial",sans-serif'>Possible Implementation<o:p></o:p></span></h2>
+
+<ol style='margin-top:0in' start=1 type=1>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo6;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Modify source business view of
+     V4314ZA – Voucher Match Workfile Browse. Note that since F4314Z is empty
+     table and it does not deliver data through Business View. Columns can be
+     added using Data Dictionary item (not Business View Columns). <o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_i1028" type="#_x0000_t75" style='width:486pt;
+ height:352pt'>
+ <v:imagedata src="1059384_files/image001.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=648 height=469
+src="1059384_files/image002.jpg" v:shapes="_x0000_i1028"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>Then generate
+it to synchronize Business View specification between JDE and Database <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=2 type=1>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo6;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Add additional Controls in W4314A<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1029" type="#_x0000_t75" style='width:471.5pt;height:294.5pt'>
+ <v:imagedata src="1059384_files/image003.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=629 height=393
+src="1059384_files/image004.jpg" v:shapes="_x0000_i1029"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=3 type=1>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo6;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Add additional parameters into Data
+     Structure of DXT4314ZB – F4314 Edit Line<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1030" type="#_x0000_t75" style='width:465.5pt;height:263pt'>
+ <v:imagedata src="1059384_files/image005.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=621 height=351
+src="1059384_files/image006.jpg" v:shapes="_x0000_i1030"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:Wingdings;mso-ascii-font-family:
+Arial;mso-hansi-font-family:Arial;mso-bidi-font-family:Arial;mso-char-type:
+symbol;mso-symbol-font-family:Wingdings'><span style='mso-char-type:symbol;
+mso-symbol-font-family:Wingdings'>à</span></span><span style='font-family:"Arial",sans-serif'>
+This is to change Data Structure of standard business function so the impact is
+huge<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:Wingdings;mso-ascii-font-family:
+Arial;mso-hansi-font-family:Arial;mso-bidi-font-family:Arial;mso-char-type:
+symbol;mso-symbol-font-family:Wingdings'><span style='mso-char-type:symbol;
+mso-symbol-font-family:Wingdings'>à</span></span><span style='font-family:"Arial",sans-serif'>
+<span style='color:red;background:yellow;mso-highlight:yellow'>Unless you know
+object management cycle do not change this</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:Wingdings;mso-ascii-font-family:
+Arial;mso-hansi-font-family:Arial;mso-bidi-font-family:Arial;mso-char-type:
+symbol;mso-symbol-font-family:Wingdings'><span style='mso-char-type:symbol;
+mso-symbol-font-family:Wingdings'>à</span></span><span style='font-family:"Arial",sans-serif'>
+If you do not handle this properly you may get ‘Memory Violation’<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=4 type=1>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo6;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Verify that the change made in
+     DXT4314ZB affect XT4314ZN.h file correctly<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>*** Break In
+Code of XT4314ZN.h ***<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>#ifndef DATASTRUCTURE_DXT4314ZB<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>#define DATASTRUCTURE_DXT4314ZB<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>typedef struct tagDSDXT4314ZB<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>{<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><span style='mso-spacerun:yes'> 
+</span>MATH_NUMERIC<span style='mso-spacerun:yes'>     
+</span>mnAPJobNumber;<span style='mso-spacerun:yes'>                      
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><span style='mso-spacerun:yes'> 
+</span>MATH_NUMERIC<span style='mso-spacerun:yes'>     
+</span>mnGLJobNumber;<span style='mso-spacerun:yes'>                      
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><span style='mso-spacerun:yes'> 
+</span>MATH_NUMERIC<span style='mso-spacerun:yes'>      </span>mnPOJobNumber;<span
+style='mso-spacerun:yes'>                       </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><span style='mso-spacerun:yes'>  </span>JCHAR<span
+style='mso-spacerun:yes'>             </span>szComputerID[16];<span
+style='mso-spacerun:yes'>                    </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><span style='mso-spacerun:yes'> 
+</span>MATH_NUMERIC<span style='mso-spacerun:yes'>     
+</span>mnWorkFileLineNumber;<span style='mso-spacerun:yes'>               
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>…<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'><span style='mso-spacerun:yes'> 
+</span>JCHAR<span style='mso-spacerun:yes'>             
+</span>szUserReserveCode[4];<span style='mso-spacerun:yes'>               
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'><span style='mso-spacerun:yes'> 
+</span>JDEDATE<span style='mso-spacerun:yes'>          
+</span>jdUserReservedDate;<span style='mso-spacerun:yes'>            </span><span
+style='mso-spacerun:yes'>      </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'><span style='mso-spacerun:yes'> 
+</span>MATH_NUMERIC<span style='mso-spacerun:yes'>     
+</span>mnUserReservedAmount;<span style='mso-spacerun:yes'>               
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'><span style='mso-spacerun:yes'> 
+</span>MATH_NUMERIC<span style='mso-spacerun:yes'>     
+</span>mnUserReservedNumber;<span style='mso-spacerun:yes'>               
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'><span style='mso-spacerun:yes'> 
+</span>JCHAR<span style='mso-spacerun:yes'>             
+</span>szUserReservedReference[16];<span style='mso-spacerun:yes'>        
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>} DSDXT4314ZB, *LPDSDXT4314ZB;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><span style='mso-spacerun:yes'> </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>#define IDERRmnAPJobNumber_1<span
+style='mso-spacerun:yes'>             </span><span
+style='mso-spacerun:yes'>         </span>1L<o:p></o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt;font-family:"Courier New"'>#define
+IDERRmnGLJobNumber_2<span style='mso-spacerun:yes'>                     
+</span>2L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>#define IDERRmnPOJobNumber_3<span
+style='mso-spacerun:yes'>                      </span>3L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>#define IDERRszComputerID_4<span
+style='mso-spacerun:yes'>                       </span>4L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'>#define IDERRmnWorkFileLineNumber_6<span
+style='mso-spacerun:yes'>               </span>6L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>…<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>#define IDERRszUserReserveCode_93<span
+style='mso-spacerun:yes'>                 </span>145L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>#define IDERRjdUserReservedDate_94<span
+style='mso-spacerun:yes'>                </span>146L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>#define IDERRmnUserReservedAmount_95<span
+style='mso-spacerun:yes'>              </span>147L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>#define IDERRmnUserReservedNumber_96<span
+style='mso-spacerun:yes'>              </span>148L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New";color:red'>#define
+IDERRszUserReservedReference_97<span style='mso-spacerun:yes'>          
+</span>149L<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span style='font-size:10.0pt;
+mso-bidi-font-size:12.0pt;font-family:"Courier New"'>#endif<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><i style='mso-bidi-font-style:
+normal'><span style='font-family:"Arial",sans-serif;color:#0070C0'>NOTE</span></i></b><i
+style='mso-bidi-font-style:normal'><span style='font-family:"Arial",sans-serif;
+color:#0070C0'>: The number of columns can be vary per E1 Release<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>*** Break In
+Code of XT4314ZN.h ***<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in'><![if !supportLists]><span style='font-family:Wingdings;
+mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'><span
+style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>Typedef DXT4314ZB through OMW to copy
+typedef of DSDXT4314ZB to clipboard<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in'><![if !supportLists]><span style='font-family:Wingdings;
+mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'><span
+style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>Paste it to notepad<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in'><![if !supportLists]><span style='font-family:Wingdings;
+mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'><span
+style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>Open XT4314ZN.h and look for typedef
+struct tagDSDXT4314ZB<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in'><![if !supportLists]><span style='font-family:Wingdings;
+mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'><span
+style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>Replace it <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=5 type=1>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo6;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Modify event rule of W4314A in (Grid)
+     Row Exit &amp; Changed - Asynch<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1031" type="#_x0000_t75" style='width:470.5pt;height:310.5pt'>
+ <v:imagedata src="1059384_files/image007.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=627 height=414
+src="1059384_files/image008.jpg" v:shapes="_x0000_i1031"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:Wingdings;mso-ascii-font-family:
+Arial;mso-hansi-font-family:Arial;mso-bidi-font-family:Arial;mso-char-type:
+symbol;mso-symbol-font-family:Wingdings'><span style='mso-char-type:symbol;
+mso-symbol-font-family:Wingdings'>à</span></span><span style='font-family:"Arial",sans-serif'>
+If XT4314ZN get called multiple times, repeat mapping<o:p></o:p></span></p>
+
+<p class=MsoNormal><!--[if gte vml 1]><v:oval id="_x0000_s1031" style='position:absolute;
+ margin-left:3in;margin-top:276.25pt;width:207pt;height:63pt;z-index:251657728'
+ filled="f" strokecolor="red"/><![endif]--><![if !vml]><span style='mso-ignore:
+vglayout;position:absolute;z-index:251657728;margin-left:441px;margin-top:3561px;
+width:416px;height:129px'><img width=277 height=86
+src="1059384_files/image009.gif" v:shapes="_x0000_s1031"></span><![endif]><span
+style='font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape id="_x0000_i1032"
+ type="#_x0000_t75" style='width:477.5pt;height:399pt'>
+ <v:imagedata src="1059384_files/image010.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=637 height=532
+src="1059384_files/image011.jpg" v:shapes="_x0000_i1032"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=6 type=1>
+ <li class=MsoNormal style='mso-list:l3 level1 lfo6;tab-stops:list .5in'><span
+     style='font-family:"Arial",sans-serif'>Modify business function of
+     XT4314Z2 to assign User Input value <o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1033" type="#_x0000_t75" style='width:485.5pt;height:313pt'>
+ <v:imagedata src="1059384_files/image012.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=647 height=417
+src="1059384_files/image013.jpg" v:shapes="_x0000_i1033"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:117.0pt;text-indent:-.25in;mso-list:l1 level3 lfo3'><![if !supportLists]><span
+style='font-family:Wingdings;mso-fareast-font-family:Wingdings;mso-bidi-font-family:
+Wingdings'><span style='mso-list:Ignore'>è<span style='font:7.0pt "Times New Roman"'>
+</span></span></span><![endif]><span style='font-family:"Arial",sans-serif'>Repeat
+this every where F0422FSEditLine gets called in XT4314Z2.c<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>*** Break Code
+of XT4314Z2 ***<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+font-family:"Courier New"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:1'>              </span>/* Oracle Testing for User
+Reserved Columns */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+color:red'><span style='mso-tab-count:1'>              </span>jdeStrcpy((JCHAR
+*) (<u><span style='background:yellow;mso-highlight:yellow'>dsAPEditLine.szUserReserveCode</span></u>),
+(const JCHAR *)(lpDS-&gt;szUserReservedCode));<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+color:red'><span style='mso-spacerun:yes'>               </span>memcpy((void
+*)(&amp;dsAPEditLine.jdUserReservedDate),(const void *)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+color:red'><span style='mso-tab-count:3'>                                           </span><span
+style='mso-spacerun:yes'>       </span>(&amp;lpDS-&gt;jdUserReservedDate),
+sizeof(JDEDATE));<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+color:red'><span style='mso-spacerun:yes'> </span><span style='mso-tab-count:
+1'>             </span>MathCopy(&amp;dsAPEditLine.mnUserReservedAmount,
+&amp;lpDS.mnUserReservedAmount );<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+color:red'><span style='mso-spacerun:yes'> </span><span style='mso-tab-count:
+1'>             </span>MathCopy(&amp;dsAPEditLine.mnUserReservedNumber,
+&amp;lpDS.mnUserReservedNumber );<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;
+color:red'><span style='mso-tab-count:1'>              </span>jdeStrcpy((JCHAR
+*) (dsAPEditLine.szUserReservedReference), (const JCHAR *)(lpDS-&gt;szUserReservedReference));<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-spacerun:yes'> </span><span style='mso-tab-count:1'>             </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><i style='mso-bidi-font-style:normal'><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt;color:#0070C0'>NOTE: Standard
+Code has typo it is szUserReserveCode not szUserReservedCode<o:p></o:p></span></i></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-spacerun:yes'>   </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-spacerun:yes'>      </span>if ((lpDS-&gt;cVoucherLogging != _J('1'))
+&amp;&amp; (idReturnValue!= ER_ERROR))<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-spacerun:yes'>      </span>{<span style='mso-spacerun:yes'>        
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:3'>                                           </span>idReturnValue
+= jdeCallObject(_J(&quot;F0411FSEditLine&quot;),<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:3.0in;text-indent:.5in'><span
+style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span style='mso-tab-count:
+1'>              </span>NULL , <o:p></o:p></span></p>
+
+<p class=MsoBodyText style='margin-left:3.0in;text-indent:.5in'><span
+style='font-family:"Times New Roman",serif'><span style='mso-tab-count:1'>              </span>lpBhvrCom,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:8'>                                                                                                                   </span>lpVoid,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:7'>                                                                                                     </span>(LPVOID)
+&amp;dsAPEditLine,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:1'>              </span><span
+style='mso-spacerun:yes'>     </span><span style='mso-tab-count:6'>                                                                                 </span>(CALLMAP
+*) &amp;cmAPError,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:1'>              </span><span
+style='mso-spacerun:yes'>     </span><span style='mso-tab-count:6'>                                                                                 </span>(int)
+nNumErrAP,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:1'>              </span><span
+style='mso-spacerun:yes'>     </span><span style='mso-tab-count:6'>                                                                                 </span>(JCHAR
+*)NULL, <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:1'>              </span><span
+style='mso-spacerun:yes'>     </span><span style='mso-tab-count:6'>                                                                                 </span>(JCHAR
+*)NULL,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-tab-count:1'>              </span><span
+style='mso-spacerun:yes'>     </span><span style='mso-tab-count:6'>                                                                                 </span>(int)0);<span
+style='mso-tab-count:1'>   </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><span
+style='mso-spacerun:yes'>      </span>}<span style='mso-spacerun:yes'>     
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span style='font-family:"Arial",sans-serif'>***
+Break In Code ***<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in'><![if !supportLists]><span style='font-family:Wingdings;
+mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'><span
+style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>For this example, lpDS is value which
+user has input and dsAPEditLine is the data structure in calling
+F0411FSEditLine<o:p></o:p></span></p>
+
+<p class=MsoNormal style='margin-left:1.0in;text-indent:-.25in;mso-list:l1 level2 lfo3;
+tab-stops:list 1.0in'><![if !supportLists]><span style='font-family:Wingdings;
+mso-fareast-font-family:Wingdings;mso-bidi-font-family:Wingdings'><span
+style='mso-list:Ignore'>n<span style='font:7.0pt "Times New Roman"'>&nbsp; </span></span></span><![endif]><span
+style='font-family:"Arial",sans-serif'>If there are more than one B0400047
+calling above mapping have to be repeated<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>Alternatively,
+User Reserved Data can be stored in calling form of W4314B – [Receipt to Match]
+with Data Structure of</span><span style='mso-bidi-font-size:10.0pt;font-family:
+"Arial",sans-serif'><span style='mso-spacerun:yes'>  </span>DSD4302450A<span
+style='mso-spacerun:yes'>       </span>dsVMCache;<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>This
+can be performed as below, <o:p></o:p></span></p>
+
+<ol style='margin-top:0in' start=5 type=1>
+ <ul style='margin-top:0in' type=disc>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>Modify
+      W4314B (Add additional FC Controls to store User Reserved Columns<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>In
+      calling B4302450 – CacheProcessVoucherMatchCache assign User Reserved
+      Columns<o:p></o:p></span></li>
+  <li class=MsoNormal style='mso-list:l0 level2 lfo4;tab-stops:list 1.0in'><span
+      style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>Then
+      modify XT4312Z2 and map as below, <o:p></o:p></span></li>
+ </ul>
+</ol>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>***
+Break Code of XT4314Z2 ***<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><span
+style='mso-tab-count:1'>          </span>/* Oracle Testing for User Reserved
+Columns */<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif;
+color:red'>NOTE: Below code is valid when User Reserved Columns are populated
+in Order Detail or <br>
+Receipt Detail Screen<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:blue'><span
+style='mso-tab-count:1'>              </span>jdeStrcpy((JCHAR *) (dsAPEditLine.<span
+style='background:yellow;mso-highlight:yellow'>szUserReservedCode</span>),
+(const JCHAR *)(dsVMCache-&gt;szUserReservedCode));<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:blue'><span
+style='mso-spacerun:yes'>              </span>memcpy((void
+*)(&amp;dsAPEditLine.jdUserReservedDate),(const void *)<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:blue'><span
+style='mso-tab-count:3'>                                           </span><span
+style='mso-spacerun:yes'>       </span>(&amp;dsVMCache-&gt;jdUserReservedDate),
+sizeof(JDEDATE));<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:blue'><span
+style='mso-spacerun:yes'> </span><span style='mso-tab-count:1'>             </span>MathCopy(&amp;dsAPEditLine.mnUserReservedAmount,
+&amp;dsVMCache.mnUserReservedAmount );<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:blue'><span
+style='mso-spacerun:yes'> </span><span style='mso-tab-count:1'>             </span>MathCopy(&amp;dsAPEditLine.mnUserReservedNumber,
+&amp;dsVMCache.mnUserReservedNumber );<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;color:blue'><span
+style='mso-tab-count:1'>              </span>jdeStrcpy((JCHAR *) (dsAPEditLine.szUserReservedReference),
+(const JCHAR *)(dsVMCache.szUserReservedReference));<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span
+style='mso-spacerun:yes'> </span><span style='mso-tab-count:1'>             </span><span
+style='mso-spacerun:yes'>   </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span
+style='mso-spacerun:yes'>      </span>if ((dsVMCache-&gt;cVoucherLogging !=
+_J('1')) &amp;&amp; (idReturnValue!= ER_ERROR))<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span
+style='mso-spacerun:yes'>      </span>{<span style='mso-spacerun:yes'>        
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+3'>                                           </span>idReturnValue =
+jdeCallObject(_J(&quot;F0411FSEditLine&quot;),<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span>NULL , <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span>lpBhvrCom,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+8'>                                                                                                                   </span>lpVoid,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+7'>                                                                                                     </span>(LPVOID)
+&amp;dsAPEditLine,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span><span style='mso-spacerun:yes'>     </span><span
+style='mso-tab-count:6'>                                                                                 </span>(CALLMAP
+*) &amp;cmAPError,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span><span style='mso-spacerun:yes'>     </span><span
+style='mso-tab-count:6'>                                                                                 </span>(int)
+nNumErrAP,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span><span style='mso-spacerun:yes'>     </span><span
+style='mso-tab-count:6'>                                                                                 </span>(JCHAR
+*)NULL, <o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span><span style='mso-spacerun:yes'>     </span><span
+style='mso-tab-count:6'>                                                                                 </span>(JCHAR
+*)NULL,<o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span style='mso-tab-count:
+1'>              </span><span style='mso-spacerun:yes'>     </span><span
+style='mso-tab-count:6'>                                                                                 </span>(int)0);<span
+style='mso-tab-count:1'>   </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt'><span
+style='mso-spacerun:yes'>      </span>}<span style='mso-spacerun:yes'>     
+</span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>***
+Break In Code ***<o:p></o:p></span></p>
+
+<ol style='margin-top:0in' start=6 type=1>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo4;tab-stops:list .5in'><span
+     style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>Compile
+     XT4314Z2 (run BusBuild.exe)<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1034" type="#_x0000_t75" style='width:427.5pt;height:290.5pt'>
+ <v:imagedata src="1059384_files/image014.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=570 height=387
+src="1059384_files/image015.jpg" v:shapes="_x0000_i1034"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<ol style='margin-top:0in' start=7 type=1>
+ <li class=MsoNormal style='mso-list:l0 level1 lfo4;tab-stops:list .5in'><span
+     style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'>Test it<o:p></o:p></span></li>
+</ol>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1035" type="#_x0000_t75" style='width:485.5pt;height:282.5pt'>
+ <v:imagedata src="1059384_files/image016.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=647 height=377
+src="1059384_files/image017.jpg" v:shapes="_x0000_i1035"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1036" type="#_x0000_t75" style='width:485.5pt;height:282pt'>
+ <v:imagedata src="1059384_files/image018.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=647 height=376
+src="1059384_files/image019.jpg" v:shapes="_x0000_i1036"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1037" type="#_x0000_t75" style='width:486pt;height:283pt'>
+ <v:imagedata src="1059384_files/image020.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=648 height=377
+src="1059384_files/image021.jpg" v:shapes="_x0000_i1037"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='mso-bidi-font-size:10.0pt;font-family:"Arial",sans-serif'><!--[if gte vml 1]><v:shape
+ id="_x0000_i1038" type="#_x0000_t75" style='width:486pt;height:272.5pt'>
+ <v:imagedata src="1059384_files/image022.png" o:title=""/>
+</v:shape><![endif]--><![if !vml]><img border=0 width=648 height=363
+src="1059384_files/image023.jpg" v:shapes="_x0000_i1038"><![endif]><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p style='margin:0in;margin-bottom:.0001pt'><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<h5><a
+href="https://customer.peoplesoft.com/C1PRD/psft/V-231219936/ods-02-0032.htm#top">Back
+to Top</a></h5>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=3 width="100%" align=center>
+
+</div>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>E1: FDA: Object
+Modification Recommendations: Interactive Applications (Doc ID 626586.1)<span
+style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>E1: BSFN:
+Object Modification Recommendations: Business Functions (Doc ID 626581.1)<span
+style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>E1: FDA: Object
+Modification Recommendations: Data Structures (Doc ID 626584.1)<span
+style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>E1: FDA: Object
+Modification Recommendations: Event Rules (Doc ID 626585.1)<span
+style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>E1: RDA: Object
+Modification Recommendations: Reports - UBEs (Doc ID 626587.1)<span
+style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'>E1: TDA: Object
+Modification Recommendations: Business Views (Doc ID 626582.1)<span
+style='mso-spacerun:yes'>  </span><o:p></o:p></span></p>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+<h5><a
+href="https://customer.peoplesoft.com/C1PRD/psft/V-231219936/ods-02-0032.htm#top">Back
+to Top</a></h5>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=3 width="100%" align=center>
+
+</div>
+
+<p class=MsoNormal><span style='font-family:"Arial",sans-serif'><o:p>&nbsp;</o:p></span></p>
+
+</div>
+
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+
+</body>
+
+</html>

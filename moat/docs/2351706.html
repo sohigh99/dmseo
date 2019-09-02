@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JDB_SelectKeyedForUpdate Behavior In Next Numbering (X0010) Using F00021</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>JDB_SelectKeyedForUpdate Behavior In Next Numbering (X0010) Using F00021</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Goal</BIG></big></big></h2>
+
+<p>This document is to go through the general next numbering routine with the API JDB_SelectKeyedForUpdate ().&nbsp;</p>
+<p>&nbsp;</p>
+<p>Possibly, what is correct behavior of following setup?<br />- Next Number Constant: Implement Next Numbers by Company/Fiscal Year. If a company record is not set up for a document type, the standard Next Numbers setup will be used. (Method 2)<br /><br />- Data from F00021<br />Document Company Doc Type Century Fiscal Year Next Number<br />00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123<br />00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 456<br />&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></big></big></h2>
+
+<p>Next number will be 123 if you are on DB2 and 456 in other database. </p>
+<p>The reason for this answer is that the API JDB_SelectKeyedForUpdate () in X0010 does not append ORDER BY clause in DB2. </p>
+<p>Not to have invalid Next Numbering, </p>
+<p style="margin-left: 30px;">Option 1&gt; Remove old information, <br />Document Company Doc Type Century Fiscal Year Next Number<br /><em>00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123&nbsp; &lt;--- Delete this row</em><br />00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 456&nbsp; &lt;--- So your next number will be running number starts from Fiscal year 16<br /></p>
+<p style="margin-left: 30px;">Option 2&gt; Define the value for current fiscal year <br />Document Company Doc Type Century Fiscal Year Next Number<br />00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 123 &lt;---Historical data<br />00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 456 &lt;--- Historical data<br /></p>
+<p style="margin-left: 30px;"><em>00020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 18&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 &lt;--- This number will be returned.</em><br /></p>
+<p>There is existing/closed without any resolution. Refer to &lt;Bug 26038032&gt; - JDB_SELECTKEYEDFORUPDATE NOT APPENDING ORDER BY W/JDB_SETSEQUENCING IN AS400 </p>
+<p>Note that only limited business functions make use of the API JDB_SelectKeyedForUpdate () and the issue is specific to AS400 environment. </p>
+<p>&nbsp;</p>
+<p>The function X0010 calls API in below sequence,<br />1. Check exact matching key with JDB_FetchKeyed (), if fails then<br />2. JDB_SetSequencing to set Descending order for the column F00021.FY which replaces the primary key of F00021<br />3. JDB_SelectKeyedForUpdate ()<br />- AS400<br />sql&gt; SELECT * FROM CRPCTL/F00021 WHERE ( NLKCO = '00021' AND NLDCT = 'PV'<br />AND NLCTRY &lt;= 20.000000 ) FOR UPDATE OF NLN001<br />&nbsp;&nbsp;: So it returns the Next Number for smallest Fiscal Year<br />- Other platform<br />sql&gt; SELECT PRODCTL.F00021.*, ROWID FROM PRODCTL.F00021 WHERE ( NLKCO =<br />'00200' AND NLDCT = 'PV' AND NLCTRY &lt;= 20.000000 ) ORDER BY NLKCO ASC,NLDCT ASC,NLCTRY DESC,NLFY DESC FOR UPDATE OF NLN001<br />&nbsp;&nbsp;: This returns the next number for the biggest Fiscal Year because it appends ORDER BY clause correctly.</p>
+
+
+<div class="kmcodeblock">
+<p>----------------- Log in AS400 -------------<br />Calling Business function X0010GetNextNumber from F0411FSGetNextDocNo for 90100215. Application Name [P0411], Version [M000T002] (BSFNLevel = 2)<br />IN-&gt;[ 1] szSystemCode [04]<br />IN-&gt;[ 2] mnNextNumberingIndexNo [1]<br />IN-&gt;[ 3] szCompanyKey [00021]<br />IN-&gt;[ 4] szDocumentType [PV]<br />IN-&gt;[ 5] mnCentury [20]<br />IN-&gt;[ 6] mnFiscalYear1 [17]<br />IN-&gt;[ 7] szSameAsDocumentType [ ]<br />IN-&gt;[ 8] mnNextNumber001 [0]<br />Entering JDB_InitUser with (AUTO commit mode)<br />Entering JDB_BeginTransaction (UserHandle 2B07C540)<br />Entering JDB_OpenTable(Table = F0002)<br />Entering JDB_OpenTable(Table = F00021)<br />Entering JDB_SetNestedSelection (hRequest 2B341CA8)<br />Entering JDB_FetchKeyed (hRequest 2B341CA8)<br />SELECT * FROM CRPCTL/F00021 WHERE ( NLKCO = '00021' AND NLDCT = 'PV' AND NLCTRY = 20.000000 AND NLFY = 17.000000 ) ORDER BY NLKCO ASC,NLDCT ASC,NLCTRY ASC,NLFY ASC<br />No More Data found (hRequest 2B341CA8)<br />Entering JDB_SetSequencing (hRequest 2B341CA8)<br />Entering JDB_SelectKeyedForUpdate (hRequest 2B341CA8)<br />SELECT * FROM CRPCTL/F00021 WHERE ( NLKCO = '00021' AND NLDCT = 'PV' AND NLCTRY &lt;= 20.000000 ) FOR UPDATE OF NLN001<br />Entering JDB_FetchForUpdate (hRequest 2B341CA8)<br />Fetched the record (hRequest 2B341CA8)<br />Entering JDB_UpdateCurrent (Table F00021) (hRequest 2B341CA8)<br />UPDATE CRPCTL/F00021 SET NLN001=21082463.000000 WHERE CURRENT OF C4575998<br />OUT-&gt;[ 1] szSystemCode [04]<br />OUT-&gt;[ 2] mnNextNumberingIndexNo [1]<br />OUT-&gt;[ 3] szCompanyKey [00021]<br />OUT-&gt;[ 4] szDocumentType [PV]<br />OUT-&gt;[ 5] mnCentury [20]<br />OUT-&gt;[ 6] mnFiscalYear1 [17]<br />OUT-&gt;[ 7] szSameAsDocumentType [ ]<br />OUT-&gt;[ 8] mnNextNumber001 [21082462]<br />Return value is 0 for X0010GetNextNumber. (BSFNLevel = 2)<br /><br />------------------ Log in Oracle Database -------------<br />Calling Business function X0010GetNextNumber from F0411FSGetNextDocNo for SDONGMYE. Application Name [P0411], Version [ZJDE0001] (BSFNLevel = 2)<br />IN-&gt;[ 1] szSystemCode [04]<br />IN-&gt;[ 2] mnNextNumberingIndexNo [1]<br />IN-&gt;[ 3] szCompanyKey [00200]<br />IN-&gt;[ 4] szDocumentType [PV]<br />IN-&gt;[ 5] mnCentury [20]<br />IN-&gt;[ 6] mnFiscalYear1 [17]<br />IN-&gt;[ 7] szSameAsDocumentType [ ]<br />IN-&gt;[ 8] mnNextNumber001 [0]<br />Entering JDB_OpenTable(Table = F0002)<br />Entering JDB_OpenTable(Table = F00021)<br />Entering JDB_FetchKeyed (hRequest 0E961C60)<br />SELECT * FROM PRODCTL.F00021 WHERE ( NLKCO = '00200' AND NLDCT = 'PV' AND NLCTRY = 20.000000 AND NLFY = 17.000000 ) ORDER BY NLKCO ASC,NLDCT ASC,NLCTRY ASC,NLFY ASC<br />No More Data found (hRequest 0E961C60)<br />Entering JDB_SetNestedSelection (hRequest 0E961C60)<br />Entering JDB_SetSequencing (hRequest 0E961C60)<br />Entering JDB_SelectKeyedForUpdate (hRequest 0E961C60)<br />SELECT PRODCTL.F00021.*, ROWID FROM PRODCTL.F00021 WHERE ( NLKCO = '00200' AND NLDCT = 'PV' AND NLCTRY &lt;= 20.000000 ) ORDER BY NLKCO ASC,NLDCT ASC,NLCTRY DESC,NLFY DESC FOR UPDATE OF NLN001<br />Entering JDB_FetchForUpdate (hRequest 0E961C60)<br />Fetched the record (hRequest 0E961C60)<br />Entering JDB_UpdateCurrent (Table F00021) (hRequest 0E961C60)<br />UPDATE PRODCTL.F00021 SET NLN001=987656.000000 WHERE ROWID = :LASTROWID<br />OUT-&gt;[ 1] szSystemCode [04]<br />OUT-&gt;[ 2] mnNextNumberingIndexNo [1]<br />OUT-&gt;[ 3] szCompanyKey [00200]<br />OUT-&gt;[ 4] szDocumentType [PV]<br />OUT-&gt;[ 5] mnCentury [20]<br />OUT-&gt;[ 6] mnFiscalYear1 [17]<br />OUT-&gt;[ 7] szSameAsDocumentType [ ]<br />OUT-&gt;[ 8] mnNextNumber001 [987655]<br />Return value is 0 for X0010GetNextNumber. (BSFNLevel = 2</p>
+</div>
+
+<p>&nbsp;</p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RUN0000044 - Error - ProcOpt Data Size Mismatch Message Clarification</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>RUN0000044 - Error - ProcOpt Data Size Mismatch Message Clarification</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>This document explains the commonly encountered error "RUN0000044 - Error - ProcOpt Data Size Mismatch" and it describes in detail how to fix this type of error.<br /><br /><br /></p>
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h3 class="km">Explanation on message in jde.log</h3>
+<p>The following error message is received in jde.log:</p>
+<div class="kmnotebox">500/2924 WRK:Starting jdeCallObject Sun May 08 18:57:34.701104 Rtk_frms.c678<br />             <span style="font-weight: bold;">RUN0000044 - Error - ProcOpt Data Size Mismatch: Requested 1923 is greater than Retrieved 1917 for App P4310,Version ZJDE0001.</span><br />             Data Structure NOT allocated. This usually means an item has been REMOVED from the template. This business function needs to be rebuilt against this new template definition.</div>
+<p> </p>
+<p>Output value in jde.log are,</p>
+<ul>
+<li>The size in byte requested: This is actual size which a certain business function has allocated (B4301710) [1923 bytes] </li>
+<li>The size in byte retrieved: This is actual size of memory returned based on processing option data structure (T43101) [1917 bytes]</li>
+</ul>
+<hr />
+<h3 class="km">How to verify message?</h3>
+<ol>
+<li>Verify Processing Option Template Data Structure from F9860.SIMID1 (Object Librarian Master Table.Member ID). For this example, T43101 - Purchase Order.</li>
+<li>Get Typedef for T43101 through OMW (Object Management Workbench). The structure definition is to be written into include folder with file name T43101.h</li>
+<li>Describe individual parameters in bytes.</li>
+</ol>
+<p style="text-decoration: underline; font-weight: bold;">Computation of size in byte:</p>
+<table style="text-align: left; width: 619px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="vertical-align: top; width: 197px; background-color: #666666; color: white;">Data Type</th>
+<th style="vertical-align: top; width: 198px; background-color: #666666; color: white;">Size in DD</th>
+<th style="vertical-align: top; width: 198px; background-color: #666666; color: white;">Actual Size in Byte</th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">Character</td>
+<td style="vertical-align: top; width: 198px;">1</td>
+<td style="vertical-align: top; width: 198px;">2</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">String</td>
+<td style="vertical-align: top; width: 198px;">The size of DD + 1 (='\0')</td>
+<td style="vertical-align: top; width: 198px;">Size in DD x 2</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">Math Numeric</td>
+<td style="vertical-align: top; width: 198px;">Various</td>
+<td style="vertical-align: top; width: 198px;">49</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Integer</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">4</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Pointer (GENLNG)</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">4</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">Date</td>
+<td style="vertical-align: top; width: 198px;">6</td>
+<td style="vertical-align: top; width: 198px;">6</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">JDEUtime</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">16</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Regardless of EnterpriseOne release, processing option template parameter is encoded in Unicode.</li>
+<li>Business Function information can be found by analyzing jdedebug.log.</li>
+<li>Review jde.log and focus on keyword RUN0000044.</li>
+<li>Open jdedebug.log and look for same keyword which is located in between data structure for input and output.</li>
+<li>Most of the major applications (which are calling master business function) will have its own Business Function to retrieve processing option value rather than having the definition coded in the master business function itself.</li>
+<li>Actual referencing will be done as below in real code.</li>
+<li>Reference B4301710.h from XT4311Z1 - F4311 Begin Document</li>
+<li>Reference T43101 from B4301710 - GetP4310ProcOpts (Get P4310 Processing Options)</li>
+</ul>
+</div>
+<hr />
+<h3 class="km">Why this error occur?</h3>
+<p>The error appears in jde.log indicating a typical object dependency issue. For this example, the size of DST43101 in B4301710.h is bigger than same data structure defined in T43101. </p>
+<hr />
+<p> </p>
+<h3 class="km">How to correct this error?</h3>
+<p>Synchronize data structure definition in T43101.h and B4301710.h. Apply the latest ESU(s) that contains these data structure and related business functions. </p>
+<hr />
+<p> </p>
+<h3 class="km">Considerations</h3>
+<p>You may encounter this error when you change any processing option data structure. Please note that custom changes to JD Edwards standard processing option data structures will be lost after an upgrade of the software. These custom changes will need to be manually retrofitted by the customer if needed. Oracle does not bear any responsibilities for any custom changes made to standard JD Edwards objects.</p>
+<hr />
+<p> </p>
+<p> </p>
+<h3 class="km">An Example showing how to compute the Size of DST43101 in bytes:</h3>
+<table style="width: 675px; border-collapse: collapse;" border="1" cellspacing="1" cellpadding="0"><colgroup><col style="width: 221pt;" width="295" /><col style="width: 32pt;" width="42" /><col style="width: 35pt;" width="47" /><col style="width: 40pt;" width="53" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt;">
+<th class="xl67" style="background-color: #c52919; width: 358px; height: 15.75pt; color: white;">Parameter</th>
+<th class="xl67" style="border-left: medium none; background-color: #c52919; width: 90px; color: white;">Length</th>
+<th class="xl67" style="border-left: medium none; background-color: #c52919; width: 108px; color: white;">Byte</th>
+<th class="xl67" style="border-left: medium none; background-color: #c52919; width: 120px; color: white;">Ref</th>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szOrderType[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szLineType[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szStatusCodeLast[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szOverrideNextStatus[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szUnitsOfMeasure[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl69" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  MATH_NUMERIC   mnLineNumberIncrement</td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">6</td>
+<td class="xl70" style="border-top: medium none; border-left: medium none; width: 108px;" align="right"><strong>49</strong></td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 120px;">  LNID</td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szTaxRateAreaSelection[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szUnitOfMeasureSelection[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szLandedCostRule[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szHeaderChangesToDetail[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szWorkOrderStatus[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szNoPBCOWarningOnGLDate[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szNoPACOWarningOnGLDate[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szItemAvailabilityUpdate[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSupplierAnalysisUpdate[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSuppressClosedLines[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szProtectPriceFlag[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szProtectStatusCode[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szProtectOrderType[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szLastStatusAllowingChange[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szNewSupplierAdd[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szCrossReferenceType[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szChangeOrderProcessingOn[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szChangeOrderStatus[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szBlanketQuoteRelease[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szOrderTemplates[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szDuplicationOrderType[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szDuplicationLastStatus[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szDuplicationNextStatus[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szApprovalRouteCodeSelection[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szAwaitingApprovalStatus[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szApprovedStatus[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl69" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  MATH_NUMERIC   mnBudgetTolerancePercentage</td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">7</td>
+<td class="xl70" style="border-top: medium none; border-left: medium none; width: 108px;" align="right"><strong>49</strong></td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 120px;">  PERT</td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szBudgetHoldCode[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetLevelofDetail</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szBudgetLedgerType[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBranchPlantValidation</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSupplyDemandInquiry[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSupplierAnalysisVersion[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSupplierMasterVersion[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szPOPrintOnDemandVersion[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cHeaderFirstCode</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl69" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  MATH_NUMERIC   mnToleranceLimit</td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">15</td>
+<td class="xl70" style="border-top: medium none; border-left: medium none; width: 108px;" align="right"><strong>49</strong></td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 120px;">  MATH01</td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDisplayKitComponentLines</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szTypeCrossReferenceT[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cAllowChangeOrderText</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cPrintPOViaSubsystem</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetHoldWarning</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cTextDuplicationSelection</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqItemAvailVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqApprovalReviewVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqReceiptRoutingVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqOpenReceiptsVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqChangeOrderVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqFromStatusCode[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          InqThruStatusCode[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cInqBasedOnLastStatus</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cInqBasedOnReqDate</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          PurchasingLedgerVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cAgreementSearchMethod</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDescriptionDefaults</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cProhibitChanges</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cSingleJob</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szOpenOrderInquiry[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szFinancialStatusInquiry[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szTypeTransaction[9]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">9</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">18</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cContinuousLineNumbering</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szCurrencyCodeFrom[4]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">4</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">8</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl69" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JDEDATE        jdDateTransactionJulian</td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">6</td>
+<td class="xl70" style="border-top: medium none; border-left: medium none; width: 108px;" align="right"><strong>6</strong></td>
+<td class="xl69" style="border-top: medium none; border-left: medium none; width: 120px;">  TRDJ</td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetAccumLofD</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetExcludeSubledger</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetJobCostSequence</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBeforeImageProcessing</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cSupplierSelfService1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szInboundTransportationVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szWMSPreferenceProfileVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cNotifyPriceChange</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cNotifyDeliveryChange</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cNotifyQuantityChanges</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cNotifyOrderHold</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szConfiguratorVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cFreeGoodsCatalogWarning</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szCostRuleSelection_VL24[26]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">26</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">52</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cInventoryParent</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szCrossReferencePromotional[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szExclusiveAdjustmentHold[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cEditSupplierMaster</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cWOBeforeImageProcessing</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szWOTypeTransaction[9]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">9</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">18</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cCreateItemBranch</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szTransferProjectLineType[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cJobProject</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szBlanketReleaseVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cHeaderProtection_EV01</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cApprovalsReapproveChanges</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szApprovalsHoldCode[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetIncludeTaxes</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetTotalMethod</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cBudgetPeriodAccumMethod</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cFinancialAAIs</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDisplayLogs</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szLogsEntryVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cProtectAccountNumber</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szRequistionSelfServiceVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cAdditionalProperties</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cCategoryCodes</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cClauseApplication</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDisplayLocationLot</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cAN8Required</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDisplayRetainageIndicator</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDisplayServiceUnits</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szCollection[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSeasonCode[3]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">3</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">6</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szSeasonYear[5]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">5</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">10</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cValidateItemsWithCollection</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cAddressNumberforPCW10</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cDisplayPCW10</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          szStyleMatrixEntryVersion[11]</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">11</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">22</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cCollectionTemplatePrefix</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt;" height="19">  JCHAR          cStyleItemSearchType</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;" align="right">1</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">2</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+<tr style="height: 14.25pt;">
+<td class="xl68" style="border-top: medium none; width: 358px; height: 14.25pt; text-align: right;" height="19"><strong> Total size in bytes<br /> </strong></td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 90px;"><strong> </strong></td>
+<td class="xl71" style="border-top: medium none; border-left: medium none; width: 108px;" align="right">1923</td>
+<td class="xl68" style="border-top: medium none; border-left: medium none; width: 120px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note: Value written above is example only. Total size of value can be vary per EnterpriseOne application release</div>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

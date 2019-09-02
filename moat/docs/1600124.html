@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Import Text File that has UTime (JDEUTime) Data Type into JDE Table</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Import Text File that has UTime (JDEUTime) Data Type into JDE Table</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>Purpose of this document is to explain possible way to import Text file that has Universal Time data to JDE table through standard UBE R47002C (Inbound Flat File Conversion). This document explains detail steps for importing to any JDE tables in EnterpriseOne.</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>Currently EnterpriseOne Table Conversion Tool does not have data type of UTime (or JDEUTime) to import text file to JDE table. So you will not be able to map text string into JDE table column directly.</p>
+<p>Currently, available data types are Date, Number and String.</p>
+<p><img src="../images/tc31.png" border="0" alt="Available Data Type for Table Conversion" title="Available Data Type for Table Conversion" hspace="0" vspace="0" /></p>
+<p>As a result, currently Table Conversion application is not able to handle conversion when both source (input text file) and target (EnterpriseOne table) contain UTime data type.<br /><br /></p>
+<h3 class="km">Through R47002C</h3>
+<p>The following steps describe one of the ways to perform this operation:</p>
+<ol>
+<li>Review and verify text file (Source)<br />&nbsp;<br /><img src="../images/tc32.png" border="0" alt="Text file example" title="Text file example" hspace="0" vspace="0" /> <br />&nbsp;<br />
+<div class="kmnotebox">Note:<br /><br />&nbsp;&nbsp;&nbsp; The first column is entered manually by hand as required by R47002C. For this example, either 1 or A or any value defined in P47002 (See below)<br />&nbsp;&nbsp;&nbsp; Text qualifier (single quote) is used even for number in the text file (e.g., AN8 in second column with value of 99999998)</div>
+&nbsp;<span class="awizEndDelimiter">&nbsp; </span></li>
+<li>Review and verify target table<br />&nbsp;<br /><img src="../images/tc033.png" border="0" alt="SQL Format File" title="SQL Format File" hspace="0" vspace="0" /><br />&nbsp;</li>
+<li>Locate text file where your network can access. For this example<br />&nbsp;<br /><img src="../images/tc34.png" border="0" alt="Locate your text format file" title="Locate your text format file" hspace="0" vspace="0" /><br />&nbsp; <br />
+<div class="kmnotebox">Note: For detail, refer to &lt;Document 1305796.1&gt; E1: 47: Representation of Path for EDI in EnterpriseOne</div>
+&nbsp;&nbsp;<span class="awizEndDelimiter"> </span><br />Now you are ready to run R47002C as described below.<br />&nbsp;</li>
+<li>Run P47002 (Flat File Cross-Reference) to define Source&nbsp; (text file) and Target table as below:<br />&nbsp;<br /><img src="../images/tc35.png" border="0" alt="Define source and target through P47002" title="Define source and target through P47002" hspace="0" vspace="0" /><br />&nbsp;<br />
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Transaction is UTIME (a UDC, add if does not exist)</li>
+<li>Direction Indicator = 1 (Inbound from Text file to Database table)</li>
+<li>Flat File Name = Path with file name and File Extension</li>
+<li>Record Type = A or 1 or any other value (this value is the first columns in your text file)</li>
+<li>File Name = Target table name</li>
+<li>&lt;Internal_Only&gt;If you want to create text file through macro, refer to &lt;Document 1305159.1&gt; E1: 47: Flat File Creation Procedure to Run R47002C - Flat File Conversion (Macro: QuoteCommaExport; Export a Text File with Comma and Quote Delimiters)&lt;/Internal_Only&gt;</li>
+</ul>
+</div>
+&nbsp;</li>
+<li>Add a version for R47002C (Inbound Flat File Conversion) because you are implement custom table.<br />&nbsp;</li>
+<li>Set correct processing option for newly added version above<br /><br /><img src="../images/tc36.png" border="0" alt="Processing Option" title="Processing Option" hspace="0" vspace="0" /><br /><br />
+<div class="kmnotebox">
+<p>Note:&nbsp;</p>
+<ul>
+<li>Enter the transaction: transaction UDC used in P47002, R47002C is using this information. In this case UTIME.</li>
+<li>Enter field delimiter: , (comma for this example)</li>
+<li>Enter text qualifier: single quote or double quote matching the actual character used in the text file. R47002C expect all columns to be in string.</li>
+</ul>
+</div>
+&nbsp;</li>
+<li>Run R47002C and verify result<br /><br /><img src="../images/tc37.png" border="0" alt="Outcome" title="Outcome" hspace="0" vspace="0" /><br /><br />&nbsp;<span class="awizEndDelimiter"> </span></li>
+</ol>
+<h3 class="km">Using Business Function to convert to JDEUTIME</h3>
+<p>Make use of EnterpriseOne standard business function SetUTimeComponents (B0130100 - Set UTime Components) to convert to JDEUTime. It takes Year, Month, Day, Hour, Minute and Seconds as parameters and returns JDEUTime.</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

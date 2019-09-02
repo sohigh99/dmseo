@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Draft</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Draft</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Accounts Receivable Draft Processing</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section12">Manual Drafts</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section13">Automatic Drafts</a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Steps to Process A/R Drafts</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">Draft Origination</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Draft Acceptance</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Draft Remittance (Optional)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Draft Collection</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Setup Requirements</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">User Defined Codes (UDC) for A/R Drafts</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Setting Up Automatic Accounting Instructions (AAIs) for Accounts Receivable Drafts</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Setting Up Bank Account Information</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310"><strong>Processing Preauthorized Drafts </strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Revise, Approve and Post A/R Drafts</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312">Revising Drafts</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">Approving and Posting Accounts Receivable Drafts</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section314"><strong>Deleting and Voiding Drafts</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section315"><strong>Returning a Draft to Prior Status </strong></a></td></tr></table>
+
+<hr size=1><p>
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Accounts Receivable Draft Processing</strong></h3>
+<p>Drafts are payment instruments that allow direct communication between the bank of the supplier and the bank of the customer. In most countries, a draft is a promise to pay a debt. The use of a draft for payment of obligations affects the legal nature of the underlying liabilities. Therefore, you must classify, track, and report drafts separately from other types of payments and obligations. <br /><br />Many areas of the world use draft processing, although the payment instrument might be referred to as something other than a draft. For example, in Asia Pacific, the draft process is commonly used for post-dated checks. In the United States, it is used for credit card payments. <br /><br />Both you, as the supplier, or your customer can originate a draft. Regardless of who originates it, you must enter the draft into the system (a process which is also known as draft acceptance), remit it for collection, and then record the collection of the money from your customer. Drafts can also be discounted and might have a contingent liability. <br /><br />There are two types of A/R Drafts: Manual and Automatic Drafts. This refers to the customer's pre-authorization of a draft, rather than the methods used to enter/process the draft records.</p>
+<a name="aref_section12"></a><h4 class="km">Manual Drafts</h4>
+<p>Manual drafts are also called customer acceptance drafts because a customer must accept them before they can be remitted to the bank. The following types of manual drafts are available:</p>
+<ul>
+<li>The supplier prints the draft with bank account information.</li>
+<li>The supplier prints the draft with the bank name only.&nbsp;</li>
+<li>The customer prints the draft with bank account information.&nbsp;</li>
+<li>The customer prints the draft with the bank name only.</li>
+</ul>
+<p><br />The system can distinguish drafts with only a bank name from those with complete bank account information. This is helpful because banks generally assess an additional fee to collect drafts if you do not provide account information. <br /><br />The program used for this in JD Edwards EnterpriseOne is Customer/Supplier Drafts Entry (P03B602).</p>
+<a name="aref_section13"></a><h4 class="km">Automatic Drafts</h4>
+<p>Automatic drafts are also called preauthorized drafts because they do not require customer acceptance. You and your customer agree in advance that the customer will pay with a draft. <br /><br />The program used for this in JD Edwards EnterpriseOne is Preauthorized Drafts (R03B671).</p>
+<p>&nbsp;</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>&nbsp;This document is intended for users who are setting up or using the A/R Draft process in the&nbsp;EnterpriseOne Accounts Receivable module</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Steps to Process A/R Drafts</strong></h3>
+<p>A draft is a payment that passes through various steps of processing. During each step, the system creates either electronic or paper records, as well as accounting entries. <br /><br />These are the steps:</p>
+<ol>
+<li>Draft Origination</li>
+<li>Draft Acceptance&nbsp;</li>
+<li>Draft Remittance (Optional)&nbsp;</li>
+<li>Draft Collection</li>
+</ol>
+<a name="aref_section32"></a><h4 class="km">Draft Origination</h4>
+<p>The draft process begins when either you or your customer originates (prints) a draft. The draft shows the amount to be paid, the due date, banking information and, possibly, information about the underlying liabilities (invoices). <br />A draft can be generated by printing an invoice with a draft (using &nbsp;Invoice Print with Draft (R03B5051)), or a statement with a draft (using R03B500X). Some customers expect one draft per invoice. Other customers expect one draft for a statement of invoices. You can either send invoices with drafts attached or send statements with drafts attached. The draft origination step updates the customer ledger with the draft number (statement number), but has no effect on the general ledger.</p>
+<a name="aref_section33"></a><h4 class="km">Draft Acceptance</h4>
+<p>A draft has no legal force until the customer accepts it. <br /><br />For manual drafts, your customer can accept the draft in any of the following ways:</p>
+<ul>
+<li>Signing the draft that you originated and returning it to you.</li>
+<li>Changing the draft that you originated (date, amount, bank, and so on), and then signing it and returning it to you&nbsp;</li>
+<li>Originating, signing, and sending the customer's own draft to you</li>
+</ul>
+<p><br />For automatic drafts, the draft is accepted by prior agreement, so each draft does not require customer acceptance. <br /><br />Draft acceptance also includes entering the draft into the system. If you process drafts manually (via P03B602), you enter the draft to create the appropriate records. If you process drafts automatically (via R03B671), the system creates the appropriate draft records for you. <br /><br />Regardless of whether you enter the draft manually or create the draft automatically, the system performs the following:</p>
+<ul>
+<li>Creates a record in the Receipts Header (F03B13) and Receipts Detail (F03B14) tables.</li>
+<li>The F03B13 record for the draft will have a 4 in the Draft Status field, to indicate that the draft is at the &lsquo;Draft Accepted&rsquo; status&nbsp;</li>
+<li>Marks the invoice as paid by changing its pay status to P in the Customer Ledger table (F03B11).&nbsp;</li>
+<li>Creates an invoice record (document type R1) in the Customer Ledger table (F03B11).</li>
+</ul>
+<p>&nbsp;</p>
+<a name="aref_section34"></a><h4 class="km">Draft Remittance (Optional)</h4>
+<p>Draft remittance consists of the following steps:</p>
+<ol>
+<li>You remit (deposit) the draft to your bank so that it can collect the funds from your customer's bank. You can remit the draft either electronically or on paper in the form of a bank register. When you remit the draft for payment, the system updates the pay status of the R1 draft invoice record to G.</li>
+<li>The system creates the following journal entries, which you must post:&nbsp;
+<ul style="list-style-type: disc;">
+<li>The system debits the drafts remitted account and credits the drafts receivable account.</li>
+<li>If the draft is remitted with a discount, the system debits the drafts remitted with discount account and credits the drafts receivable account.&nbsp;</li>
+<li>If the draft is remitted with contingent liability, the system debits the drafts remitted with discount account and credits the drafts receivable account. The system also debits the bank account and credits the contingent liability account.</li>
+</ul>
+</li>
+<li>You arrange to collect funds from the draft in one of the following ways:&nbsp;
+<ul style="list-style-type: disc;">
+<li>Wait until the funds become available on the due date specified by the draft.</li>
+<li>Request an advance from your bank before the due date of the draft. Typically, banks charge a fee when they advance funds for a draft before its due date.</li>
+</ul>
+</li>
+</ol>
+<p class="kmnotebox">Note: Draft remittance is optional in certain countries. It is also optional if you are using the Drafts process to record credit card payments on sales orders by your customers.</p>
+<a name="aref_section35"></a><h4 class="km">Draft Collection</h4>
+<p>Draft collection consists of the following steps:</p>
+<ol>
+<li>Your bank collects the funds for the draft from the customer's bank on the due date of the draft, or your bank informs you that it cannot collect the funds.</li>
+<li>On or after the due date, both you and your customer recognize the transfer of cash. When you run the program that processes draft collection, the system updates the pay status of the draft invoice record to show that it has been collected.&nbsp;</li>
+<li>The system creates the following journal entries, which you must post:&nbsp;
+<ul style="list-style-type: disc;">
+<li>The system creates a journal entry to debit the bank account and credit drafts remitted.</li>
+<li>If the draft is remitted with a discount, the system debits the bank account and credits the drafts remitted with discount account.&nbsp;</li>
+<li>If the draft is remitted with contingent liability, the system debits the contingent liability account and credits the drafts remitted with discount account.</li>
+</ul>
+</li>
+</ol>
+<div class="kmnotebox">Note: See JD Edwards EnterpriseOne Accounts Receivable Online guides regarding each step in more detail.
+<p>The Implementation Guides are available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a></p>
+</div>
+<a name="aref_section36"></a><h3 class="km"><strong>Setup Requirements</strong></h3>
+<p>&nbsp;You need to set up the following to process drafts:</p>
+<ul style="list-style-type: disc;">
+<li>User Defined Codes for A/R Drafts</li>
+<li>Setup AAIs&nbsp;</li>
+<li>Bank Accounts</li>
+</ul>
+<p><br />When you process drafts, the system uses unique user defined codes and AAIs. Additionally, to avoid fees from the bank, most companies set up bank account information for their customers who process drafts. You use payment instruments to differentiate customers who process drafts from those who do not, as well as to identify those customers for whom you originate the draft from those who originate the draft themselves. You can also use payment instruments to identify those customers for whom you have bank account information from those for whom you do not.</p>
+<a name="aref_section37"></a><h4 class="km">User Defined Codes (UDC) for A/R Drafts</h4>
+<p>User defined codes (UDC) are used throughout the Accounts Receivable system. The following discussion of user defined codes for draft processing provides you with detailed information about whether new codes can be added and existing codes modified, as well as how the codes are used in the program. <br /><br /><strong>Payment Instrument Codes (00/PY) </strong><span style="text-decoration: underline;" sizcache="0" sizset="27"><br /></span><br />Using a payment instrument in draft processing is optional. You use payment instrument codes to categorize drafts for reporting and accounting purposes. For example, if you want to distinguish drafts that you originated from those your customer originated, or if you want to distinguish drafts for which you have bank account information from those for which you do not, you can assign the drafts different payment instruments. <br />The payment instrument that you assign to a draft can also be used in conjunction with AAI items, such as RD1x, RD2x, RD3x, and RD4x (where x represents the payment instrument), to assign different accounts based on the payment instrument. The following list provides examples of the payment instruments that are set up for you to use for draft processing. You can use these codes or set up additional codes. <br /><br />D &ndash; Draft by Invoice <br />F &ndash; Draft by Statement <br />1 &ndash; Draft that you originate with a bank account number <br />2 &ndash; Draft customer originates with a bank account number <br />3 &ndash; Draft you originate without a bank account number <br />4 &ndash; Draft customer originates without a bank account number</p>
+<div class="kmnotebox">Note: The description of the payment instrument code in this table might not be the same as the description in the UDC (00/PY) because these codes can be used in other systems.</div>
+<p><br /><strong>Setting Up the Default Payment Instrument for A/R Drafts</strong> <br /><br />To distinguish invoice records to be paid by draft from other invoice records, you can set up a default payment instrument on the customer master record. The system updates invoice records for that customer with the payment instrument that is specified on the customer record, unless you change it on the invoice. <br />For draft processing, you can use the payment instrument to differentiate customers for whom you might print invoices with a draft attachment from customers for whom you might print statements with a draft attachment. You can also use the payment instrument to identify drafts entered with bank account information from those that do not have bank account information. Processing options for the draft entry programs allow you to set up payment instruments to use for this purpose. The system updates draft invoice records (document type R1) in the Customer Ledger table (F03B11) and draft receipt records in the Receipts Header (F03B13) table with the payment instrument specified in the processing options. If you need to update the payment instrument for invoices that you previously entered, you can use the Speed Status Change program (P03B114) to update the payment instrument on all invoices for the customer or on an invoice-by-invoice basis.</p>
+<div class="kmnotebox">Note: See JD Edwards EnterpriseOne Accounts Receivable Online guides for further details regarding each step.</div>
+<p><br /><strong>Payment Status Codes (00/PS)</strong> <br /><br />Pay status codes are hard-coded. The system updates invoice (document type RI) and draft invoice (document type R1) records in the Customer Ledger table (F03B11) with one of the following payment status codes, based on where the invoice is in the draft process: <br /><br />A &ndash; Approval for Payment and used during invoice generation. When you create an invoice and expect your customer to pay by draft, the system displays this pay status on the invoice. <br />P &ndash; Paid in full and used during Draft acceptance and draft collection stages. When you accept the draft, the system updates the pay status of the invoice (RI) to this status. The system also updates the draft invoice (R1) to this pay status when the draft is collected. <br />D &ndash; Draft accepted and used during Draft acceptance stage. When you accept the draft, the system updates the pay status of the draft invoice (R1) to this status. <br /># - Draft included in register and used during Draft Registration stage. When you register the draft, the system updates the pay status of the draft invoice (R1) to this status. <br />G &ndash; Draft deposited not due and used during Draft remittance. When you submit the draft to the bank and you update the draft with the remitted information, the system updates the draft invoice (R1) to this status. <br /><br /><br /><strong>Draft Status Codes (03B/DS) </strong><br /><br />Draft status codes are hard-coded. The system updates the draft record in the Receipts Header table (F03B13) with one of the following draft status codes, based on where the draft is in the draft process: <br /><br />4 &ndash; Draft accepted. When you enter the draft using either Enter Our Drafts or Enter Customer Drafts program, or when you create the draft by running the Pre-Authorized Drafts program (R03B671), the system updates the status of the draft to this status. <br />3 &ndash; Draft remitted for cash or discount. When you run the Draft Remittance program (R03B672) and specify to remit the draft for cash or with a discount, the system updates the status of the draft to this status. <br />2 &ndash; Draft remitted with contingent liability. When you run the Draft Remittance program and specify to remit the draft with contingent liability, the system updates the status of the draft to this status. <br />0 &ndash; Draft collected. When you run the Draft Collection with Status Update program (R03B680), the system updates the status of the draft to this status.</p>
+<a name="aref_section38"></a><h4 class="km">Setting Up Automatic Accounting Instructions (AAIs) for Accounts Receivable Drafts</h4>
+<p>The system uses the following AAIs for draft processing, where x is the payment instrument: <br /><br />- Drafts Receivable (RD1x) - The RD1x AAI item defines the drafts receivable account to debit when you accept a draft. The system automatically debits the drafts receivable account (RD1x) unless you override it in the processing options, and it edits the A/R trade account (RC). When you remit drafts, the system debits drafts remitted (RD2x, RD3x, or RD4x) and credits drafts receivable (RD1x). <br /><br />- Drafts Remitted (RD2x) - The RD2x AAI item defines the drafts remitted account to debit when you remit drafts for cash. The system automatically debits the drafts remitted account (RD2x) unless you override it in the processing options, and credits the drafts receivable account (RD1x). When you collect drafts, the system debits a bank account (RB) and credits the drafts remitted account (RD2x). <br /><br />- Drafts Remitted for Discount (RD3x) - The RD3x AAI item defines the drafts remitted for discount account to debit when you remit drafts for a discount. During draft remittance, you use a processing option to choose the drafts remitted for discount account. The system debits the drafts remitted for discount Account (RD3x) and credits the drafts receivable account (RD1x). When you collect drafts, the system debits a bank account (RB) and credits the drafts remitted for discount account (RD3x). <br /><br />- Contingent Liability (RD4x) - The RD4x AAI item defines the draft contingent liability account to credit when you remit drafts for a discount if you are required to recognize a contingent liability until the maturity date of the draft. During draft remittance, you use a processing option to choose the draft contingent liability account. <br />The system debits the draft remitted for discount account (RD3x), and credits the drafts receivable account (RD1x). The system also debits the bank account of the remittance, based on a processing option, or the bank account used during the pre-register, and credits the draft contingent liability account (RD4x) unless you override it in the processing options. When you collect drafts, the system debits the draft contingent liability account (RD4x) and credits the drafts remitted for discount account (RD3x). <br /><br />- Void/Non-Sufficient Funds (RD5) The RD5 AAI item defines the draft receivable account for the new draft that the system creates when you void or specify a draft as NSF. Depending on the draft status at the time that you void or specify the draft as NSF, the system debits the account associated with AAI item RD5 and credits either the draft receivable account (RD1x) or the draft remittance account (RD2x or RD3x).</p>
+<a name="aref_section39"></a><h4 class="km">Setting Up Bank Account Information</h4>
+<p>You must set up bank account information when using Accounts Receivable draft processing. Depending on the type of information that you process, you must set up bank account information for your company&rsquo;s bank accounts, as well as for your suppliers or customers. <br /><br />Bank Account Cross Reference (P0030A) &ndash; You use this program to set up bank account information for your suppliers and customers. If you process Accounts Receivable drafts you must set up bank account information for the customer. Although all the programs update and store bank account information in the Bank Transit Master table (F0030), the system differentiates each bank account record using a record type. The record type not only identifies whether the bank account is for a supplier or customer; it is also used to differentiate customers who process drafts and automatic debits from suppliers who process automatic payments. <br />Type D - The system assigns this value when you set up bank account information and turn on the A/R Drafts, Auto Debit option using the Bank Account Cross Reference program (P0030A). You must turn on this option for customers who process drafts or auto debits.</p>
+<a name="aref_section310"></a><h3 class="km"><strong>Processing Preauthorized Drafts </strong></h3>
+<p>From the Draft Daily Operations menu (G03B161), choose Pre-Authorized Drafts (R03B671). <br /><br />Automatic drafts are also called preauthorized drafts because they do not require customer acceptance for each draft. You and your customer agree in advance that the customer will pay with a draft. You do not print and send a draft to the customer, but instead remit (deposit) the draft to your bank for collection. You create automatic drafts by running the Pre-Authorized Drafts program (R03B671). You select the invoices to pay with each draft by using data selection. You can run this batch process in either proof or final mode: <br /><br />Proof Mode - You can choose to generate a detail or summary report of transactions:</p>
+<ul style="list-style-type: disc;">
+<li>Detail &ndash; lists each invoice to be paid by draft</li>
+<li>Summary &ndash; prints a summary of all invoices by customer or payor, due date, and payment instrument to be paid by draft</li>
+</ul>
+<p><br />Or <br /><br />Final Mode - You can make the same selections as in proof mode. In final mode, the system:</p>
+<ul style="list-style-type: disc;">
+<li>Creates drafts</li>
+<li>Updates the pay status of drafts to D (draft accepted)&nbsp;</li>
+<li>Generates a report</li>
+</ul>
+<p><br />Whichever mode you choose, you can review the information and make necessary changes. If you need to make changes after running R03B671 in proof mode, you can use either Standard Invoice Entry (P03B11) or Speed Status Change (P03B114). If you make any changes after running R03B671 in final mode, you will need to use P03B602. We recommend running R03B671 in proof mode first and evaluating the results, as it will be easier to make changes at that step than after running it in final mode. <br /><br />The system processes drafts in the same way as receipts except that the system:</p>
+<ul style="list-style-type: disc;">
+<li>Uses batch type DB (draft receipts)</li>
+<li>Applies draft receipts to open customer invoices&nbsp;</li>
+<li>Creates an invoice record with a document type of R1 in the Customer Ledger table (F03B11) for the total draft amount&nbsp;</li>
+<li>Updates the payment status of the draft invoice to D (draft accepted)</li>
+</ul>
+<p><br />After you generate drafts, you must approve and post them to the general ledger to create the appropriate journal entries. This program updates and creates records in the Customer Ledger (F03B11), Receipts Header (F03B13), and Receipts Detail (F03B14) tables.</p>
+<div class="kmnotebox">Note - The report prints the abbreviated column heading PI, which indicates payment instrument.</div>
+<a name="aref_section311"></a><h3 class="km"><strong>Revise, Approve and Post A/R Drafts</strong></h3>
+<a name="aref_section312"></a><h4 class="km">Revising Drafts</h4>
+<p>After you enter drafts, you can review and revise them before you post them to the general ledger. You typically review drafts to:</p>
+<ul style="list-style-type: disc;">
+<li>Verify information for a particular customer</li>
+<li>Revise draft information, such as the due date, payment instrument, or customer bank account</li>
+</ul>
+<p><br />The following guidelines apply when you revise draft information:</p>
+<ul style="list-style-type: disc;">
+<li>You cannot add invoices to a draft unless an unapplied amount exists.</li>
+<li>You can change the following fields when the draft has been accepted:&nbsp;
+<ul style="list-style-type: circle;">
+<li>Draft Due Date: You can also change this field after the draft has been remitted.</li>
+</ul>
+<ul style="list-style-type: circle;">
+<li>Draft Amount: You cannot change this field if the draft is posted or if it is in a status other than Draft- Acceptance.&nbsp;</li>
+</ul>
+<ul style="list-style-type: circle;">
+<li>Payment Instrument</li>
+<li>Bank Name&nbsp;</li>
+<li>Customer Bank Account Number&nbsp;</li>
+<li>Bank Transit&nbsp;</li>
+</ul>
+</li>
+<li>You can never change the G/L date on a draft; however, you can assign a new G/L date to a posted draft when you perform additional tasks (such as applying the draft to invoices or voiding the draft). The system updates the Receipts Detail records (F03B14) with the G/L date that you enter. The system does not change the G/L date on the Receipts Header record (F03B13).</li>
+</ul>
+<a name="aref_section313"></a><h4 class="km">Approving and Posting Accounts Receivable Drafts</h4>
+<p>From the Draft Daily Operations menu (G03B161), choose Draft Journal Review or Post Drafts to GL. After you enter drafts, you must post them to the general ledger to update the appropriate account information. Depending on your organization's policy, your batches might require management approval before you can post them. The process to review and approve batches is the same regardless of the batch type. The batch type for draft batches is DB.</p>
+<div class="kmnotebox">Note - The status of the draft batch header remains In Use until you completely exit the draft entry program.</div>
+<p>After each step in the drafts process (entering, remitting and collecting) you must post the drafts to the General Ledger (F0911). If this is not done at each step, incorrect entries may be created in the F0911. <br />When you post the draft at draft acceptance, the system creates a journal entry to debit the Drafts Receivable account, using the RD1 AAI, and credits the A/R trade account using the RC AAI. <br />When you post the draft at draft remittance, the system creates a journal entry to debit the Draft Remittance account, using the RD2 AAI, and credits the Drafts Receivable account, using the RD1 AAI. <br />When you post the draft at draft collection, the system creates a journal entry to debit the GL bank account, using the RB AAI, and credits the Draft Remittance account, using the RD2 AAI. <br />Please note that the Posted Code field of the F03B13 record for the draft will remain blank until the draft has been collected, and the collection has been posted, regardless of whether or not the draft has been posted during previous stages. <br /><br />During the post, the system does the following:</p>
+<ul style="list-style-type: disc;">
+<li>Selects unposted receipt transactions from the following tables:</li>
+<li>Receipts Header (F03B13)&nbsp;</li>
+<li>Receipts Detail (F03B14)&nbsp;</li>
+<li>Edits and verifies each transaction</li>
+</ul>
+<p><br />If no errors occur, the system does the following:</p>
+<ul style="list-style-type: disc;">
+<li>Debits and credits the appropriate accounts in the Account Ledger table (F0911). The account that the system debits depends on the draft status.</li>
+<li>Creates automatic offsets to the A/R trade account in the Account Ledger table (F0911)&nbsp;</li>
+<li>Creates automatic entries to the discount, write-off, chargeback, or deduction account, if applicable&nbsp;</li>
+<li>Updates balances in the Account Balances table (F0902)&nbsp;</li>
+<li>Marks the transactions as posted (P) in the Account Ledger table (F0911)&nbsp;</li>
+<li>Updates the Receipt Detail table (F03B14) with a D in the Posted Code field.
+<div class="kmnotebox">Note - The system does not update the Receipts Header record (F03B13) until the draft is collected and posted. If the draft is posted after acceptance and remittance, the system does not update the Posted Code field.</div>
+</li>
+<li>Updates the status of the Batch Control Records table (F0011) to D.</li>
+</ul>
+<p>&nbsp;You can also post drafts using the Draft Journal Review program (P0011).</p>
+<p>When posting a draft matched with invoices, the F0911.AN8 field on each AE line is populated with the first Customer Number encountered for the trade account, and the F0911.AN8 field on the R1 line is populated with the draft&rsquo;s Payor Number.</p>
+<div class="kmnotebox">Note - The system creates unapplied draft (RU), draft (R1), chargeback (RB), and deduction (R5) invoices with a posted status of D in the Customer Ledger table (F03B11). To determine whether these records are posted, you must locate and verify the posted status of the draft document from which they originated.</div>
+<p>If you enter a draft in error, you can delete or void it. When you delete or void a draft, the system reopens any invoices that the draft paid. You can delete a draft only when:</p>
+<ul style="list-style-type: disc;">
+<li>The draft is not posted AND</li>
+<li>The draft is at a draft-acceptance status (4)</li>
+</ul>
+<div class="kmnotebox">Note - If the draft is at a remittance or collection status, you cannot delete it; you must post the draft and then void it.</div>
+<p>&nbsp;</p>
+<a name="aref_section314"></a><h3 class="km"><strong>Deleting and Voiding Drafts</strong></h3>
+<p>When you delete a draft, the system removes the draft records from the following tables:</p>
+<ul style="list-style-type: disc;">
+<li>Receipt Header (F03B13)</li>
+<li>Receipt Detail (F03B14)&nbsp;</li>
+<li>Customer Ledger (F03B11)</li>
+</ul>
+<p><br />If the draft is posted, you must void the draft. When you void a draft, the system updates the following fields on the draft&rsquo;s Receipt Header record (F03B13):</p>
+<ul style="list-style-type: disc;">
+<li>Receipt NSF/Void Code field (NFVD). The system updates this field to V.</li>
+<li>Void Date (VDGJ) - The system uses the G/L date that you enter when you void the draft.&nbsp;</li>
+<li>Void Reason Code (VRE)</li>
+</ul>
+<p><br />The system uses the reason code that you enter when you void the draft. The system also creates a new batch, which you must post to create the reversing journal entries. You can void the draft at any stage of draft processing. <br /><br />To delete or void drafts the client needs to follow a very similar process to that of deleting or voiding regular receipts:</p>
+<ol>
+<li>Open Draft Inquiry (P03B602) from menu G03B161</li>
+<li>Inquire on the draft to be deleted or voided&nbsp;</li>
+<li>Highlight this draft&nbsp;</li>
+<li>Either take row exit &lsquo;NSF&rsquo; for non-sufficient funds, if the draft has to be deleted or voided because the customer didn&rsquo;t have enough money in their bank account, or in all other scenarios take row exit &lsquo;Void/Delete&rsquo; to do a regular void</li>
+</ol>
+<p><br />The only difference between the two row exits is the reason code; NSF does not have additional functionality behind it.</p>
+<div class="kmnotebox">Note: In order to void or NSF a draft, the draft can be at any status but must be posted. If the draft is unposted, it can only be deleted and then only when it is at an acceptance status (4).</div>
+<a name="aref_section315"></a><h3 class="km"><strong>Returning a Draft to Prior Status </strong></h3>
+<p>If you remit or collect a draft in error, you can return the draft to its prior status rather than completely processing the draft and then voiding it. You can select multiple drafts for this purpose. The system reverses any changes that were made to the drafts when each was moved to its current status.</p>
+<div class="kmnotebox">Note -You cannot return a draft from the acceptance status to a prior status, or return a draft that is voided or designated as having insufficient funds (NSF) to a prior status.</div>
+<p>In the processing options for the draft entry programs (P03B602), you can specify whether to prohibit users from using this feature. When you return a draft to a previous status, the system:</p>
+<ul style="list-style-type: disc;">
+<li>Issues a warning that the remittance paper or tape batch might have already been sent to the bank for processing.</li>
+<li>Removes the draft from the remittance register if the draft is included in the remittance register.&nbsp;</li>
+<li>Updates the draft invoice record (R1) in the Customer Ledger table (F03B11) to the prior pay status.&nbsp;</li>
+<li>Updates the Receipts Header table (F03B13) with the prior draft status and batch.&nbsp;</li>
+<li>Removes unposted records from the Receipts Detail table (F03B14) for the current status.&nbsp;</li>
+<li>Reverses posted records from the Receipts Detail table (F03B14) for the current status.&nbsp;</li>
+<li>Deletes the draft record from the Draft Remittance Work File table (F03B672) if it exists (remitted using a tape format), and marks the Text Processor Header record (F007101) with a status of 3(Suspended/Outbound).</li>
+</ul>
+<div class="kmnotebox">Note - The system retrieves the status for the Text Processor Header record from the user defined code 00/TL.</div>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

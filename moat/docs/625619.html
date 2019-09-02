@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Update Sales Price / Cost / Exchange Rate (R42950)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Update Sales Price / Cost / Exchange Rate (R42950)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Cost Update</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section22"><strong>Price Update</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section23"><strong>Exchange Rate Update</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section24"><strong>Calculation Differences Between R42950 and Sales Order Entry (P4210)</strong></a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p><strong>Overview</strong></p>
+<p>The Update Sales Price/Cost (R42950) program can be run individually or through a processing option off of Sales Update (R42800) program. All Sales Order Detail (F4211) records will be processed by this program. To avoid integrity issues with the Item Ledger (F4111) file, cost will not be updated if inventory was relieved at time of Shipment Confirmation (P4205) or if the cost was overridden at time of Sales Order Entry (P4210).</p>
+<p>When Ship Confirming (P4205) the order, the latest cost will pull in automatically, so the Cardex (F4111) will be updated with the current cost from the Item Cost (F4105) table.<br /><br />A new Sales order will get the current cost, price and exchange rate. The Update Sales Price/Cost (R42950) program is used only to update open orders with the cost, price and exchange rate that is current at the moment the program is run. Data Selection can be used to restrict the update process to a selected number of Sales Order Detail (F4211) records.</p>
+<p>Record Reservation and Transaction Processing is not available for the R42950 program in releases prior to 9.1. This functionality was introduced in the 9.1 release under BUG 14226175, &ldquo;RECORD RESERVATION AND TP&rdquo;.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section21"></a><h3 class="km"><strong>Cost Update</strong></h3>
+<p>In this example, there are 15 items in inventory at an average cost of $6.00.<br /><br />The cost method for inventory/sales is Weighted Average (02).<br />&nbsp;<br /><img src="../images/spc01.png" border="1" hspace="0" /><br /><br />Enter a sales order. Notice the Unit Cost is $6.00 and Unit Price as $4.00 on the sales order.<br /><br /><img src="../images/spc02.png" border="1" hspace="0" /><br /><img src="../images/spc03.png" border="1" hspace="0" /><br /><br />Adjust in a quantity of 5 at $2.00 each. Now there are 20 items in inventory and the Weighted Average Cost is $5.00/item.<br /><br /><img src="../images/spc04.png" border="1" hspace="0" /><br /><br />However, the Sales Order entered prior to the adjustment still shows a cost of $6.00.<br /><br />To update the Unit Cost on the sales order with the current cost of $5.00, run the Update Sales Price/Cost (R42950) program with the first processing option on the Process tab set to '1'.<br /><br /><img src="../images/spc05.png" border="1" hspace="0" /><br /><br />The PDF output below shows the new values followed by the old values on next line.<br /><br /><img src="../images/spc06.png" border="1" hspace="0" /></p>
+<a name="aref_section22"></a><h3 class="km"><strong>Price Update</strong></h3>
+<p><img src="../images/spc07.png" border="1" hspace="0" /><br /><br />Set the processing option #1 on Price Options tab to '1'. <br /><br />Set processing option #2 on Price Options tab to the date that will be used to pull the price. This processing option only affects the Price update, not the Cost or Exchange Rate updates.<br /><br />Some clients require that the price is updated according to ship date or promised date. This can be done by setting up a version with the processing options set correctly, then call this version from the Sales Update (R42800) program to pull the appropriate price.</p>
+<p>When the Price Effective Date (Processing Option 2) in the Price Process tab of R42950 is defined as '4' - Actual Ship&nbsp; Date, the R42950 is designed to update the Price Effective Date (PEFJ) when updating the price based on the Actual Ship Date. The Original Ship Date will act as Original Promised Date (OPDJ) and is available in F4201. The original promised delivery date for a sales order defaults from the Requested Date (DRQJ). Lastly, the processing option on the R42950 dictates which date to use to when repricing. In this example, the processing option is defined to use Actual Ship Date which is how the system should retrieve the price, based on the Actual Ship Date.<br /><br /><img src="../images/spc08.png" border="1" hspace="0" /><br /><br />Once the price update is done, it will be reflected on Sales Order Entry (P4210) screen. When Sales Update (R42800) is run, the Journal Entries will be created correctly using the new price.<br /><br /><img src="../images/spc09.png" border="1" hspace="0" /></p>
+<a name="aref_section23"></a><h3 class="km"><strong>Exchange Rate Update</strong></h3>
+<p><img src="../images/spc10.png" border="1" hspace="0" /><br /><br />Processing options Process tab #2 should be set to '1', everything else can be left blank. <br /><br />When entering a sales order, the currency exchange rate is pulled in using the transaction/system date. At the time of running the Update Sales Price/Cost (R42950) program, the current date/time is used to pull in the current currency exchange rate. <br /><br />In the following example, an order is entered in Canadian currency. Notice that the currency exchange rate is 0.6666667. <br /><br /><img src="../images/spc11.png" border="1" hspace="0" /></p>
+<p>Change the exchange rate using the Currency Exchange Rate Entry (P0015A) application off menu G1141.<br /><br />Run the Update Sales Price/Cost (R42950) program with processing option set to update current exchange rate. The PDF output shows the updated price with the new exchange rate.<br /><br /><img src="../images/spc12.png" border="1" hspace="0" /><br /><br />Also note that the new exchange rate is displayed on the sales order detail.<br /><br /><img src="../images/spc13.png" border="1" hspace="0" /></p>
+<a name="aref_section24"></a><h3 class="km"><strong>Calculation Differences Between R42950 and Sales Order Entry (P4210)</strong></h3>
+<p><em>Note:&nbsp; In this example, the currency multiplier is used.&nbsp; If using the currency divisor method, these will be divided.</em><br /><br /><strong>Sales Order Entry calculates the unit prices in this manner:</strong><br /><br />Domestic unit price * exchange rate = Foreign unit price<br /><br />While creating the sales order, the system will check the price in F4106 in foreign currency.<br />1.&nbsp;&nbsp;&nbsp; If the price is defined in foreign currency then the system will retrieve that price as foreign unit price and then calculate the domestic unit price from it using exchange rate. Suppose there are no records in F4106 with foreign currency, then system will check the price in domestic currency. <br />2.&nbsp;&nbsp;&nbsp; If the price is defined in domestic currency, then system will retrieve that price as domestic unit price and will calculate the foreign unit price from it using exchange rate.&nbsp;&nbsp; <br />**When creating the sales order, the unit price calculation is depends on the currency of the price in F4106.<br /><br /><strong>R42950 calculates unit prices in this manner:</strong><br /><br />Foreign unit price * exchange rate = New domestic unit price.&nbsp; <br />**R42950 does NOT update the foreign unit price, only the domestic unit price.<br /><br /><strong>Advanced Pricing Functionality:</strong><br /><br />When Advanced Pricing adjustments are in different currencies:<br /><br />During sales order entry:<br />1.&nbsp;&nbsp;&nbsp; When the price is in FOREIGN: (F4106 has the unit price in foreign currency)<br />Foreign unit price * exchange rate = Domestic unit price<br />2.&nbsp;&nbsp;&nbsp; &nbsp;When the price is DOMESTIC: (No F4106 price exists for the foreign currency, but does exist in domestic currency)<br />Domestic unit price * exchange rate = Foreign unit price<br /><br />When running R42950:<br />The system will always calculate the domestic unit price from foreign unit price by using new exchange rate (while running the UBE in update exchange rate mode).<br />Foreign unit price * new exchange rate = new domestic unit price</p>
+<p>&nbsp;</p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

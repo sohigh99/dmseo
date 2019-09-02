@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JDE API Essential Part I - MATH_NUMERIC</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>JDE API Essential Part I - MATH_NUMERIC</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The purpose of this document is to have&nbsp; simplified version for JDEAPIs.chm file (INTERNAL ONLY). So this document shall only cover APIs which are frequently used in EnterpriseOne business functions.</p>
+<p>&lt;Internal_Only&gt;On the way, I shall put in additional information and real-life example for each usages. So please do publish it internally&lt;/Internal_Only&gt;</p>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><a href="#datatypee1" alt="Data Type in EnterpriseOne" title="Data Type in EnterpriseOne">Data Type in EnterpriseOne</a><br /> <a href="#datatypeinc" alt="Data Type in C Language" title="Data Type in C Language">Data Type in C Language</a><br /> &nbsp;</p>
+<p>MATH_NUMERICEnterpriseOne API (Application Program Interface)<br /> &nbsp;&nbsp;&nbsp; |--- Common Library<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- JdeCurrency<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- ParseNumericStringEx<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- ZeroMathNumericEx<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- JdeDate<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- DeformatDate<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- FormatDate<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#IsJDEDATENull" alt="IsJDEDATENull" title="IsJDEDATENull">IsJDEDATENull</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- LinkList<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MATH_NUMERIC" alt="MATH_NUMERIC" title="MATH_NUMERIC">MATH_NUMERIC</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MATH_NUMERIC" alt="Overview of MATH_NUMERIC" title="Overview of MATH_NUMERIC">Overview</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <span style="font-weight: bold;"></span><span style="font-weight: bold;"><a href="#FormatMathNumeric" alt="FormatMathNumeric" title="FormatMathNumeric">FormatMathNumeric</a></span><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#IncrementMathNumeric" alt="IncrementMathNumeric" title="IncrementMathNumeric">IncrementMathNumeric</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#IntToMathNumeric" alt="IntToMathNumeric" title="IntToMathNumeric">IntToMathNumeric</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#LongToMathNumeric" alt="LongToMathNumeric" title="LongToMathNumeric">LongToMathNumeric</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathAdd" alt="MathAdd" title="MathAdd">MathAdd</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathCompare" alt="MathCompare" title="MathCompare"><span style="font-weight: bold;">MathCompare</span></a><span style="font-weight: bold;"></span><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathCompareAbsolute" alt="MathCompareAbsolute" title="MathCompareAbsolute">MathCompareAbsolute</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <span style="font-weight: bold;"><a href="#MathCopy" alt="MathCopy" title="MathCopy">MathCopy</a></span><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathDivide" alt="MathDivide" title="MathDivide">MathDivide</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathNumericToInt" alt="MathNumericToInt" title="MathNumericToInt">MathNumericToInt</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathNumericToLong" alt="MathNumericToLong" title="MathNumericToLong">MathNumericToLong</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathRound" alt="MathRound" title="MathRound">MathRound</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathStringToLong" alt="MathStringToLong" title="MathStringToLong">MathStringToLong</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathSubtract" alt="MathSubtract" title="MathSubtract">MathSubtract</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#MathZeroTest" alt="MathZeroTest" title="MathZeroTest"><span style="color: red; font-weight: bold;"></span><span style="color: red; font-weight: bold;">MathZeroTest</span></a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#ParseNumericString" alt="ParseNumericString" title="ParseNumericString">ParseNumericString</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#ReverseMathNumeric" alt="ReverseMathNumeric" title="ReverseMathNumeric">ReverseMathNumeric</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#ZeroMathNumeric" alt="ZeroMathNumeric" title="ZeroMathNumeric">ZeroMathNumeric</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- Miscellaneous<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- <a href="#IsStringBlank" alt="IsStringBlank" title="IsStringBlank">IsStringBlank</a><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- Data Dictionary<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- Imaging<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- JDEBASE (To be added into independent document)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- JDE Cache (To be added into additional independent document)<br /> &nbsp;&nbsp;&nbsp; |--- Events<br /> &nbsp;&nbsp;&nbsp; |--- System Function</p>
+<p>&nbsp;</p>
+<p><big><big><a name="datatypee1"></a>EnterpriseOne Data Type (Computation of size in byte):</big></big></p>
+<table style="text-align: left; width: 712px; height: 91px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr><th style="vertical-align: top; width: 197px; background-color: #3366ff; color: white;">Data Type</th><th style="vertical-align: top; width: 198px; background-color: #3366ff; color: white;">Size in DD</th><th style="vertical-align: top; width: 198px; background-color: #3366ff; color: white;">Actual Size in Byte</th></tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">Character</td>
+<td style="vertical-align: top; width: 198px;">1</td>
+<td style="vertical-align: top; width: 198px;">2</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">String</td>
+<td style="vertical-align: top; width: 198px;">The size of DD + 1 (='\0')</td>
+<td style="vertical-align: top; width: 198px;">Size in DD x 2</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">Math Numeric</td>
+<td style="vertical-align: top; width: 198px;">Various</td>
+<td style="vertical-align: top; width: 198px;">49</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Integer</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">4</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Pointer (GENLNG)</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">4</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 197px;">Date</td>
+<td style="vertical-align: top; width: 198px;">6</td>
+<td style="vertical-align: top; width: 198px;">6</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">JDEUTIME</td>
+<td style="vertical-align: top;">11</td>
+<td style="vertical-align: top;">16</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><big><big><a name="datatypeinc"></a>Data Type in C Language (put down reference here ___________)</big></big></p>
+<table style="border-collapse: collapse; width: 712px; height: 79px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /> <col style="width: 305pt;" width="406" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 48pt; background-color: #3366ff; color: white;" width="64" height="20">SN</td>
+<td style="width: 48pt; background-color: #3366ff; color: white;" width="64">Type</td>
+<td style="width: 305pt; background-color: #3366ff; color: white;" width="406">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;">1</td>
+<td>Basic Type</td>
+<td>They are arithmetic types and consists of the two types: (a) integer types and (b) floating-point types.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">2</td>
+<td style="vertical-align: top;">Enumerated types</td>
+<td style="vertical-align: top;">They are again arithmetic types and they are used to define variables that can only be assigned certain discrete integer values throughout the program.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">3</td>
+<td style="vertical-align: top;">Void Type</td>
+<td style="vertical-align: top;">The type specifier void indicates that no value is available.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">4</td>
+<td style="vertical-align: top;">Derived types</td>
+<td style="vertical-align: top;">They include (a) Pointer types, (b) Array types, (c) Structure types, (d) Union types and (e) Function types.<br /> So data type defined in Enterprise follows this</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div style="margin-left: 40px;"><big> Integer Types</big></div>
+<table style="border-collapse: collapse; text-align: start; width: 712px; height: 231px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 85pt;" span="2" width="113" /> <col style="width: 356pt;" width="475" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt; margin-right: 0px; padding-bottom: 0px; padding-top: 0px;">
+<td class="xl65" style="height: 15.75pt; width: 85pt; background-color: #3366ff; color: white;">Type</td>
+<td class="xl65" style="border-left: medium none; width: 85pt; background-color: #3366ff; color: white;" width="113">Storage size</td>
+<td class="xl65" style="border-left: medium none; width: 356pt; background-color: #3366ff; color: white;" width="475">Value range</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">char</td>
+<td style="vertical-align: top;">1 byte</td>
+<td style="vertical-align: top;">-128 to 127 or 0 to 255</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">unsigned char</td>
+<td style="vertical-align: top;">1 byte</td>
+<td style="vertical-align: top;">0 to 255</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">signed char</td>
+<td style="vertical-align: top;">1 byte</td>
+<td style="vertical-align: top;">-128 to 127</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">int</td>
+<td style="vertical-align: top;">2 or 4 bytes</td>
+<td style="vertical-align: top;">-32,768 to 32,767 or -2,147,483,648 to 2,147,483,647</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">unsigned int</td>
+<td style="vertical-align: top;">2 or 4 bytes</td>
+<td style="vertical-align: top;">0 to 65,535 or 0 to 4,294,967,295</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">short</td>
+<td style="vertical-align: top;">2 bytes</td>
+<td style="vertical-align: top;">-32,768 to 32,767</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">unsigned short</td>
+<td style="vertical-align: top;">2 bytes</td>
+<td style="vertical-align: top;">0 to 65,535</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">long</td>
+<td style="vertical-align: top;">4 bytes</td>
+<td style="vertical-align: top;">-2,147,483,648 to 2,147,483,647</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">unsigned long</td>
+<td style="vertical-align: top;">4 bytes</td>
+<td style="vertical-align: top;">0 to 4,294,967,295</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big> Floating-Point Types</big></p>
+<table style="border-collapse: collapse; text-align: start; width: 712px; height: 42px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 85pt;" span="2" width="113" /> <col style="width: 356pt;" width="475" /> <col style="width: 85pt;" width="113" /></colgroup>
+<tbody>
+<tr style="height: 15.75pt; margin-right: 0px; padding-bottom: 0px; padding-top: 0px;">
+<td class="xl65" style="height: 15.75pt; width: 85pt; background-color: #3366ff; color: white;">Type</td>
+<td class="xl65" style="border-left: medium none; width: 85pt; background-color: #3366ff; color: white;" width="113">Storage size</td>
+<td class="xl65" style="border-left: medium none; width: 262px; background-color: #3366ff; color: white;">Value range</td>
+<td class="xl65" style="border-left: medium none; width: 238px; background-color: #3366ff; color: white;">Precision</td>
+</tr>
+<tr style="height: 15.75pt; margin-right: 0px; padding-bottom: 0px; padding-top: 0px;">
+<td class="xl66" style="border-top: medium none; height: 15.75pt; width: 85pt; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;" width="113" height="21">float</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 85pt; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;" width="113">4 byte</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 262px; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;">1.2E-38 to 3.4E+38</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 238px; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;">6 decimal places</td>
+</tr>
+<tr style="height: 15.75pt; margin-right: 0px; padding-bottom: 0px; padding-top: 0px;">
+<td class="xl66" style="border-top: medium none; height: 15.75pt; width: 85pt; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;" width="113" height="21">double</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 85pt; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;" width="113">8 byte</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 262px; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;">2.3E-308 to 1.7E+308</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 238px; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;">15 decimal places</td>
+</tr>
+<tr style="height: 15.75pt; margin-right: 0px; padding-bottom: 0px; padding-top: 0px;">
+<td class="xl66" style="border-top: medium none; height: 15.75pt; width: 85pt; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;" width="113" height="21">long double</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 85pt; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;" width="113">10 byte</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 262px; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;">3.4E-4932 to 1.1E+4932</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 238px; margin-right: 0px; padding-bottom: 5px; padding-top: 5px;">19 decimal places</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <br /> <big> The Void Type</big></p>
+<table style="border-collapse: collapse; width: 710px; height: 77px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 85pt;" span="2" width="113" /> <col style="width: 356pt;" width="475" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 54px; background-color: #3366ff; color: white;">&nbsp;</td>
+<td style="width: 177px; background-color: #3366ff; color: white;">Types</td>
+<td style="width: 356pt; background-color: #3366ff; color: white;" width="475">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 54px;" height="20">1</td>
+<td style="width: 177px;">Function returns as void</td>
+<td>There are various functions in C which do not return value or you can say they return void. A function with no return value has the return type as void. For example void exit (int status)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 54px;">2</td>
+<td style="vertical-align: top; width: 177px;">Function arguments as void</td>
+<td style="vertical-align: top;">There are various functions in C which do not accept any parameter. A function with no parameter can accept as a void. For example, int rand(void)</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 54px;">3</td>
+<td style="vertical-align: top; width: 177px;">Pointers to void</td>
+<td style="vertical-align: top;">A pointer of type void * represents the address of an object, but not its type. For example a memory allocation function void *malloc( size_t size ); returns a pointer to void which can be casted to any data type.</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Boolean type</big><br /> The Boolean or logical data type is a data type, having two values (usually denoted true and false), intended to represent the truth values of logic and Boolean algebra. (It is named after George Boole, who first defined an algebraic system of logic in the mid 19th century). The Boolean data type is <span style="font-weight: bold; color: red;">the primary result of conditional statements</span>, which allow different actions and change control flow depending on whether a programmer-specified boolean condition evaluates to true or false.</p>
+<p style="margin-left: 40px;">C language uses an integer type, where relational expressions like i &gt; j and logical expressions connected by &amp;&amp; and || are defined to have <span style="font-weight: bold; color: red;">value 1 if true and 0 if false</span><span style="color: red;">, </span><span style="font-weight: bold; color: red;">whereas the test parts of <span style="color: #3333ff;">if, while, for, etc.</span>, treat any non-zero value as true</span>. So in calling API listed below (e.g., MathZeroTest) use it with care.</p>
+<p style="margin-left: 40px;">&nbsp;</p>
+<table style="border-collapse: collapse; width: 170px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 85pt;" span="2" width="113" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 85pt; background-color: #3366ff;">Boolean</td>
+<td style="width: 85pt; background-color: #3366ff;" width="113">Integer</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">TRUE</td>
+<td>1</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FALSE</td>
+<td style="vertical-align: top;">0</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;">&nbsp;</p>
+<p>Back To Top</p>
+<p>&nbsp;</p>
+<p><big><big>SUMMARY</big></big></p>
+<table style="border-collapse: collapse; width: 1120px; height: 47px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 71pt;" width="94" /> <col style="width: 297pt;" width="396" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 71pt; background-color: #3366ff; color: white;">API</th><th style="width: 297pt; background-color: #3366ff; color: white;">For</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><a href="#MATH_NUMERIC" alt="MATH_NUMERIC" title="MATH_NUMERIC">MATH_NUMERIC</a></td>
+<td>There are no numeric values stored within the OneWorld database. Numeric values are stored as a MATH_NUMERIC data type. A MATH_NUMERIC is a structure that contains all the required information to execute mathematical operations on a stored value. This data type allows the attributes of a number to be stored directly with the value, providing greater flexibility when formatting the number for display.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#FormatMathNumeric" alt="FormatMathNumeric" title="FormatMathNumeric">FormatMathNumeric</a></td>
+<td style="vertical-align: top;">FormatMathNumeric Formats a JDE MATH_NUMERIC into a fully formatted string, ready for output.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#IncrementMathNumeric" alt="IncrementMathNumeric" title="IncrementMathNumeric">IncrementMathNumeric</a></td>
+<td style="vertical-align: top;">IncrementMathNumeric Increments or decrements a referenced MATH_NUMERIC by one.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#IntToMathNumeric" alt="IntToMathNumeric" title="IntToMathNumeric">IntToMathNumeric</a></td>
+<td style="vertical-align: top;">IntToMathNumeric converts an integer to a MATH_NUMERIC.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#LongToMathNumeric" alt="LongToMathNumeric" title="LongToMathNumeric">LongToMathNumeric</a></td>
+<td style="vertical-align: top;">LongToMathNumeric converts a long to a MATH_NUMERIC.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathAdd" alt="MathAdd" title="MathAdd">MathAdd</a></td>
+<td style="vertical-align: top;">MathAdd adds parameter two to parameter three and returns the sum in parameter one. All parameters are JDE_NUMERIC data types.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathCompare" alt="MathCompare" title="MathCompare">MathCompare</a></td>
+<td style="vertical-align: top;">MathCompare returns a &ldquo;1&rdquo; if parameter one is greater than parameter two; returns a &ldquo;-1&rdquo; if parameter two is greater than parameter one. Both parameters are JDE_NUMERIC data types</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathCompareAbsolute" alt="MathCompareAbsolute" title="MathCompareAbsolute">MathCompareAbsolute</a></td>
+<td style="vertical-align: top;">MathCompareAbsolute is the same as MathCompare, except that it compares the absolute value of the parameters, for example, -123 would be greater than +100.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathCopy" alt="MathCopy" title="MathCopy">MathCopy</a></td>
+<td style="vertical-align: top;">MathCopy copies the value of a source MATH_NUMERIC value (parameter two) to a destination MATH_NUMERIC value (parameter one).</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathDivide" alt="MathDivide" title="MathDivide">MathDivide</a></td>
+<td style="vertical-align: top;">MathDivide Divides parameter three by parameter four and places the quotient in parameter one. The remainder is placed in parameter two. All parameters are JDE_NUMERIC data types.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathNumericToInt" alt="MathNumericToInt" title="MathNumericToInt">MathNumericToInt</a></td>
+<td style="vertical-align: top;">MathNumericToInt converts a MATH_NUMERIC into an integer (int). For example, when you pass in 1.9, it is treated as 1.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathNumericToLong" alt="MathNumericToLong" title="MathNumericToLong">MathNumericToLong</a></td>
+<td style="vertical-align: top;">MathNumericToLong converts a MATH_NUMERIC to a long (checks that MATH_NUMERIC does not have decimals).</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathRound" alt="MathRound" title="MathRound">MathRound</a></td>
+<td style="vertical-align: top;">MathRound rounds a JDE_NUMERIC passed in parameter two to the specified number of digits passed in parameter three. The result is returned in parameter one.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathStringToLong" alt="MathStringToLong" title="MathStringToLong">MathStringToLong</a></td>
+<td style="vertical-align: top;">MathStringToLong translates a number string into a long number. The value is passed as a return code.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathSubtract" alt="MathSubtract" title="MathSubtract">MathSubtract</a></td>
+<td style="vertical-align: top;">MathSubtract subtracts parameter three from parameter two and places the result into parameter one. All parameters are JDE_NUMERIC data types.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#MathZeroTest" alt="MathZeroTest" title="MathZeroTest">MathZeroTest</a></td>
+<td style="vertical-align: top;">MathZeroTest returns an int 0 if the string portion of the structure is equal to zero and the length is 1.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#ParseNumericString" alt="ParseNumericString" title="ParseNumericString">ParseNumericString</a></td>
+<td style="vertical-align: top;">ParseNumericString formats a numeric string into the JDE_NUMERIC format.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#ReverseMathNumeric" alt="ReverseMathNumeric" title="ReverseMathNumeric">ReverseMathNumeric</a></td>
+<td style="vertical-align: top;">ReverseMathNumeric reverses the sign on a MATH_NUMERIC.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#ZeroMathNumeric" alt="ZeroMathNumeric" title="ZeroMathNumeric">ZeroMathNumeric</a></td>
+<td style="vertical-align: top;">ZeroMathNumeric sets a MATH_NUMERIC to zero.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#IsStringBlank" alt="IsStringBlank" title="IsStringBlank">IsStringBlank</a></td>
+<td style="vertical-align: top;">IsStringBlank tests if a given string is blank.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#ParseNumericStringEx" alt="ParseNumericStringEx" title="ParseNumericStringEx">ParseNumericStringEx</a></td>
+<td style="vertical-align: top;">ParseNumericStringEx is the same as ParseNumericString except it includes the option to keep the Currency Information. Currency Information will not clear if the third parameter is equal to CURRENCY_KEEP.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#ZeroMathNumericEx" alt="ZeroMathNumericEx" title="ZeroMathNumericEx">ZeroMathNumericEx</a></td>
+<td style="vertical-align: top;">ZeroMathNumericEx is the same as ZeroMathNumeric but with option to keep the Currency Information.Currency Information will not clear if the second parameter is equal to CURRENCY_KEEP.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#DeformatDate" alt="DeformatDate" title="DeformatDate">DeformatDate</a></td>
+<td style="vertical-align: top;">DeformatDate changes a date string into the JDEDATE format.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#FormatDate" alt="FormatDate" title="FormatDate">FormatDate</a></td>
+<td style="vertical-align: top;">FormatDate formats an internal JDEDATE into a formatted string.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"><a href="#IsJDEDATENull" alt="IsJDEDATENull" title="IsJDEDATENull">IsJDEDATENull</a></td>
+<td style="vertical-align: top;">IsJDEDATENull tests if a JDEDATE is NULL.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MATH_NUMERIC"></a>Overview on MATH_NUMERIC</big></big><br /> There are no numeric values stored within the EnterpriseOne database. Numeric values are stored as a MATH_NUMERIC data type. <span style="font-weight: bold;">A MATH_NUMERIC is <span style="color: red;">a structure </span>that contains all the required information to execute mathematical operations on a stored value.</span> This data type allows the attributes of a number to be stored directly with the value, providing greater flexibility when formatting the number for display.<br /> <br /> <big style="font-weight: bold;">Required Header Files</big><br /> jdemath.h (Including abhvr.h, will indirectly include jdemath.h).<br /> <br /> <big><span style="font-weight: bold;">Layout</span></big><br /> typedef struct tagMATH_NUMERIC<br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char String[MAXLEN_MATH_NUMERIC+1];<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char Sign;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; char EditCode;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; short nDecimalPosition;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; short nLength;<br /> } MATH_NUMERIC. FAR *LPMATH_NUMERIC<br /> &nbsp;</p>
+<table style="border-collapse: collapse; width: 868px; height: 42px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 283px; background-color: #3366ff; color: white;">Field</td>
+<td style="width: 581px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 283px;" height="20">String</td>
+<td style="width: 581px;">Contains the actual digits of the value stored in this structure, without any formatting characters. For example, 1,234.56 would be represented as a character string 123456.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 283px;">Sign</td>
+<td style="vertical-align: top; width: 581px;">Specifies whether the stored number is positive or negative.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 283px;">EditCode</td>
+<td style="vertical-align: top; width: 581px;">Contains the edit that will be performed against the string value before it is displayed.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 283px;">nDecimalPosition</td>
+<td style="vertical-align: top; width: 581px;">Contains the number of digits that will appear on the right side of the decimal point.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 283px;">nLength</td>
+<td style="vertical-align: top; width: 581px;">Contains the total length of the number.</td>
+</tr>
+</tbody>
+</table>
+<p class="code">MATH_NUMERIC consists of following APIs:</p>
+<ul>
+<li><a href="#FormatMathNumeric" alt="FormatMathNumeric" title="FormatMathNumeric">FormatMathNumeric</a></li>
+<li>IncrementMathNumeric</li>
+<li>IntToMathNumeric</li>
+<li>LongToMathNumeric</li>
+<li>MathAdd</li>
+<li>MathCompare</li>
+<li>MathCompareAbsolute</li>
+<li>MathCopy</li>
+<li>MathDivide</li>
+<li>MathNumericToInt</li>
+<li>MathNumericToLong</li>
+<li>MathRound</li>
+<li>MathStringToLong</li>
+<li>MathSubtract</li>
+<li><a href="#MathZeroTest" alt="MathZeroTest" title="MathZeroTest">MathZeroTest</a></li>
+<li>ParseNumericString</li>
+<li>ReverseMathNumeric</li>
+<li>ZeroMathNumeric</li>
+</ul>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code" style="margin-left: 40px;"><big><big><a name="FormatMathNumeric"></a>FormatMathNumeric</big></big><br /> FormatMathNumeric Formats a JDE MATH_NUMERIC into a fully formatted string, ready for output.</p>
+<p style="margin-left: 40px;"><big>Syntax</big><br /> void FormatMathNumeric (char FAR *,MATH_NUMERIC FAR *);</p>
+<p class="code" style="margin-left: 40px;"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 42px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">char FAR*</td>
+<td style="width: 226px;">Pointer to output string.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">MATH_NUMERIC FAR*</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 62px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 48pt; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 48pt; background-color: #3366ff; color: white;" width="64">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">None</td>
+<td>This does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Example</big><br /> char szString[MAXLEN_MATH_NUMERIC;<br /> Math_Numeric mnMathNumeric;<br /> ParseNumericString(&amp;mnMathNumeric, &ldquo;123&rdquo;);<br /> FormatMathNumeric( szString, &amp;mnMathNumeric);<br /> /* szString will now contain the value &ldquo;123&rdquo; */<br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code" style="margin-left: 40px;"><big><big><a name="IncrementMathNumeric"></a>IncrementMathNumeric</big></big><br /> IncrementMathNumeric Increments or decrements a referenced MATH_NUMERIC by one.</p>
+<p style="margin-left: 40px;"><big>Syntax</big><br /> void IncrementMathNumeric (LPMATH_NUMERIC lpIncremented, int nIncrement);</p>
+<p class="code" style="margin-left: 40px;"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 42px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpIncremented</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to be incremented.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">nIncrement</td>
+<td style="vertical-align: top; width: 226px;">Flag to indicate if incrementing or decrementing by one. Use a 1 to increment, a -1 to decrement.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 62px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 48pt; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 48pt; background-color: #3366ff; color: white;" width="64">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">None</td>
+<td>This does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Example</big><br /> MATH_NUMERIC mnMathNumeric;<br /> ParseNumericString( &amp;mnMathNumeric, &ldquo;123&rdquo;);<br /> /* Increment a given MATH_NUMERIC by one */<br /> IncrementMathNumeric(&amp;mnMathNumeric, 1);<br /> /* the value of mnMathNumeric is now 124 */<br /> /*Decrement a given MATH_NUMERIC by one * /<br /> IncrementMathNumeric( &amp;mnMathNumeric, -1);<br /> /* the value of mnMathNumeric is now 123 */<br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code" style="margin-left: 40px;"><big><big><a name="IntToMathNumeric"></a>IntToMathNumeric</big></big><br /> IntToMathNumeric converts an integer to a MATH_NUMERIC.</p>
+<p style="margin-left: 40px;"><big>Syntax</big><br /> enum MathErrorCode IntToMathNumeric(int nNumberIn, LPMATH_NUMERIC lpmnMathOut);</p>
+<p class="code" style="margin-left: 40px;"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 42px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">nNumberIn</td>
+<td style="width: 226px;">Integer Input.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnMathOut</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable to be formatted.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 62px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">It was not successful</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Example</big><br /> int nNumber = 200;<br /> MATH_NUMERIC mnMathNumeric;<br /> int nMathReturn;<br /> nMathReturn = IntToMathNumeric(nNumber, &amp;mnMathNumeric);<br /> /*mnMathNumeric should now have the value 200 */<br /> <br /> Additional Notes<br /> Currently not ANSI C.<br /> <br /> Related APIs:<br /> LongToMathNumeric<br /> MathNumericToInt<br /> MathNumericToLong <br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code" style="margin-left: 40px;"><big><big><a name="LongToMathNumeric"></a>LongToMathNumeric</big></big><br /> LongToMathNumeric converts a long to a MATH_NUMERIC.</p>
+<p style="margin-left: 40px;"><big>Syntax</big><br /> enum MathErrorCode IntToMathNumeric(long lNumberIn. LPMATH_NUMERIC lpmnMathOut);</p>
+<p class="code" style="margin-left: 40px;"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 42px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lnumber</td>
+<td style="width: 226px;">Long Input.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnMathOut</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable to be formatted.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 62px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">It was not successful</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Example</big><br /> Long lNumber = 23456789L;<br /> MATH_NUMERIC mnMathNumeric;<br /> int nMathReturn;<br /> nMathReturn = LongToMathNumeric(lNumber, &amp;mnMathNumeric);<br /> /* mnMathNumeric should now have the value 23456789 */<br /> <br /> Additional Notes<br /> Currently not ANSI C.<br /> <br /> Related APIs:<br /> IntToMathNumeric<br /> MathNumericToInt<br /> MathNumericToLong <br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code" style="margin-left: 40px;"><big><big><a name="MathAdd"></a>MathAdd</big></big><br /> MathAdd adds parameter two to parameter three and returns the sum in parameter one. All parameters are JDE_NUMERIC data types.</p>
+<p style="margin-left: 40px;"><big>Syntax</big><br /> enum MathErrorCode MathAdd (LPMATH_NUMERIC lpmnSum. LPMATH_NUMERIC lpmnAddend0. LPMATH_NUMERIC lpmnAddend1);</p>
+<p class="code" style="margin-left: 40px;"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 42px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnSum</td>
+<td style="width: 226px;">Pionter to Math_Numeric variable to store result of add</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnAddend0</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable to add</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpmnAddend1</td>
+<td style="vertical-align: top;">Pointer to second Math_Numeric variable to add</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 62px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">It was not successful</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> MATH_NUMERIC mnMathTwo;<br /> MATH_NUMERIC mnMathSum;<br /> int nMathReturn;<br /> LongToMathNumeric( 200000L, &amp;mnMathOne);<br /> LongToMathNumeric( 300000L, &amp;mnMathTwo);<br /> nMathReturn = MathAdd( &amp;mnMathSum, &amp;mnMathOne, &amp;mnMathTwo);<br /> /* mnMathSum should now have the value 500000 */<br /> <br /> <big> Related APIs:</big><br /> MathCompare<br /> MathCompareAbsolute<br /> MathCopy<br /> MathDivide<br /> MathMultiply<br /> MathRound<br /> MathSubtract <br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code" style="margin-left: 40px;"><big><big><a name="MathCompare"></a>MathCompare</big></big><br /> MathCompare returns a &ldquo;1&rdquo; if parameter one is greater than parameter two; returns a &ldquo;-1&rdquo; if parameter two is greater than parameter one. Both parameters are JDE_NUMERIC data types.</p>
+<p style="margin-left: 40px;"><big>Syntax</big><br /> enum MathErrorCode MathCompare (LPMATH_NUMERIC lpmnValue0. LPMATH_NUMERIC 1pmnValue1);</p>
+<p class="code" style="margin-left: 40px;"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmn</td>
+<td style="width: 226px;">Pionter to Math_Numeric variable to compare</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnValue1</td>
+<td style="vertical-align: top; width: 226px;">Pointer to second Math_Numeric variable to compare.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 62px; margin-left: 40px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">0</td>
+<td style="width: 450px;">if lpmnValue0 = lpmnValue1</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">&lt;0</td>
+<td style="vertical-align: top; width: 450px;">if lpmnValue0 &lt;lpmnValue1</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&gt;0</td>
+<td style="vertical-align: top;">if lpmnValue0&gt; lpmnValue1</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 40px;"><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> MATH_NUMERIC mnMathTwo;<br /> LongToMathNumeric( 200000L, &amp;mnMathOne);<br /> LongToMathNumeric( 300000L, &amp;mnMathTwo);<br /> if ( MathCompareAbsolute( &amp;mnMathOne, &amp;mnMathTwo) = 0 )<br /> {<br /> &nbsp;&nbsp;&nbsp; /* mnMathOne and mnMathTwo are equal */<br /> }<br /> else<br /> {<br /> &nbsp;&nbsp;&nbsp; /* mnMathOne and mnMathTwo are not equal */<br /> }<br /> <br /> <big> Related APIs:</big><br /> MathCompare<br /> MathCompareAbsolute<br /> MathCopy<br /> MathDivide<br /> MathMultiply<br /> MathRound<br /> MathSubtract <br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathCopy"></a>MathCopy</big></big><br /> MathCopy copies the value of a source MATH_NUMERIC value (parameter two) to a destination MATH_NUMERIC value (parameter one).</p>
+<p><big>Syntax</big><br /> enum MathErrorCode MathCopy (LPMATH_NUMERIC lpmnDest, LPMATH_NUMERIC lpmnSource);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnDest</td>
+<td style="width: 226px;">Pionter to Math_Numeric variable to copy to</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnSour</td>
+<td style="vertical-align: top; width: 226px;">Pointer to second Math_Numeric variable to copy from</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">it was not successful</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> MATH_NUMERIC mnMathTwo;<br /> int nMathReturn;<br /> ParseNumericString( &amp;mnMathOne. &ldquo;567&rdquo;);<br /> nMathReturn = MathCopy( &amp;mnMathtwo, &amp;mnMathOne);<br /> /* mnMathTwo should now have the same values as mnMathOne */<br /> <br /> <big> Related APIs:</big><br /> MathCompare<br /> MathCompareAbsolute<br /> MathCopy<br /> MathDivide<br /> MathMultiply<br /> MathRound<br /> MathSubtract <br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathDivide"></a>MathDivide</big></big><br /> MathDivide Divides parameter three by parameter four and places the quotient in parameter one. The remainder is placed in parameter two. All parameters are JDE_NUMERIC data types.</p>
+<p><big>Syntax</big><br /> enum MathErrorCode MathDivide(LPMATH_NUMERIC . LPMATH_NUMERIC, LPMATH_NUMERIC, LPMATH_NUMERIC, int FAR *, int FAR *);</p>
+<p class="code"><big>Parameters</big></p>
+<p class="code">&nbsp;</p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">LPMATH_NUMERIC</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable for the quotient</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">LPMATH_NUMERIC</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable for the remainder.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">LPMATH_NUMERIC</td>
+<td style="vertical-align: top;">Pointer to Math_Numeric variable to divide.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">LPMATH_NUMERIC</td>
+<td style="vertical-align: top;">Pointer to Math_Numeric variable to divide by.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FAR*</td>
+<td style="vertical-align: top;">Pointer to the number of decimals to round to.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FAR*</td>
+<td style="vertical-align: top;">Pointer to the flag indicating whether or not to round: 1 = no; 0 = yes.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">it was not successful</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnQuotient;<br /> MATH_NUMERIC mnRemainder;<br /> MATH_NUMERIC mnMathOne;<br /> MATH_NUMERIC mnMathTwo;<br /> int nDecimals = 2;<br /> int nRoundFlag = 1;<br /> ParseNumericString(&amp;mnMathOne. &ldquo;45&rdquo;);<br /> ParseNumericString(&amp;mnMathOne. &ldquo;9&rdquo;);<br /> nMathReturn = MathDivide(&amp;mnQuotient, &amp;mnRemainder, &amp;mnMathOne,&amp;mnMathTwo, &amp;nDecimals, &amp;nRoundFlag);<br /> /* mnQuotient should be 5.00 */<br /> <br /> <big> Related APIs:</big><br /> MathCompare<br /> MathCompareAbsolute<br /> MathCopy<br /> MathDivide<br /> MathMultiply<br /> MathRound<br /> MathSubtract <br /> <br /> Note:</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathNumericToInt"></a>MathNumericToInt</big></big><br /> MathNumericToInt converts a MATH_NUMERIC into an integer (int). For example, when you pass in 1.9, it is treated as 1.</p>
+<p><big>Syntax</big><br /> enum MathErrorCode MathNumericToInt(LPMATH_NUMERIC lpmnMathIn, LPINT lpmnNumberOut);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnMathIn</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to input.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnNumberOut</td>
+<td style="vertical-align: top; width: 226px;">Pointer to integer for output.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">it was not successful</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> int nNumber;<br /> int nMathReturn;<br /> nMathReturn = ParseNumericString (&amp;mnMathOne, &ldquo;487&rdquo;);<br /> nMathReturn = MathNumericToInt( &amp;mnMathOne, &amp;nNumber);<br /> <br /> <big> Related APIs:</big><br /> IntToMathNumeric<br /> LongToMathNumeric<br /> MathNumericToLong <br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathRound"></a>MathRound</big></big><br /> MathRound rounds a JDE_NUMERIC passed in parameter two to the specified number of digits passed in parameter three. The result is returned in parameter one.</p>
+<p><big>Syntax</big><br /> enum MathErrorCode MathRound (LPMATH_NUMERIC lpmnRounded, LPMATH_NUMERIC lpmnMathIn, int FAR * lpnDecimals);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnRounded</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to input.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnMathIn</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable to round</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpnDecimals</td>
+<td style="vertical-align: top;">Pointer to the number of decimals to round to.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">it was not successful</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> Int mnDecimalsToRound;<br /> MATH_NUMERIC mnMathRounded;<br /> int nMathReturn;<br /> ParseNumericString(&amp;mnMathOne. &ldquo;12.45678&rdquo;);<br /> nDecimalsToRound = 3;<br /> nMathReturn = MathRound(&amp;mnMathRounded, &amp;mnMathOne, &amp;nDecimalsToRound);<br /> /* mnMathRounded should be 12.457 */<br /> <br /> <big> Related APIs:</big><br /> MathAdd<br /> MathCompare<br /> MathCompareAbsolute<br /> MathCopy<br /> MathDivide<br /> MathMultiply<br /> MathSubtract <br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathStringToLong"></a>MathStringToLong</big></big><br /> MathStringToLong translates a number string into a long number. The value is passed as a return code.</p>
+<p><big>Syntax</big><br /> long MathStringToLong (char FAR *s);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">FAR*s</td>
+<td style="width: 226px;">Math String</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">Long number</td>
+<td style="width: 450px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathSubtract"></a>MathSubtract</big></big><br /> MathSubtract subtracts parameter three from parameter two and places the result into parameter one. All parameters are JDE_NUMERIC data types.</p>
+<p><big>Syntax</big><br /> enum MathErrorCode MathSubtract(LPMATH_NUMERIC lpmnSum, LPMATH_NUMERIC lpmnAddend0, LPMATH_NUMERIC lpmnAddend1);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnSum</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to store result of subtraction.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpmnAddend0</td>
+<td style="vertical-align: top; width: 226px;">Pointer to Math_Numeric variable to subtract from.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpmnAddend1</td>
+<td style="vertical-align: top;">Pointer to Math_Numeric variable to subtract</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">it was not successful</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> MATH_NUMERIC mnMathTwo;<br /> MATH_NUMERIC mnMathSum;<br /> int nMathReturn;<br /> LongToMathNumberic(400000L, &amp;mnMathOne);<br /> LongToMathNumberic(300000L, &amp;mnMathTwo);<br /> nMathReturn = MathSubtract( &amp;mnMathSum, &amp;mnMathOne, &amp;mnMathTwo);<br /> /* mnMathSum should have the value 100000 */<br /> <br /> <big> Related APIs:</big><br /> MathAdd<br /> MathCompare<br /> MathCompareAbsolute<br /> MathCopy<br /> MathDivide<br /> MathMultiply<br /> MathSubtract <br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="MathZeroTest"></a>MathZeroTest</big></big><br /> MathZeroTest returns an int 0 (FALSE) if the string portion of the structure is equal to zero and the length is 1.</p>
+<p><big>Syntax</big><br /> short MathZeroTest (LPMATH_NUMERIC lpmnValue0);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnValue0</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to test.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">0</td>
+<td style="width: 450px;">If it is a zero</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">1</td>
+<td style="vertical-align: top; width: 450px;">it is not zero</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> short ReturnCode;<br /> ParseNumericString(&amp;mnMathOne, &ldquo;0&rdquo;);<br /> ReturnCode = MathZeroTest(&amp;mnMathOne);</p>
+<div class="kmnotebox">
+<p>Note: This API may cause you some confusion so keep in mind that it returns 0 when argument is zero</p>
+<p>For example, code below,</p>
+<p>&nbsp;&nbsp; if (MathZeroTest(&amp;lpDS-&gt;mnAddressNumber))<br />&nbsp;&nbsp; {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MathCopy(&amp;dsD4201500.mnAddressNo, &amp;lpDS-&gt;mnAddressNumber);<br />&nbsp;&nbsp; }</p>
+<p>:In case, mnAddressNumber is Zero then it returns integer value 0 which is FALSE in Boolean so it does not go to MathCopy(&amp;dsD4201500.mnAddressNo, &amp;lpDS-&gt;mnAddressNumber);</p>
+</div>
+<p><a href="1593495.1_MATH_NUMERIC_jdeapi_.html#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="ParseNumericString"></a>ParseNumericString</big></big><br /> ParseNumericString formats a numeric string into the JDE_NUMERIC format.</p>
+<p><big>Syntax</big><br /> enum MathErrorCode ParseNumericString(LPMATH_NUMERIC lpmnMathOut, LPSTR lpszString);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpmnMathOut</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to format.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">lpszString</td>
+<td style="vertical-align: top; width: 226px;">Numeric string input.</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">MATH_SUCCESSFUL</td>
+<td style="width: 450px;">It was successful</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 173px;">MathErrorCode</td>
+<td style="vertical-align: top; width: 450px;">it was not successful</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> int nMathReturn;<br /> nMathReturn = ParseNumericString (&amp;mnMathOne, &ldquo;487.98&rdquo;);<br /> <br /> <big> Related APIs:</big><br /> ParseNumericStringEx <br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="ParseNumericStringEx"></a>ParseNumericStringEx</big></big><br /> (This API belongs to JdeCurrency). ParseNumericStringEx is the same as ParseNumericString except it includes the option to keep the Currency Information. Currency Information will not clear if the third parameter is equal to CURRENCY_KEEP.</p>
+<p><big>Syntax</big><br /> (MathErrorCode) ParseNumericStringEx (MATH_NUMERIC *t, char *s, int iFlag);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">*t</td>
+<td style="width: 226px;">&nbsp;</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 202px;">*s</td>
+<td style="vertical-align: top; width: 226px;">&nbsp;</td>
+<td style="vertical-align: top; width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lflag</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">None</td>
+<td style="width: 450px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> szTaxRate[iPosition] = '\0';<br /> if ( !IsStringBlank (szTaxRate) )<br /> {<br /> &nbsp;&nbsp;&nbsp; switch ( iTaxPosition )<br /> {<br /> case 0 : jdeMathCopyCurrencyInfo(&amp;mnTaxRate, &amp;(lpDS-&gt;mnTaxRate1));<br /> nDecimals = Decimals (&amp;lpDS-&gt;mnTaxRate1);<br /> break;<br /> case 1 : jdeMathCopyCurrencyInfo(&amp;mnTaxRate, &amp;(lpDS-&gt;mnTaxRate2));<br /> nDecimals = Decimals (&amp;lpDS-&gt;mnTaxRate2);<br /> break;<br /> case 2 : jdeMathCopyCurrencyInfo(&amp;mnTaxRate, &amp;(lpDS-&gt;mnTaxRate3));<br /> nDecimals = Decimals (&amp;lpDS-&gt;mnTaxRate3);<br /> break;<br /> case 3 : jdeMathCopyCurrencyInfo(&amp;mnTaxRate, &amp;(lpDS-&gt;mnTaxRate4));<br /> nDecimals = Decimals (&amp;lpDS-&gt;mnTaxRate4);<br /> break;<br /> case 4 : jdeMathCopyCurrencyInfo(&amp;mnTaxRate, &amp;(lpDS-&gt;mnTaxRate5));<br /> nDecimals = Decimals (&amp;lpDS-&gt;mnTaxRate5);<br /> break;<br /> }<br /> ParseNumericStringEx (&amp;mnTaxRate, szTaxRate,CURRENCY_KEEP);<br /> nStringDecimals = Decimals ( &amp;mnTaxRate );<br /> ParseNumericString (&amp;mnThousand, "1000");<br /> MathMultiply ( &amp;mnTaxRate, &amp;mnTaxRate, &amp;mnThousand );<br /> mnTaxRate.nDecimalPosition = (short) nDecimals;<br /> if ( bSign == TRUE )<br /> {<br /> ReverseMathNumeric ( &amp;mnTaxRate );<br /> }<br /> }<br /> else<br /> {<br /> ZeroMathNumeric ( &amp;mnTaxRate );<br /> }<br /> <br /> <big> Related APIs:</big><br /> ParseNumericString<br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="ReverseMathNumeric"></a>ReverseMathNumeric</big></big><br /> ReverseMathNumeric reverses the sign on a MATH_NUMERIC.</p>
+<p><big>Syntax</big><br /> void ReverseMathNumeric (MATH_NUMERIC FAR *pReverse);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">pReverse</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to reverse.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">None</td>
+<td style="width: 450px;">This code does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> ParseNumericString( &amp;mnMathOne, &ldquo;1&rdquo;);<br /> ReverseMathNumeric(&amp;mnMathOne);<br /> /*mnMathOne is now -1 */<br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="ZeroMathNumeric"></a>ZeroMathNumeric</big></big><br /> ZeroMathNumeric sets a MATH_NUMERIC to zero.</p>
+<p><big>Syntax</big><br /> void ZeroMathNumeric (MATH_NUMERIC FAR *pZeroed);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">pzeroed</td>
+<td style="width: 226px;">Pointer to Math_Numeric variable to set to zero.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">None</td>
+<td style="width: 450px;">This does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> MATH_NUMERIC mnMathOne;<br /> ParseNumericString(&amp;mnMathOne, &ldquo;1&rdquo;);<br /> ZeroMathNumeric(&amp;mnMathOne);<br /> /*mnMathOne is now 0 */<br /> <br /> <big> Related APIs:</big><br /> ZeroMathNumericEx <br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="ZeroMathNumericEx"></a>ZeroMathNumericEx</big></big><br /> (This API is grouped in JdeCurrency) ZeroMathNumericEx is the same as ZeroMathNumeric but with option to keep the Currency Information.Currency Information will not clear if the second parameter is equal to CURRENCY_KEEP.</p>
+<p><big>Syntax</big><br /> (MathErrorCode) ZeroMathNumericEx (MATH_NUMERIC *t, int iFlag);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">*t</td>
+<td style="width: 226px;">&nbsp;</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">iFlag</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">None</td>
+<td style="width: 450px;">This does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Related APIs:</big><br /> ZeroMathNumeric<br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="FormatDate"></a>FormatDate</big></big><br /> FormatDate formats an internal JDEDATE into a formatted string.</p>
+<p><big>Syntax</big><br /> Short FormatDate (char FAR *lpszDateStringOut, JDEDATE FAR * lpjdDateIn, char FAR * lpszFormatMask);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpszDateStringOut</td>
+<td style="width: 226px;">Pointer to string buffer for output.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpjdDateIn</td>
+<td style="vertical-align: top;">Pointer to JDEDATE in.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpszFormatMask</td>
+<td style="vertical-align: top;">Mask indicating format of date output string.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">None</td>
+<td style="width: 450px;">This does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> JDEDATE jdDateOne;<br /> char szDateOne[13];<br /> char szFormatMask[ ] = &ldquo;OSASE&rdquo;;<br /> JDEDATEToday( &amp;jdDateOne);<br /> rc = FormatDate (szDateOne, &amp;jdDateOne, szFormatMask);<br /> <br /> <big> Related APIs:</big><br /> DeformatDate <br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p><br /> &nbsp;</p>
+<p class="code"><big><big><a name="DeformatDate"></a>DeformatDate</big></big><br /> DeformatDate changes a date string into the JDEDATE format.</p>
+<p><big>Syntax</big><br /> Short DeformatDate (JDEDATE FAR * lpjdDateOut, char FAR * lpszDateString, char FAR * lpszFormatMask);</p>
+<p class="code"><big>Parameters&nbsp;&nbsp;&nbsp; </big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpjdDateOut</td>
+<td style="width: 226px;">Pointer to JDEDATE variable to format.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpszDateString</td>
+<td style="vertical-align: top;">Date string.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">lpszFormatMask</td>
+<td style="vertical-align: top;">Mask indicating format of date output string.</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">None</td>
+<td style="width: 450px;">This does not return a value</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> JDEDATE jdDateOne;<br /> char szDateOne[ ] = &ldquo;03/10/1994\n&rdquo;;<br /> char szFormatMask[ ] = &ldquo;OSASE&rdquo;;<br /> rc = DeformatDate (&amp;jdDateOne, szDateOne, szFormatMask);<br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p class="code"><big><big><a name="IsStringBlank"></a>IsStringBlank</big></big><br /> IsStringBlank tests if a given string is blank.</p>
+<p><big>Syntax</big><br /> BOOL IsStringBlank( char *pszInputString);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">pszInputString</td>
+<td style="width: 226px;">Pointer to string to test</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">TRUE</td>
+<td style="width: 450px;">The string is blank</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FALSE</td>
+<td style="vertical-align: top;">The string is not blank</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> char szString[ ] = &ldquo;this is not blank&rdquo;;<br /> If ( IsStringBlank(szString) )<br /> {<br /> /* string is blank */<br /> }<br /> /* string is not blank */<br /> }<br /> <br /> <big>Related APIs:</big><br /> ZeroMathNumeric<br /> <br /> Note</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p class="code"><big><big><a name="IsJDEDATENull"></a>IsJDEDATENull</big></big><br /> IsJDEDATENull tests if a JDEDATE is NULL.</p>
+<p><big>Syntax</big><br /> BOOL IsJDEDATENull( LPJDEDATE lpjdDate);</p>
+<p class="code"><big>Parameters</big></p>
+<table style="border-collapse: collapse; width: 785px; height: 56px;" border="2" cellspacing="2" cellpadding="1">
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px; background-color: #3366ff; color: white;">Parameter</td>
+<td style="width: 226px; background-color: #3366ff; color: white;">Note</td>
+<td style="width: 317px; background-color: #3366ff; color: white;">Usage</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 202px;" height="20">lpjdDate</td>
+<td style="width: 226px;">Pointer to JDEDATE to test for NULL.</td>
+<td style="width: 317px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Return Value</big></p>
+<table style="border-collapse: collapse; width: 627px; height: 33px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px; background-color: #3366ff; color: white;">Return Value</td>
+<td style="width: 450px; background-color: #3366ff; color: white;">Description</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 173px;" height="20">TRUE</td>
+<td style="width: 450px;">The date IS NULL</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">FALSE</td>
+<td style="vertical-align: top;">The is NOT NULL</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <big>Example</big><br /> JDEDATE jdDateOne;<br /> JDEDATEToday( &amp;jdDateOe);<br /> if ( IsJDEDATENull(&amp;jdDateOne) )<br /> {<br /> /* date is null */<br /> }<br /> else<br /> /* date is not null */<br /> }</p>
+<p><a href="#TheContent" title="Back To Top">Back To Top</a></p>
+<p>&nbsp;</p>
+<p>Note</p>
+<p>&nbsp;</p>
+<p>For information on<br /> JDEBASE (To be added into independent document)<br /> JDE Cache (To be added into additional independent document)</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

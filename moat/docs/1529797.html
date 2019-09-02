@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>XML File Creation using Wrapper Functio in E1</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>XML File Creation using Wrapper Functio in EnterpriseOne</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>Purpose of this document is to provide an example of XML creation through <strong>B0000201 (XERCES XML Wrapper Functions)</strong>.</p>
+<p>Note that this example may not be the best practice in parsing an XML file for outbound and JD Edwards EnterpriseOne does not have any standard UBE which transforms into XML format file.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>&nbsp;</p>
+<ul>
+<li><a href="#xml" alt="What is XML" title="What is XML">What is XML?</a></li>
+<li><a href="#parsers" alt="What is parsers" title="What is parsers">What is Parsers?</a></li>
+<li><a href="#xerces" alt="What is Xerces" title="What is Xerces">What is Xerces?</a></li>
+<li><a href="#reference" alt="Reference - Oracle Technical Network" title="Reference - Oracle Technical Network">Reference</a></li>
+<li><a href="#bsfn" alt="Business Functions in EnterpriseOne" title="Business Functions in EnterpriseOne">Business functions to parse in EnterpriseOne</a>
+<ul>
+<li><a href="#d0000201a" alt="Create XML Document" title="Create XML Document">B0000201 - CreateXMLDocumentXercesWrapper (Create XML Document Xerces Wrapper Function)</a></li>
+<li><a href="#d0000201b" alt="Add XML Attribute" title="Add XML Attribute">B0000201 - AddXMLAttributeXercesWrapper (Add XML Attribute Xerces Wrapper)</a>
+<ul>
+<li><a href="#d0000201c" alt="String" title="String">B0000201 - AddXMLElementStringXercesWrapper (Add XML Element String Xerces Wrapper)</a></li>
+<li><a href="#d0000201d" alt="Date" title="Date">B0000201 - AddXMLElementDateXercesWrapper (Add XML Element Date Xerces Wrapper)</a></li>
+<li><a href="#d0000201e" alt="Math Numeric" title="Math Numeric">B0000201 - AddXMLElementMathXercesWrapper (Add XML Element Math Numeric Xerces Wrapper)</a></li>
+<li><a href="#d0000201f" alt="Character" title="Character">B0000201 - AddXMLElementCharXercesWrapper&nbsp; (Add XML Element Character Xerces Wrapper)</a></li>
+<li><a href="#d0000201j" alt="UTime" title="UTime">B0000201 - AddXMLElementUTimeXercesWrapper&nbsp; (Add XML Element UTC Xerces Wrapper)</a></li>
+</ul>
+</li>
+<li><a href="#d0000201g" alt="Free Memory" title="Free Memory">B0000201 - FreeXMLElementXercesWrapper (Free XML Element Xerces Wrapper)</a></li>
+<li><a href="#d0000201h" alt="Write XML Document" title="Write XML Document">B0000201 - WriteXMLDocumentXercesWrapper (Write XML Document Xerces Wrapper)</a></li>
+</ul>
+</li>
+<li><a href="#output" alt="Example of output" title="Example of output">Example of XML output</a></li>
+<li><a href="#implementation" alt="Possible Implemenation" title="Possible Implemenation">How to implement (Example of code)</a></li>
+<li><a href="#relation">Relation between output and BSFNs</a></li>
+<li><a href="#considerations" alt="Considerations" title="Considerations">Considerations</a></li>
+</ul>
+<p><br /> This document is to provide one example for XML transformation for outbound. <br /> <br /> <big><a name="xml"></a>XML (Extensible Markup Language):</big></p>
+<ul>
+<li>XML is text based markup language.</li>
+<li>XML is more than html because html only deals with presentation and carries no information about the data itself.</li>
+</ul>
+<p><br /> <big><a name="parsers"></a>Parsers:</big> function reference here is based on DOM (Document Object Model ) parser - Tree Structure based API:</p>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; The Dom parser implements the dom api and it creates a DOM tree in memory for an XML document</li>
+<li>&nbsp;&nbsp;&nbsp; compared with SAX (Simple API For XML ) parser - Event Based API</li>
+</ul>
+<p>Generally, DOM parser is used when,</p>
+<ul>
+<li>Document needs to be Manipulated</li>
+<li>Transforming the document back and forth</li>
+<li>Working with small XML files</li>
+</ul>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; The parser has a drawback of higher consumption of memory/cache because string/text values are being stored in memory in order to manipulate it<br /> <br /> <big><a name="xerces"></a>What is Xerces?</big><br /> Xerces is Apache's collection of software libraries for parsing, validating, serializing and manipulating XML. The library implements a number of standard APIs for XML parsing, including DOM, SAX and SAX2. The implementation is available in Java, C++ and Perl programming languages. Refer to external link for detail: <a href="http://xerces.apache.org/xerces2-j/" alt="external link" title="external link">http://xerces.apache.org/xerces2-j/</a></p>
+<hr />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><big><a name="reference"></a>Before you proceed, refer to the Oracle Documentation (Oracle Technical Network) </big><br /> <a href="http://www.oracle.com/technetwork/index.html" alt="OTN" title="OTN" target="_blank">http://www.oracle.com/technetwork/index.html</a><br /> &nbsp;&nbsp;&nbsp; |-- Documentation (<a href="http://www.oracle.com/technetwork/indexes/documentation/index.html" alt="index" title="index" target="_blank">http://www.oracle.com/technetwork/indexes/documentation/index.html</a>)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |-- JD Edwards EnterpriseOne (<a href="http://www.oracle.com/technetwork/indexes/documentation/index.html" alt="detail document" title="detail document" target="_blank">http://www.oracle.com/technetwork/documentation/jdedent-098169.html</a>)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |-- JD Edwards EnterpriseOne Tools Documentation (<a href="http://docs.oracle.com/cd/E24705_01/index.htm" alt="Tools Documentation link" title="Tools Documentation link">http://docs.oracle.com/cd/E24705_01/index.htm</a>)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--<span style="font-weight: bold;"> EnterpriseOne Tools Interoperability Reference Implementations Guide </span>(<a href="http://www.oracle.com/technetwork/indexes/documentation/index.html" alt="Interoperability" title="Interoperability" target="_blank">http://docs.oracle.com/cd/E24705_01/doc.91/e24253/toc.htm</a>)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |-- XML Transformation (<a href="http://docs.oracle.com/cd/E24705_01/doc.91/e24253/understnd_xml_transform.htm#g8d6ab57f7cedeaac_ef90c_10a77c8e3f7__6f80" alt="XML Transformation" title="XML Transformation">http://docs.oracle.com/cd/E24705_01/doc.91/e24253/understnd_xml_transform.htm#g8d6ab57f7cedeaac_ef90c_10a77c8e3f7__6f80</a>)</p>
+<hr />
+<p><br /> <br /> <br /> <big><a name="bsfn"></a>Business Function for parsing SQL format file to XML file format:</big></p>
+<table style="border-collapse: collapse; width: 803px; height: 591px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 98pt;" width="131" /><col style="width: 54pt;" width="72" /><col style="width: 414pt;" width="552" /><col style="width: 85pt;" width="113" /><col style="width: 196pt;" width="261" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 98pt; background-color: #009900; color: white;">Event</th><th style="width: 54pt; background-color: #009900; color: white;">Function</th><th style="width: 362px; background-color: #009900; color: white;">&nbsp;</th><th style="width: 70px; background-color: #009900; color: white;">Data Structure</th><th style="width: 415px; background-color: #009900; color: white;">Purpose</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">Initialize Section</td>
+<td>B0000201</td>
+<td style="width: 362px;"><a href="#b0000201a" alt="Create XML Document" title="Create XML Document">CreateXMLDocumentXercesWrapper (Create XML Document Serces Wrapper Function)</a></td>
+<td style="width: 70px;">D0000201A</td>
+<td style="width: 415px;">Initialize Xerces engine and create handles for xml documents and document elements.</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201b" alt="Add Attribute" title="Add Attribute">AddXMLAttributeXercesWrapper (Add XML Attribute Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201B</td>
+<td style="vertical-align: top;">Add name space attribute to document elements</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Do Section</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201c" alt="String" title="String">AddXMLElementStringXercesWrapper (Add XML Element String Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201C</td>
+<td style="vertical-align: top;">To parse Data Type string value</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201d" alt="Date" title="Date">AddXMLElementDateXercesWrapper (Add XML Element Date Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201D</td>
+<td style="vertical-align: top;">To parse data type Date</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201e" alt="Math_Numeric" title="Math_Numeric">AddXMLElementMathXercesWrapper (Add XML Element Math Numeric Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201E</td>
+<td style="vertical-align: top;">To prase data type Math Numeric</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201f" alt="Character" title="Character">AddXMLElementCharXercesWrapper (Add XML Element Character Xerces WRapper)</a></td>
+<td style="vertical-align: top;">D0000201F</td>
+<td style="vertical-align: top;">To parse data type character</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top; text-decoration: line-through;">AddXMLDelementUTCXercesWrapper (Add XMLElement UTC Xerces Wrapper)</td>
+<td style="vertical-align: top; text-decoration: line-through;">D0000201I</td>
+<td style="vertical-align: top;">Do Not Use (OBSOLETE)!<br /> To parse UTC data type with format of 2013-12-31T12:59:59-00:00. You are not able to override Timeformat and Timezoneformat through jdeUTime_Format(). So timeformat is always 24 hour format and timezone is coming from your user profile F00921.UTCTIME</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201j" alt="JDEUTime" title="JDEUTime">AddXMLElementUTimeXercesWrapper (Add XML Element UTC Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201J</td>
+<td style="vertical-align: top;">To parse UTC Data type with mask. You can override Timeformat and Timezone format through jdeUTime_FormatEx(). Note that Daylight saving rule is coming from your user profile (F00921.FUTTIME4)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">End Section</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201g" alt="Free XML" title="Free XML">FreeXMLElementXercesWrapper (Free XML Element Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201G</td>
+<td style="vertical-align: top;">Free the document level element</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;"><a href="#d0000201h" alt="Write XML Document" title="Write XML Document">WriteXMLDocumentXercesWrapper (Write XML Document Xerces Wrapper)</a></td>
+<td style="vertical-align: top;">D0000201H</td>
+<td style="vertical-align: top;">Write the xml document to the location specified in the processing option (if any)</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">&nbsp;</td>
+<td style="vertical-align: top;">FreeXMLElementXercesWrapper (Free XML Element Xerces Wrapper)</td>
+<td style="vertical-align: top;">D0000201G</td>
+<td style="vertical-align: top;">To free memory which is used by WriteXMLDocumentXercesWrapper</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Refer to sample report R03012D2 (Customer Extract to XML), R4101D3 (Item Initial Load Extract To XML), R3002D (BOM Initial Load Extract To XML) and R41021D (Item Balance Extract.) for detail implemenation</li>
+<li>This is a sample report only. So if you need to parse any other table to XML format file, you need to create your own report which, in return, can be handled through subsystem along with Interop reports R00460 (Interoperability Generic Outbound Subsystem UBE)</li>
+<li>This document does not provide details on this implmentation.</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><br /> <br /> <big><big>Business Function:</big></big><br /> <big><a name="d0000201a"></a>B0000201 - CreateXMLDocumentXercesWrapper (Create XML Document Xerces Wrapper Function)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: This business function initializes XML document information.</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201A - Create&nbsp;XML&nbsp;Document&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th class="xl65" style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szDocumentName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">A&nbsp;256&nbsp;byte&nbsp;field&nbsp;used&nbsp;to&nbsp;hold&nbsp;miscellaneous&nbsp;data.<br /> This string determines 1st component of output XML file.<br /> Example: <span style="text-decoration: underline; font-style: italic;">R55XML01</span><span style="font-style: italic;">_021713_192832.xml</span></td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Pointer to hold document information.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hDocumentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Pointer to hold document elements.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail routine:
+<ul>
+<li>&nbsp;&nbsp;&nbsp; idReturn =IB0000201_CreateXmlDocument(&amp;hXmlDoc,lpDS-&gt;szDocumentName,&amp;hDocElement);&nbsp; /*Creating empty Xml Document*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |---&nbsp; xrcsStatus = XRCS_initEngine();</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |---&nbsp; xrcsStatus = XRCS_createEmptyDocument(hXmlDocument); /*Create the XML Document in memory*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |---&nbsp; xrcsStatus = XRCS_createElement(*hXmlDocument, szDocumentName, hDocElement); /*create document element*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |---&nbsp; xrcsStatus = XRCS_setDocumentElement(*hXmlDocument,*hDocElement);&nbsp; /*Add document element*/</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0501250 - Failed to create XML document"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;</p>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201b"></a>B0000201 - AddXMLAttributeXercesWrapper (Add XML Attribute Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To add an attribute of the document</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201B - Add&nbsp;XML&nbsp;Attribute&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hXMLDocument from create XML</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hDocumentElement from create XML</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szAttributeName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">"xmlns"</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szAttributeValue</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">"http://www.schemas.e1.oracle.com"</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail routine:
+<ul>
+<li>idReturn = IB0000201_AddXmlAttribute(hXmlDoc,hElement,lpDS-&gt;szAttributeName,lpDS-&gt;szAttributeValue);&nbsp; /*Adding attribute */</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_createAttribute(hXmlDocument, szAttributeName, szAttributeValue, &amp;hAttribute);&nbsp; /*Create the XML attribute and attach it to specified element. */</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_appendAttribute(hElement, hAttribute);</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- XRCS_freeAttribute(hAttribute);</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML attribute to XML document"</li>
+<li>"B0000201 - Failed to add XML attribute"</li>
+</ul>
+&lt;Internal_Only&gt;
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li style="list-style-type: none;">
+<p>Support Test - R03012D2&nbsp; PO - process Tab:&nbsp; Path= c:\</p>
+</li>
+<li style="list-style-type: none;">Run the report locally and it will generate XML in c root.</li>
+<li style="list-style-type: none;">To add custom attributes in your XML, add "AddXMLAttributeXercesWrapper" in your initialize Section</li>
+<li style="list-style-type: none;">0026 Add XML Attribute Xerces Wrapper<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA rpt_hXMLDocument_GENLNG -&gt; BF hXMLDocument<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VA rpt_hDocumentElement_GENLNG -&gt; BF hElement<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<strong>xmlns:msxsl</strong>" -&gt; BF szAttributeName<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<strong>urn:schemas-microsoft-com:xsl</strong>" -&gt; BF szAttributeValue</li>
+</ul>
+<p>The output is:</p>
+</li>
+<li style="list-style-type: none;">
+<div class="e"><span class="m">&lt;?</span><span class="pi">xml version="1.0" encoding="utf-8" </span><span class="m">?&gt;</span></div>
+<div class="e">
+<div class="c" style="text-indent: -2em; margin-left: 1em;"><a href="#" class="b">-</a> <span class="m">&lt;</span><span class="t">R03012D2</span><span class="ns"> xmlns:msxsl</span><span class="m">="</span><strong class="ns">urn:schemas-microsoft-com:xsl</strong><span class="m">"</span><span class="m">&gt;</span></div>
+</div>
+</li>
+</ul>
+&lt;/Internal_Only&gt;</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;</p>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201c"></a>B0000201 - AddXMLElementStringXercesWrapper (Add XML Element String Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To parse JDE string values to XML format file</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201C - Add&nbsp;XML&nbsp;Element&nbsp;String&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cFreeElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">An&nbsp;option&nbsp;that&nbsp;specifies&nbsp;the&nbsp;type&nbsp;of&nbsp;processing&nbsp;for&nbsp;an&nbsp;event.<br /> 0 for parent<br /> 1 for detail elements</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cCreateEmptyElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">An&nbsp;option&nbsp;that&nbsp;specifies&nbsp;the&nbsp;type&nbsp;of&nbsp;processing&nbsp;for&nbsp;an&nbsp;event. Set 1 to create.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hXMLDocument</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hParentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hDocumentElement</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Name to be appeared in XML file</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementString</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Value of database value (e.g., F03012.CO)</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hNewElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Not In Use</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>&nbsp;idReturn = IB0000201_AddXmlElement(hXmlDoc, lpDS-&gt;cFreeElementFlag, hParentElement, &amp;hNewElement,&nbsp; lpDS-&gt;szElementName, lpDS-&gt;szElementString, lpDS-&gt;cCreateEmptyElementFlag); /*Adding Xml Element*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_createElement(hXmlDocument, szElementName, &amp;hElement);&nbsp; /*Create new XML element node. */</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_setElementText(hElement, szElementText);&nbsp; /* Add Text */</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_appendChildElement(hParentElement, hElement); /* Add Child Element */</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_appendChildElement(hParentElement, hElement);&nbsp; /* Add child element to parent */</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- (Optional) XRCS_freeElement(hElement);&nbsp; /* If requested, free the new element; otherwise store it. */</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML element to XML document"</li>
+<li>"B0501250 - Failed to add XML element"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201d"></a>B0000201 - AddXMLElementDateXercesWrapper (Add XML Element Date Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To parse JDEDATE to XML Date based on DateFormatMask</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201D - Add&nbsp;XML&nbsp;Element&nbsp;Date&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cFreeElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Set 1 to write detail.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cCreateEmptyElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Set 1 to write detail element.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hXMLDocument</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hParentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hDocumentElement</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Description to be written in XML file (e.g, Testdate)</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">jdElementDate</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DATE01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">JDEDATE</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Database column (e.g., F03012.TRDJ)</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hNewElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">No in use unless you want to manipulate memory</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szDateFormatMask</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">FFU3</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td style="margin-left: 30px;">Default: OSASE<br /> Depending on request from your business party</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>FormatDate (szElementText, &amp;lpDS-&gt;jdElementDate, lpDS-&gt;szDateFormatMask); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Convert the date passed in to a string */</li>
+<li>idReturn = IB0000201_AddXmlElement(hXmlDoc, lpDS-&gt;cFreeElementFlag, hParentElement, &amp;hNewElement,&nbsp; lpDS-&gt;szElementName, szElementText, lpDS-&gt;cCreateEmptyElementFlag);&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*Adding Xml Element*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- Refer D0000201C</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML element to XML document"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201e"></a>B0000201 - AddXMLElementMathXercesWrapper (Add XML Element Math Numeric Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To parse MATH_NUMERIC to XML document</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201E - Add&nbsp;XML&nbsp;Element&nbsp;Math&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cFreeElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">1 for detail</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cCreateEmptyElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">1 for detail element.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hXMLDocument</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hParentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hDocumentElement</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Numeric type data to be written in XML</td>
+</tr>
+<tr style="height: 30pt; margin-left: 30px;">
+<td class="xl66" style="height: 30pt; width: 230pt; margin-left: 30px;" width="307" height="40">mnElementMathNumeric</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">MATH01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">MATH_NUMERIC</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Database column to map (e.g., F03012.AN8)&nbsp;</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hNewElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">N/A</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>FormatMathNumeric(szElementText, &amp;lpDS-&gt;mnElementMathNumeric); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Convert the math_numeric passed in to a string */</li>
+<li>idReturn = IB0000201_AddXmlElement(hXmlDoc, lpDS-&gt;cFreeElementFlag, hParentElement, &amp;hNewElement,&nbsp; lpDS-&gt;szElementName, szElementText, lpDS-&gt;cCreateEmptyElementFlag); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Adding Xml Element*/</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML element to XML document"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201f"></a>B0000201 - AddXMLElementCharXercesWrapper&nbsp; (Add XML Element Character Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: Parse JCHAR (character) to XML element</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201F - Add&nbsp;XML&nbsp;Element&nbsp;Character&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cFreeElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">1 for detail</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cCreateEmptyElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">1 for detail element</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hXMLDocument</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hParentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hDocumentElement</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Character Description to be appeared XML file</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cElementCharacter</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Character Type database value</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hNewElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">N/A</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>szElementText[0] = lpDS-&gt;cElementCharacter; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* Assign character value to string */</li>
+<li>idReturn = IB0000201_AddXmlElement(hXmlDoc, lpDS-&gt;cFreeElementFlag, hParentElement, &amp;hNewElement,&nbsp; lpDS-&gt;szElementName, szElementText, lpDS-&gt;cCreateEmptyElementFlag); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*Adding Xml Element*/</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML element to XML document"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201g"></a>B0000201 - FreeXMLElementXercesWrapper (Free XML Element Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To free pointer used</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Struture: D0000201G - Free&nbsp;XML&nbsp;Element&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hParentElement<br /> hDocumentElement</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>hXmlElement =(XRCS_hElement)jdeRemoveDataPtr(hUser,(unsigned long)lpDS-&gt;hElement); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* retrieve the element pointer */</li>
+<li>idReturn =IB0000201_FreeXmlElement(hXmlElement);&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*Call internal To free element*/</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0501250 - Failed to Free XML Element"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="d0000201h"></a>B0000201 - WriteXMLDocumentXercesWrapper (Write XML Document Xerces Wrapper )</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To write XML document to the path you have specified</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201H - Write&nbsp;XML&nbsp;Document&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">hXMLDocument</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szFilePathandName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">Path for output</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>hXmlDoc =(XRCS_hElement)jdeRemoveDataPtr(hUser,(unsigned long)lpDS-&gt;hXMLDocument);&nbsp; /* Retrieveing Xml Document handle */</li>
+<li>idReturn = IB0000201_WriteXmlToFile(hXmlDoc, lpDS-&gt;szFilePathandName);</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- ((hXmlDocument != NULL) &amp;&amp; (!IsStringBlank(szXmlPath)))&nbsp;&nbsp;&nbsp;&nbsp; /*Check required parameters*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_serializeDocumentToFileWithEncoding_putDoubleQuotes(hXmlDocument, szXmlPath, _J("UTF-8"), 1);&nbsp;&nbsp; /*Write XML to file, indicate UTF-8 encoding and use double quotes for attributes*/&nbsp;&nbsp;&nbsp; &nbsp;</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- xrcsStatus = XRCS_terminateEngine();&nbsp;&nbsp;&nbsp;&nbsp; /* Shut down XML parser */</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Write to XML document"</li>
+<li>"B0000201 - Failed to write XML to file"</li>
+<li>"B0000201 - Failed to terminate XML parser"</li>
+<li>"B0000201 - Invalid parameters passed to IB0501250_WriteXmlToFile"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;</p>
+<div class="kmnotebox">
+<p style="margin-left: 30px;"><span id="form1:panelPage1">Exposed API's In XercesWrapper in custom BSFN, the please explorer the following options.<br /> .<br /> EXTERNC XRCS_Status &nbsp;XRCS_serializeDocumentToFileWithEncoding_putDoubleQuotes (const XRCS_hDocument hDoc, const JCHAR *szFileName, const JCHAR *szEncoding, const int putdoubleQuotes)<br /> .<br /> EXTERNC XRCS_Status &nbsp;XRCS_serializeDocumentToXMLString_putDoubleQuotes (const XRCS_hDocument hDoc, JCHAR **pszXMLString, const int putdoubleQuotes)</span></p>
+<p style="margin-left: 30px;"><span id="form1:panelPage1">.<br /> EXTERNC XRCS_Status&nbsp; XRCS_serializeDocumentToXMLStringWithEncoding_putDoubleQuotes (const XRCS_hDocument hDoc, JCHAR **pszXMLString, const JCHAR *szEncoding, const int putdoubleQuotes)<br /> .<br /> EXTERNC XRCS_Status&nbsp; XRCS_serializeDocumentToXMLStringNoEncoding_putDoubleQuotes (const XRCS_hDocument hDoc, JCHAR **pszXMLString, const int putdoubleQuotes)<br /> .<br /> <br /> Note: &nbsp;There are several customers who would like R744002 to generate the Document xmlns in double quotes. &nbsp;However, this UBE uses B74XML01 to generate it. &nbsp;<br /> The application development team concluded that this is a limitation: <a href="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=11063238" alt="Click (or CTRL+Click if using Firefox) to view" title="Click (or CTRL+Click if using Firefox) to view" name="contextTextUrl_1379083653147" target="_blank"></a><span id="3-3L512PY1379083653147">Bug 11063238</span><img class="activityExternalBugIconMenu" src="https://support.us.oracle.com/oip/faces/secure/srm/images/bug.gif" title="https://bug.oraclecorp.com/pls/bug/webbug_edit.edit_info_top?rptno=11063238" name="node1379083653148_11063238" /> &nbsp;- IMPLEMENT SEPA PAYMENTS FOR GERMANY (PAIN.001.002.03)). </span></p>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;">&nbsp;</p>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big style="text-decoration: line-through;"><a name="d0000201i"></a>B0000210 - AddXMLElementUTCXercesWrapper (Add XML Element UTC Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: To parse JDEUTime to XML format file (Not In Use)</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201I - Add&nbsp;XML&nbsp;Element&nbsp;UTC&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 298pt; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cFreeElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">An&nbsp;option&nbsp;that&nbsp;specifies&nbsp;the&nbsp;type&nbsp;of&nbsp;processing&nbsp;for&nbsp;an&nbsp;event.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cCreateEmptyElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">An&nbsp;option&nbsp;that&nbsp;specifies&nbsp;the&nbsp;type&nbsp;of&nbsp;processing&nbsp;for&nbsp;an&nbsp;event.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">General&nbsp;purpose&nbsp;ID&nbsp;variable.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hParentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">General&nbsp;purpose&nbsp;ID&nbsp;variable.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">A&nbsp;256&nbsp;byte&nbsp;field&nbsp;used&nbsp;to&nbsp;hold&nbsp;miscellaneous&nbsp;data.</td>
+</tr>
+<tr style="height: 30pt; margin-left: 30px;">
+<td class="xl66" style="height: 30pt; width: 230pt; margin-left: 30px;" width="307" height="40">szUTime</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">CNTRGUTM</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">JDE Utime</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">INPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">A&nbsp;UTime&nbsp;data&nbsp;item&nbsp;for&nbsp;generic&nbsp;use.</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hNewElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OUTPUT</td>
+<td class="xl67" style="width: 298pt; margin-left: 30px;" width="397">General&nbsp;purpose&nbsp;ID&nbsp;variable.</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>jdeUTime_Get(&amp;lpDS-&gt;szUTime, &amp;yr, &amp;mo, &amp;day, &amp;hr, &amp;min, &amp;sec, JDEUTIME_UTC_ZERO_STANDARD);&nbsp;&nbsp; /* Convert the UTC using zero time zone */</li>
+<li>Convert Year to String (szYear)</li>
+<li>Convert Month to String (szMonth)</li>
+<li>Convert Day to String (szDay)</li>
+<li>Convert Hour to String (szHour)</li>
+<li>Convert Minute to String (szMinute)</li>
+<li>Convert Second to String (szSecond)</li>
+<li>Format Output String szYear-szMonth-szDayTszHour:szMinute:szSecond-00:00 (e.g., 2013-12-31T12:59:59-00:00)</li>
+<li>idReturn = IB0000201_AddXmlElement(hXmlDoc, lpDS-&gt;cFreeElementFlag, hParentElement, &amp;hNewElement,&nbsp; lpDS-&gt;szElementName, szElementText, lpDS-&gt;cCreateEmptyElementFlag); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*Adding Xml Element*/</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; |--- Refer above</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML element to XML document"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;</p>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <br /> <big><a name="d0000201j"></a>B0000201 - AddXMLElementUTimeXercesWrapper&nbsp; (Add XML Element UTC Xerces Wrapper)</big></p>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Purpose: This function parses JDEUTime class to XML format file which calls API jdeUTime_FormatEx().</li>
+<li>Parameter:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Data Structure: D0000201J - Add&nbsp;XML&nbsp;Element&nbsp;UTime&nbsp;Xerces&nbsp;Wrapper</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table style="border-collapse: collapse; width: 720px; margin-left: 30px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 230pt;" width="307" /><col style="width: 48pt;" span="4" width="64" /><col style="width: 298pt;" width="397" /></colgroup>
+<tbody style="margin-left: 30px;">
+<tr style="height: 30pt; margin-left: 30px;"><th class="xl65" style="height: 30pt; width: 230pt; background-color: #cccccc; margin-left: 30px;">Parameter Name</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Item</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Data Type</th><th class="xl65" style="width: 48pt; background-color: #cccccc; margin-left: 30px;">Req/Opt</th><th class="xl65" style="width: 0px; background-color: #cccccc; margin-left: 30px;">I/O/Both</th><th style="width: 338px; background-color: #cccccc; margin-left: 30px;">Others</th></tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cFreeElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">1 for detail</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">cCreateEmptyElementFlag</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">EV01</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">1 for detail element</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hXMLDocument</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">hXMLDocument</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hParentElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">hDocumentElement</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szElementName</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">DTA4</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">JDEUTime data item to be written into XML File</td>
+</tr>
+<tr style="height: 30pt; margin-left: 30px;">
+<td class="xl66" style="height: 30pt; width: 230pt; margin-left: 30px;" width="307" height="40">szUTime</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">CNTRGUTM</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">JDE Utime</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">Database value (e.g., F03012.DTEE)</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">hNewElement</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">GENLNG</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">ID</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">N/A</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szDateFormatMask</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">FFU3</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td style="width: 338px; margin-left: 30px;">Default: OSASE<br /> &nbsp; For other combination, refer to &lt;Document 660527.1&gt; - E1: BSFN: How to Convert a String to a Julian Date</td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szTimeFormat</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">IEC1</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">Default: 24<br /> &nbsp; Available values: 12, 24<br /> &nbsp; If you set 12 which shows AM or PM&nbsp; (e.g., <span class="tx">07/25/2012 05:44:24PM)</span></td>
+</tr>
+<tr style="height: 15pt; margin-left: 30px;">
+<td class="xl66" style="height: 15pt; width: 230pt; margin-left: 30px;" width="307" height="20">szTimeZoneFormat</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">IEC2</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">char</td>
+<td class="xl66" style="width: 48pt; margin-left: 30px;" width="64">OPT</td>
+<td class="xl66" style="width: 0px; margin-left: 30px;">INPUT</td>
+<td class="xl67" style="width: 338px; margin-left: 30px;">Timezone from User Profile which is UDC H91/TZ (Timezones).</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Detail Routine:
+<ul>
+<li>jdeUTime_FormatEx(szFormattedText, &amp;lpDS-&gt;szUTime, lpDS-&gt;szDateFormatMask, lpDS-&gt;szTimeFormat, lpDS-&gt;szTimeZoneFormat); /* Convert the UTC using both date mask, time format, and time zone */</li>
+<li>idReturn = IB0000201_AddXmlElement(hXmlDoc, lpDS-&gt;cFreeElementFlag, hParentElement, &amp;hNewElement,&nbsp; lpDS-&gt;szElementName, szFormattedText, lpDS-&gt;cCreateEmptyElementFlag); &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /*Adding Xml Element*/</li>
+</ul>
+</li>
+<li>Error:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>"B0000201 - Failed to Add XML element to XML document"</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;</p>
+<hr />
+<p style="margin-left: 30px;"><br /> <br /> <br /> <big><a name="output"></a>Example of XML output &lt;<a href="&lt;&lt;INLINE_ATTACHMENT:1529797.1:XMLOUTPUT&gt;&gt;" alt="Output Example" title="Output Example">R55XML01_021713_192832.xml</a>&gt;</big><br /> <br style="font-family: Lao UI;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;?xml version="1.0" encoding="utf-8" ?&gt; </span><br style="font-family: Courier New,Courier,monospace;" /> <span style="color: red; font-family: Courier New,Courier,monospace;">-</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">R55XML01</span><span style="color: red; font-family: Courier New,Courier,monospace;">xmlns</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">="</span><span style="font-weight: bold; color: red; font-family: Courier New,Courier,monospace;">http://www.schemas.e1.oracle.com</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">"&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp; </span><span style="color: red; font-family: Courier New,Courier,monospace;">-</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">customer syncmode</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">="</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">0</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">"&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Environment</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">PD910</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Environment</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">AddressNumber</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">4242</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">AddressNumber</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Company</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">00000</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Company</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">BeginningEffectiveDate</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">02/17/2013</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">BeginningEffectiveDate</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">PersonCorporationCode</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">A</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">PersonCorporationCode</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">DateEntered</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">01/01/1970 10:00:00AM (UTC+10:00)</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">DateEntered</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">customer</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp;&nbsp;&nbsp; </span><span style="color: red; font-family: Courier New,Courier,monospace;">-</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">customer syncmode</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">="</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">0</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">"&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Environment</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">PD910</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Environment</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">AddressNumber</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">4242</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">AddressNumber</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Company</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">00001</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">Company</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">BeginningEffectiveDate</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">02/17/2013</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">BeginningEffectiveDate</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">PersonCorporationCode</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">C</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">PersonCorporationCode</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">DateEntered</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><span style="font-weight: bold; font-family: Courier New,Courier,monospace;">07/25/2012 05:44:24PM (UTC+10:00)</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">DateEntered</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">customer</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span><br style="font-family: Courier New,Courier,monospace;" /> <span style="font-family: Courier New,Courier,monospace;">&nbsp; </span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&lt;/</span><span style="color: #993300; font-family: Courier New,Courier,monospace;">R55XML01</span><span style="color: #3333ff; font-family: Courier New,Courier,monospace;">&gt;</span></p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>You can append as many elements as possible</li>
+<li>If needed, you can change file name at the End Section of the report</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p><br /> <br /> <big><a name="implementation"></a>Possible Implemenation:</big><br /> Refer to <a href="&lt;&lt;INLINE_ATTACHMENT:1529797.1:ER&gt;&gt;" alt="Event Rule example" title="Event Rule example">attached file</a>.</p>
+<p style="margin-left: 30px;"><br /> 1. (Optional) Create Processing Option template to indicate Path to write output file (e.g., \\DeploymentServer\XMLOutbound\Test\ ). This enables you to set output path dynamically<br /> 2. Associate Processing option to report template<br /> 3. Associate Business View (source data) to pull. For this example, custom business view based on F03012<br /> (Now you implement detail routine) <br /> 4. Create (at least) 4 global variable which are to be used from initialization of variables to termination<br /> &nbsp;&nbsp;&nbsp; For example, <br /> &nbsp;&nbsp;&nbsp;&nbsp; rpt_hXMLDocument_GENLNG<br /> &nbsp;&nbsp;&nbsp;&nbsp; rpt_hDocumentElement_GENLNG<br /> &nbsp;&nbsp;&nbsp;&nbsp; rpt_hParentElement_GENLNG<br /> &nbsp;&nbsp;&nbsp;&nbsp; rpt_szFileName_DL01</p>
+<p style="margin-left: 30px;">(<em>Initialize Section</em>) which initializes once</p>
+<div style="margin-left: 40px;">5. (Optional) If needed, set additional selection<br /> 6. Call "Create XML Document Xerces Wrapper Function" to initialize Document and Document Elements pointer based on input report name<br /> 7. Call "Create XML Document Xerces Wrapper Function" to&nbsp; add attribute based on pointer returned by 6</div>
+<p style="margin-left: 30px;">(<em>Do Section</em>) which calls below routine row by row based on business view you have associated</p>
+<div style="margin-left: 40px;">8. Call "Add XML Element String Xerces Wrapper" to add parent level element (for this example, customer)<br /> 9. Call "Add XML Attribute Xerces Wrapper" to append syncmode = 0<br /> 10. (Optional) call "Add XML Element String Xerces Wrapper" to indicate environment<br /> 11. Call "Add XML Element Math Numeric Xerces Wrapper" to parse MATH_NUMERIC value (for example, F03012.AN8)<br /> 12. Call "Add XML Element String Xerces Wrapper" to parse JCHAR value (for example, F03012.CO)<br /> 13. Call "Add XML Element Date Xerces Wrapper" to part JDEDATE value <br /> 14. Call "Add XML Element Character Xerces Wrapper" to parse JCHAR (a single character)<br /> 15. Call "Add XML Element UTC Xerces Wrapper" to parse JDEUTIME</div>
+<p style="margin-left: 30px;">(<em>End Section</em>)</p>
+<div style="margin-left: 40px;">16. (Optional) Call "Free XML Element Xerces Wrapper" to free Parent Element<br /> 17. Call "Free XML Element Xerces Wrapper" to free document level element<br /> 18. Create string to use for output file name (e.g., _021713_192832.xml which is _mmddyy_hhmmss.xml)<br /> 19. Call "Write XML Document Xerces Wrapper" to write document as indicated patch in processing option</div>
+<div style="margin-left: 40px;">20. Call "Free XML Element Xerces Wrapper" to free XML Document</div>
+<p style="margin-left: 30px;">&nbsp;</p>
+<hr />
+<p style="margin-left: 30px;">&nbsp;</p>
+<p><br /> <br /> <big><a name="relation"></a>Relation between BSFN and output</big><br /> Refer below,<br /> 
+<hr />
+<p><img src="../images/xml.png" border="0" alt="XML mapping detail " title="mapping" hspace="0" vspace="0"/></p>
+
+<p>&nbsp;</p>
+<p><br /> <br /> <a name="considerations"></a><big>Considerations:</big></p>
+<ul>
+<li>Information provided is for example only and is not supported by Oracle.</li>
+<li>Basic transformation can be done by 3rd party software related to your Java Application Server</li>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&lt;Internal_Only&gt;</p>
+<p>We do not have business function for Inbound XML though it appears we can convert XML file line by line through conversion tool.&nbsp;</p>
+<p>JD Edwards EnterpriseOne Tools Interoperability Guide<br />&nbsp;&nbsp; &nbsp;9 <a href="http://docs.oracle.com/cd/E24705_01/doc.91/e24253/undrstnd_xml_transact.htm#EOTIN00484" alt="XML Transaction" title="XML Transaction" target="_blank">Understanding XML Transaction</a></p>
+<p>&lt;/Internal_Only&gt;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

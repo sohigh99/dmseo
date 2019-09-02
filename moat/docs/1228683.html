@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deadlock</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Deadlock in EnterpriseOne</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><a name="subtitle"></a><span style="font-size: large;">Caching in EnterpriseOne</h1> -->
+
+<h2 class="km"><a name="section01"></a><span style="font-size: medium;">Purpose of Document</h2>
+
+<p> </p>
+<p>Through this case study, an actual implementation is discussed to minimize potential deadlocks in EnterpriseOne Distribution, Manufacturing and Financial Modules. Below are two common tables that can be used to isolate certain transactions:</p>
+<ul>
+<li>F0011 (Batch Header Control Records)  Batch header is to be written, when a certain transaction affects General Ledger; to set boundary of transaction</li>
+<li>F00095 (Business Object Reservation)  Maintain higher integrity by preventing other users/processes from accessing a certain table simultaneously by recording data into the F00095 - Business Object Reservation table.</li>
+</ul>
+<div class="kmnotebox">Note: Custom Table Triggers and/or Stored Procedures and Functions cause deadlocks. Ensure that any external program does not affect daily transactions. Refer to &lt;Document 1301427.1&gt; <em>E1: DB: Custom Stored Procedure Causes Deadlock in the Database</em></div>
+<p> </p>
+
+<p> </p>
+<p><h2><a name="TheContent"></a>Table of Contents:</h2></p>
+<ul>
+<li><a href="#listing" alt="Listing of applications" title="Listing of applications">List of applications</a> with Transaction Processing</li>
+<li><a href="#ex1" alt="Example 1 - Distribution" title="Example 1 - Distribution">Example in Distribution</a>: Two different applications compete to update F4209 (Held Orders)</li>
+<li><a href="#ex2" alt="Example 2 - Manufacturing" title="Example 2 - Manufacturing">Example in Manufacturing</a>: Two different internal routines compete to update F4102 (Item Branch File)</li>
+<li><a href="#ex3" alt="Example 3 - Financial" title="Example 3 - Financial">Example in Financial</a>: Two different business functions compete to update F0011 (Batch Control Records)</li>
+<li><a href="#example4" alt="Example 4 - one transaction impact multiple module" title="Example 4 - one transaction impact multiple module">Example in Transaction which impact more than 2 modules</a>: Two different MBF tries to update F4102.MRPC in a single Transaction Processing Boundaries</li>
+<li><a href="#conclusion" alt="Conclusion" title="Conclusion">Conclusion</a></li>
+</ul>
+
+
+<p> <a name="listing"></a>
+  <h2>Listing of Applications with Transaction Processing by EnterpriseOne Release</h2>Refer to <a href="../docs/1320968.html" alt="Listing of Applications with Transaction Processing in EnterpriseOne" title="Listing of Applications with Transaction Processing in EnterpriseOne">Listing of Applications with Transaction Processing in EnterpriseOne</a></p>
+
+  <p>Note: Deadlocks occur in applications listed above</p>
+  <p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+    <hr>
+    <a name="ex1"></a><h3>Example 1: In Sales Order </h3>(An example of a deadlock scenario in the Distribution Module)In updating Sales Order, the order gets held and held orders are released before the transaction is committed.<h4>No Deadlock Scenario:</h4></p>
+<div style="margin-left: 40px;">Transaction 1: through P42101-Sales Order Entry
+<div style="margin-left: 40px;">1. ENTER: SalesOrderApplCtrlEX        2. ENTER: F4211FSEndDoc               3. ENTER: WriteHoldCode                      <span style="text-decoration: underline;"><em>sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)</em>              3. EXIT: for WriteHoldCode=0        2. EXIT: for F4211FSEndDoc=0 1. EXIT: for SalesOrderApplCtrlEX=0</div>
+Transaction 2:  through P43070-Held Order Release
+<div style="margin-left: 40px;">1. ENTER: ReleaseHeldOrder        <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)</em>1. EXIT: for ReleaseHeldOrder=0</div>
+</div>
+<p><h4>Deadlock Scenario:</h4></p>
+
+
+<div style="margin-left: 40px;">Transaction 1: through P42101-Sales Order Entry
+<div style="margin-left: 40px;">1. ENTER: SalesOrderApplCtrlEX       2. ENTER: F4211FSEndDoc              3. ENTER: WriteHoldCode                 <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F4209 SET (...) WHERE (order number 9999)</em>              3. EXIT: for WriteHoldCode=0</div>
+Transaction 2:  through P43070-Held Order Release
+<div style="margin-left: 40px;">1. ENTER: ReleaseHeldOrder     <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F4209  SET (...) WHERE (order number 9999) </em>             *** Deadlock takes place ***1. EXIT: for ReleaseHeldOrder=0         ...        2. EXIT: for F4211FSEndDoc=01. EXIT: for SalesOrderApplCtrlEX=0</div>
+</div>
+<p><h4>SOLUTION</h4>This type of issue may occur when 'Transaction Processing' is on/enabled. To prevent this type of issue, 'Record Reservation' logic can be implemented. For details on Record Reservation, refer to &lt;Document 625589.1&gt; E<em>1: 40: User Record Reservation. </em></p>
+<ol>
+<li>Fast path to UDC</li>
+<li>Look for Product Code: 00 (Foundation Environment) and User Defined Codes 'RR' - Object In Use Application ID</li>
+<li>Ensure application ID P42101 and P43070 are added</li>
+</ol>
+<p> </p>
+<div class="kmnotebox">Notes:
+<ul>
+<li>This is just one possible scenario of a deadlock issue and does not include all other deadlock situations.</li>
+<li> F4211FSEndDoc (B4200310) is called when 'Transaction Processing' is ON.  The UPDATE of F4209 issues an exclusive lock until the transaction is committed by sql&gt; COMMIT TRANSACTION.  Refer to &lt;Document 1208208.1&gt; <em>E1: DB: Transaction, Transaction Processing, Commit and Rollback.</em></li>
+<li>From the first update SQL statement until the commit transaction, BLOCKING against F4209 will take place.</li>
+<li>For example, two different transactions through from two different applications (P42101 and P43070) are competing to update table F4209 (Held Orders)</li>
+<li>For a small transaction from the first update of F4209 to F4211FSEndDoc it may not take time but if there are a large number of detail lines, it may take some time in updating the detail information (We can call this blocking from Update statement to Commit Transaction)</li>
+<li>Once the second UPDATE is issued in transaction 2 above, deadlock occurs and an error will be written to the JDE &amp; JDEDEBUG logs (if debug is enabled) and to E1ROOT.LOG </li>
+<li>JDE.LOG will contain the error message after locking takes place (review the JDE.LOG from the server that runs logic (or Enterprise Server)</li>
+<li>Call Object Kernel can potentially go to zombie state.</li>
+<li>E1ROOT.LOG will contain COSE #1001 Timeout errors when calling(first Level) BSFN SalesOrderApplCtrlEX (B4210900).  Again for this case stufy only; Call Object kernel log or JDE.LOG which trace system level information will be useful for further analysis.</li>
+<li>By defining applications P42101 and P43070 through UDC 00/RR - Record Reservation, the second update never takes place until all the data through P42101 is committed/roll-backed so this is safe way to enforce integrity as well as to avoid possible deadlocks.</li>
+<li>Generally, record reservation routines will be written at Dialog Initialized Event as soon as the Revision form (where data is added/updated) is opened in UPDATE MODE.</li>
+<li>P43070 will reserve order when the Find button is clicked (Ex: after grid buffer is written or when data can be seen in the grid). This routine is implemented through &lt;Bug 10912055&gt;.</li>
+<li>UDC 00/RR is validated through BSFN N0000604 (ValidateApplicationId -Validate Application ID).  If a certain routine does not call this business function, the object/record reservation routine is hard coded within a certain routine.</li>
+</ul>
+</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a><a name="ex2"></a>
+  <hr>
+  <h3> Example 2: In Bill of Material </h3> (An example of a deadlock scenario in the Manufacturing Module)In adding/updating BOM (Bill of Material) through P3002, deadlocks may take place against table F4102 as two processes (Internal Routines) are competing to updating the same table within EndDoc routine- F3002EndDocument. This example shows how a deadlock occurs within one transaction in a single application.<h4>No Deadlock Scenario:</h4>    Turn off Transaction Processing so AUTO COMMIT takes place<h4>Deadlock Scenario:</h4></p>
+<div style="margin-left: 40px;">Transaction 1: through P3002-Bill of Material
+<div style="margin-left: 40px;">1. ENTER: F3002EndDocument    2. ENTER: UpdateLowLevelCodes        <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F4102 SET ... IBLLX=7 WHERE (IBITM = 999 AND IBMCU =' M30')</em>   2. EXIT: for UpdateLowLevelCodes=0   2. ENTER: UpdateF4102MRPNetChg      <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F4102 SET ... IBMRPC='1' WHERE (IBITM = 999 AND IBMCU = ' M30')</em>              *** Deadlock takes place ***   2. EXIT: for UpdateF4102MRPNetChg=0        sql&gt; **** Other Insert/Update against F3002 ***1. EXIT: for F3002EndDocument=0</div>
+</div>
+<p> </p>
+<div class="kmnotebox">Notes:
+<ul>
+<li>By default 'Transaction Processing' is ON/enabled for Headerless/detail forms in the Manufacturing module (form/grid properties)</li>
+<li>For this reason, it determines that Transaction Processing is ON even though 'Transaction Processing' is not ON when calling business function F3002EndDocument (N3002040)</li>
+<li>This type of issue may occur regardless of the size of data in THE grid</li>
+<li>For example, business functions UpdateLowLevelCodes (B3001080 - F4102 Update Low Level Codes) and UpdateF4102MRPNetChg (B4000930 - F4102 Update MRP Net Change) update the same table F4102 (Item Branch File) since the first UPDATE is not committed it blocks the same row to be updated.  The second update tries to get locking information indefinitely</li>
+<li>If your applied bugs, you can implement transaction processing 
+<ul>
+<li>&lt;Bug 13490757&gt; DATABASE RECORD LOCK UPDATING NET CHANGE FLAG MRPC ON PURCHASE ORDER AND PARTSLIST</li>
+<li>&lt;Bug 11007632&gt; ETO DEADLOCK BY PO RECEIPT - SAR: 8925493</li>
+<li>Because offending business function UpdateF4102MRPNetChg (B4000930 - F4102 Update MRP Net Change) sets table F4102 outside transaction processing boundaries</li>
+<li>For detail, refer to &lt;Document 1513147.1&gt; E1: DB: JDEDB_COMMIT_MANUAL, JDEDB_COMMIT_AUTO, Transaction Processing Boundaries and Deadlock</li>
+</ul>
+</li>
+<li>Refer to &lt;Document 989586.1&gt; <em>E1: 30: FAQ - Transaction Processing in Manufacturing Modules</em></li>
+<li>A number of applications update F4102.MRPC (NetChangeFlag).  For details, refer to &lt;Document 1050946.1&gt; <em>E1: 34: F4102.IBMRPC - NetChangeFlag (Flag - Net Change)</em></li>
+</ul>
+</div>
+
+<p><h4>SOLUTION</h4> Apply relevant ESUs which contain objects or disable Transaction Processing through Form Design Aid
+  <a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a>
+
+  <hr>
+
+  <a name="ex3"></a><h3>Example 3: In Voucher Entry </h3>(An example of a deadlock scenario in the Financial Module)In adding invoice, voucher or journal, two different transactions in a single application may cause deadlocks when updating F0011 - Batch Header.<h4>No Deadlock Scenario:</h4></p>
+<div style="margin-left: 40px;">Transaction 1:
+<div style="margin-left: 40px;">1. ENTER: F0411FSEndDoc      2. ENTER: BatchReviseOnTransactionCommit            <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F0011 SET ...,ICIST='U',ICIAPP='P',... WHERE ( ICICUT = 'V' AND ICICU = 9999 )</em>     2. EXIT: for BatchReviseOnTransactionCommit=0     *** Additional manipulation of data *** 1. EXIT: for F0411FSEndDoc=0</div>
+Transaction 2:
+<div style="margin-left: 40px;">1. ENTER: BatchReviseOnExit    <span style="text-decoration: underline;"><em>sql&gt; UPDATE PRODDTA.F0011 SET ...,ICIST='A',ICIAPP='A',... WHERE ( ICICUT = 'V' AND ICICU = 9999 ) </em>1. EXIT: for BatchReviseOnExit=0</div>
+</div>
+<p><h4>Deadlock Scenario:</h4></p>
+<div style="margin-left: 40px;">Transaction 1:
+<div style="margin-left: 40px;">1. ENTER: F0411FSEndDoc     2. ENTER: BatchReviseOnTransactionCommit        <em><span style="text-decoration: underline;">sql&gt; UPDATE PRODDTA.F0011 SET ...,ICIST='U',ICIAPP='P',... WHERE ( ICICUT = 'V' AND ICICU = 9999 )</em>     2. EXIT: for BatchReviseOnTransactionCommit=0</div>
+ Transaction 2:
+<div style="margin-left: 40px;">1. ENTER: BatchReviseOnExit   <span style="text-decoration: underline;"><em>sql&gt; UPDATE PRODDTA.F0011 SET ...,ICIST='A',ICIAPP='A',... WHERE ( ICICUT = 'V' AND ICICU = 9999 )</em>   *** Deadlock takes place ***1. EXIT: for BatchReviseOnExit=01. EXIT: for F0411FSEndDoc=0</div>
+</div>
+<p><h4>SOLUTION</h4>
+If both transactions are called when 'Transaction Processing' is enabled, then call both BSFNs (xxxEndDoc and BatchReviseOnExit) asynchronously.Alternatively, implement batch creation.  Alternatively, call the first BSFN synchronously. (A drawback of this configuration is that users have to wait until the first transaction is fully committed). See the following table which illustrates this further:</p>
+<table style="border-collapse: collapse; width: 703px; height: 105px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 157pt;" width="209" /> <col style="width: 54pt;" width="72" /> <col style="width: 156pt;" width="208" /> <col style="width: 51pt;" width="68" /> <col style="width: 62pt;" width="82" /> </colgroup>
+<tbody>
+<tr style="height: 21pt;">
+<th class="xl66" style="height: 21pt; width: 211pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;" colspan="2">1<span class="font6"><sup>st</sup><span class="font5"> BSFN Call: F0411FSEndDoc</th>
+<th class="xl66" style="width: 207pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;" colspan="2">2<span class="font6"><sup>nd</sup><span class="font5"> BSFN Call: BatchReviseOnExit</th>
+<th class="xl65" style="width: 62pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;">Result</th>
+</tr>
+<tr style="height: 18.75pt;">
+<th class="xl65" style="height: 18.75pt; width: 157pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;">Transaction Processing (On/Off)</th>
+<th class="xl65" style="width: 54pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;">Async</th>
+<th class="xl65" style="width: 156pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;">Transaction Processing (On/Off)</th>
+<th class="xl65" style="width: 51pt; padding-bottom: 0.6pt; padding-top: 0.6pt; font-weight: bold; background-color: #009900; color: white;">Async</th>
+<th style="font-weight: bold; background-color: #009900; color: white;"> </th>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="height: 15.75pt; width: 157pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="209" height="21">Ref #1&gt; On</td>
+<td class="xl65" style="width: 54pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="72">Yes</td>
+<td class="xl65" style="width: 156pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="208">On</td>
+<td class="xl65" style="width: 51pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="68">Yes</td>
+<td class="xl65" style="width: 62pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="82">OK</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="height: 15.75pt; width: 157pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="209" height="21">Ref #2&gt; On</td>
+<td class="xl65" style="width: 54pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="72">Yes</td>
+<td class="xl65" style="width: 156pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="208">On</td>
+<td class="xl65" style="width: 51pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="68">No</td>
+<td class="xl65" style="width: 62pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="82">Not OK</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="height: 15.75pt; width: 157pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="209" height="21">Ref #3&gt; On</td>
+<td class="xl65" style="width: 54pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="72">No</td>
+<td class="xl65" style="width: 156pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="208">On/Off</td>
+<td class="xl65" style="width: 51pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="68">Yes/No</td>
+<td class="xl65" style="width: 62pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="82">OK</td>
+</tr>
+<tr style="height: 15.75pt;">
+<td class="xl65" style="height: 15.75pt; width: 157pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="209" height="21">Ref #4&gt; Off</td>
+<td class="xl65" style="width: 54pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="72">No</td>
+<td class="xl65" style="width: 156pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="208">On/Off</td>
+<td class="xl65" style="width: 51pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="68">Yes/No</td>
+<td class="xl65" style="width: 62pt; padding-bottom: 0.6pt; padding-top: 0.6pt;" width="82">OK</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Notes:
+<ul>
+<li>Batch Header is a standard method to control monetary transactions.</li>
+<li>When Transaction 2 steps in before transaction 1 finishes, deadlocking can occur.</li>
+<li>For this type of error, determine whether 'Transaction Processing' is enabled when calling BSFNS: <em>xxx</em>EndDoc and BatchReviseOnExit (B0000008) and check whether these get called synchronously or asynchronously in the application.</li>
+<li>This type of issue can be transaction volume specific.</li>
+<li>Deadlocks can occur if BatchReviseOnExit is called after xxxEndDoc in Post OK button event or in 'Post Cancel Button clicked' event.</li>
+<li>Similar deadlock issues can occur in application P4312 (Purchase Order Receipt) belonging to the Distribution Module as this application also creates G/L records.</li>
+<li>Related Master Business Functions are AccRecFSEndDoc (B03B0011), F0411FSEndDoc (B0400047) and F0911FSEndDoc (B0900049).</li>
+<li>If transaction processing is disabled when calling <em>xxx</em>EndDoc, a deadlock will not take place because F0011 gets updated as soon as it gets issued.  But usually for higher atomity,  <em>xxx</em>EndDoc gets called when Transaction Processing in on.</li>
+<ul>
+<li>Reference 1: If both BSFNs are running with Transaction Processing enabled, and both are running Asynchronously, the second BSFN will held until the first BSFN ends (likewise single threaded Call Object kernel configuration).</li>
+<li>Reference 2: If the volume of transactions for<em> xxx</em>EndDoc is huge, it may take a long time. In this situation, the second BSFN may interfere with the first transaction.</li>
+<li>Reference 3 &amp; 4: The second transaction will be waiting for the first transaction to return back to the calling application.</li>
+</ul>
+<li>Commonly, Batch Header can be deleted and updated through Business Function FSCloseBatch (B0000042 - F0011 Close Batch) when clicking the Cancel button (in the Data Entry form) or clicking the Close button (in Browse form) to indicate the transaction is completed/done.</li>
+<li>If the user clicks the Cancel button immediately after clicking the OK button, and in the case where there are huge number of records, deadlocking may occur. This is usually seen in systems with slow performance. Try improving the system's performance through system tuning and maintenance.</li>
+</ul>
+</div>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+<hr>
+
+<p><a name="example4"></a><h3>Example 4: Example in Transaction which impact more than 2 modules</h3>Refer to &lt;Note 1050946.1&gt; E1: 34: F4102.IBMRPC - NetChangeFlag (Flag - Net Change) FAQ</p>
+<p>When encountering deadlocks:</p>
+<ul>
+<li>ShipConfirmEndDoc (N4200790 - Shipment Confirmation End Document) can call F4311EndDoc (XT4311Z1 - F4311 End Document) and F4312EndDoc (XT4312Z1 - F4312 End Document) for ST/OT (Transfer Order) transaction</li>
+<li>Purchase Order Receipt for ETO order (where Work Order Number is populated) can call F4312EndDoc and F3111EndDoc (B3101260 - F3111 Parts List End Doc) where both MBF tries to update F4102.MRPC</li>
+</ul>
+<p><h4>Deadlock Scenario:</h4></p>
+<p style="margin-left: 40px;">Transaction 1</p>
+<p style="margin-left: 80px;">   1. ShipConfirmEndDoc       2. F4211GetShipmentInfo           3. F4311OrderIntegrity               4. F4311EditLine               4. F4311EndDoc                   5. SetNetChangeFlag                       SELECT IBITM, IBMCU, IBMRPC, IBUSER, IBPID, IBJOBN, IBUPMJ, IBTDAY FROM CRPDTA.F4102  WHERE  ( IBITM = 1234.000000 AND IBMCU = '         M30' )                       6. GetAuditInfo                       6. EXIT: for GetAuditInfo=0                       <span style="text-decoration: underline;"><span style="font-style: italic;">UPDATE CRPDTA.F4102  SET IBITM=1234.000000,IBMCU='         M30',IBMRPC='1',IBUSER='JDE',IBPID='EP4310',IBJOBN='LOCAL',IBUPMJ=112341,IBTDAY=185546.000000 WHERE  ( IBITM = 1234.000000 AND IBMCU = '         M30' )...       2. F4312EndDoc           3. F0911FSEndDoc           3. F4111EndDocument           3. F4311EndDoc           3. UpdateF4102MRPNetChg               SELECT IBITM, IBMCU, IBVEND, IBMRPC, IBUSER, IBPID, IBJOBN, IBUPMJ, IBTDAY FROM CRPDTA.F4102  WHERE  ( IBITM = 1234.000000 AND '         M30' )               <span style="text-decoration: underline;"><span style="font-style: italic;">UPDATE CRPDTA.F4102  SET IBITM=1234.000000,IBMCU='         M30',IBVEND=4343.000000,IBMRPC='1',IBUSER='JDE',IBPID='EP4205',IBJOBN='LOCAL',IBUPMJ=112341,IBTDAY=185551.000000 WHERE  ( IBITM = 1234.000000 AND IBMCU = '         M30' )               OCI0000178 - Unable to execute - UPDATE CRPDTA.F4102  SET IBITM=:BND1,IBMCU=:BND2,IBVEND=:BND3,IBMRPC=:BND4,IBUSER=:BND5,IBPID=:BND6,IBJOBN=:BND7,IBUPMJ=:BND8,IBTDAY=:BND9 WHERE  ( IBITM = :KEY1 AND IBMCU = :KEY2 )...</p>
+<p><h4>SOLUTION:</h4>In case you face any deadlock (Transaction Failure) for routines explained above, do apply &lt;BUG 11007632&gt; - ETO DEADLOCK BY PO RECEIPT - SAR: 8925493 which sets update of F4102.mrpc for B4000930 - UpdateF4102MRPNetChg (F4102 Updata MRP Net Change) and &lt;Bug 13490757&gt;: DATABASE RECORD LOCK UPDATING NET CHANGE FLAG MRPC ON PURCHASE ORDER AND PARTSLIST for B3100170 - SetNetChangeFlag (Set Net Change Flag) at outside Transaction Processing boundaries through below code:</p>
+<p>idJDBReturn = JDB_InitUser((HENV) lpBhvrCom-&gt;hEnv, &amp;hUser, (JCHAR *)NULL, <span style="color: red;">JDEDB_COMMIT_AUTO);</p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Both F4311EndDocument and F4312Document are called through Table Trigger against F4211 for ST/OT orders</li>
+<li>F4312EndDoc can be called when the processing option of P4205 (Shipment Confirmation) for In-transit account is ON</li>
+<li>BSFN F4311OrderIntegrity can be called through Table Trigger in F4211 for ST/OT orders</li>
+<li>To have full list of business function which put a certain table outside transaction processing, refer to &lt;Document 1513147.1&gt; E1: DB: JDEDB_COMMIT_MANUAL, JDEDB_COMMIT_AUTO, Transaction Processing Boundaries and Deadlock</li>
+</ul>
+</div>
+<p> </p>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+
+
+<hr>
+
+<p><a name="conclusion"></a><h3>Conclusion</h3>In general, deadlocks will impact daily business significantly. When encountering deadlocks:</p>
+<ul>
+<li>Check whether there are any non-standard (or add-on) Table Triggers, Procedures or Functions that have been implemented</li>
+<li>Try to determine how users are interfacing with the offending application</li>
+<li>Ensure that Record Reservation is defined correctly</li>
+<li>Check custom applications (both Interactive and Batch) when Transaction Processing is enabled and whether these compete with standard applications</li>
+<li>Review the E1ROOT_*.LOG(s) which trace JAS level errors</li>
+<li>Check locking/deadlock through database tools and list all tables affected</li>
+<li>Capture JAS logs to check event flow or runtime routines.  Debug logging will capture more information.,</li>
+<li>Capture Call Object Kernel logs.  Againm enabling debug logging will capture internal process information and database transactions.</li>
+<li>Check how offending business functions are being called using Form Design Aid (FDA)</li>
+</ul>
+<p><a href="#TheContent" alt="Back To Top" title="Back To Top">Back To Top</a></p>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>If you experience deadlock,
+<ul>
+<li>Application release upgrade (for example, TP is implemented against P4210, P31111 and so on)</li>
+<li>Custom table trigger, procedure and function</li>
+</ul>
+</li>
+<li>then make it sure your custom code does not contribute deadlock by checking transaction processing (and Record Reservation implemenation) as written at &lt;Document 1320968.1&gt; E1: DB: Listing of Applications with Transaction Processing by EnterpriseOne Release</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

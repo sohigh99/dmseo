@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Write, Update Or Undo Work With Automatic Payment Control Groups Within EnterpriseOne Accounts Payable (P04571, R04571, R04575)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How To Write, Update Or Undo Work With Automatic Payment Control Groups Within EnterpriseOne Accounts Payable (P04571, R04571, R04575)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Work With Payment Groups (P04571)</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section31">Processing Options for Work With Payment Groups (P04571)</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section32">Print Tab</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section33">Update Tab</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section34">Display Tab</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section35">Currency Tab</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section36">Process Tab</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Overview of Revising Unprocessed Payments (P04571)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Write Payment Groups (P04571)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Printing Attachments</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Printing Debit Statements</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">Supplier Vs. Factor/Special Payee</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312">Writing Payments for EFT Payment Groups</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">Data Processing</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Record Reservation for Payments</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Payment ID Using Next Numbers</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section316"><strong>Reset Payments Groups (P04571)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section317"><strong>Undo Payment Groups (P04571)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section318">Undo Automatic Payment Troubleshooting Suggestions</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section319"><strong>Update Payment Groups (P04571)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section320"><strong>Splitting a Payment Group (P04571)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section321"><strong>Revise The Value Date of a Payment (P04571)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section322"><strong>Revise Control Information for a Payment Group (P04571)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section323"><strong>Preventing Duplicate Payment Groups (P04571)</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Work With Payment Groups (P04571)</strong></h3>
+<p>The Create Payment Control Groups (R04570) populates:</p>
+<ul>
+<li>A/P Payment Control Group (F04571).</li>
+<li>A/P Payment Header (F04572).</li>
+<li>A/P Payment Detail (F04573).</li>
+</ul>
+<p> <br />Because the system stores the payment group information in temporary work tables, many revisions can be made prior to writing and completing the payments without affecting the Accounts Payable Matching Document (F0413) table and the Accounts Payable Matching Document Detail (F0414) table. When a payment group is updated, the system removes the payment group information from the temporary work tables and creates records in Accounts Payable Matching Document (F0413) table and the Accounts Payable Matching Document Detail (F0414). Therefore, any changes should be made to the payment group before it is updated. Payment groups in the Work with Payment Groups (P04571) application are at one of the following statuses:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 50%;">Status</th>
+<th class="km" style="width: 50%;">Description</th>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Write</td>
+<td class="km" style="width: 50%;">The pay item is ready to be written.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Update</td>
+<td class="km" style="width: 50%;">The payment has been written and is ready to be updated in the F0411 table.</td>
+</tr>
+</tbody>
+</table>
+<p>Prior to writing payments, the Work with Payment Groups (P04571) program can be used to:</p>
+<ul>
+<li>Change information at the payment and voucher levels.</li>
+<li>Remove payment groups, payments and vouchers from the payment cycle.</li>
+<li>Change control information for payment groups.</li>
+</ul>
+<p>After payments are written, the Work with Payment Groups (P04571) program can be used to:</p>
+<ul>
+<li>Void payments that have been written.</li>
+<li>Remove payment groups, payments and vouchers from the payment cycle.</li>
+</ul>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document discusses how to Work With Payment Groups (P04571) within Oracle JD Edwards EnterpriseOne Financial system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h4 class="km">Processing Options for Work With Payment Groups (P04571)</h4>
+<a name="aref_section32"></a><h5 class="km">Print Tab</h5>
+<ul>
+<li>Processing Option 1: Default Print Program Version - Specify the version that the system uses for the print program and attachment program. If this processing option is left blank, the system uses the default version ZJDE0001.</li>
+<li>Processing Option 2: Payment Control Group Output - Specify the output configuration for Payment Control Groups (PCG). Valid values are:</li>
+<ul>
+<li>Blank (Separate files by PCG).</li>
+<li>1(Separate files by bank account).</li>
+<li>2 (Send multiple PCGs in one spool file).</li>
+</ul>
+<li>Processing Option 3: Save Spool File (FUTURE) - Specify if the system saves a copy of a spool file after it has printed. This option is not yet functional in Oracle JD Edwards EnterpriseOne software.</li>
+<li>Processing Option 4: Hold Spool File (FUTURE) - Specify if the system holds a spool file. This option is not yet functional in JD Edwards EnterpriseOne software. Valid values are:</li>
+</ul>
+<a name="aref_section33"></a><h5 class="km">Update Tab</h5>
+<ul>
+<li>Processing Option 1: Default Register Program Version - Specify the version number of the register program. If this processing option is left blank the system uses the default ZJDE0001 version.</li>
+<li>Processing Option 2: Post Void Payments - Specify whether the system should post void payments to the General Ledger (F0911) or not. Void payments include alignment checks and reset payments. Void payments also include checks that are printed as Void so that the stub can be used for additional information continued from the previous stub. Valid values are:</li>
+<ul>
+<li>Blank (Do not post void payments to the general ledger).</li>
+<li>1 (Post void payments to the general ledger).</li>
+</ul>
+<li>Processing Option 3: Submit Post Program - Determines if payments are automatically posted to the General Ledger (F0911) during the Update process. Valid values are:</li>
+<ul>
+<li>Blank (Do not automatically post payments).</li>
+<li>1 (Automatically post payments).</li>
+</ul>
+</ul>
+<a name="aref_section34"></a><h5 class="km">Display Tab</h5>
+<ul>
+<li>Processing Option 1: Display Business Units - Specify if the system displays the business unit that is assigned to the payment control groups. Valid values are:</li>
+<ul>
+<li>Blank (Do not display the business unit).</li>
+<li>1 (Display the business unit).</li>
+<li>Note: This field is only valid if the Create Payment Control Groups (R04570) program processed payment groups by Business Unit (data dictionary item MCU).</li>
+</ul>
+<li>Processing Option 2: Next Status Selection</li>
+<ul>
+<li>Write Status - Enter 1 to display payment control groups with a Next Status (data dictionary item CRC) of WRT. This option can be changed in Work with Payment Groups (P04571).</li>
+<li>Update Status - Enter 1 to display the payment control groups with a Next Status of UPD. This option can be changed in Work with Payment Groups (P04571).</li>
+</ul>
+<li>Processing Option 3: G/L Bank Account - Enter a value for the GL bank account selection criteria.</li>
+<li>Processing Option 4: Specify Preloaded Values</li>
+<ul>
+<li>Originator - Enter the user ID of the person to display only the payment control groups created by this originator. The value that you enter should be the same as in the Transaction Originator (data dictionary item TORG) field in the Create Payment Control Groups (R04570) program. Leave this processing option blank to search on all transaction originators.</li>
+<li>Payment Control Group Version - Enter a version number of the Create Payment Control Groups (R04570) to display only payment control groups created with this version. Leave this processing option blank to search on all versions.</li>
+<li>Business Unit - Enter a business unit to display only the payment control groups created for that business unit. Leave this processing option blank to search on all business units.</li>
+<li>Payment Instrument: Enter a payment instrument to display only the payment control groups created with this payment instrument. Leave this processing option blank to search on all payment instruments.</li>
+<li>Currency Code: Enter a currency code to display only the payment control groups created with this currency code. Leave this processing option blank to search on all payment currencies.</li>
+</ul>
+<li>Processing Option 5: Alternate Currency</li>
+<ul>
+<li>Display Alternate Currency Amounts - Enter 1 to display the Payment Amount (data dictionary item PAAP) in the alternate currency. This conversion is used for display purposes only.</li>
+<li>Alternate Currency Effective Dates - Enter the effective date for the currency's exchange rate or leave this processing option blank to use the system date.</li>
+</ul>
+</ul>
+<a name="aref_section35"></a><h5 class="km">Currency Tab</h5>
+<ul>
+<li>Processing Option 1: Exchange Rate</li>
+<ul>
+<li>Effective Date- Specify the date used to retrieve the exchange rate when writing foreign or alternate currency payments. If this processing option is left blank, the system uses the payment GL Date (data dictionary item DGJ). If an effective date is entered that has no corresponding exchange rate in the Currency Exchange Rate (F0015) table, the system uses the exchange rate on the voucher.</li>
+<li>Use Voucher's Rate - Enter 1 to use the voucher's exchange rate when writing foreign payments. Leave this processing option blank to use the exchange rate for the specified effective date.</li>
+</ul>
+</ul>
+<a name="aref_section36"></a><h5 class="km">Process Tab</h5>
+<ul>
+<li>Processing Option 1: Interactive Process - Determines how automatic payments are processed. Valid values are:</li>
+<ul>
+<li>Blank (Submit the print and update jobs for batch processing).</li>
+<li>1 (Process payments interactively).</li>
+</ul>
+</ul>
+<a name="aref_section37"></a><h3 class="km"><strong>Overview of Revising Unprocessed Payments (P04571)</strong></h3>
+<p>Changes that can be made to vouchers and payments in a payment group before it has been written include:</p>
+<ul>
+<li>Excluding debit memos (credit vouchers) - Debit memos occur when you have overpaid a supplier or have been issued credit from a supplier. Before a payment group is written, debit memos can be removed.</li>
+<li>Splitting payments - If only a partial payment of a voucher is required, the payment can be split using the Work with Payment Groups (P04571). A Payment is split by using the Split option in the Row Exit. When the Gross Amount (data dictionary item AG) of a voucher is modified using this split option, the system creates a new pay item on the voucher for the remaining balance. This new pay item is given the default pay status, which is typically A (Approved) for payment. The new pay item is not included in the current payment group.</li>
+<li>Revising the Value Date (data dictionary item VLDT) - Typically, the Value Date applies to draft processing and indicates the date that a payment reaches the appropriate bank.</li>
+<li>Removing a voucher from a payment group - If a voucher needs to be removed from a payment group, use the Undo feature in the Row exit to remove it. The system resets the pay status of the voucher from payment in process to Approved and removes it from the group.</li>
+<li>Removing unprocessed payments - If a payment should not be completed, use the Undo feature in the Row exit to remove it from the payment group. </li>
+<li>Removing an entire payment group - Use the Undo option from the Row exit to remove an entire payment group. </li>
+<li>Revising control information for a payment group - Control information that can be changed includes the Sequence ID and the different payment print programs.</li>
+</ul>
+<a name="aref_section38"></a><h3 class="km"><strong>Write Payment Groups (P04571)</strong></h3>
+<p>When payments are written, the payments are either printed or copied to a bank tape. <br /><br />Steps to write an entire payment group:</p>
+<ol>
+<li>Open Work with Payment Groups application (P04571).</li>
+<li>Search for the desired payment group.</li>
+<li>Ensure that the payment group's Next Status (data dictionary item CRC) is set to WRT.</li>
+<li>Highlight the payment group.</li>
+<li>Choose the Write option from the Row exit.</li>
+<li>The user is prompted to verify the Next Payment Number is correct.</li>
+</ol>
+<p>Steps to write a single payment:</p>
+<ol>
+<li>Open Work with Payment Groups application (P04571).</li>
+<li>Search for the desired payment group.</li>
+<li>Ensure that the payment group's Next Status (data dictionary item CRC) is set to WRT.</li>
+<li>Highlight the payment group.</li>
+<li>Click the Select button.</li>
+<li>Find the desired payment(s) and highlight them.</li>
+<li>Choose the Write option from the Row exit.</li>
+<li>The user is prompted to verify the Next Payment Number is correct.</li>
+</ol>
+<p>When payments are written, the system:</p>
+<ul>
+<li>Creates a matching document with a document type of PK (for automatic payment) in the temporary worktables.</li>
+<li>Creates a matching document with a document type of PT (for electronic funds transfer) in the temporary worktables.</li>
+<li>Assigns payment numbers.</li>
+<li>Changes the Next Status (CRC) of the payment group from WRT (write) to UPD (update).</li>
+<li>Prints payments using the appropriate print program as defined by the Payment Instrument (data dictionary item PYIN) and GL Bank Account (data dictionary item ANI).</li>
+<li>Prints attachments using the Print Attachments Standard UBE (R04573), if needed.</li>
+<li>Prints a debit statement using Print AP Payment Debit Statements (R04574) for any Debit Memos.</li>
+<li>Updates the Pay Status in the F04572 from '#' to '*'.</li>
+</ul>
+<div class="kmnotebox">Note: When you write a payment whose amount, in words, exceeds the number of characters provided in the print program, the system prints checks with digits for the payment amount instead of words.</div>
+<a name="aref_section39"></a><h4 class="km">Printing Attachments</h4>
+<p>The standard JD Edwards EnterpriseOne check format is designed to print a maximum of ten detail lines on a payment stub. If a payment has more detail lines than specified on the GL Bank Account Information in Work with GL Bank Accounts (P0030G), attachments can be used to print additional detail lines. To use attachments, Processing Option 2: Print Attachments on the Printing tab of the Create Payment Control Groups (R04570) must be set to 1 prior to creating payment groups.<br /><br />Create Payment Control Groups (R04570) controls the printing of attachments. The P04572 payment format is designed to print ten detail lines on a payment stub. However, you can specify a different number of detail lines per payment stub in Work with GL Bank Accounts (P0030G). If more than ten, a print payment program that can accommodate the number of lines must be used. If a payment has more detail lines than specified, and Processing Option 2: Print Attachments is set to 1, the payment stub prints See Attachment and all detail prints on the attachment. If  Processing Option 2: Print Attachments is Blank and more detail lines exist than specified, the Auto Payments Write/Reset program (P04572) prints the specified number of detail lines on a stub, voids the payment, prints the specified number of detail lines on the next stub, voids the payment, and so on until all detail lines have been printed. The payment form following the last detail line prints with the full payment amount. The system can print as many as 99 payment stubs for a single payment. The number of detail lines that the system prints for a single payment depends on the number of detail lines on each payment stub. For example, if you print 10 detail lines on each payment stub, the system can print 990 (10 detail lines times 99 payment stubs) for the payment. In this example, if more than 990 lines of detail exist, the system prints multiple payments.</p>
+<a name="aref_section310"></a><h4 class="km">Printing Debit Statements</h4>
+<p>A debit statement is printed for negative payments and is used to notify suppliers when they have been overpaid. By assigning a program to the debit statement component, a separate debit statement form is printed with a payment. A debit statement is automatically generated if debit memos and open vouchers for a supplier net to zero or net to a negative total. <span style="text-decoration: underline;"><br /><br /></span></p>
+<div class="kmnotebox">Note: Only when the total is positive does Automatic Payment processing close and process vouchers, otherwise, only a Debit Statement is printed. To close out vouchers that total zero dollars and/or negative, use Manual Payments with Voucher Match (P0413M).</div>
+<a name="aref_section311"></a><h4 class="km">Supplier Vs. Factor/Special Payee</h4>
+<p>Payments are always issued to the Payee Address Number (data dictionary item PYE). The Payee (PYE) is populated during Voucher Entry and is determined by Processing Option 5: Alternate/Payee on the Defaults tab of the Voucher Entry Master Business Function (P0400047):</p>
+<ul>
+<li>If a 1 is entered, the Payee (PYE) field is populated with the Address Book Number in the Factor/Special Payee (data dictionary item AN85) of the Supplier Master (F0401) record.</li>
+<li>If blank, the Payee (PYE) field is populated using the Supplier's Address Book Number.</li>
+</ul>
+<p>The Payee (PYE) field can also be overwritten during voucher entry.</p>
+<a name="aref_section312"></a><h4 class="km">Writing Payments for EFT Payment Groups</h4>
+<p>When writing payment groups assigned to Payment Instrument (PYIN) T, the system creates records in the A/P Payment Tape (F04572OW) table. The system creates new records in the A/P Payment Tape (F04572OW) table for each payment group written. Each payment group is uniquely identified in the A/P Payment Tape (F04572OW) table by the value that is specified in the Member ID field (data dictionary item KNMID).</p>
+<a name="aref_section313"></a><h4 class="km">Data Processing</h4>
+<p>The system does not update the Accounts Payable Ledger (F0411), Accounts Payable Matching Document (F0413) or Accounts Payable Matching Document Detail (F0414) tables until the Update process completes. All payment information remains in the following temporary work tables after the Write process is completed:</p>
+<ul>
+<li>A/P Payment Processing - Header (F04571)</li>
+<li>A/P Payment Processing - Summary (F04572)</li>
+<li>A/P Payment Processing - Detail (F04573).</li>
+</ul>
+<a name="aref_section314"></a><h4 class="km">Record Reservation for Payments</h4>
+<p>Record reservation for payments is the process where the system determines, prior to writing payments, how many payment numbers to reserve for a payment cycle. The system adds that number to the Next Payment Number (data dictionary item NXTC) in the Bank Transit Master (F0030) table for the GL Bank Account being used. For example, if the Next Payment Number (NXTC) is 258 and the system determines 30 payment numbers are going to be used for the next payment cycle, the system updates the next payment number to 288. Therefore, when another user attempts to write payments using the same GL Bank Account, the next payment number begins at 288.<br /><br />The purpose of using the record reservation process is to prevent duplicate payments and is especially useful when more than one user is making payments for the same bank account.  If two users access the Write payments process simultaneously, the system activates the record reservation process for the first user and sends an error message to the second user. When the first user completes the record reservation process, the second user can access a payment number record and reserve the number of payments that are needed for that payment cycle.</p>
+<a name="aref_section315"></a><h4 class="km">Payment ID Using Next Numbers</h4>
+<p>When running a write payment program (e.g. R04572) the system assigns each payment a unique number. This number is the Payment ID (data dictionary item PYID). The Payment ID (PYID) prevents pay items in one payment from being mixed with pay items that are paid on a different payment. "The JD Edwards EnterpriseOne Accounts Payable system uses next unique number program P00022 (F00022) to assign Payment ID (PYID) numbers.<br /><br />Databrowser Query of Unique Key File (F00022) for F0413, which is where the Payment ID Next Number is pulled from.<br /><br /><img src="../images/autop01.png"/><br /><br />When the Write of a Automatic Payment Group is performed, the following pop up screen displays to verify the Next Number for the payment:<br /><br /><img src="../images/autop02.png"/></p>
+<div class="kmnotebox">Caution:  This screen allows you to confirm what your next number is for live physical payments and is not the number used for EFT/ACH payments. This number displayed may not be used depending on the Payment Instrument (PYIN) and Pre-Note Code (AB1) setting in the Supplier Master (P04012).   The Next Number used for EFT payments is pulled from the Next Number (P0002) application under System Code 04, on the fifth line down labeled ACH. </div>
+<a name="aref_section316"></a><h3 class="km"><strong>Reset Payments Groups (P04571)</strong></h3>
+<p>Payments may need to be rewritten after already completing the Write process in certain situations such as a paper jam, or wrong payment date. Payment groups can only be rewritten if they have not been Updated yet. To rewrite payments, the payment control group must be Reset using the Row exit option. Written payments have a Next Status (CRC) of UPD (update). After resetting the payments, the status is changed back to WRT (write). At this point, any issues can be corrected and the Write process can be rerun. <br /><br />If you need to undo or reset an EFT payment, the tape affected can be identified in the Copy Bank Tape File to Tape (P0457) program, which is accessed from the Automatic Payment Processing menu (G0413). This program shows information such as the File ID (data dictionary item FILE) and Member ID (data dictionary item MID). If payments are reset, you must delete the bank tape record before rewriting the payments. <br /><br />When resetting payments:</p>
+<ul>
+<li>If a new beginning payment number is entered, the system voids any payments that were selected for reset and have a payment number that is less than the new beginning number, if that number was previously assigned.</li>
+<li>If the default next payment number is accepted, the system voids payments by writing zero records.</li>
+</ul>
+<p>Processing Option 2: Post Void Payments on the Update tab of Work with Payment Groups (P04571) determines if these voided payments get stored in the General Ledger (F0911). <br /><br />You can reset an entire payment group, a single payment within a group, or a pay item within a payment. <br /><br /><br /></p>
+<a name="aref_section317"></a><h3 class="km"><strong>Undo Payment Groups (P04571)</strong></h3>
+<p>When a payment group or voucher was created in error, use the Undo feature to reverse the payment control group or payment. When undoing a payment or payment control group, the system:</p>
+<ol>
+<li>Voids the payment(s) using the same process described in the Reset Payment Groups (P04571) section.</li>
+<li>Removes the voucher(s) from the payment group, or deletes the entire payment group.</li>
+<li>Resets the Pay Status (PST) of the voucher from Payment in Process (#) to Approved (A). </li>
+</ol>
+<p><br />Steps to undo a pay item:</p>
+<ol>
+<li>Highlight/select the row for the payment group in the Work with Payment Groups application P04571</li>
+<li>Click the select button at the top of your screen</li>
+<li>Find the voucher pay item(s) and highlight/select the rows for them</li>
+<li>Row exit to undo</li>
+<li>When prompted with the screen to validate that you want to undo the selected payments, click yes</li>
+</ol>
+<p><br />Steps to undo an entire payment group:</p>
+<ol>
+<li>Highlight/select the row for the payment group(s) in the Work with Payment Groups application P04571</li>
+<li>Row exit to undo</li>
+<li>When prompted with the screen to validate that you want to undo the selected payment group, click yes.</li>
+</ol>
+<a name="aref_section318"></a><h4 class="km">Undo Automatic Payment Troubleshooting Suggestions</h4>
+<p>If you are working with Oracle Software Support on a Service Request with a Support Engineer within EnterpriseOne Accounts Payable and they want you to verify if your three temporary payment tables (F04571, F04572 and F04573) are not corrupted, they may ask you to first Undo ALL existing payment groups. For steps on this process, please see the Preventing Duplicate Payments (P04571) section.  Common issues that may be encountered:</p>
+<ul>
+<li><em>Not Able To Undo all Groups</em> - If you have undone all groups except one and this  group does not have an amount listed, this most likely means it is a corrupted group and is only showing in the temporary header table (F04571).  After all groups that can be undone query the three tables (F04571, F04572 and F04573). If this group exists only in the F04571, it is corrupted and should be removed. </li>
+<li><em>Undo all groups still shows data</em> - If you are able to Undo all payment groups at both Write and Update status but a query of the three temporary payment tables (F04571, F04572 and F04573) shows data remaining indicates the tables themselves are corrupted. These must be cleared and regenerated by your CNC administrator to fix the issues.  Export this data for future reference because you may need to research the data listed to see if any of the vouchers listed have truly been paid or were never paid.</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">Caution: Above are examples of how Automatic Payments in Work With Payment Groups (P04571) can become corrupted for one reason or another.  We strongly encourage you to log a Service Request with Oracle Software Support for assistance with the above process, but you can have these steps to add this information to the Service Request to assist with the troubleshooting. </div>
+<a name="aref_section319"></a><h3 class="km"><strong>Update Payment Groups (P04571)</strong></h3>
+<p>After payment groups have been written,  the groups must be updated to create transaction records in the Accounts Payable Matching Document (F0413) and Accounts Payable Matching Document Detail (F0414). Payment control groups can be Updated only if the Next Status (CRC) is UPD (update). <br /><br />To update a payment group:</p>
+<ol>
+<ul>
+<li>Highlight/select the row for the payment group(s).</li>
+<li>Select the Update option from the Row exit.</li>
+</ul>
+</ol>
+<p>When a payment group is updated, the system:</p>
+<ol>
+<ul>
+<li>Processes void payments.</li>
+<li>Changes the pay status of vouchers from payment in-process (#) to paid (P) and sets the Open Amount (PAAP) to zero.</li>
+<li>Prints the Payment Register (R04576)</li>
+<li>Copies the payment information to the Accounts Payable Matching Document (F0413) and Accounts Payable Matching Document Detail (F0414) tables from the temporary work tables.</li>
+<li>Removes the records from the temporary work tables:</li>
+<ul>
+<li>A/P Payment Control Group (F04571)</li>
+<li>A/P Payment Header (F04572)</li>
+<li>A/P Payment Detail (F04573).</li>
+</ul>
+</ul>
+</ol>
+<p> </p>
+<div class="kmnotebox">Note: EFT payment records remain in A/P Payment Tape (F04572OW)until they are manually deleted.</div>
+<p><br /><br />The following graphic illustrates what happens when the system updates the Accounts Payable Ledger (F0411):<br /><br /><img src="../images/autop03.png"/></p>
+<a name="aref_section320"></a><h3 class="km"><strong>Splitting a Payment Group (P04571)</strong></h3>
+<p><br />There may be a reason to split a payment group.  To do so, use the Split option from the Row exit when on the Work with Payment Detail (W04573A) form.<br /><br />Access the Split Payment form.<br /><br /><img src="../images/autop04.png"/></p>
+<a name="aref_section321"></a><h3 class="km"><strong>Revise The Value Date of a Payment (P04571)</strong></h3>
+<p>There may be a reason to revise the Value Date (data dictionary item VLDG) of a payment. The Value Date (VLDT) is the date that a payment amount is debited or credited to the bank account. To make this revision, use the ValueDate option from the Form exit on the Work with Payment Group (W04572WA) form. The following forms opens:<br /><br /><img src="../images/autop05.png"/></p>
+<a name="aref_section322"></a><h3 class="km"><strong>Revise Control Information for a Payment Group (P04571)</strong></h3>
+<p>Before Writing an automatic payment control group, the Control Information may need to be modified. The Control Information for a payment group is information on how the payments should be written. To modify this information,</p>
+<ol>
+<li>From Work with Payment Groups, inquire on your payment control group</li>
+<li>check the selection box and use the Controls option from the Row Exit.</li>
+</ol>
+<p><img src="../images/autop06.png" width="900"/><br /><br />Important fields:</p>
+<table class="km" style="width: 50%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 50%;">Key Field</th>
+<th class="km" style="width: 50%;">Explanation</th>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Payment (PGMP)</td>
+<td class="km" style="width: 50%;">Enter a value that exists in the Produce Bank File (04/PP) UDC table to specify the program used to print accounts payable payments.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Register (PGMR)</td>
+<td class="km" style="width: 50%;">Enter a value that exists in the Register Program - Payments (04/PR) UDC table to specify the program used to print the account payable payment register.</td>
+</tr>
+<tr>
+<td>Attachment (PGMA)</td>
+<td>Enter a value that exists in the Attachment Program - Payments (04/PA) UDC table to specify the program used to print attachments when processing accounts payable payments.</td>
+</tr>
+<tr>
+<td>Debit Statement (PGMD)</td>
+<td>Enter a value that exists in the Debit Statement Pgm - Payments (04/PD) UDC table to specify the program used to print debit statements when processing accounts payable payments.</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<a name="aref_section323"></a><h3 class="km"><strong>Preventing Duplicate Payment Groups (P04571)</strong></h3>
+<p>For full details on how to troubleshoot to fix duplicate payments and prevent duplicate payments, please refer to <a href='../docs/1957784.html'>"Troubleshooting Accounts Payable Duplicate Payment Batches</a></p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

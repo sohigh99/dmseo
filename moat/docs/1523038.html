@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case Study - Slow Performance in P4116</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Case study - Slow Performance in P4116 (Inventory Reclassification) </h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>  Case study for performance issue from Inventory Transaction. This document may cover multiple products and components in EnterpriseOne.</p>
+
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#q1">Is The Database Optimized?</a></li>
+  <li><a href="#q2">What Is The Business Requirement?</a></li>
+  <li><a href="#q3">How Do You Determine If You Have Slow Performance? How Slow is Slow?</a></li>
+  <li><a href="#q4">When Is Audit Information Determined?</a></li>
+  <li><a href="#q5">What Sub-transactions Are Performed During F4111EndDoc?</a></li>
+  <li><a href="#q6">How Can Performance Issues Be Analyzed?</a></li>
+  <li><a href="#q7">Possible Workarounds</a></li>
+  <li><a href="#q8">Maintaining Optimal Performance As Business Data Tables Increase in Size</a></li>
+  <li><a href="#q9">Other Considerations</a></li>
+</ul>
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+
+<p>Questions to address when encountering slow performance with inventory transactions in JD Edwards EnterpriseOne.</p>
+<p> </p>
+<h3 class="km"><a name="q1"></a>Is the database optimized?</h3>
+<p>The causes of slow performance can vary. This document presumes that your DBA (Database Administrator) optimizes the database on a regular basis. This document does not cover how to optimize the database.</p>
+<hr />
+<h3 class="km"><a name="q2"></a>What is the business requirement?</h3>
+<p> In this example, we will review a manufacturing company manufacturing consumer goods which have to be controlled by Lot Number.<br />       1. Manufacturing B/P produces and assigns a single lot.<br />       2. The sales department dispatchs a single lot into multiple lots (for this example, 400 Lots) through P4116 (Item Reclassification)</p>
+<hr />
+<h3 class="km"<a name="q3"></a>>How do you determine if you have slow performance? How slow is slow?</h3>
+<p>In multiplying a single lot to many lots, users face 'Web Client Exception', 'Asynchronous Business Function Error' or 'Transaction Failure' when enterpriseServerTimeout = 90000 (milisecond) and JDENETTimeout = 60 second.</p>
+<p>In reviewing data from F4111, it took a second in writing each row<br /> Excel output example:<br /> sql&gt; select ILUKID,ILDCT,ILDOC, TO_CHAR(TO_DATE(SUBSTR(ILCRDJ,2,5),'YYDDD'),'YYYY/MM/DD') as "date",<br /> ILTDAY as "time",ILFRTO,ILLITM,ILTRQT/100 as "quantity",ILTRUM,ILLOCN,ILLOTN <br /> from proddta.f4111<br /> where   ILITM=187 AND ILLOTN like 'A%'<br /> ORDER  BY 2,1 </p>
+<table style="width: 879px; border-collapse: collapse; height: 181px;" border="2" cellspacing="2" cellpadding="1"><colgroup> <col style="width: 48pt;" span="3" width="64" /> <col style="width: 59pt;" width="78" /> <col style="width: 48pt;" span="7" width="64" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; width: 48pt; background-color: #cccccc;">ILUKID</th>
+<th style="width: 48pt; background-color: #cccccc;">ILDCT</th>
+<th style="width: 48pt; background-color: #cccccc;">ILDOC</th>
+<th style="width: 59pt; background-color: #cccccc;">date</th>
+<th style="width: 48pt; background-color: #cccccc;">time</th>
+<th style="width: 48pt; background-color: #cccccc;">ILFRTO</th>
+<th style="width: 48pt; background-color: #cccccc;">ILLITM</th>
+<th style="width: 48pt; background-color: #cccccc;">quantity</th>
+<th style="width: 48pt; background-color: #cccccc;">ILTRUM</th>
+<th style="width: 48pt; background-color: #cccccc;">ILLOCN</th>
+<th style="width: 48pt; background-color: #cccccc;">ILLOTN</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357265</td>
+<td>IB</td>
+<td class="xl65">61831</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">171804</td>
+<td> </td>
+<td>TESTITEM    </td>
+<td class="xl65">0</td>
+<td>  </td>
+<td>FG20                </td>
+<td>30116-88                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357266</td>
+<td>IC</td>
+<td class="xl65">61831</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">171804</td>
+<td> </td>
+<td>TESTITEM     </td>
+<td class="xl65">88</td>
+<td>BC</td>
+<td>FG20                </td>
+<td>30116-88                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357267</td>
+<td>IR</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">173938</td>
+<td>F</td>
+<td>TESTITEM    </td>
+<td class="xl65">-22620</td>
+<td>KG</td>
+<td>FG20                </td>
+<td>30116-88                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357268</td>
+<td>IB</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">173940</td>
+<td>T</td>
+<td>TESTITEM      </td>
+<td class="xl65">0</td>
+<td>  </td>
+<td>FG20                </td>
+<td>30116-01                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357269</td>
+<td>IR</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">173940</td>
+<td>T</td>
+<td>TESTITEM       </td>
+<td class="xl65">260</td>
+<td>KG</td>
+<td>FG20                </td>
+<td>30116-01                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357270</td>
+<td>IB</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">173941</td>
+<td>T</td>
+<td>TESTITEM     </td>
+<td class="xl65">0</td>
+<td>  </td>
+<td>FG20                </td>
+<td>30116-02                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357271</td>
+<td>IR</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">173942</td>
+<td>T</td>
+<td>TESTITEM     </td>
+<td class="xl65">260</td>
+<td>KG</td>
+<td>FG20                </td>
+<td>30116-02                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17"> </td>
+<td> </td>
+<td class="xl65"> </td>
+<td> </td>
+<td class="xl65">...</td>
+<td> </td>
+<td> </td>
+<td class="xl65"> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357440</td>
+<td>IB</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">174153</td>
+<td>T</td>
+<td>TESTITEM      </td>
+<td class="xl65">0</td>
+<td>  </td>
+<td>FG20                </td>
+<td>30116-87                      </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl65" style="height: 12.75pt;" height="17">357441</td>
+<td>IR</td>
+<td class="xl65">13000003</td>
+<td>2013/01/16</td>
+<td class="xl65" style="background-color: #ffff33;">174153</td>
+<td>T</td>
+<td>TESTITEM      </td>
+<td class="xl65">260</td>
+<td>KG</td>
+<td>FG20                </td>
+<td>30116-87                      </td>
+</tr>
+</tbody>
+</table>
+<p>For this example, quantity 22620</p>
+<hr />
+<h3 class="km"><a name="q4"></a>When is audit information determined?</h3>
+<p>Audit information is determined through F4111EndDoc routine</p>
+<hr />
+<h3 class="km"><a name="q5"></a>What sub-transactions are performed during F4111EndDoc?</h3>
+<p>Commonly performed sub-transactions</p>
+<ul>
+<li>    Update Average Cost (F4105 - Item Cost)</li>
+<li>    Update G/L (F0911 - General Ledger)</li>
+<li>    Update Audit Information (F4102 - Item Branch)</li>
+<li>    Update Quantity (F41021 - Item Location)</li>
+<li>    Update Agreement (F38011 - Agreement Quantities)</li>
+<li>    Write Cardex (F4111 - Item Ledger)</li>
+<li>    (Optional EDI) write F47126/F47127 - EDI Product Activity Data Header/Detail</li>
+<li>    Write cost computed (F4105 - Item Cost)</li>
+<li>    Update/Write Item Price (F4106 - Item Price)</li>
+<li>    Write/Update Lot (F4108 - Lot Master)</li>
+<li>    Write License Plate</li>
+<li>    (Optional) Update F4115 - Item History (cUpdateSalesHistory = 1)</li>
+<li>    Update F3106 - W.O. Cross Reference File (P31114 and DFM)</li>
+<li>    Update F4102.MRPC (net change flag)</li>
+<li>    Delete F4141 and Update F4106 (for purge option is ON for R41610)</li>
+<li>    Delete F4141 and Update F4140 (when purge is ON for R41413)</li>
+<li>    Delete F41021WF</li>
+<li>    Call R47127O - Outbound Product Activity Data Subsystem UBE</li>
+<li>    Write Bulk Information (SY41B is installed from F99410)</li>
+<li>    Update Warehouse</li>
+<li>    Close batch by updating F0011.IST</li>
+<li>    Delete all the caches created/used</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Refer to &lt;Document 1276239.1&gt; - E1: 41: Inventory Transaction MBF XT4111Z1 Clarification</li>
+<li>Validation is performed through F4111EditLine so this document does not cover validation and writing cache routine</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q6"></a>How can performance issue be analyzed?</h3>
+<p>Common tools used for analysis</p>
+<ol>
+<li>Capture callobject kernel log (JDEDEBUG_*.log) for problematic transaction.</li>
+<li>Analyze it through Performance Workbench which shows "Timing summaries in Business Function detail output". Refer to &lt;Document 747328.1&gt; - EnterpriseOne Performance Workbench</li>
+<li>Open jdedebug.log and check whether there is any repetitive routine</li>
+</ol>
+<p> </p>
+<p>Example of log:<br /> P4116 - Item Reclassifications<br />     |--- (EVENT:  Row Exit &amp; Changed - Asynch) XT4116Z1 - F4116FSEditLine (F4116 FS Edit Line) which validates detail data and create cache for inventory and general ledger<br />           : This functions gets called 400 times and more however this routine does not impact COMMIT FAILE<br />     |--- (EVENT: Button Clicked (OK Button)) XT4116Z1 - F4116FSEndDoc (F4116 FS End Doc)<br />              |--- XT4111Z1 - F4111EndDocument<br />                    : This function reads row by row based on inventory cache created through Edit Line routine. So below routines calls 400 times for this example.<br />                    |--- GetAuditInfo: So each rows from F4111 can have different time flag<br />                    |--- Other routine as question 5 reads<br />                    |--- X4181 - AverageCostUpdate (F4105UpdateAverageCost<br />                             |--- XF4105 - GetItemCost (F4105 Get Item Cost Row) to read before cost is computed.<br />                             |--- XF4105 - UpdateItemCost (F4105 UPdte Item Cost): main business function to edit F4105.<br />                                   |--- XF4105 - EditF4105 (Edit F4105): validation before update<br />                             |--- JDB_UpdateTable (F4105)</p>
+<p> </p>
+<div style="margin-left: 80px; font-style: italic;"><small><span style="text-decoration: underline; color: red; font-weight: bold;">11:06:09</span>.230119     Calling Business function AverageCostUpdate from F4111EndDocument for USERID. Application Name [P4116], Version [ZJDE0001] (BSFNLevel = 3)<br /> 11:06:09.230123     IN-&gt;[  1] mnShortItemNumber                [9999]<br /> 11:06:09.230124     IN-&gt;[  2] szSecondItemNumber               [2NDITEM                  ] <br /> 11:06:09.230125     IN-&gt;[  3] szThirdItemNumber                [3RDITEM                  ] <br /> 11:06:09.230126     IN-&gt;[  4] szBranchPlant                    [         M30] <br /> 11:06:09.230127     IN-&gt;[  5] szLocation                       [LOCN        ] <br /> 11:06:09.230128     IN-&gt;[  6] szLotNumber                      [30124-50] <br /> 11:06:09.230129     IN-&gt;[  7] mnTransactionQuantity            [260] <br /> 11:06:09.230130     IN-&gt;[  8] mnExtendedCost                   [7705] <br /> 11:06:09.230131    <span style="color: red;"> IN-&gt;[  9] cCostingLevel                    [2] </span>  *** Since costing level is 2 it has to read all data from F41021 which meets MCU and ITM ***<br /> 11:06:09.230132     <span style="color: red;">IN-&gt;[ 10] cUpdateAverageCost               [Y] </span>  *** UpdateAverageCost is Y so it has to update Average Cost ***<br /> 11:06:09.230133     IN-&gt;[ 11] mnMarginMaintenance              [.000] <br /> 11:06:09.230134     IN-&gt;[ 12] cMarginMaintenanceFlag           [N] <br /> 11:06:09.230135     IN-&gt;[ 13] cSalesBasePriceLevel             [3] <br /> 11:06:09.230136     IN-&gt;[ 14] szPrimaryUOM                     [KG] <br /> 11:06:09.230137     IN-&gt;[ 15] szProgramID                      [EP4116] <br /> 11:06:09.230138     IN-&gt;[ 16] szCurrencyCode                   [] <br /> 11:06:09.230139     IN-&gt;[ 17] mnUnitCostInPrimary              [29.6329] <br /> 11:06:09.230140     IN-&gt;[ 18] cUseUnitCost                     [1] <br /> 11:06:09.230148     Entering JDB_OpenTable(Table = F41021) <br /> <span style="font-weight: bold; text-decoration: underline; color: red;">11:06:09</span>.230153     Entering JDB_FetchKeyed (hRequest 06D96B58)  *** This returns all the row which meets below WHERE condition ***<br /> 11:06:09.230155     SELECT LIITM, LIMCU, LILOCN, LILOTN, LIPQOH FROM CRPDTA.F41021  WHERE  ( LIITM = 9999.000000 AND LIMCU = '         M30' )  *** No Order By statement because JDB_FetchKeyed() ***<br /> 11:06:09.230156     ORACLE DBFetch conn=09F9AA08 requ=09E4BAB8 maxrows=100   *** every 100 records to have better performance from DB. For this example, the record count 40,000 rows ***<br /> 11:06:09.230157     Fetched the record   *** Indicate the 1st row was returned based on above SELECT statement ***<br /> 11:06:09.230158     Entering JDB_FetchMatchingKey (hRequest 06D96B58)  <br /> 11:06:09.230159     Fetched the record <br /> ...<br /> 11:06:09.246210     Entering JDB_FetchMatchingKey (hRequest 06D96B58) <br /> 11:06:09.246211     ORACLE DBFetch conn=09F9AA08 requ=09E4BAB8 maxrows=100 <br /> 11:06:09.246212     Fetched the record <br /> 11:06:09.246213     Entering JDB_FetchMatchingKey (hRequest 06D96B58) <br /> 11:06:09.246214     Fetched the record <br /> ...<br /> 11:06:10.575264     Entering JDB_FetchMatchingKey (hRequest 06D96B58) <br /> 11:06:10.575265     Fetched the record <br /> 11:06:10.575266     Entering JDB_FetchMatchingKey (hRequest 06D96B58) <br /> 11:06:10.575267     No More Data found  *** Indicate that the last row was read from F4105 ***<br /> 11:06:10.575269     Entering JDB_CloseTable(Table = F41021) <br /> 11:06:10.590353     OUT-&gt;[  1] mnShortItemNumber                [9999] <br /> 11:06:10.590354     OUT-&gt;[  2] szSecondItemNumber               [2NDITEM                  ] <br /> 11:06:10.590355     OUT-&gt;[  3] szThirdItemNumber                [3RDITEM                  ] <br /> 11:06:10.590356     OUT-&gt;[  4] szBranchPlant                    [         M30] <br /> 11:06:10.590357     OUT-&gt;[  5] szLocation                       [LOCN        ] <br /> 11:06:10.590358     OUT-&gt;[  6] szLotNumber                      [30124-50] <br /> 11:06:10.590359     OUT-&gt;[  7] mnTransactionQuantity            [260] <br /> 11:06:10.590360     OUT-&gt;[  8] mnExtendedCost                   [7705] <br /> 11:06:10.590361     OUT-&gt;[  9] cCostingLevel                    [2] <br /> 11:06:10.590362     OUT-&gt;[ 10] cUpdateAverageCost               [Y] <br /> 11:06:10.590363     OUT-&gt;[ 11] mnMarginMaintenance              [.000] <br /> 11:06:10.590364     OUT-&gt;[ 12] cMarginMaintenanceFlag           [N] <br /> 11:06:10.590365     OUT-&gt;[ 13] cSalesBasePriceLevel             [3] <br /> 11:06:10.590366     OUT-&gt;[ 14] szPrimaryUOM                     [KG] <br /> 11:06:10.590367     OUT-&gt;[ 15] szProgramID                      [EP4116] <br /> 11:06:10.590368     OUT-&gt;[ 16] szCurrencyCode                   [] <br /> 11:06:10.590369     OUT-&gt;[ 17] mnUnitCostInPrimary              [29.6329] <br /> 11:06:10.590370     OUT-&gt;[ 18] cUseUnitCost                     [1] <br /> <span style="text-decoration: underline; font-weight: bold; color: red;">11:06:10</span>.590376     Return value is 0 for AverageCostUpdate. (BSFNLevel = 3) <br /> </small></div>
+<p>Example of code X4181.c</p>
+<p style="margin-left: 80px; font-style: italic;"><small>*** Break In Code ***</small></p>
+<p style="margin-left: 80px;"><small style="font-style: italic;">     JDEDBReturn = JDB_FetchKeyed( hRequest, IndexID, (void *)(&amp;dsF41021Key1),<br />                                     (short)(uNumOfKeys), (void *)(&amp;dsF41021), <br />                                     (int) FALSE ) ;<br />       <span style="color: red;">while</span> ( JDEDBReturn == JDEDB_PASSED ) /* If costing level is 2 it will look for all location and lot which meets ITM and MCU */<br />       {<br />          MathAdd ( lpmnPQOH, lpmnPQOH, &amp;dsF41021.lipqoh ) ; /* lpmnPQOH = lpmnPQOH + &amp;dsF41021.lipqoh which sum up pqoh */<br />          JDEDBReturn = JDB_FetchMatchingKey( hRequest, (void *)(&amp;dsF41021Key1),<br />                                              (short)(uNumOfKeys), <br />                                              (void *)(&amp;dsF41021), (int) FALSE ) ;<br />       }<br /> *** Break In Code ***</small></p>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Unless it is requested by Oracle Support, do not set DumpLPDS =0 in [DEBUG] section of your JDE.INI where BSFNs are running. Because as this case study reads each parameters are meaningful to take note. Refer to &lt;Document 1298665.1&gt; - E1: KER: DumpLPDS Parameter Considerations in the Server JDE.</li>
+<li>Detail on aggregation &lt;Document 1082178.1&gt; - E1: BSFN: How to Sum/Aggregate Quantity or Amount using JDE API</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q7"></a>Possible workarounds</h3>
+<p>There are a few ways to workaround this issue</p>
+<ul>
+<li>Turn off Average Cost update by removing 'Y' flag for Description 02. Most of cases, this shall sever performance gain for this type of transaction because there is not any change in inventory cost.</li>
+<ul>
+<li>&lt;Document 625564.1&gt; - E1: 41: Weighted Average Cost (P4105/R41811/P4205/P4312/P4114/P4112)</li>
+</ul>
+<li>Implement Batch Process R47121 (EDI Product Activity Data Edit/Create)</li>
+<ul>
+<li>&lt;Document 625628.1&gt; - E1: 47: Inbound 852 (R47121/P47120/P4112/P4114/R41413)</li>
+</ul>
+</ul>
+<hr />
+<h3 class="km"><a name="q8"></a>Maintaining otimal performance as data tables increase in size</h3>
+<p><br /> Most of the performance is related with data and/or database (RDBMS) so it is important to have compact data set by purging it regularly.</p>
+<p>Refer to below documents,</p>
+<ul>
+<li>&lt;Document 1268674.1&gt; - E1: 34: R3482 &amp; R3483 MRP Performance and Data Purge</li>
+<li>&lt;Document 1322000.1&gt; - E1: 41: Inventory Purge Programs (R4101P / R4102P)</li>
+</ul>
+<hr />
+<h3 class="km"><a name="q9"></a>Other considerations</h3>
+<p>Performance is very subjective.  It is important to indicate expectations or objectives for the issue. The cause of slow performance is variable.  Try to narrow down the issue from top to bottom. The information written here is most bottom level debugging.</p>
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

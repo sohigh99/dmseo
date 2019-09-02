@@ -1,0 +1,1279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Debug Batch Header (F0011) Related Issues in Distribution</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Debug Batch Header (F0011) Related Issues in Distribution</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+<p>This note is to guide how to debug when issue pertains to Batch Header (F0011) File. The audience for this note is someone with developer level knowledge.<br /><br />This note is based on thin client configuration and supposed that you understood <strong>Batch Control Processing</strong> in EnterpriseOne. In EnterpriseOne Batch Header is heavily used to isolate a certain transaction when the result of transaction affects monetary account or needs to be written into F0911 (General Ledger File).</p>
+
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#q1">General routine to add/update/delete Batch Control Records (F0011)</a></li>
+  <li><a href="#q1">Example I - Inventory Transaction</a></li>
+  <li><a href="#q1">Example II - P4312 - Purchase Order Receipt</a></li>
+  <li><a href="#q1">Example III - P4314 - Voucher Match</a></li>
+  <li><a href="#q1">Example IV - R42800 - Sales Update</a></li>
+  <li><a href="#q1">List of application with Batch Control</a></li>
+  <li><a href="#q1">Column Explanation on F0011 - Batch Control Records</a></li>
+</ul>
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>This note is to explain how to debug when a certain issue is coming from batch header file (F0011). Batch header is to be written, when a certain transaction affects General Ledger, to set boundary of transaction. It is important to capture both jasdebug.log and jdedebug.log to debug issue properly because batch header information has to be handled from both client (serialized object) and server (callobject kernel). In case, the code you are on is not up to the latest code there is chance of</p>
+<ul>
+<li>Dead Lock: INSERT, UPDATE and DELETE can contribute deadlock against F0011</li>
+<li>Deletion of batch header: Verify user interface in Cancel or Close button and check whether Transaction Processing for both End Doc and Batch Header Related business function</li>
+<li>Or wrongly updated batch header: Check locking or user interface</li>
+</ul>
+<p><br /> To enable you to debug your issue better this note explains how batch header is handled in Distribution module. Same routine may have implemented in Financial or Manufacturing Module so the way you can debug is more or less same. <br /> <br /> <em>Note that most of codes here are hard coded so do not modify any code and Oracle does not bear any responsibility for wrong result may be caused by custom code you are on. </em><br /> <br /> Before review below note, refer to &lt;Document <a href="../docs/1317478.html">Batch Control Processing and Related Business Functions in EnterpriseOne to understand Batch Control Processing</a> better.</p>
+<hr />
+<h3 class="km"><a name="q1"></a>General routine to add/update/delete Batch Control Records (F0011)</h3>
+<h4 class="km">Creating new transaction:</h4>
+<table style="border-collapse: collapse; width: 966px; height: 255px;" border="2" cellspacing="1" cellpadding="1"><colgroup><col style="width: 103pt;" width="137" /> <col style="width: 65pt;" width="86" /> <col style="width: 149pt;" width="198" /> <col style="width: 119pt;" width="158" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 148px;" height="17"> </td>
+<th style="width: 257px; background-color: #999999; color: black;">Hook-up Event</th>
+<th style="width: 236px; background-color: #999999; color: black;">Business Function</th>
+<th style="width: 300px; background-color: #999999; color: black;">Notes</th>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Insert</th>
+<td style="width: 257px;">Row is Exited Changed - Asynch</td>
+<td style="width: 236px;">B0000004 - BatchOpenOnInitialization (F0011 Write Batch Header)</td>
+<td style="width: 300px;">F4114EditLine <br />     F4111EditLine <br />       FSOpenBatch <br />          BatchOpenOnInitialization<br /> - Before F0911FSBeginDoc gets called</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Update 1</th>
+<td style="width: 257px;">Post OK button clicked</td>
+<td style="width: 236px;">B0000007 - BatchReviseOnTransactionCommit (F0011 Update on Transaction Commitment)</td>
+<td style="width: 300px;">F4114EndDocument<br />     F4111EndDocument<br />         F0911FSEndDoc<br />           BatchReviseOnTransactionCommit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Update 2</th>
+<td style="width: 257px;">Close Button Clicked</td>
+<td style="width: 236px;"> </td>
+<td style="width: 300px;">F4114ClearDetailStack<br />     F4111ClearDetailStack<br />         BatchReviseOnExit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Delete</th>
+<td style="width: 257px;">Cancel button clicked<br style="font-weight: bold;" /> or Batch in Error in Batch Application</td>
+<td style="width: 236px;"> </td>
+<td style="width: 300px;">FSCloseBatch <br />     BatchReviseOnExit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; width: 148px; background-color: #999999; color: black;">Close Batch</th>
+<td style="width: 257px;"> </td>
+<td style="width: 236px;">N0000001 - BatchControlProcessing (Batch Control Processing)</td>
+<td style="width: 300px;"> </td>
+</tr>
+</tbody>
+</table>
+<p>* Batch Control is ON batch header has to be written before batch control form gets opened through F0011 Write Batch Header</p>
+<h5 class="km">Editing/updating existing data:</h5>
+<table style="border-collapse: collapse; width: 966px; height: 265px;" border="2" cellspacing="1" cellpadding="1"><colgroup><col style="width: 103pt;" width="137" /> <col style="width: 65pt;" width="86" /> <col style="width: 149pt;" width="198" /> <col style="width: 119pt;" width="158" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 148px;" height="17"> </td>
+<th style="width: 257px; background-color: #999999; color: black;">Hook-up Event</th>
+<th style="width: 236px; background-color: #999999; color: black;">Business Function</th>
+<th style="width: 300px; background-color: #999999; color: black;">Notes</th>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Insert</th>
+<td style="width: 257px;">Dialog is Initialized</td>
+<td style="width: 236px;">N0000001 - BatchOpenBatchControlProcessing (Batch Open - Batch Control Processing)</td>
+<td style="width: 300px;">Written by N0000001</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Update 1</th>
+<td style="width: 257px;">Post OK button clicked</td>
+<td style="width: 236px;">B0000007 - BatchReviseOnTransactionCommit (F0011 Update on Transaction Commitment)</td>
+<td style="width: 300px;">F4312EndDoc <br />     F0911FSEndDoc <br />        BatchReviseOnTransactionCommit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Update 2</th>
+<td style="width: 257px;">Close Button Clicked</td>
+<td style="width: 236px;"> </td>
+<td style="width: 300px;">FSCloseBatch <br />     BatchReviseOnExit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; background-color: #999999; width: 148px; color: black;">Delete</th>
+<td style="width: 257px;">Cancel button clicked</td>
+<td style="width: 236px;"> </td>
+<td style="width: 300px;">FSCloseBatch <br />     BatchReviseOnExit</td>
+</tr>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; width: 148px; background-color: #999999; color: black;">Close Batch</th>
+<td style="width: 257px;"> </td>
+<td style="width: 236px;">N0000001 - BatchControlProcessing (Batch Control Processing)</td>
+<td style="width: 300px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q2"></a>Example I - Inventory Transaction</h3>
+<p>  : Inventory transaction creates Cardex (F4111) file so below routine explains how application related with inventory transaction handles batch header<br /> 1. Insert:<br />     Event: Row Is Exited Changed - Asynch<br />     Business function: dit Line routine calls F4111EditLine <br />     Function: Insert takes place before F0911FSBeginDoc as Cache for G/L has to be written with batch created through the Business Function BatchOpenOnInitialization <br />     Call Stack:<br />     1. F4114EditLine (XT4114Z1 - F4114 Edit Line)<br />         2. F4111EditLine (XT4111Z1 - F4111 Edit Line)<br />             3. FSOpenBatch (B0000042 - F0011 Open Batch)<br />                 4. BatchOpenOnInitialization (B0000004 - F0011 Write Batch Header)<br /> <small style="font-style: italic;">                    INSERT INTO PRODDTA.F0011 (ICICUT, ICICU, ICIST, ICIAPP, ICAICU, ICUSER, ICDICJ, ICNDO, ICBAL, ICBALJ, ICAME, ICDOCN, ICAUSR, ICPOB, ICIBOI, ICAIPT, ICOFFP, ICPID, ICJOBN, ICUPMJ, ICUPMT, ICDRSP, IC52PP, ICCBP) VALUES ('N',159698.000000,'U','P',0.000000,'SDONGMYE',111142,0.000000,' ',' ',0.000000,0.000000,' ','N',' ',0.000000,' ',' ',' ',0,0.000000,' ',' ',' ') </small>            3. F0911FSBeginDoc (B0900049 - F0911 Begin Document)<br /> <br /> 2. Update 1<br />     Event: Post OK button clicked<br />     Business Function: Update take place in F0911FSEndDoc routine through business function BatchReviseOnTransactionCommit <br />     Function: This is to isolate working batch as there is chance to create batch through Edit Line and exit from routine without committing transaction<br /> <br /> 2'. Update 2 <br />     Event: After all the data have committed through BatchReviseOnExit in End Doc routine<br />     Function: This is to make a certain batch to get ready<br />     Call Stack:<br />     1. F4114EndDocument (XT4114Z1 - F4114 End Document)<br />         2. F4111EndDocument (XT4111Z1 - F4111 End Document)<br />             3. F0911FSEndDoc (B0900049 - F0911 End Document)<br />                 4. BatchReviseOnTransactionCommit (B0000007 - F0011 Update on Transaction Commitment)<br /> <small style="font-style: italic;">                    UPDATE PRODDTA.F0011  SET ICICUT='N ',ICICU=159698.000000,ICIST='U',ICIAPP='P',ICAICU=0.000000,ICUSER='SDONGMYE  ',ICDICJ=111142,ICNDO=0.000000,ICBAL=' ',ICBALJ=' ',ICAME=4000.000000,ICDOCN=1.000000,ICDRSP=' ',IC52PP=' ',ICCBP=' ' WHERE  ( ICICUT = 'N' AND ICICU = 159698.000000 ) </small><br /> <br /> 2''. Update 3 <br />      Event: when Close button is clicked to close batch <br />      Call Stack:<br />     1. F4114ClearDetailStack (XT4114Z1 - F4114 Clear Detail Stack)<br />         2. F4111ClearDetailStack (XT4111Z1 - F4111 Delete Work File)<br />             3. BatchReviseOnExit (B0000008 - F0011 Update on Exit)<br /> <small>                UPDATE PRODDTA.F0011  SET ICICUT='N ',ICICU=159698.000000,ICIST='A',ICIAPP='A',ICAICU=0.000000,ICUSER='SDONGMYE  ',ICDICJ=111142,ICNDO=0.000000,ICBAL='N',ICBALJ='N',ICAME=4000.000000,ICDOCN=1.000000,ICDRSP=' ',IC52PP=' ',ICCBP=' ' WHERE  ( ICICUT = 'N' AND ICICU = 159698.000000 ) </small><br /> <br /> 3. Delete<br />     Event: Cancel Button clicked<br />     Business Function: FSCloseBatch<br />     Function: Batch created through Edit Line has to be deleted as transaction is abandoned<br /> <br /> Data in F0011 - Batch Header through P4114 - Inventory Adjustment</p>
+<table style="border-collapse: collapse; width: 771px; height: 158px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 40pt;" width="53" /> <col style="width: 28pt;" width="37" /> <col style="width: 37pt;" width="49" /> <col style="width: 21pt;" width="28" /> <col style="width: 29pt;" span="2" width="38" /> <col style="width: 35pt;" width="46" /> <col style="width: 37pt;" width="49" /> <col style="width: 26pt;" width="35" /> <col style="width: 25pt;" width="33" /> <col style="width: 30pt;" width="40" /> <col style="width: 26pt;" width="35" /> <col style="width: 33pt;" width="44" /> <col style="width: 32pt;" width="43" /> <col style="width: 26pt;" width="35" /> <col style="width: 26pt;" width="34" /> <col style="width: 28pt;" width="37" /> <col style="width: 32pt;" width="42" /> <col style="width: 22pt;" width="29" /> <col style="width: 32pt;" width="42" /> <col style="width: 32pt;" width="43" /> <col style="width: 33pt;" width="44" /> </colgroup>
+<tbody>
+<tr style="height: 25.5pt;">
+<th class="xl66" style="height: 25.5pt; width: 40pt; background-color: #999999;">DB Action</th>
+<th class="xl66" style="border-left: medium none; width: 28pt; background-color: #999999;">ICUT</th>
+<th class="xl66" style="border-left: medium none; width: 37pt; background-color: #999999;">ICU</th>
+<th class="xl66" style="border-left: medium none; width: 21pt; background-color: #999999;">IST</th>
+<th class="xl66" style="border-left: medium none; width: 29pt; background-color: #999999;">IAPP</th>
+<th class="xl66" style="border-left: medium none; width: 29pt; background-color: #999999;">AICU</th>
+<th class="xl66" style="border-left: medium none; width: 35pt; background-color: #999999;">USER</th>
+<th class="xl66" style="border-left: medium none; width: 37pt; background-color: #999999;">DICJ</th>
+<th class="xl66" style="border-left: medium none; width: 26pt; background-color: #999999;">NDO</th>
+<th class="xl66" style="border-left: medium none; width: 25pt; background-color: #999999;">BAL</th>
+<th class="xl66" style="border-left: medium none; width: 30pt; background-color: #999999;">BALJ</th>
+<th class="xl66" style="border-left: medium none; width: 26pt; background-color: #999999;">AME</th>
+<th class="xl66" style="border-left: medium none; width: 33pt; background-color: #999999;">DOCN</th>
+<th class="xl66" style="border-left: medium none; width: 32pt; background-color: #999999;">AUSR</th>
+<th class="xl66" style="border-left: medium none; width: 26pt; background-color: #999999;">POB</th>
+<th class="xl66" style="border-left: medium none; width: 26pt; background-color: #999999;">IBOI</th>
+<th class="xl66" style="border-left: medium none; width: 28pt; background-color: #999999;">AIPT</th>
+<th class="xl66" style="border-left: medium none; width: 32pt; background-color: #999999;">OFFP</th>
+<th class="xl66" style="border-left: medium none; width: 22pt; background-color: #999999;">PID</th>
+<th class="xl66" style="border-left: medium none; width: 32pt; background-color: #999999;">JOBN</th>
+<th class="xl66" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMJ</th>
+<th class="xl66" style="border-left: medium none; width: 33pt; background-color: #999999;">UPMT</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl64" style="border-top: medium none; height: 12.75pt; width: 40pt;" width="53" height="17">Insert</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">N</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">9999</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28">U</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38">P</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38">0</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46">UserID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">111130</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">0</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 25pt;" width="33"> </td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 30pt;" width="40"> </td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">0</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">0</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">N</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> 0</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 22pt;" width="29"> </td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43">0</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">0</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Update1</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">4000</td>
+<td style="vertical-align: top;">1</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Update2</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">A</td>
+<td style="vertical-align: top;">A</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">N</td>
+<td style="vertical-align: top;">N</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Update3</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Delete</td>
+<td style="vertical-align: top;">N</td>
+<td style="vertical-align: top;">9999</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q3"></a>Example II - P4312 - Purchase Order Receipt</h3>
+<p>1. Insert<br />     Event: Dialog is Initialized<br />     Business Function: BatchOpenBatchControlProcessing<br />     Function: To debug this routine jasdebug.log has to be captured <br /> <br /> 2. Update<br />     Event: Post OK button clicked<br />     Business Function: BatchReviseOnTransactionCommit in F0911FSEndDoc routine from F4312EndDoc<br />     Call Stack: <br />     1. F4312EndDoc (XT4312Z1 - F43121 End Document)<br />         2. F0911FSEndDoc (B0900049 - F0911 End Document)<br />             3. BatchReviseOnTransactionCommit (B0000007 - F0011 Update on Transaction Commitment)<br /> <small style="font-style: italic;">                UPDATE PRODDTA.F0011  SET ICICUT='O ',ICICU=42197.000000,ICIST='U',ICIAPP='P',ICAICU=0.000000,ICUSER='SDONGMYE  ',ICDICJ=111130,ICNDO=0.000000,ICBAL=' ',ICBALJ=' ',ICAME=20000.000000,ICDOCN=2.000000,ICDRSP=' ',IC52PP=' ',ICCBP=' ' WHERE  ( ICICUT = 'O' AND ICICU = 42197.000000 ) </small><br /> <br /> 2. Update 2<br />     Event: Post Close button clicked in W4312F (not W4312A)<br />     Business Function:  BatchReviseOnExit through FSCloseBatch<br />     Call Stack:<br />     1. FSCloseBatch (B0000042 - F0011 Close Batch)<br />         2. BatchReviseOnExit (B0000008 - F0011 Update on Exit)<br /> <small style="font-style: italic;">            UPDATE PRODDTA.F0011  SET ICICUT='O ',ICICU=159701.000000,ICIST='A',ICIAPP='A',ICAICU=0.000000,ICUSER='SDONGMYE  ',ICDICJ=111142,ICNDO=0.000000,ICBAL='N',ICBALJ='N',ICAME=20000.000000,ICDOCN=1.000000,ICDRSP=' ',IC52PP=' ',ICCBP=' ' WHERE  ( ICICUT = 'O' AND ICICU = 159701.000000 ) </small><br /> <br /> 3. Delete<br />     Event: Cancel button clicked in W4312A<br />     Business Function: BatchReviseOnExit through FSCloseBatch<br /> <br /> Data in F0011  Batch Header in P4312 - Purchase Order Receipt</p>
+<table style="border-collapse: collapse; width: 1034px; height: 113px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 40pt;" width="53" /> <col style="width: 26pt;" width="35" /> <col style="width: 37pt;" width="49" /> <col style="width: 20pt;" width="26" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 35pt;" width="46" /> <col style="width: 37pt;" width="49" /> <col style="width: 26pt;" width="35" /> <col style="width: 24pt;" width="32" /> <col style="width: 29pt;" width="38" /> <col style="width: 26pt;" width="35" /> <col style="width: 33pt;" width="44" /> <col style="width: 32pt;" width="43" /> <col style="width: 26pt;" width="35" /> <col style="width: 24pt;" width="32" /> <col style="width: 26pt;" width="35" /> <col style="width: 32pt;" width="42" /> <col style="width: 21pt;" width="28" /> <col style="width: 31pt;" width="41" /> <col style="width: 32pt;" width="42" /> <col style="width: 32pt;" span="2" width="43" /> <col style="width: 29pt;" width="39" /> <col style="width: 26pt;" width="34" /> </colgroup>
+<tbody>
+<tr style="height: 25.5pt;">
+<th class="xl68" style="height: 25.5pt; width: 40pt; background-color: #999999;">DB Action</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">ICUT</th>
+<th class="xl68" style="border-left: medium none; width: 37pt; background-color: #999999;">ICU</th>
+<th class="xl68" style="border-left: medium none; width: 20pt; background-color: #999999;">IST</th>
+<th class="xl68" style="border-left: medium none; width: 28pt; background-color: #999999;">IAPP</th>
+<th class="xl68" style="border-left: medium none; width: 28pt; background-color: #999999;">AICU</th>
+<th class="xl68" style="border-left: medium none; width: 35pt; background-color: #999999;">USER</th>
+<th class="xl68" style="border-left: medium none; width: 37pt; background-color: #999999;">DICJ</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">NDO</th>
+<th class="xl68" style="border-left: medium none; width: 24pt; background-color: #999999;">BAL</th>
+<th class="xl68" style="border-left: medium none; width: 29pt; background-color: #999999;">BALJ</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">AME</th>
+<th class="xl68" style="border-left: medium none; width: 33pt; background-color: #999999;">DOCN</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">AUSR</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">POB</th>
+<th class="xl68" style="border-left: medium none; width: 24pt; background-color: #999999;">IBOI</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">AIPT</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">OFFP</th>
+<th class="xl68" style="border-left: medium none; width: 21pt; background-color: #999999;">PID</th>
+<th class="xl68" style="border-left: medium none; width: 31pt; background-color: #999999;">JOBN</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMJ</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMT</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">DRSP</th>
+<th class="xl68" style="border-left: medium none; width: 29pt; background-color: #999999;">52PP</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">CBP</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 40pt;" width="53" height="17">Insert</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">O</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">9999</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26">U</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">P</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46">UserID</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">111130</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">0</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">N</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32">N</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42">0</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 25.5pt;">
+<td class="xl66" style="border-top: medium none; height: 25.5pt; width: 40pt;" width="53" height="34">Update1</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">2000</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">2</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 25.5pt;">
+<td class="xl66" style="border-top: medium none; height: 25.5pt; width: 40pt;" width="53" height="34">Update2</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26">A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">A</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 40pt;" width="53" height="17">Delete</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">O</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">9999</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q4"></a>Example III - P4314 - Voucher Match</h3>
+<p>1. Insert<br />     Event: Dialog is Initialized in W4314A<br />     Business Function: BatchOpenBatchControlProcessing<br />     Note: To debug this routine jasdebug.log has to be captured <br /> <br /> 2. Update<br />     Event: Post OK button clicked in W4314A<br />     Business Function: BatchReviseOnTransactionCommit in F0911FSEndDoc routine from F4312EndDoc<br />     Call Stack:<br />     1. F4314EndDoc (XT4314ZN - F4314 End Document)<br />         2. F0411FSEndDoc (B0400047 - F0411 End Document)<br />             3. BatchReviseOnTransactionCommit (B0000007 - F0011 Update on Transaction Commitment)<br /> <small style="font-style: italic;">                UPDATE PRODDTA.F0011  SET ICICUT='V ',ICICU=159704.000000,ICIST='U',ICIAPP='P',ICAICU=0.000000,ICUSER='SDONGMYE  ',ICDICJ=111142,ICNDO=0.000000,ICBAL=' ',ICBALJ=' ',ICAME=20000.000000,ICDOCN=1.000000,ICDRSP=' ',IC52PP=' ',ICCBP=' ' WHERE  ( ICICUT = 'V' AND ICICU = 159704.000000 ) </small><br /> <br /> 2. Update 2<br />     Event: Post Close button clicked in W4314A<br />     Business Function:  BatchReviseOnExit through FSCloseBatch<br />     Call Stack:<br />     1. FSCloseBatch (B0000042 - F0011 Close Batch)<br />         2. BatchReviseOnExit (B0000008 - F0011 Update on Exit)<br /> <small>            UPDATE PRODDTA.F0011  SET ICICUT='V ',ICICU=159704.000000,ICIST='A',ICIAPP='A',ICAICU=0.000000,ICUSER='SDONGMYE  ',ICDICJ=111142,ICNDO=0.000000,ICBAL='N',ICBALJ='N',ICAME=20000.000000,ICDOCN=1.000000,ICDRSP=' ',IC52PP=' ',ICCBP=' ' WHERE  ( ICICUT = 'V' AND ICICU = 159704.000000 ) </small><br /> <br /> 3. Delete<br />     Event: Cancel button clicked in W4314A<br />     Business Function: BatchReviseOnExit through FSCloseBatch<br /> <br /> Data from F0011 - Batch Header in P4314 - Voucher Match</p>
+<table style="border-collapse: collapse; width: 1034px; height: 101px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 41pt;" width="55" /> <col style="width: 26pt;" span="2" width="35" /> <col style="width: 20pt;" width="26" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 35pt;" width="46" /> <col style="width: 37pt;" width="49" /> <col style="width: 26pt;" width="35" /> <col style="width: 24pt;" width="32" /> <col style="width: 29pt;" width="38" /> <col style="width: 27pt;" width="36" /> <col style="width: 33pt;" width="44" /> <col style="width: 32pt;" width="43" /> <col style="width: 26pt;" width="35" /> <col style="width: 24pt;" width="32" /> <col style="width: 26pt;" width="35" /> <col style="width: 32pt;" width="42" /> <col style="width: 21pt;" width="28" /> <col style="width: 31pt;" width="41" /> <col style="width: 32pt;" width="42" /> <col style="width: 32pt;" span="2" width="43" /> <col style="width: 29pt;" width="39" /> <col style="width: 26pt;" width="34" /> </colgroup>
+<tbody>
+<tr style="height: 25.5pt;">
+<th class="xl68" style="height: 25.5pt; width: 41pt; background-color: #999999;">DB Action</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">ICUT</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">ICU</th>
+<th class="xl68" style="border-left: medium none; width: 20pt; background-color: #999999;">IST</th>
+<th class="xl68" style="border-left: medium none; width: 28pt; background-color: #999999;">IAPP</th>
+<th class="xl68" style="border-left: medium none; width: 28pt; background-color: #999999;">AICU</th>
+<th class="xl68" style="border-left: medium none; width: 35pt; background-color: #999999;">USER</th>
+<th class="xl68" style="border-left: medium none; width: 37pt; background-color: #999999;">DICJ</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">NDO</th>
+<th class="xl68" style="border-left: medium none; width: 24pt; background-color: #999999;">BAL</th>
+<th class="xl68" style="border-left: medium none; width: 29pt; background-color: #999999;">BALJ</th>
+<th class="xl68" style="border-left: medium none; width: 27pt; background-color: #999999;">AME</th>
+<th class="xl68" style="border-left: medium none; width: 33pt; background-color: #999999;">DOCN</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">AUSR</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">POB</th>
+<th class="xl68" style="border-left: medium none; width: 24pt; background-color: #999999;">IBOI</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">AIPT</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">OFFP</th>
+<th class="xl68" style="border-left: medium none; width: 21pt; background-color: #999999;">PID</th>
+<th class="xl68" style="border-left: medium none; width: 31pt; background-color: #999999;">JOBN</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMJ</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMT</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">DRSP</th>
+<th class="xl68" style="border-left: medium none; width: 29pt; background-color: #999999;">52PP</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">CBP</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Insert</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">V</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">9999</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26">U</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">P</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46">UserID</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">111130</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36">0</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">N</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32">N</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42">0</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Update1</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36">2000</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">2</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Update2</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26">A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">A</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Delete</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">V</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">9999</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q5"></a><big><small>Example IV - R42800 - Sales Update</small><br /> </big></h3>
+<p>1. Insert<br />     Event: Do Section for Page Header<br />     Business Function: FSOpenBatch<br />     Call Stack:<br />     1. FSOpenBatch (B0000042 - F0011 Open Batch)<br />         2. BatchOpenOnInitialization (B0000004 - F0011 Write Batch Header)<br /> <small style="font-style: italic;">            INSERT INTO PRODDTA.F0011 (ICICUT, ICICU, ICIST, ICIAPP, ICAICU, ICUSER, ICDICJ, ICNDO, ICBAL, ICBALJ, ICAME, ICDOCN, ICAUSR, ICPOB, ICIBOI, ICAIPT, ICOFFP, ICPID, ICJOBN, ICUPMJ, ICUPMT, ICDRSP, IC52PP, ICCBP) VALUES ('IB',159699.000000,'U','P',0.000000,'SDONGMYE',111142,0.000000,' ',' ',0.000000,0.000000,' ','N',' ',0.000000,' ',' ',' ',0,0.000000,' ',' ',' ') </small><br /> <br /> 2. Update1<br />     Event: Calling End Document routines of Master Business functions B0900049, B03B0011 and/or XT4314ZN and End Section Event of Sales Update And Report<br />     Business Function: Various<br /> <br /> 2. Update2<br />     Event: Calling End Document routines of Master Business functions B0900049, B03B0011 and/or XT4314ZN and End Section Event of Sales Update And Report<br />     Business Function: Various<br />     Function: Before exit from batch it updates batch status to A - Approved<br /> <br /> 2. Delete <br />     Event: End Section Event of Sales Update And Report<br />     Business Function:  BatchReviseOnExit through FSCloseBatch<br />     Note: Batch ends in error then Delete routine comes<br />     Call Stack:<br />     1. FSCloseBatch (B0000042 - F0011 Close Batch)<br />         2. BatchReviseOnExit (B0000008 - F0011 Update on Exit)<br /> <small>            DELETE FROM PRODDTA.F0011  WHERE  ( ICICUT = 'IB' AND ICICU = 159699.000000 ) <br style="font-style: italic;" /> </small><br /> Data from F0011 - Batch Header in R42800 - Sales Update</p>
+<table style="border-collapse: collapse; width: 1034px; height: 97px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 41pt;" width="55" /> <col style="width: 26pt;" span="2" width="35" /> <col style="width: 20pt;" width="26" /> <col style="width: 28pt;" span="2" width="37" /> <col style="width: 35pt;" width="46" /> <col style="width: 37pt;" width="49" /> <col style="width: 26pt;" width="35" /> <col style="width: 24pt;" width="32" /> <col style="width: 29pt;" width="38" /> <col style="width: 27pt;" width="36" /> <col style="width: 33pt;" width="44" /> <col style="width: 32pt;" width="43" /> <col style="width: 26pt;" width="35" /> <col style="width: 24pt;" width="32" /> <col style="width: 26pt;" width="35" /> <col style="width: 32pt;" width="42" /> <col style="width: 21pt;" width="28" /> <col style="width: 31pt;" width="41" /> <col style="width: 32pt;" width="42" /> <col style="width: 32pt;" span="2" width="43" /> <col style="width: 29pt;" width="39" /> <col style="width: 26pt;" width="34" /> </colgroup>
+<tbody>
+<tr style="height: 25.5pt;">
+<th class="xl68" style="height: 25.5pt; width: 41pt; background-color: #999999;">DB Action</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">ICUT</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">ICU</th>
+<th class="xl68" style="border-left: medium none; width: 20pt; background-color: #999999;">IST</th>
+<th class="xl68" style="border-left: medium none; width: 28pt; background-color: #999999;">IAPP</th>
+<th class="xl68" style="border-left: medium none; width: 28pt; background-color: #999999;">AICU</th>
+<th class="xl68" style="border-left: medium none; width: 35pt; background-color: #999999;">USER</th>
+<th class="xl68" style="border-left: medium none; width: 37pt; background-color: #999999;">DICJ</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">NDO</th>
+<th class="xl68" style="border-left: medium none; width: 24pt; background-color: #999999;">BAL</th>
+<th class="xl68" style="border-left: medium none; width: 29pt; background-color: #999999;">BALJ</th>
+<th class="xl68" style="border-left: medium none; width: 27pt; background-color: #999999;">AME</th>
+<th class="xl68" style="border-left: medium none; width: 33pt; background-color: #999999;">DOCN</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">AUSR</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">POB</th>
+<th class="xl68" style="border-left: medium none; width: 24pt; background-color: #999999;">IBOI</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">AIPT</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">OFFP</th>
+<th class="xl68" style="border-left: medium none; width: 21pt; background-color: #999999;">PID</th>
+<th class="xl68" style="border-left: medium none; width: 31pt; background-color: #999999;">JOBN</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMJ</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">UPMT</th>
+<th class="xl68" style="border-left: medium none; width: 32pt; background-color: #999999;">DRSP</th>
+<th class="xl68" style="border-left: medium none; width: 29pt; background-color: #999999;">52PP</th>
+<th class="xl68" style="border-left: medium none; width: 26pt; background-color: #999999;">CBP</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Insert</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">IB</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">9999</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26">U</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">P</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46">UserID</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49">111130</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36">0</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">N</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32">N</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42">0</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43">0</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Update1</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36">2000</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44">2</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+<tr>
+<td style="vertical-align: top;">Update2</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;">A</td>
+<td style="vertical-align: top;">A</td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+<td style="vertical-align: top;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 41pt;" width="55" height="17">Delete</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">IB</td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35">9999</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 20pt;" width="26"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 28pt;" width="37"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 35pt;" width="46"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 37pt;" width="49"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="38"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 27pt;" width="36"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 33pt;" width="44"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 24pt;" width="32"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="35"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 21pt;" width="28"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 31pt;" width="41"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="42"> </td>
+<td class="xl67" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 32pt;" width="43"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 29pt;" width="39"> </td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 26pt;" width="34"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>R42800 can create multiple batch depends on the routine defined (e.g., IB - for regular batch proces, ST - for Interbranch, G - for GL summarization, V- for Intercompany Invoice)</li>
+<li>However the way it handled data from F0011  is  more or less same (INSERT -&gt; UPDATE for successful transaction and INSERT -&gt; Delete for Error Batch)</li>
+<li>R42800 can call B0900049 and optionally B03B0011, XT4314ZN so these routine can have it's own batch controlling options as example written above</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<h3 class="km"><a name="q6"></a>List of application with Batch Control</h3>
+<p>List of interactive application.</p>
+<table style="border-collapse: collapse; width: 1010px; height: 535px;" border="2" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" width="64" /> <col style="width: 134pt;" width="179" /> <col style="width: 68pt;" width="91" /> <col style="width: 216pt;" width="288" /> <col style="width: 48pt;" span="2" width="64" /> <col style="width: 127pt;" width="169" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th class="xl63" style="height: 12.75pt; width: 48pt; background-color: #666666; color: white;">Apps ID</th>
+<th class="xl64" style="border-left: medium none; width: 134pt; background-color: #666666; color: white;">Description</th>
+<th class="xl64" style="border-left: medium none; width: 75px; background-color: #666666; color: white;">Form ID</th>
+<th class="xl64" style="border-left: medium none; width: 219px; background-color: #666666; color: white;">Form Description</th>
+<th class="xl64" style="border-left: medium none; width: 71px; background-color: #666666; color: white;">Old</th>
+<th class="xl64" style="border-left: medium none; width: 68px; background-color: #666666; color: white;">New</th>
+<th class="xl65" style="border-left: medium none; width: 311px; background-color: #666666; color: white;">Notes - Batch Type </th>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P31113</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Work Order Inventory Issues</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W31113D</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Inventory Issue Revisions</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000055</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000014</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4105</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Cost Revisions</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4105A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Cost Revisions</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4105</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Cost Revisions</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4105A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Cost Revisions</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000056</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000015</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P41051</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Speed Cost Maintenance</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W41051A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Location Costs</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P41051</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Speed Cost Maintenance</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W41051A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Location Costs</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000057</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000016</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4112</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Inventory Issues</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4112A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Inventory Issues</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4113</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Inventory Transfers</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4113B</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Inventory Transfers</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4114</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Inventory Adjustments</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4114A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Inventory Adjustments</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4116</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Item Reclassifications</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4116B</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Item Reclassifications</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P415101</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">General Stock Movements</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W415101B</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">General Stock Movements</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4312</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">PO Receipts</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4312A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Purchase Order Receipts</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4312</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">PO Receipts</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4312D</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Receipts Purchase Or</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000058</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000017</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4312</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">PO Receipts</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4312F</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Purchase Orders to R</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000059</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000018</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4314</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Voucher Match</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4314A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Voucher Match</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4314</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Voucher Match</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4314A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Voucher Match</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000060</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000019</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P43214</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Purchase Receipts Inquiry</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W43214A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Purchase Receipts</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P43214</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Purchase Receipts Inquiry</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W43214A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Purchase Receipts</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000061</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000020</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 25.5pt;">
+<td class="xl66" style="border-top: medium none; height: 25.5pt; width: 48pt;" width="64" height="34">P43250</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Receipt Routing Movement and D</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W43250K</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Routing Statuses</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000004</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000001</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 25.5pt;">
+<td class="xl66" style="border-top: medium none; height: 25.5pt; width: 48pt;" width="64" height="34">P43250</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Receipt Routing Movement and D</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W43250K</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Routing Statuses</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000062</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000021</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P43252</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Routing Ledger Inquiry</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W43252D</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Receipt Routing Ledg</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000063</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000022</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P43253</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Routing Disposition</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W43253A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Routing Disposition</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000064</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000023</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4576</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Ship and Debit Claims</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4576A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work With Claims</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000065</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000024</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P4915</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Work with Shipments</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W4915B</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Work with Shipments</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000066</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000025</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 25.5pt;">
+<td class="xl66" style="border-top: medium none; height: 25.5pt; width: 48pt;" width="64" height="34">P49640</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Transportation Load Confirmati</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W49640A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Confirm Load</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000067</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000026</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 25.5pt;">
+<td class="xl66" style="border-top: medium none; height: 25.5pt; width: 48pt;" width="64" height="34">P49640</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Transportation Load Confirmati</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W49640B</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Confirm Load - Compartments</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000068</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000027</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td class="xl66" style="border-top: medium none; height: 12.75pt; width: 48pt;" width="64" height="17">P49650</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 134pt;" width="179">Deliver Confirm</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 75px;">W49650A</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 219px;">Deliver Confirm Load</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 71px;">B0000069</td>
+<td class="xl66" style="border-top: medium none; border-left: medium none; width: 68px;">N0000028</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 311px;"> </td>
+</tr>
+</tbody>
+</table>
+<p><br /> The list written this note is non-exhaustible</p>
+<hr />
+<h3 class="km"><a name="q7"></a>Column Explanation on F0011 - Batch Control Records<big> </big></h3>
+<table style="border-collapse: collapse; height: 3007px; width: 1013px;" border="2" cellspacing="0" cellpadding="1"><colgroup><col style="width: 48pt;" span="5" width="64" /> </colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; width: 75px; background-color: #666666; color: white;">Alias</th>
+<th style="width: 121px; background-color: #666666; color: white;">DD Item</th>
+<th style="width: 100px; background-color: #666666; color: white;">Description</th>
+<th style="width: 480px; background-color: #666666; color: white;">Glossary</th>
+<th style="width: 146px; background-color: #666666; color: white;">Notes</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; color: red; font-weight: bold;" height="17">ICUT (2)*</td>
+<td style="width: 121px;">BatchType</td>
+<td style="width: 100px;">Batch Type</td>
+<td style="width: 480px;">A code that specifies the system and type of transactions entered in a batch. The system assigns the value when you enter a transaction. Valid values are set up in user defined code table 98/IT. You cannot assign new values. All batch types are hard coded.</td>
+<td style="width: 146px;">UDC 98/IT</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; color: red; font-weight: bold;" height="17">ICU (8)*</td>
+<td style="width: 121px;">BatchNumber</td>
+<td style="width: 100px;">Batch Number</td>
+<td style="width: 480px;">A number that identifies a group of transactions that the system processes and balances as a unit. When you enter a batch, you can either assign a batch number or let the system assign it using the Next Numbers program. NN (00|1)</td>
+<td style="width: 146px;">NN 00/1</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">IST (1)</td>
+<td style="width: 121px;">BatchStatus</td>
+<td style="width: 100px;">Batch Status</td>
+<td style="width: 480px;">A user defined code (98/IC) that indicates the posting status of a batch. Valid values are:<br /> Blank - Unposted batches that are pending approval or have a status of approved.<br /> A - Approved for posting. The batch has no errors, and is in balance, but has not yet been posted.<br /> D - Posted. The batch posted successfully.<br /> E - Error. The batch is in error. You must correct the batch before it can post.<br /> P - Posting. The system is in the process of posting the batch to the general ledger. The batch is unavailable until the posting process is complete. If errors occur during the post, the batch status changes to E (error).<br /> U - In use. The batch is temporarily unavailable because someone is working with it, or the batch appears to be in use because a power failure occurred while the batch was open.</td>
+<td style="width: 146px;">Management Approval is required then IST =' ' and IAPP = 'P'<br /> <br /> Management Approval is not required then, IST ='A', IAPP = 'A', DRSP = ' ', 52PP = ' '<br /> <br /> UDC 98/IC<br /> <br /> U -&gt; A<br /> U -&gt; E<br /> A -&gt; U -&gt; P -&gt; D</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">IAPP (1)</td>
+<td style="width: 121px;">BatchApprovedForPost</td>
+<td style="width: 100px;">Batch Approved for Posting</td>
+<td style="width: 480px;">An option that indicates whether a batch is approved and ready for posting, or whether it is pending approval. You may select only one option. They are:<br />   o  A - Approved for posting<br />   o  P - Pending approval. The batch will not post.<br /> If the system constants do not specify manager approval, the system automatically approves batches that are not in error.</td>
+<td style="width: 146px;">When Management Approval is required  value is N then set 'P' else set 'A'<br /> <br /> UDC H00/IA<br /> P -&gt; A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">AICU (15)</td>
+<td style="width: 121px;">AmountBatchExpected</td>
+<td style="width: 100px;">Input Total</td>
+<td style="width: 480px;">On batch control forms, the total amount that you expect to enter for the batch of transactions. This amount must be entered without decimals. For journal entries, this amount is the total of the debits. In other systems, it is the total amount of all transactions in the batch. If you want to display the amount with decimals, change the value of display decimals in the Data Dictionary for the item (AICU).<br /> After you enter transactions into the batch, the system compares the amounts you entered to the amount you expected to enter and displays the difference, if any, when you exit the batch. <br />   Example:<br />   Input Total - 10052  <br />   Total Entered - 10000<br />   Total Remaining - 52<br /> If you are not using batch control, or if you do not enter a total expected amount, the system compares the total amount of the transactions you enter to zero and displays the difference as a negative number.</td>
+<td style="width: 146px;">Batch Control Processing</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">USER (10)</td>
+<td style="width: 121px;">UserId</td>
+<td style="width: 100px;">User ID</td>
+<td style="width: 480px;"> </td>
+<td style="width: 146px;">The first User ID is to be retained</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">DICJ (6)</td>
+<td style="width: 121px;">DateBatchJulian</td>
+<td style="width: 100px;">Date - Batch (Julian)</td>
+<td style="width: 480px;">The date of the batch. If you leave this field blank, the system date is used.</td>
+<td style="width: 146px;">The first Batch Date is to be retained</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">NDO (5)</td>
+<td style="width: 121px;">NoOfDocumentsExpected</td>
+<td style="width: 100px;">Amount -  Number of Documents Expected</td>
+<td style="width: 480px;">The number of documents you expect to enter in the current batch. The system maintains a count of the documents you actually enter and displays the difference, if any, when you finish the batch.</td>
+<td style="width: 146px;">Batch Control Processing</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">BAL (1)</td>
+<td style="width: 121px;">BalanceDocumentsAmts</td>
+<td style="width: 100px;">Balanced - Documents and Amounts</td>
+<td style="width: 480px;">An option that indicates whether the amount and number of documents in the batch balance to your control totals.  The system updates this option automatically if you use the batch control feature.  If the option is turned on, the amounts and documents balance to the control totals.  If the option is turned off, the amounts and documents do not balance to the control totals.<br /> Note:  The journal review form is used by many JDEdwards EnterpriseOne systems.  As a result, this field may not apply to batches created by your particular system.</td>
+<td style="width: 146px;">Set 'Y' when AME = AICU<br /> otherwise set 'N'<br /> <br /> UDC H00/BA</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">BALJ (1)</td>
+<td style="width: 121px;">BalancedJournalEntries</td>
+<td style="width: 100px;">Balanced - Journal Entries</td>
+<td style="width: 480px;">A code that indicates whether the journal entries (JEs) for a document are in balance. After you correct an out-of-balance situation, the N code remains until you run the daily system integrity check. Valid values are:<br /> Y - Yes, JEs are in balance.  <br /> N - No, at least one of the JEs is not in balance.</td>
+<td style="width: 146px;">If Transacion is in balance then set 'Y' else 'N'<br /> <br /> UDC H00/BB</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">AME (15)</td>
+<td style="width: 121px;">AmountEntered</td>
+<td style="width: 100px;">Amount - Entered</td>
+<td style="width: 480px;">The total amount of transactions entered.</td>
+<td style="width: 146px;"> </td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">DOCN (15)</td>
+<td style="width: 121px;">AmountDocumentsEntered</td>
+<td style="width: 100px;">Amount - Documents Entered</td>
+<td style="width: 480px;">If you are using the batch control feature, the number of transactions entered into the batch. If you are not using batch control, the system displays the number as negative.<br /> Note: The batch review screen is used by many J.D. Edwards systems. As a result, this field might not apply to batches created by your particular system.</td>
+<td style="width: 146px;">If this value is 0 then batch header is to be deleted (e.g., Cancel button clicked before OK button clicked)</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">AUSR (10)</td>
+<td style="width: 121px; font-style: italic;">AuthorizedUserId</td>
+<td style="width: 100px; font-style: italic;">Authorized User ID</td>
+<td style="width: 480px; font-style: italic;">Authorized User ID</td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">POB (1)</td>
+<td style="width: 121px;">PostOutOfBalance</td>
+<td style="width: 100px;">Post Out of Balance</td>
+<td style="width: 480px;">An option that indicates whether the batch can be posted out-of-balance. <br /> Valid settings are:<br />   On - The batch is not required to balance and can be posted out-of-balance. If you choose this option, you should also turn on the option to exclude the batch from the integrity reports. <br />   Off - The batch is required to balance and cannot be posted out-of-balance.</td>
+<td style="width: 146px;">Default Value = N<br /> UDC H00/PO</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px;" height="17">IBOI (1)</td>
+<td style="width: 121px;">IncludeBatchonIntegrityf</td>
+<td style="width: 100px;">Include-Batch-on-Integrity flag</td>
+<td style="width: 480px;">An option that determines whether or not an out-of-balance batch is exlcuded from the Batch to Detail report (R007031). If you turn on this option for a specific batch, the batch is not included in the Batch to Detail report.</td>
+<td style="width: 146px;">Default Value = Y<br /> Rule: VALUE = YN10</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">AIPT (15)</td>
+<td style="width: 121px; font-style: italic;">AmountInputTotal</td>
+<td style="width: 100px; font-style: italic;">Amount - Input Total</td>
+<td style="width: 480px; font-style: italic;">On batch header forms, a number that indicates the total amount that you expect to enter for the batch, without decimals.<br /> For journal entries in the general ledger, a number that indicates the total amount of the debits.<br /> In other systems, a number that indicates the total amount of all documents in the batch.<br /> The system keeps track of the amount you enter and displays the difference, if any, when it finishes the batch. When you review batches of transactions, the system displays the difference between the input total and what you actually entered. For example:<br />   Input Total - 10052<br />   Total Entered - 10000<br />   Total Remaining - 52  <br /> If you are using batch control but you did not enter an input total, this amount appears as a negative number when you review batches.</td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">OFFP (1)</td>
+<td style="width: 121px; font-style: italic;">AutoOffModeDOrBAp</td>
+<td style="width: 100px; font-style: italic;">Auto Offset Mode (S, Y, or B) - A/P</td>
+<td style="width: 480px; font-style: italic;">A code that specifies how the system generates the offset entry (document type AE) in the Account Ledger table (F0911) when vouchers, payments, and drafts are posted to the general ledger. Valid values are:<br />     B - The system creates one offset for each batch of transactions by account.<br />     Y - The system creates one offset for each transaction by account.<br />     S - The system creates one offset for each pay item by account. <br /> The system creates offsets for the actual amount (AA) and foreign currency (CA) ledger types only.</td>
+<td style="width: 146px; font-style: italic;">N/A<br /> UDC H04/OF</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">PID (10)</td>
+<td style="width: 121px; font-style: italic;">ProgramId</td>
+<td style="width: 100px; font-style: italic;">Program ID</td>
+<td style="width: 480px; font-style: italic;"> </td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">JOBN (10)</td>
+<td style="width: 121px; font-style: italic;">WorkStationId</td>
+<td style="width: 100px; font-style: italic;">Work Station ID</td>
+<td style="width: 480px; font-style: italic;"> </td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">UPMJ (6)</td>
+<td style="width: 121px; font-style: italic;">DateUpdated</td>
+<td style="width: 100px; font-style: italic;">Date - Updated</td>
+<td style="width: 480px; font-style: italic;"> </td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">UPMT (6)</td>
+<td style="width: 121px; font-style: italic;">TimeLastUpdated</td>
+<td style="width: 100px; font-style: italic;">Time - Last Updated</td>
+<td style="width: 480px; font-style: italic;"> </td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">DRSP (1)</td>
+<td style="width: 121px; font-style: italic;">DetailedRestatementProcessed</td>
+<td style="width: 100px; font-style: italic;">Detailed Restatement Processed</td>
+<td style="width: 480px; font-style: italic;">A flag that indicates the batch has been reserved for processing by a current job or has been previously processed by a job of R11411 Detailed Currency Restatement.<br /> If a batch has been previously processed by R11411 and the user sets the flag back to blank, the batch can be processed again, but only detail records available for posting will be selected.<br /> Valid values are:<br /> Blank = Batch has not been reserved or processed by R11411<br /> 1 = Batch has been reserved or processed by R11411</td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">52PP (1)</td>
+<td style="width: 121px; font-style: italic;">52PeriodProcessed</td>
+<td style="width: 100px; font-style: italic;">52 Period Processed</td>
+<td style="width: 480px; font-style: italic;">A flag that indicates the batch has been reserved for processing by a current job or has been previously processed by a job of R098011 52 Period Accounting Post.  If a batch has been previously processed by R098011 and the user sets the flag back to blank, the batch can be processed again, but only detail records available for posting will be selected.  Values are:  <br /> Blank  - Batch has not been reserved or processed by R098011.  <br /> 1 - Batch has been reserved or processed by R098011.</td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 75px; font-style: italic;" height="17">CBP (1)</td>
+<td style="width: 121px; font-style: italic;">CashBasisProcessed</td>
+<td style="width: 100px; font-style: italic;">Cash Basis Processed</td>
+<td style="width: 480px; font-style: italic;">A flag that indicates the batch has been reserved for processing by a current job, or has been previously processed by a job of R11C850 Create Cash Basis Entries.  <br /> If a batch has been previously processed by R11C850 and the user sets the flag back to blank, the batch can be processed again, but only detail records available for posting will be selected.  Valid values are:<br /> Blank<br /> Batch has not been reserved or processed by R11C850.<br /> 1<br /> Batch has been reserved or processed by R11C850.</td>
+<td style="width: 146px; font-style: italic;">N/A</td>
+</tr>
+</tbody>
+</table>
+<div class="kmnotebox">
+<p><br /> <em>Note:<br /> </em></p>
+<ul>
+<li><em>Currently no routines write Audit Information (UPMJ, UPMT, JOBN and PID) because this table is to be accessed frequently to make a certain transaction unique and avoid possible locking issue.</em></li>
+<li><em>Application by application implementation can be vary</em></li>
+<li><em>N/A stands for columns not to be populated</em></li>
+<li><em>For detail information on business function refer to <span class="x9s"></span><span class="x9s"> <br /> </span></em></li>
+<li><span class="x9s"><em>Default value for character flag is ' ' a space</em><br /> </span></li>
+</ul>
+</div>
+<hr />
+<p>Note: This document is written based on EnterpriseOne application release 9.0 and can be updated when there is any change in the future.</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

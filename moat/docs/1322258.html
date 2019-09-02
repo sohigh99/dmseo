@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R47011 Reads Memory Violation</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R47011 Reads Memory Violation</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose</BIG></span></big></big></h2>
+
+<p>This document is part of an advisor - to see other documents related to EDI, please use the links provided below:</p>
+<p><a href="https://support.oracle.com/oip/faces/secure/km/DocumentDisplay.jspx?id=1350916.2" target="_blank">JD Edwards EnterpriseOne Electronic Data Interchange (EDI) Advisor</a> &gt; <a href="https://support.oracle.com/oip/faces/secure/km/DocumentDisplay.jspx?id=1350920.2&amp;h=Y" target="_blank">JD Edwards EnterpriseOne Electronic Data Interchange (EDI) Use Advisor </a>&gt; Note 1322258.1</p>
+<p><br /><br />This solution will help the user troubleshoot the following error in R47011 (Inbound Purchase Order).<br /><br />EventRule : Business Function R47011DetailDoSectionProcess at line 36 for Event 13 in Section Read/Edit EDI Detail has caused a memory violation.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Troubleshooting Steps</BIG></span></big></big></h2>
+
+<p>R47011 (Inbound Purchase Order) ends in error as below when the number of detail lines are more than 1000,<br /> - Error message in PDF: <br /><br /></p>
+<div class="kmnotebox">EventRule : Business Function <strong>R47011DetailDoSectionProcess</strong> at line 36 for Event 13 in Section Read/Edit EDI Detail has caused <strong>a memory violation</strong>.</div>
+<p><br />- Message in jde.log</p>
+<div class="kmnotebox">6056/5396      Tue May 03 01:12:27 2011                                                                                              JDB_UTL1.C2484<br /> JDB9900600 - Failed to store value, maximum exceeded. Probable cause is forgetting to call <strong>jdeRemoveDataPtr()</strong></div>
+<p><br /> Sequence of referencing for Processing Options.</p>
+<ol>
+<li>In processing option of R47011, get the version of P4210</li>
+<li>In processing option of P4210 referenced version, get the version of P4310</li>
+</ol>
+<div class="kmnotebox">Note: This is one of many possible example for Memory Violation. For example, error may come from different business function as &lt;Bug 11020549&gt;: R47011 EXCEEDING DATA POINTERS - SAR: 8939166</div>
+<p><br /> <strong>Do not call version for transfer order</strong> as it is written in &lt;Document 655648.1&gt; - E1: 47: Inbound 850 (R47011).<br /><br /><span style="text-decoration: underline;"><strong>Excerpt:</strong></span><br />The Inbound Purchase Order (P47010) program supports most types of Sales Orders that can be manually entered using Sales Order Entry (P4210) except for Transfer Orders. <strong>The EDI program does not support the generation of Transfer Orders</strong>.</p>
+<div class="kmnotebox"><strong>Additional Note:</strong><br />
+<ul>
+<li>Business function written in PDF output is the first level business function which is called directly from Event Rule</li>
+<li>As we can see from this example, maximum cursor which operating system can hold is 1000</li>
+<li>Since open cursor is not closed properly, the error may persist until the server is restarted</li>
+<li>For this example, <em>R47011DetailDoSectionProcess </em>(B4700110 - R47011 Detail Do Section Process) is representation of 'Row Is Exited Changed - Async' in P4210 (Sales Order Entry) so this is to call B4200310/B4200311 - F4211FSEditLine (F4211  Edit One, note that there are 2 spaces in between F4211 and Edit Line)</li>
+<li>Most of case, actual issue is not coming 1st level BSFN rather issue is caused by inner/sub routine of 1st Level Business Function so it is important to analyze jdedebug.log</li>
+<li>1000 signifies that issue is related with F4211FSEditLine which is called by each rows to create data into F47UI11/F47UI12 if all the validation are successful</li>
+<li>In assigning wrong referencing version, pointers (the address of memory/cache) are created 1000 without closing it. The reason for this is that in transfer order, data pointer for Sales Order detail is to be opened till corresponding Purchase Order detail lines consume it. Eventually when cache/work file for purchase order is created correctly this pointer will be removed</li>
+<li>Max data point which DB can handle is 1000</li>
+<ul>
+<li><strong>#define JDB_MAX_DATAPTR 1000</strong></li>
+<li>Defined at system/common/jdekrnl/jdb/jdbprv.h (encapsulated code)</li>
+</ul>
+<li>Cf., Cursor (temporary repository of data) are defined as below (JDECACHE definition),</li>
+<ul>
+<li><strong>#define JDECACHE_MAX_CURSORS 100</strong></li>
+<li>This file can be accessed system\include\JDEKDFN.h </li>
+</ul>
+<li>JDECM_CacheInit can open maximum cursors up to 100 (defined at system\include\jdekprto.h)</li>
+<li>You must NOT change any default value listed here</li>
+<li>So data pointer error will come after 1000 open pointer and open cursor error will come after 100 cursor opened</li>
+<li>&lt;Document 1050172.1&gt; E1: BSFN: Why is /* FP */ Written in Business Function C Source file ? explains how to minimize this type of issue technically</li>
+<li>For this case it is not easy to determine because cache verification for this example may be appeared correctly</li>
+<li>If you see 'Memory Violation' message in PDF or jde.log which is reflecting a certain business function called by a certain report has failed to return called routine</li>
+<li>Memory is utilized through JDE business function so it is important to capture jdedebug.log (namely callobject kernel log)</li>
+<li>When issue is occurring in a certain report, turn on logging dynamically in submitting a UBE to server because this log will contain runtime (through batch kernel) and business function (through callobject kernel) are to be combined into one file</li>
+<li>At once jdedebug.log is ready, analyze it through Performance Workbench because all the cache information can be traced through 'Log additional APIs?'</li>
+<li>All the UBE is running in a single thread for this reason if a certain ube is calling another ube synchronously you need to check the routines from both UBEs</li>
+</ul>
+</div>
+<p><br /><br /><br /><br /></p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

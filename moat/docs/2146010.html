@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cannot Add Primary Location - Workaround</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+            .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Cannot Add Primary Location - Workaround</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></big></big></h2>
+
+<p>Is there a standard way to create the Primary Location (F41021) when this was not added during Item Branch creation with the P41026 program?<br />&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>No. There is no standard way to populate the primary location through the following applications:</p>
+<ul>
+<li>P41026 - Item Branch, based on F4102 (Item Branch File)</li>
+<li>P41024 - Location Revisions, which allows additions and updates to the F41021 (Item Location File)</li>
+<li>Or R4101Z1I - Item Master Unedited Transactions Inbound Processor which allows the user to create F4101/F4102/F41021</li>
+</ul>
+<p>&nbsp;</p>
+<p><span style="text-decoration: underline; font-size: small;"><strong>Reference:</strong> </p>
+<ul>
+<li>Interactive application: &lt;Bug 16953703&gt; : ADD PRIMARY LOCATION (this is an enhancement request, this functionality does not yet exist)</li>
+<li>Batch application: &lt;Document 625451.1&gt; E1: 41: How to Create Item Master and Item Branch Plant Records Using Interoperability (R4101Z1I/P4101Z1/F4101/F4102/F4101Z1)</li>
+</ul>
+<p style="margin-left: 30px;">&nbsp;&nbsp;Question 10: Is it possible to create secondary locations using R4101Z1I? Also, is it possible to create a primary location for already existing Item Branch/Plan records?<br />&nbsp;&nbsp;Answer 10: No, R4101Z1 is not designed to create additional F41021 records. You can create multiple F4102 records against already existing F4101 records, and can create primary locations when creating F4102 records, but not secondary locations for existing item/branch records. In addition, you cannot use R4101Z1 to restore a missing primary location record.<br /><br /></p>
+<p><strong><span style="text-decoration: underline;">Workaround 1:</strong></p>
+<p>(Custom routine) If this is a frequent requirement,&nbsp;the user can call the form W41026B (Primary Location) through W41026H (Work with Item Branch) form. This creates records in the F4111, F4108 and F41021.</p>
+<p>&nbsp;Example :<br /></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. Create a dummy B/P<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. Create dummy records through P41026 by adding Item B/P (F4102) for your item<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. The system open W41026B [Primary Location] for this new (dummy) Item B/P. Click OK on this form W41026B [Primary Location]. Now , there is a primary location for the dummy B/P .<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4. Update F41021.MCU with an SQL instrument , with the B/P that it needs . <br /></p>
+<p><span style="text-decoration: underline;"><strong>Workaround 2</strong>:</p>
+<p>This method involves lot/location creation 'on the fly' as explained in &lt;Document 1075187.1&gt; - E1: 40: Item Branch/Location/Lot Creation On the Fly in E1 Inventory Transaction.</p>
+<ol>
+<li>Go to P4114 (Inventory Adjustment)</li>
+<li>Specify Item, Quantity, and Lot Number with (for lot controlled item) with Lot Expiration Date which creates Primary Location. To create item location on the fly, you must specify either Location or Lot (or both)</li>
+<li>(Not to change physical inventory or it's value and cost) Reverse it</li>
+<li>In case the primary Location with Blank Lot then update F41021 (Item Location) Lot Number using query tools because there is no means to create blank value</li>
+</ol>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: Standard routine maintains relationship among F4108 (Lot Master), F4111 (Cardex) and F41021. So it is important to have valid values in these tables.</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><br />&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

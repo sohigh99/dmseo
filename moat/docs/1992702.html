@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting Standard Voucher Entry Issues Or Errors Within EnterpriseOne Accounts Payable (P0411) (Non-Purchase Order Related)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Standard Voucher Entry Issues Or Errors Within EnterpriseOne Accounts Payable (P0411) (Non-Purchase Order Related)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#TRBLSHOOT">Troubleshooting Steps</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Common Standard Voucher Entry Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Error </strong>ID: 1243 - " Invalid Version"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Error </strong>ID: 0082&nbsp; - "Duplicate Supplier/Invoice Number"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Error </strong>ID: 1912&nbsp; - "Duplicate Supplier/Invoice Number"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Error </strong>ID: 0272 - "Tax Area Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Error </strong>ID: 0953 - "Bank Currency Code Incorrect"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Error </strong>"Voucher not eligible for Deletion"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Error</strong>&nbsp;"Record Has Already Been Voided/Deleted"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Error</strong> "At least one Voucher could not be voided"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Error </strong>"Voucher Being Processed by Check Run"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Errors</strong> "Taxable Amount Greater than Gross" and "Tax Amount Greater than Gross"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Error </strong>"Fetch F0006 Failed"</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section213"><strong>Common Troubleshooting Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section214"><strong>Question 1:</strong> How can I correct a voucher that is stuck at a # (payment in progress) Pay Status (ISTP)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section215"><strong>Question 2:</strong> Is it possible to change the Gross Amount on a posted voucher?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section216">Question 3: Why does the system not throw a hard error when creating a debit memo (document type PD) and manually populating the document number with the same number as an existing standard voucher (document type PV)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section217"><strong>Question 4:&nbsp; </strong>Can the system prevent users from entering duplicate vouchers (duplicate invoice numbers for the same supplier)?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section218"><strong>All AP Voucher Documents</strong></a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document helps troubleshoot Standard Voucher Entry (P0411) issues and/or errors within EnterpriseOne Account Payable and are not related to Purchase Order entry 2 or 3 way match.&nbsp; Please refer to EnterpriseOne Distribution module system 43 for these knowledge documents.</p>
+<H2 class=km><A NAME="TRBLSHOOT"></A>Troubleshooting Steps</H2><p>
+<a name="aref_section21"></a><h3 class="km"><strong>Common Standard Voucher Entry Errors</strong></h3>
+<a name="aref_section22"></a><h4 class="km"><strong><a name="invalidversion"></a>Error </strong>ID: 1243 - " Invalid Version"</h4>
+<p>Cause . . . . . . . This Version does not currently exist on the enterprise server.</p>
+<p>Resolution. . . . Confirm that the version exists in Batch Versions list and that the version is included in the package that is installed on the server. Running the version with "Install Specs Only" from the "Advanced" form exit when submitting the version may be able to install the version specs on the server if the version template is present in the current server package.</p>
+<p class="km"><strong>Scenario:</strong> After entering the voucher information in the header in the Payment Information screen when attempting to enter more information in the grid receive error: "Invalid Version" (Error Code 1243), why?</p>
+<p><strong>Solution:</strong> Check the Processing Options of the P0411 version that you are using to see what version of AP Master Business Function (P0400047) is set and then check if the version actually exists. If it does not either create it or select a version that does exist by submitting the code specifications to the server.&nbsp; Go to Batch Versions inquire on your program/version, select it, click Submit, in Form Exit click Advanced, check the Submit code specification box and click Submit.&nbsp; Now the version should be recognized.</p>
+<hr />
+<a name="aref_section23"></a><h4 class="km"><strong><a name="dupsupplierinvoicenumber"></a>Error </strong>ID: 0082&nbsp; - "Duplicate Supplier/Invoice Number"</h4>
+<p>CAUSE . . . . The Accounts Payable constants record has been setup with DUPLICATE INVOICE NUMBER EDIT set to Y (YES). Another document with the same number and the same supplier already exists in the file. This is a warning message.</p>
+<p>RESOLUTION. . Press Enter to accept the value.</p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Error </strong>ID: 1912&nbsp; - "Duplicate Supplier/Invoice Number"</h4>
+<p>CAUSE . . . . The Accounts Payable constants record has been setup with DUPLICATE INVOICE NUMBER EDIT set to H (Hard Error). Another document with the same number and the same supplier already exists in the file.</p>
+<p>RESOLUTION . . You must change the invoice number or supplier number to a new number.</p>
+<p class="km"><strong>Scenario:</strong>&nbsp; After deleting an unposted voucher batch why is the system throwing a "Duplicate Invoice" error when re-entering the vouchers?</p>
+<p><strong>Solution:</strong>&nbsp; This may be a valid error if you do not allow duplicate invoices.&nbsp; Or it is possible that the original, unposted voucher batch didn't completely delete.&nbsp; Review the Accounts Payable Ledger (F0411) and General Ledger (F0911) to see if any orphaned records exist for the voucher batch. If any exist, these orphaned records need to be deleted from the database by the CNC.</p>
+<hr />
+<a name="aref_section25"></a><h4 class="km"><strong><a name="taxareainvalid"></a>Error </strong>ID: 0272 - "Tax Area Invalid"</h4>
+<p>CAUSE . . . . The tax area does not exist in the Tax Area Master file (F4008). A tax area having an effective date prior to the tax point date (service date) must exist in the Tax Area file.</p>
+<p>RESOLUTION. . Change the service date if applicable or change the tax area to a valid tax area. NOTE: The service date is not applicable in certain circumstances. For example; Supplier Master, Customer Master and Business Unit Revisions.</p>
+<p class="km"><strong>Scenario:</strong> What is the Service/Tax Date (DSVJ) used for in Standard Voucher Entry(P0411)?</p>
+<p><strong>Solution:</strong> The Service/Tax Date (DSVJ) is a date that indicates when you purchased goods or services, or when you incurred a tax liability. The date is used to validate if the Tax Rate/Area entered on the voucher is effective. In other words, the system checks the Service/Tax Date (DSVJ) against the effective date range on the tax rate area used. If the Service/Tax Date (DSCJ) falls outside the effective date range, then Error 0272 is thrown.</p>
+<hr />
+<a name="aref_section26"></a><h4 class="km"><strong><a name="bankcurrencyincorrect"></a>Error </strong>ID: 0953 - "Bank Currency Code Incorrect"</h4>
+<p class="km"><strong>Scenario 1:</strong> Is it possible to enter a voucher in a currency other than the one designated to a monetary bank account?</p>
+<p class="km"><strong>Scenario 2:</strong> Should the system let us enter a voucher in a currency different than the currency designated on a monetary bank account and pay that voucher via auto payments or manual payments without voucher match?</p>
+<p><strong>Solution:</strong> There is a Processing Option on the Voucher Entry MBF Processing Options (P0400047): Currency tab, #5 - Currency Disagreement. When running different applications from the menu such as&nbsp;Standard Voucher Entry (P0411|ZJDE0001) versus Payment Without Voucher Match (P0411|ZJDE0003),&nbsp; a different version of the Voucher Entry MBF may be called. In this case, P0400047|ZJDE0001 is used for Standard Voucher Entry, whereas P0400047|ZJDE0003 is used for Payment Without Voucher Match. Only when this Processing Option value&nbsp;is set to&nbsp;blank will the Voucher Entry MBF set error "0953: Bank Currency Code Incorrect".</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong><a name="vhrnoteligiblefordelete"></a>Error </strong>"Voucher not eligible for Deletion"</h4>
+<p class="km"><strong>Scenario:</strong> &nbsp;Why does the system trigger an error of "Voucher not eligible for deletion" when attempting to delete a voucher that has not been posted, but has an associated payment that was voided?</p>
+<p><strong>Solution:</strong> If a payment record exists for the voucher in the Accounts Payable Matching Document Detail table (F0414), regardless of whether it was voided or not, a corresponding voucher record must also exist in the Accounts Payable Ledger table (F0411). Therefore, the voucher cannot be deleted and must be posted and then voided instead.</p>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong><a name="recordalreadyvoided"></a>Error</strong>&nbsp;"Record Has Already Been Voided/Deleted"</h4>
+<p class="km"><strong>Scenario:</strong>&nbsp;What causes the error "Record Has Already Been Voided/Deleted" when a user&nbsp;attempts to delete or void a voucher which contains pay items that were previously voided?</p>
+<p><strong>Solution:</strong>&nbsp;If a user tries to void a voucher from Supplier Ledger Inquiry header screen in Standard Voucher Entry application (P0411), the system attempts to void the entire voucher. However, if some pay items have already been voided, the system triggers the error "Record Has Already Been Voided/Deleted". To void the remaining pay items, the user needs to select the voucher in Standard Voucher Entry application (P0411) and open its details. From the&nbsp;Enter Voucher Payment Information form&nbsp;(W0411A), each pay item needs to be highlighted and deleted individually.</p>
+<hr />
+<a name="aref_section29"></a><h4 class="km"><strong><a name="onevhrcouldnotbevoided"></a>Error</strong> "At least one Voucher could not be voided"</h4>
+<p>Question 3: What causes the error "At least one voucher could not be voided" when attempting to delete an unposted voucher in the Standard Voucher Entry application (P0411)?</p>
+<p>Answer 3: Generally, this error indicates that the voucher has been paid. When you encounter this error, use the following steps to find and void or delete any payment records for the problem voucher:</p>
+<ol start="1">
+<li>In the Standard Voucher Entry application (P0411), select the unposted voucher.</li>
+<li>Select the Payment History Option from the Row exit.</li>
+<li>Payments are displayed for that voucher. Record the Payment Number(s) (data dictionary item DOCM).</li>
+<li>Open the Supplier Payment Inquiry application (P0413M) to search on the payment numbers recorded in Step 3.</li>
+<li>Select the payments.</li>
+<li>If the payment has not yet been posted, you can either void or delete it (depending on the Void Payment Entry application (P0413M/P0413V) processing options.</li>
+<li>If you opt to delete the payment, you can now delete the corresponding voucher. If you chose to void the payment instead, you need to post (R09801) the voucher first and then void it.</li>
+</ol><hr />
+<a name="aref_section210"></a><h4 class="km"><strong>Error </strong>"Voucher Being Processed by Check Run"</h4>
+<p><strong>Scenario:</strong>&nbsp;Why does system throw "Voucher Being Processed by Check Run" error when trying to delete a voucher?</p>
+<p><strong>Solution:</strong>&nbsp;The Pay Status of the voucher being deleted must be '#' (payment in progress) which implies that the voucher is currently under processing for automatic payment process and hence cannot deleted. Please refer to the Question 4 of Standard Voucher Entry Questions (P0411) (non-Purchasing Related) section on how to correct a voucher that is stuck at a # (payment in progress) pay status.</p>
+<hr />
+<a name="aref_section211"></a><h4 class="km"><strong><a name="taxamtgreaterthangross"></a>Errors</strong> "Taxable Amount Greater than Gross" and "Tax Amount Greater than Gross"</h4>
+<p class="km"><strong>Scenario:</strong>&nbsp;Why does entering a voucher with negative VAT tax trigger two errors: "Taxable Amount Greater than Gross" and "Tax Amount Greater than Gross"?</p>
+<p><strong>Solution:</strong>&nbsp;It is currently not possible to enter negative tax on a voucher. As a workaround, a user can enter a debit memo for the negative tax amount or enter two pay items (i.e. one for the voucher amount and one for the negative tax) on the voucher using a Tax Explanation Code (data dictionary item EXR1) of VT.</p>
+<hr />
+<a name="aref_section212"></a><h4 class="km"><strong>Error </strong>"Fetch F0006 Failed"</h4>
+<p class="km"><strong>Scenario:</strong> Why does Standard Voucher Entry (P0411) trigger the error "Fetch F0006 Failed" when specifying voucher header information?</p>
+<p><strong>Solution:</strong> If row security is turned on for the Business Unit Master (F0006), AAI (Automatic Accounting Instruction) validation that occurs during voucher entry can cause this error. To resolve this error, ensure the user has the ability to view data from the Business Unit Master (F0006) for the Business Unit (data dictionary item MCU) used within the Accounts Payable AAIs.</p>
+<hr />
+<a name="aref_section213"></a><h3 class="km"><strong>Common Troubleshooting Questions</strong></h3>
+<a name="aref_section214"></a><h4 class="km"><strong><a name="paystatusstuck"></a>Question 1:</strong> How can I correct a voucher that is stuck at a # (payment in progress) Pay Status (ISTP)?</h4>
+<p><strong>Solution 1:</strong> If any UBE report in the automatic payment process (R04570, R04572, R04575 or R04576) is prematurely terminated or fails to complete, the voucher pay status (data dictionary item RPPST) may be incorrectly set to # (payment in progress). To correct this issue, follow the steps below:</p>
+<ol>
+<li>Search for outstanding payment groups in the Work with Payment Groups application (P04571).</li>
+<li>Any outstanding payment groups need to be either updated or undone to remove them from the temporary worktables: A/P Payment Processing Header (F04571), A/P Payment Processing Summary (F04572), and A/P Payment Processing Detail (F04573).</li>
+<li>Inquire on the temporary worktables: F04571, F04572 and F04573 using UTB (Universal Table Browser), or Databrowser. If any orphan records are found in the temporary worktables, it is recommended that you regenerate the tables to clear out the data. Before regenerating the tables, it is recommended that you export the data into an Excel Spreadsheet in case you need a list of the removed records. Caution:&nbsp; Ensure that no users are creating payment control groups (R04570) during this process.</li>
+<li>After the temporary worktables have been cleared, run a query over the Accounts Payable Ledger table (F0411) by pay status (data dictionary item RPPST) equal to # (payment in progress). Cross-reference the Accounts Payable Ledger table (F0411) data with the Matching Document Detail Table (F0414) by voucher document number (data dictionary item RNDOC) to confirm it has not been paid.</li>
+<li>Once you determine that the voucher has not been paid, use a data utility tool to update the vouchers Pay Status (data dictionary item RPPST) field from # (payment in progress) to A (approved) in the Accounts Payable Ledger table (F0411). Be sure that the open amount field (data dictionary item AAP) is equal to the gross amount (data dictionary item AG) field in the Accounts Payable Ledger table (F0411).</li>
+</ol><hr />
+<a name="aref_section215"></a><h4 class="km"><strong>Question 2:</strong> Is it possible to change the Gross Amount on a posted voucher?</h4>
+<p class="km"><strong>Answer 2:</strong> It is possible to change the gross amount on a posted voucher if the original GL Date (DGJ) of the voucher is in the current period. If it is not in the current period, the system will throw a "Prior End Balance Forward Invalid" error and not allow the change. This limitation is because the GL Date (DGJ) is on the header of the voucher and cannot be changed just for a single line. Therefore, when a single line is changed, the original GL Date (DGJ) must be used. If the original GL Date (DGJ), then this works. However, if it is in a prior period, it will not be allowed. The only way to modify this would be to void and re-enter the entire voucher or to open the old period.&nbsp; The steps to modifying a posted voucher in the same period are:</p>
+<ul>
+<li class="km">Locate the voucher.</li>
+<li class="km">Highlight the desired voucher and click the Select button.</li>
+<li class="km">In the detail section of the Enter Voucher - Payment Information form (W0411A), change the value in the amount field. The existing pay item can be modified to read the correct amount or a new line can be added to the grid to account for the change.</li>
+<li class="km">The GL date is automatically edited against the system settings.</li>
+<li class="km">Accept the change by clicking the OK button. The system displays the Enter Voucher - GL Distribution (W0411K) form to add a new distribution line for the change in the amount. The existing posted GL Distribution lines cannot be changed.</li>
+</ul>
+<hr />
+<a name="aref_section216"></a><h4 class="km">Question 3: Why does the system not throw a hard error when creating a debit memo (document type PD) and manually populating the document number with the same number as an existing standard voucher (document type PV)?</h4>
+<p>Answer 3: The Accounts Payable Ledger table (F0411) has the following composed primary key: Company Key (KCO), Document Number (DOC), Document Type (DCT), Document Pay Item (SFX) and Pay Item Extension Number (SFXE).&nbsp; The system considers transactions as duplicates (and trigger an Invalid Record error message) when they contain the same primary key information.&nbsp; In the example above, the document type is different between the two records (PV and PD).</p>
+<hr />
+<a name="aref_section217"></a><h4 class="km"><strong>Question 4:&nbsp; </strong>Can the system prevent users from entering duplicate vouchers (duplicate invoice numbers for the same supplier)?</h4>
+<p><strong>Answer 4:</strong>&nbsp; The Duplicate Invoice Number Edit (data dictionary item DUIN) flag in the Accounts Payable Constants (P0000) determines if duplicate invoice numbers are allowed for a supplier. Valid values are:</p>
+<ul>
+<li>H - The system validates the invoice number. If it is a duplicate number, the system issues an error message and requires that a unique invoice number be entered.</li>
+<li>Y - The system validates the invoice number. It if is a duplicate number, the system issues a warning message but allows the duplication.</li>
+<li>N - The system does not validate the invoice number and does not issue an error or warning message.</li>
+</ul>
+
+<hr />
+<a name="aref_section218"></a><h3 class="km"><strong>All AP Voucher Documents</strong></h3>
+<div class="kmnotebox">
+<p><strong>Overview Documents</strong></p>
+<ul>
+<!--   All commented documents belong to 2525008.html  -->
+<!-- <li><a href='../docs/2425008.html'>Overview of Standard Vouchers in EnterpriseOne Accounts Payable (P0400047, P0411, P0411SV) (Non-Purchase Order Related)</a></li> -->
+<!-- <li><a href='../docs/1992836.html'>Overview of Speed Status Change Within EnterpriseOne Accounts Payable (P0411S) [Video] (Non-Purchase Order Related)</a></li> -->
+<!-- <li><a href='../docs/1992857.html'>Overview of Multiple Voucher Multiple Supplier and Multi Company and Single Supplier Voucher Programs Within Accounts Payable (P0411, P041016, P041017) (Non-Purchase Order Related)</a></li> -->
+<!-- <li><a href='../docs/1992835.html'>Overview of Voucher Journal Report Within EnterpriseOne Accounts Payable (R048101) (Non-Purchase Order Related)</a></li> -->
+<li><a href='../docs/1992832.html'>Overview of Pay When Paid Within EnterpriseOne Accounts Payable (P03B470, R03B470) (Non-Purchase Order Related)</a></li>
+<!-- <li><a href='../docs/1992847.html'>Overview of Voucher Outbound Interoperability Within EnterpriseOne Accounts Payable (P0411, P0400048, P0900160) (Non-Purchase Order Related)</a></li> -->
+<!-- <li><a href='../docs/1992826.html'>Overview of Recurring Voucher Process Within EnterpriseOne Accounts Payable (P0411, R048101) (Non-Purchase Order Related)</a></li> -->
+<!-- <li><a href='../docs/1992825.html'>Overview of Prepayment (Prepaid) Vouchers Within EnterpriseOne Accounts Payable (P0411/ZJDE0009) (Non-Purchase Order Related)</a></li> -->
+<!-- <li><a href='../docs/1992806.html'>Overview of Logged Vouchers Within EnterpriseOne Accounts Payable (P042002) (Non-Purchase Order Related)</a></li> -->
+</ul>
+<p><strong>Frequently Asked Questions</strong></p>
+<ul>
+<li><a href='../docs/1387758.html'>FAQ - Frequently Asked Questions Regarding Standard Voucher Entry Within EnterpriseOne Accounts Payable (P0411) (Non-Purchase Order Related)</a></li>
+<li><a href='../docs/1992886.html'>FAQ - Frequently Asked Questions Regarding Logged Vouchers Within EnterpriseOne Accounts Payable (P042002) (Non-Purchase Order Related)</a></li>
+</ul>
+<p><strong>Troubleshooting Errors and Issues</strong></p>
+<ul>
+<li><a href='../docs/1992702.html'>Troubleshooting Standard Voucher Entry Issues Or Errors Within EnterpriseOne Accounts Payable (P0411) (Non-Purchase Order Related)</a></li>
+<li><a href='../docs/1993350.html'>Troubleshooting Logged Vouchers Within EnterpriseOne Accounts Payable (P042002) (Non-Purchase Order Related)</a></li>
+<li><a href='../docs/1993251.html'>Troubleshooting Multiple Voucher Multiple Supplier and Multi Company and Single Supplier Vouchers (P0411, P041016, P041017) (Non-Purchase Order Related)</a></li>
+</ul>
+</div>
+<p>&nbsp;</p></p>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

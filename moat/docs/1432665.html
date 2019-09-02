@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FAQ - Frequently Asked Questions Regarding Multi Currency Automatic Payments Within EnterpriseOne Accounts Payable</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>FAQ - Frequently Asked Questions Regarding Multi Currency Automatic Payments Within EnterpriseOne Accounts Payable</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Multi Currency Automatic Payment Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 1:&nbsp; </strong>What is the Document Type assigned to losses?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 2:&nbsp; </strong>Does the system create a gain or loss when paying a domestic voucher in an alternate currency?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 3:&nbsp; </strong>Does the system create a gain or loss when paying foreign vouchers in a domestic currency?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Question 4:&nbsp; </strong>At which stage in the payment process is a gain or loss created?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Question 5:&nbsp; </strong>When is the conversion method defined in the General Accounting Constants used when calculating gains or losses</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Question 6:&nbsp; </strong>Is it possible to record the gain and loss to the expense account instead of a single variant account?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Question 7:&nbsp; </strong>How does the system account for the difference between the exchange rate used when writing a payment and the daily exchange rate?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Question 8:&nbsp; </strong>When the bank executes the payment file, they use the daily exchange rate, which is sometimes different than the exchange rate used at the time of writing the payment. &nbsp;How does the system account for this difference?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Question 9:&nbsp; </strong>When entering a voucher using a monetary bank account, does the bank account currency code need to be the same currency code as the voucher currency?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Question 10:&nbsp; </strong>How can you determine if a payment will be written in the alternate currency?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Question 11:&nbsp; </strong>How can I process alternate currency payments using the Speed Payment Entry Program, P0411SV?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section213"><strong>Question 12: &nbsp;</strong>Why does the Manual Payment Journal Review (R04311) fail to display GL Distribution information for K batches?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section214"><strong>Question 13:</strong> I have a domestic voucher in USD. I need to pay in another currency which is the bank's monetary currency. What is the best way to pay this Voucher?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section215"><strong>Question 14:</strong> Is it possible for R04572 to print a currency code other than $ (Dollars)?</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section216"><strong>Unrealized Currency Gains and Losses (R04425)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section217"><strong>Question 1:&nbsp; </strong>What is the purpose of the XJDE0003 version of the A/P Unrealized Gain/Loss Report (R04425)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section218"><strong>Question 2:&nbsp; </strong>Is it possible to prevent a user from submitting the A/P Unrealized Gain/Loss Report twice, causing duplicate records?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section219"><strong>Question 3:&nbsp; </strong>Can the A/P Unrealized Gain/Loss Report (R04425) be run in a multi-threaded job queue?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section220"><strong>Question 4:&nbsp; </strong>Why is a user&nbsp;unable to view the processing options for the A/P Unrealized Gain/Loss Report (R04425)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section221"><strong>Question 5:</strong> Is it possible to run the A/P Unrealized Gain/Loss Report (R04425) in proof mode?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section222"><strong>Question 6:</strong> Does the system check if a gain or loss has already been generated for a voucher within a period?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section223"><strong>Question 7: </strong>If the AP &nbsp;Unrealized Gain/Loss Report (R04425) was ran before a voucher was voided, is it possible to run it again to reverse the JX?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section224"><strong>Question 8</strong> : When running Unrealized Gains and Losses (R04425) how does the system determine which exchange rate to use?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section225"><strong>Question 9:</strong> When the Unrealized Gain Loss Report is submitted to run in Final mode, the system creates JX transaction for unrealized gain loss amount but there is no reversing JX for subsequent month?&nbsp;</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides answers to frequently asked questions regarding multi currency automatic payments<strong>.<br /></strong></p>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<a name="aref_section21"></a><h3 class="km"><strong>Multi Currency Automatic Payment Questions</strong></h3>
+<hr />
+<a name="aref_section22"></a><h4 class="km"><strong>Question 1:&nbsp; </strong>What is the Document Type assigned to losses?</h4>
+<p><strong>Answer 1:&nbsp;</strong> Gains and losses are assigned the same Document Type (DCT) of PG. <br /> <strong><br /> </strong></p>
+<hr />
+<a name="aref_section23"></a><h4 class="km"><strong>Question 2:&nbsp; </strong>Does the system create a gain or loss when paying a domestic voucher in an alternate currency?</h4>
+<p><strong>Answer 2:&nbsp;</strong> No, this scenario does not yield a realized gain or loss.</p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Question 3:&nbsp; </strong>Does the system create a gain or loss when paying foreign vouchers in a domestic currency?</h4>
+<p><strong> Answer 3:</strong>&nbsp; The system may calculate a gain or loss if there is a difference in the exchange rate between the time the voucher was created and the time the payment is created.</p>
+<hr />
+<a name="aref_section25"></a><h4 class="km"><strong>Question 4:&nbsp; </strong>At which stage in the payment process is a gain or loss created?</h4>
+<p><strong>Answer 4:&nbsp; </strong>The gain or loss record is created when the payment is generated. A gain/loss record is added to the Accounts Payable Matching Document Detail table (F0414).</p>
+<hr />
+<a name="aref_section26"></a><h4 class="km"><strong>Question 5:&nbsp; </strong>When is the conversion method defined in the General Accounting Constants used when calculating gains or losses</h4>
+<p><strong>Answer 5:&nbsp;</strong> The conversion method specified in the General Accounting Constants (P0000) is used when a method is not specified in the Work with Currency Exchange Rates (P0015A) application.</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong>Question 6:&nbsp; </strong>Is it possible to record the gain and loss to the expense account instead of a single variant account?</h4>
+<p><strong>Answer 6:&nbsp;</strong> The gains and losses that are computed when creating a payment are going to the account defined in AAI items PG and PL. The ability to capture these records in the expense account is currently unavailable, unless you associate the expense account to the PG or PL AAIs.</p>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Question 7:&nbsp; </strong>How does the system account for the difference between the exchange rate used when writing a payment and the daily exchange rate?</h4>
+<p><strong> Answer 7:</strong>&nbsp; The system is unable to calculate a second gain or loss on a payment by payment basis. Therefore, the Currency Exchange Rates (F0015) needs to be current prior to writing a payment.</p>
+<hr />
+<a name="aref_section29"></a><h4 class="km"><strong>Question 8:&nbsp; </strong>When the bank executes the payment file, they use the daily exchange rate, which is sometimes different than the exchange rate used at the time of writing the payment. &nbsp;How does the system account for this difference?</h4>
+<p><strong>Answer 8:</strong>&nbsp; The system is unable to calculate a second gain or loss on a payment by payment basis. Therefore, you need to make sure that the exchange rate table (F0015) is current before you write the payment. You can call the bank or look on the banks website the day you create the payment file to get the daily exchange rate and&nbsp;update the exchange rate table accordingly. Depending on how you have set up the processing option effective date on the currency tab of the Work with Payment Group (P04571), the system will either pick up the GL payment date or the specified date to determine which exchange rate to use. This will then create a correct realized gain or loss.</p>
+<hr />
+<a name="aref_section210"></a><h4 class="km"><strong>Question 9:&nbsp; </strong>When entering a voucher using a monetary bank account, does the bank account currency code need to be the same currency code as the voucher currency?</h4>
+<p><strong>Answer 9:&nbsp;</strong> No, if a voucher is assigned a monetary bank account, the bank account currency code does not have to be the same as the transaction currency code of the voucher when you process payments in an alternate currency. See question/answer number 1 above.</p>
+<hr />
+<a name="aref_section211"></a><h4 class="km"><strong>Question 10:&nbsp; </strong>How can you determine if a payment will be written in the alternate currency?</h4>
+<p><strong> Answer 10:</strong>&nbsp; The R04570 output will not show the payment amount in the alternate currency, however, the currency code in the header will indicate that the payment is to be made in a third currency. The amount is converted when the payment is written.<br /> <strong><br /> </strong></p>
+<hr />
+<a name="aref_section212"></a><h4 class="km"><strong>Question 11:&nbsp; </strong>How can I process alternate currency payments using the Speed Payment Entry Program, P0411SV?</h4>
+<p><strong>Answer 11:</strong>&nbsp; You cannot use the A/P Speed Voucher Entry (Speed Payment Entry) program (P0411SV) to enter manual payments in an alternate currency. This program does not calculate currency amounts or gains and losses.</p>
+<a name="aref_section213"></a><h4 class="km"><strong>Question 12: &nbsp;</strong>Why does the Manual Payment Journal Review (R04311) fail to display GL Distribution information for K batches?</h4>
+<p><strong>Answer 12:</strong>&nbsp; The Manual Payment Journal Review (R04311) is designed to work for Manual Payment batches only (Batch Type M and W). Although most of the information is displayed for Automatic Payment batches, the report is unable to search the General Ledger (F0911) for the correct information because it was designed to specifically search for Manual Payment batches.&nbsp;</p>
+<p>There is not one specific report for Automatic Payment batches that contains all of the information provided for Manual Payments through the Manual Payment Journal Review (R04311). However, there are several reports that are printed during the Automatic Payment Process, including the AP Payment Register (R04576) and Create Payment Control Groups (R04570) that show the payment information. If coupled with the Post (R09801) report or the Payment Register (R09313), this should encompass all data for Auto Payments that is displayed in the Manual Payments Journal Review (R04311).</p>
+<hr />
+<a name="aref_section214"></a><h4 class="km"><strong>Question 13:</strong> I have a domestic voucher in USD. I need to pay in another currency which is the bank's monetary currency. What is the best way to pay this Voucher?</h4>
+<p><strong>Answer 13:</strong> Since your bank in monetary in another currency, best option is to void the voucher, post the void. Re-enter voucher in foreign currency with USD as base and other currency as the transaction currency. You now can pay this voucher in the foreign monetary curency.</p>
+<hr />
+<a name="aref_section215"></a><h4 class="km"><strong>Question 14:</strong> Is it possible for R04572 to print a currency code other than $ (Dollars)?</h4>
+<p><strong>Answer 14:</strong> The print program R04572 is hard-coded to print $ (Dollars).&nbsp; EnterpriseOne provides many other print programs that are country specific (for example R04572U1 for the United Kingdom, P04572C for Canada, etc).&nbsp; A list of available print programs can be found in UDC table 04/PP.&nbsp; Some of these programs print a county specific currency symbol, whilst other do not print a currency symbol as this is part of the check stock (preprinted on the check&nbsp; itself).</p>
+<hr />
+<a name="aref_section216"></a><h3 class="km"><strong>Unrealized Currency Gains and Losses (R04425)</strong></h3>
+<a name="aref_section217"></a><h4 class="km"><strong>Question 1:&nbsp; </strong>What is the purpose of the XJDE0003 version of the A/P Unrealized Gain/Loss Report (R04425)?</h4>
+<p><strong>Answer 1:</strong>&nbsp; This version of the A/P Unrealized Gain/Loss Report (R04425) is for reporting purposes only; it will not create additional entries for gains and losses.</p>
+<hr />
+<a name="aref_section218"></a><h4 class="km"><strong>Question 2:&nbsp; </strong>Is it possible to prevent a user from submitting the A/P Unrealized Gain/Loss Report twice, causing duplicate records?</h4>
+<p><strong>Answer 2:&nbsp;</strong> The AP Unrealized Gain/Loss report (R04425) was designed to be submitted multiple times.</p>
+<hr />
+<a name="aref_section219"></a><h4 class="km"><strong>Question 3:&nbsp; </strong>Can the A/P Unrealized Gain/Loss Report (R04425) be run in a multi-threaded job queue?</h4>
+<p><strong>Answer 3:</strong>&nbsp; Yes, the&nbsp;A/P Unrealized Gain/Loss Report (R04425) can be run in a multithreaded job queue, even though it creates JE records in the General Ledger (F0911). However, the final decision to run the report in this manner is up to&nbsp;to each individual company based on their business rules and processes. It is recommended to always run the A/P Unrealized Gain/Loss Report in proof mode first. After any issues are corrected, run the UBE report again to create the necessary journal entries. <em><br /> <br /> </em></p>
+<hr />
+<a name="aref_section220"></a><h4 class="km"><strong>Question 4:&nbsp; </strong>Why is a user&nbsp;unable to view the processing options for the A/P Unrealized Gain/Loss Report (R04425)?</h4>
+<p><strong>Answer 4:&nbsp;</strong> Processing Option Security defined within Security Workbench&nbsp;(P00950), can secure access to the processing options of a report. &nbsp;Verify the User/Role has security that allows them to access the processing options for the A/P Unrealized Gain/Loss Report (R04425).</p>
+<hr />
+<a name="aref_section221"></a><h4 class="km"><strong>Question 5:</strong> Is it possible to run the A/P Unrealized Gain/Loss Report (R04425) in proof mode?</h4>
+<p class="km"><strong>Answer 5:</strong> The UBE does not have a proof or final processing option.&nbsp; However, setting Processing Option 3: Create Journal Entries to blank (do not create journal entries) acts as a proof mode and can be run multiple times within a given fiscal period.</p>
+<hr />
+<a name="aref_section222"></a><h4 class="km"><strong>Question 6:</strong> Does the system check if a gain or loss has already been generated for a voucher within a period?</h4>
+<p><strong>Answer 6:</strong> Each time the A/P Unrealized Gain/Loss Report (R04425) is run, it calculates unrealized gains/losses if Processing Option 3: Create Journal Entries is set to:</p>
+<ul>
+<li>1: Create journal entries for accounts with calculated gains or losses.</li>
+<li>2: Create journal entries for accounts with calculated losses only.</li>
+<li>3: Create journal entries for accounts with calculated gains only.</li>
+</ul>
+<p>The system does not flag the voucher record to indicate that an unrealized gain or loss has already been created for a fiscal period.&nbsp; It is recommended to run the UBE in proof mode first: processing option 3 Create Journal Entries is set to blank.</p>
+<hr />
+<a name="aref_section223"></a><h4 class="km"><strong>Question 7: </strong>If the AP &nbsp;Unrealized Gain/Loss Report (R04425) was ran before a voucher was voided, is it possible to run it again to reverse the JX?</h4>
+<p><strong>Answer 7:&nbsp;</strong>The AP Unrealized Gain/Loss (R04425) does not pick up voided vouchers. For a JX created on a voucher that is later voided, you can either void the JX or create an Adjustment in Work with Journal Entries (P0911).</p>
+<hr />
+<a name="aref_section224"></a><h4 class="km"><strong>Question 8</strong> : When running Unrealized Gains and Losses (R04425) how does the system determine which exchange rate to use?</h4>
+<p><strong>Answer 8:</strong> The exchange rate defaults from the Currency Exchange Rates table (F0015).&nbsp; The effective date (EFT) determines when the exchange rate is in effect.</p>
+<hr />
+<a name="aref_section225"></a><h4 class="km"><strong>Question 9:</strong> When the Unrealized Gain Loss Report is submitted to run in Final mode, the system creates JX transaction for unrealized gain loss amount but there is no reversing JX for subsequent month?&nbsp;</h4>
+<p><strong>Answer 9:</strong> Reversing JX for Unrealized Gain Loss amount only get generated upon posting (R09801) the batch to the General Ledger.</p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

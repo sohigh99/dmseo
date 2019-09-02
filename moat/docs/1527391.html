@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case Study on how to record user specific times through P42101 (Sales Order Entry)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Case Study on how to record user specific times through P42101 (Sales Order Entry)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><a name="subtitle"></a><span style="font-size: large;">Caching in EnterpriseOne</span></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><a name="section01"></a><span style="font-size: medium;">Purpose of Document</span></h2>
+
+<p> Purpose of this document is to guide possible implementation on times per user time zone which are available EnterpriseOne release 8.9 and above as below,</p>
+<ul>
+<li>RSDT (Promised Delivery Time)</li>
+<li>DRQT (Requested Delivery Time)</li>
+<li>PMDT (Scheduled Shipment Time)</li>
+<li>RLTM (Time - Release)</li>
+<li>ADTM (Actual Shipment Time)</li>
+<li>OPTT (Time - Original Promised Delivery)</li>
+<li>PDTT (Time - Scheduled Pick)</li>
+<li>PSTM (Time - Future Time 2)</li>
+</ul>
+<p>Note that above columns are available in P42101 but not in P4210.</p>
+<p>Before continue to review, refer to &lt;Document 626596.1&gt; - E1: DD: Data Item Class JDEUTIME:<br /> "<em>Prior to EnterpriseOne 8.9, the software presumed that all users of a system were located in the same time zone. While this is not a problem for localized enterprises dealing with only one time zone, it becomes a significant issue for enterprises whose business processes span several time zones, particularly when the duration of these processes is relatively short. Time zone variations make timestamps inaccurate, and the potential errors caused by these variations can make the calculated and reported dates in applications almost meaningless. In the current e-business environment, where multi-zone, short duration business processes are typical, finding a solution to this problem is critical.</em>"</p>
+<p> </p>
+
+<h3>Table of Contents </h3>
+<ul>
+  <li><a href="#1">Limitation</a></li>
+  <li><a href="#2">UTC (Coordinated Universal Time)</a></li>
+  <li><a href="#q1">Goal</a></li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#q1.1">Business Scenario</a></li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#q1.2">Representation of data type for date (JDEDATE) and datetime (JDEUTIME)</a></li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#q1.3">Example of implementation:</a></li>
+  <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#q1.4">Problem</a></li>
+  <li><a href="#q2">Solution</a></li>
+</ul>
+
+
+<h4><a name="1"></a>Limitation</h4>
+<p>Since columns listed above do not belong to JDEUTime class of data dictionary item, Oracle do not support any trigger in DD and Table level. So information in body is example on possible implementation to make use of the concept of JDEUTime. Full list of table column combination can be found <a href="&lt;&lt;INLINE_ATTACHMENT:1527391.1:JDEUTIME&gt;&gt;" alt="Table_Column_JDEUTime" title="Table_Column_JDEUTime">here</a>.</p>
+<p> </p>
+<h4><a name="2"></a>UTC (Coordinated Universal Time)</h4>
+<p>Coordinated Universal Time (UTC) is the primary time standard by which the world regulates clocks and time. It is one of several closely related successors to Greenwich Mean Time (GMT). For most purposes, UTC is synonymous with GMT, but GMT is no longer precisely defined by the scientific community.</p>
+<p> </p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+
+<p> </p>
+<h2><a name="q1"></a>Goal</h2>
+<p>As above reference- E1: DD: Data Item Class JDEUTIME reads your business may require you to implement JDEUTime for Sales Order Module. This document is to guide possible implementation and considerations on it. If possible, create a brand new table to hold these information rather than modify existing routines.</p>
+<p>For this example, you are going to create custom NER (Named Event Rule) to show/save based on the timezone you are on.</p>
+
+<h3><a name="q1.1"></a>Business Scenario</h3>
+<ul>
+<li>Supposed that you (user A) are sitting in UAT +08:00 (GMT + 08:00, Singapore) and you promised to deliver a certain part by 11:00:00 a.m.</li>
+<li>When a user (User B) from Abudabi (UAT +04:00) sees it as 07:00:00 and ship to location has changed from Singapore to Abudabi</li>
+<li>So User B wants to change it the earliest working hour 09:00:00.</li>
+</ul>
+<p>So,</p>
+<ul>
+<li>User A enter 110000 which is to be stores as 030000 in the database</li>
+<li>User B views it as 070000</li>
+<li>User B updates it with 090000</li>
+<li>So database stores it as 050000</li>
+</ul>
+<p> </p>
+<hr>
+
+<h3><a name="q1.2"></a>Representation of data type for date (JDEDATE) and datetime (JDEUTIME)</h3>
+<p>A. Julian Date</p>
+<ul>
+<li>    113001 &lt;&gt; 1/1/2013     113365 &lt;&gt; 12/31/2013</li>
+<li>    114001 &lt;&gt; 1/1/2014     114365 &lt;&gt; 12/31/2013</li>
+</ul>
+<p><br /> B. timedate format data (example of F03012.aidtee)<br />    - Representation through JDE tools (e.g., UTB or application): 8282012 <span style="color: #3333ff;">05:57:55(UTC)</span> /* Description 2 of UDC H91/TZ (Time Zone) for Code 26 */<br />     : Date is parsed based on Date Format from User Profile which is coming from UDC 00/DF (Date Format).<br />    - Representation through JDE tools: 8282012 <span style="color: #3333ff;">13:57:55(UTC+08:00)</span> <br />         : when UDC H91/TZ is 31 (UAT +08:00) same value is to be appeared,<br /> <br /> C. Value through Query Tools (example of Oracle 10g)<br />    sql&gt; <span style="font-style: italic;">select aidtee from proddta.f03012 where aian8 = 4242;</span></p>
+<div style="margin-left: 40px;">    AIDTEE<br />     ---------------------<br />     01-JAN-70<br />     11-OCT-06</div>
+<p>   To describe it with date and time<br />    sql&gt; <span style="font-style: italic;">SELECT TO_CHAR(aidtee, 'DD-MON-YYYY HH24:MI:SS') AS test FROM proddta.f03012 WHERE an8 = 4242;</span></p>
+<div style="margin-left: 40px;">    TEST<br />     ---------------------<br />     01-JAN-1970 00:00:00<br />     11-OCT-2006 09:20:54</div>
+<p> </p>
+<div class="kmnotebox">
+<p> Note</p>
+<ul>
+<li>Depending on database server and its version may yield different result</li>
+<li>Julian Date in EnterpriseOne is different from common Julian Date. For this example, the JD Edwards Julian date (say, CYYDDD format) would be 113123, where C = 1 (for 21st century), YY = 13 (for 2013) and DDD is 123 (for the 123rd day of year 2013).  So the first 3 digits are for the Century and Current Year, and the last 3 digits indicates the number of days into the year.</li>
+</ul>
+</div>
+<hr>
+
+<h3><a name="q1.3"></a>Example of implementation:</h3>
+<p>Requirement:  2 columns (RSDJ (Date - Promised Delivery) and RSDT (Promised Delivery Time)) from F4211 (Sales Order Detail File) are to be adjusted based on user timezone defined.</p>
+<p>Steps:</p>
+<p>1. Create data structure with minimum parameters. For this example, jdPromisedDeliveryDate, mnPromisedDeliveryTime, cMode and cTimeFormat</p>
+<ul>
+<li>cMode: this is need to determine From Time and To Time. For example,</li>
+<ul>
+<li>- Write/Update: From Time (User Time) to To Time (Server Time or UTC - 0)</li>
+<li>- View: From Time (Server Time) to To Time (User Time)</li>
+</ul>
+<li>cTimeFormat: This parameter is required because time format can be HHMM without seconds. So depends on requirement, if needed additional '00' is to be appended by multiplying HHMM with 100</li>
+</ul>
+<p>2. Define necessary variable in reading data</p>
+
+<p>3. Check whether input RSDJ is NULL but RSDT is not zero then set RSDJ = Date Today</p>
+<div class="kmcodeblock">
+<p>If BF jdPromisedDeliveryDate is equal to &lt;Null Date&gt; And BF mnPromisedDeliveryTime is not equal to &lt;Zero&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;         BF jdPromisedDeliveryDate = SL DateToday<br /> End If<br /> <br /> </p>
+</div>
+
+  <p>4. Retrieve Time Zone and Daylight Savings Rule for the user. This can be through BSFN or simple Table I/O as below,   <br />            
+  </p>
+
+  <div class="kmcodeblock">
+    <span style="text-decoration: underline;">F00921.Fetch Single</span><br />&nbsp;&nbsp;&nbsp;&nbsp;                 SL UserID =  TK User ID<br />&nbsp;&nbsp;&nbsp;&nbsp;                 VA evt_szUserTimeZone_TIMEZONES &lt;- TK Universal Time (UTCTIME)<br />&nbsp;&nbsp;&nbsp;&nbsp;                 VA evt_szUsrDayltSavRule_DSAVNAME &lt;- TK Future Use Field 4 (FUTTIME4)</p>
+  </div>
+
+
+<p>5. (If needed, you may implement server timezone which is different from UTC - 0, or GMT) For this example, for simple implementation we simply sets UTC - 0 timezone</p>
+<p>6. Set FROM and TO Time Zone values based on MODE flag<br /></p>
+
+<div class="kmcodeblock">        If BF cMode is equal to "1" /* before write/update */<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szFROMTimeZone_TIMEZONES = VA evt_szUserTimeZone_TIMEZONES<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szTOTimeZone_TIMEZONES = VA evt_szSystemTimeZone_TIMEZONES /* e.g., Code 26 which is (UTC) from UDC H91/TZ */<br />         Else /* before read */<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szFROMTimeZone_TIMEZONES = VA evt_szSystemTimeZone_TIMEZONES<br />&nbsp;&nbsp;&nbsp;&nbsp;              VA evt_szTOTimeZone_TIMEZONES = VA evt_szUserTimeZone_TIMEZONES<br />         End If</p>
+</div>
+
+
+<p>7. Retrieve Daylight Savings Flag<br />        </p>
+<div class="kmcodeblock">
+ <span style="text-decoration: underline;">Is Daylight Savings in Effect</span> *** B9800009 - IsDaylightSavingsInEffect ***<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     BF jdPromisedDeliveryDate -&gt; BF jdDate<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     BF mnPromisedDeliveryTime -&gt; BF mnTime<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     VA evt_cDaylightSavingsFlag_EV01 &lt;- BF cDaylightSavingsFlag<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;                     BF cSuppressErrorMessages -&gt; BF cSuppressErrorMessage<br /> <br />
+ </div>
+ <p> 8. (Only when jdPromisedDeliveryDate is not NULL Date) If the time format is '1' then the time is in HHMM format. If no value is passed the time is in HHMMSS format<br /> </p>      
+
+ <div class="kmcodeblock"><p>If BF cTimeFormat01 is equal to "1"<br />&nbsp;&nbsp;&nbsp;&nbsp;                    BF mnTime01 = [BF mnTime01]*100<br />       End If</p>
+</div>
+
+<p>9. Convert User Date/Time to UTC format<br />         </p>
+<div class="kmcodeblock">
+ <span style="text-decoration: underline;">Get UTC Time</span>  *** B9800009 - GetUTCTime ***<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;VA evt_mnUTCTimeWithSec_UTCWSEC &lt;- BF mnUTCTime<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;BF jdPromisedDeliveryDate -&gt; BF jdDate<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;BF mnPromisedDeliveryTime -&gt; BF mnTime<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;"2" -&gt; BF cUTC_Local<br />
+ &nbsp;&nbsp;&nbsp;&nbsp;VA evt_szFROMTimeZone_TIMEZONES -&gt; BF szTimeZone<br />
+ &nbsp;&nbsp;&nbsp;&nbsp; VA evt_cDaylightSavingsFlag_EV01 -&gt; BF cDaylightSavings<br />
+ &nbsp;&nbsp;&nbsp;&nbsp; VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName</p>
+</div>
+<p>10.  Seconds are not considered by B9800009 and need to be appended to the converted value<br /> </p>
+<div class="kmcodeblock" >          
+&nbsp;&nbsp;&nbsp;&nbsp;VA evt_nSeconds_INT01 = mod([BF mnTime01],100)</p></div>
+
+<p>11. Convert UTC Time to the requested time zone<br />         </p>
+<div class="kmcodeblock"> <span style="text-decoration: underline;">Get Time and Date From UTC</span>  *** B9800009 ***<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_mnUTCTimeWithSec_UTCWSEC -&gt; BF mnUTCTime<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;BF mnPromisedDeliveryTime &lt;- BF mnTime<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;BF jdPromisedDeliveryDate &lt;- BF jdDate<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;"2" -&gt; BF cUTC_Local<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_szTOTimeZone_TIMEZONES -&gt; BF szTimeZone<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_cDaylightSavingsFlag_EV01 -&gt; BF cDaylightSavings<br />                        
+  &nbsp;&nbsp;&nbsp;&nbsp;VA evt_szUsrDayltSavRule_DSAVNAME -&gt; BF szDaylightSavingsRuleName<br />                       </p>
+
+<p>          BF mnTime01 = [BF mnTime01]+[VA evt_nSeconds_INT01] /* to describe hhmmss */</p>
+</div>
+
+<p>11'. If the time format is '1' convert the time to HHMM format<br />  </p>
+<div class="kmcodeblock">              If BF cTimeFormat01 is equal to "1"<br />&nbsp;&nbsp;  &nbsp;  &nbsp;                         BF mnTime01 = [BF mnTime01]/100<br />                End If</p>
+</div>
+
+
+<p>12. Save it and compile</p>
+<p>13. Table Trigger design for table to update</p>
+<p>Implement above at,</p>
+<p>Issue is coming in updating exiting order so call custom NER at the event of,</p>
+<ul>
+<li>Before Record Is Inserted</li>
+<li>Before Record Is Updated</li>
+<li>After Record Is Fetched</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">
+<p> Note:</p>
+<p>This NER is to be implemented through table trigger, proper error has to be handled</p>
+</div>
+<hr>
+
+
+<h3><a name="q1.4"></a>PROBLEM: </h3>
+<p>In updating Sales Order Detail lines, if the time gap for column RSDT is same with gap between two timezone (From and To) the value stored in server gets wrong. For example, User (UTC - 1) enters order as below,</p>
+<table style="border-collapse: collapse; width: 144px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" span="3" width="64" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; width: 48pt; background-color: #cccccc;">DOCO</th>
+<th style="width: 48pt; background-color: #cccccc;">LNID</th>
+<th style="width: 48pt; background-color: #cccccc;">RSDT</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">9999</td>
+<td>1.000</td>
+<td>080000</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">9999</td>
+<td>2.000</td>
+<td>090000</td>
+</tr>
+</tbody>
+</table>
+<p>(Note that there is 1 hour gap between two order lines)<br /> <br /> Quantity for both lines are updated by same user, which updates</p>
+<table style="border-collapse: collapse; width: 144px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" span="3" width="64" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<th style="height: 12.75pt; width: 48pt; background-color: #cccccc;">DOCO</th>
+<th style="width: 48pt; background-color: #cccccc;">LNID</th>
+<th style="width: 48pt; background-color: #cccccc;">RSDT</th>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;">9999</td>
+<td>1.000</td>
+<td>080000</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">9999</td>
+<td>2.000</td>
+<td style="background-color: yellow; color: red;">080000</td>
+</tr>
+</tbody>
+</table>
+<p>(Note that 2nd row is updated with 1st row column value)<br /> <br /> Same issue occurs,</p>
+<ul>
+<li>User is sitting in (UTC - 2)</li>
+<li>Time gap between two lines are 2 hour (e.g., 08:00:00 and 10:00:00)</li>
+</ul>
+<p><br /> Or,</p>
+<ul>
+<li>User timezone is (UTC + 4)</li>
+<li>Time gap between two lines are -4 hour (e.g., 10:00:00 and 6:00:00)</li>
+</ul>
+<p>What is possible cause of this and how to fix it?<br />  </p>
+<p> </p>
+<h2><a name="q2"></a>SOLUTION</h2>
+<p>Issue is coming in updating exiting order so call custom NER at the event of, <br /> - Before Record Is Inserted<br /> <span style="font-weight: bold;"> - After Record Is Inserted</span><br /> <br /> - Before Record Is Updated<br /> <span style="font-weight: bold;"> - After Record is Updated</span><br /> And, <br /> - After Record Is Fetched<br /> <br /> : this is based on existing routine for F4211_CURRENCY() and JDEUTime (database level update) which adjust display whenever it got accessed. So if you implement table trigger, your custom NER has to be called from all table events.</p>
+<hr />
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Oracle do not encourage any modification of existing routine</li>
+<li>Additional table trigger can affect performance</li>
+</ul>
+</div>
+<p>&nbsp; </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

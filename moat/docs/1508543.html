@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Setting up Address Book</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Setting up Address Book</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Address Book</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Implementing Address Book</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Setting Up the JD Edwards EnterpriseOne Address Book System</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Address Book Constants (P0000)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Country Constants (P0070)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Address Book User Defined Codes (UDCs) (P0004A)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Address Book Category Codes</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section37">Updating Category Codes</a></td></tr></table>
+<table><tr><td width=60>&nbsp;</td><td><a href="#aref_section38">Category Code Reporting</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Address Book Next Numbers (P0002)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Address Book Postal Codes (P0117)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">Audit Log (P0100041, P0100042, P0100043)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>Additional Address Book Set Up</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">Data Privacy (P01138)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Effective Address Dates</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">External Email</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Address Book Word Search (P01BDWRD, R01BDWRD)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">High Impact Bugs</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section318">Enhancement Bugs</a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Address Book</strong></h3>
+<p>The Address Book system is the foundation for other JD Edwards EnterpriseOne systems. The Address Book system contains name, address, and phone numbers for customers, suppliers, companies, and so on. This information is stored in several database tables to create a central repository of information. Other JD Edwards EnterpriseOne systems retrieve up-to-date name and address information from the Address Book system. For example, the Accounts Payable system uses address book information for supplier payments and the Accounts Receivable system uses address book information to generate customer invoices and statements.</p>
+<p>With a central repository of information that integrates with other JD Edwards EnterpriseOne systems, you can effectively manage your address book information. The Address Book system includes:</p>
+<ul>
+<li>Maintenance of complete information for employees, customers, suppliers, and so on.</li>
+<li>Notification of authorized users about special situations, such as credit warnings, hold messages, and other critical account information.</li>
+<li>Classification of entries by search type for inquiry and reporting purposes.</li>
+<li>Ability to retrieve information by name, address, phone number, and search type.</li>
+<li>Management of tax information.</li>
+<li>Ability to associate multiple addresses with a single address book record.</li>
+<li>Effective dates for address changes.</li>
+<li>Supplemental data for organizing and tracking information that is not included in standard master table.</li>
+</ul>
+<p>The following JD Edwards EnterpriseOne systems from Oracle integrate with the JD Edwards EnterpriseOne Address Book system and allow you to do the tasks described:</p>
+<p>&nbsp;</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">System</th><th class="km" style="width: 50%;">Task</th></tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Accounts Payable</td>
+<td class="km" style="width: 50%;">Set up suppliers and tax entities.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Accounts Receivable</td>
+<td class="km" style="width: 50%;">Set up customers and tax entities.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne General Accounting</td>
+<td class="km" style="width: 50%;">Set up companies and business units.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Job Cost</td>
+<td class="km" style="width: 50%;">Set up jobs and assign them to a project manager and superintendent in addition to suppliers and subcontractors.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Fixed Assets</td>
+<td class="km" style="width: 50%;">Set up employees who are responsible for assets and suppliers who provide assets.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Purchase Order Management</td>
+<td class="km" style="width: 50%;">Set up suppliers, buyers, carriers, branch/plants, ship-to addresses, and landed cost suppliers (duty brokers).</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Sales Order Management</td>
+<td class="km" style="width: 50%;">Set up ship-to addresses, sold-to addresses, carriers, salespersons, branch/plants, and customer billing instructions.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Inventory Management</td>
+<td class="km" style="width: 50%;">Set up planners, buyers, and branch/plants in the item master record.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Contract Management</td>
+<td class="km" style="width: 50%;">Set up suppliers for progress payments and set up contract logs.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Contract Billing</td>
+<td class="km" style="width: 50%;">Set up architects, customers, owners, and remit-to, alternate bill-to, and send-to addresses.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Service Billing</td>
+<td class="km" style="width: 50%;">Set up employees and customers (for work orders).</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Advanced Pricing</td>
+<td class="km" style="width: 50%;">Set up category codes to categorize customers for special pricing.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Requirements Planning</td>
+<td class="km" style="width: 50%;">Set up branch/plants and planners, such as material planners or employees in charge of a product or line.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Forecasting</td>
+<td class="km" style="width: 50%;">Set up hierarchies for forecasting.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Equipment/Plant Management</td>
+<td class="km" style="width: 50%;">Set up employees who are responsible for equipment, suppliers who provide equipment, and employees who are assigned to perform preventive maintenance.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Work Order Management</td>
+<td class="km" style="width: 50%;">Set up customers, managers, originators, and supervisors.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Service Management</td>
+<td class="km" style="width: 50%;">Set up customers and service providers.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Payroll</td>
+<td class="km" style="width: 50%;">Set up employees and the name and address of W2 reporting entities.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Human Capital Management</td>
+<td class="km" style="width: 50%;">Set up participants, beneficiaries, and applicants.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne System user profiles</td>
+<td class="km" style="width: 50%;">Set up Address Book records for user names and attach E-mail addresses for each user name.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">JD Edwards EnterpriseOne Workflow Tools</td>
+<td class="km" style="width: 50%;">Set up destination of workflow messages and E-mail addresses for address book records.</td>
+</tr>
+</tbody>
+</table>
+<p>This document describes the initial set up steps for JD Edwards EnterpriseOne Address Book.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are setting up and processing address book records in EnterpriseOne.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Implementing Address Book</strong></h3>
+<p>The following implementation steps are suggested for EnterpriseOne Address Book:</p>
+<ol>
+<li>Set up constants, user-defined codes, category codes, next numbers, postal codes, and the audit log. See <a href="#Set_Up">section</a> below for set up information.</li>
+<li>Set up self-service. For more information on supplemental data see <a href='../docs/659185.html'>Setting up Supplemental Data</a>).</li>
+<li>Set up parent/child relationships and organizational structures (see <a href='../docs/660085.html'>Address Book Parent Child Relationship</a>).</li>
+</ol>
+<p>You may also wish to set up:</p>
+<ol>
+<li>Data Privacy - see <a href="#Additional">Additional Setup section</a> below.</li>
+<li>Date Effective Addresses - see <a href="#Additional">Additional Setup section</a> below.</li>
+<li>External Email - see <a href="#Additional">Additional Setup section</a> below.</li>
+<li>Word Search&nbsp;- see <a href="#Additional">Additional Setup section</a> below.</li>
+</ol>
+<a name="aref_section32"></a><h3 class="km"><strong><a name="Set_Up"></a>Setting Up the JD Edwards EnterpriseOne Address Book System</strong></h3>
+<p>Before using the Address Book system, you must set up information that the system uses during processing. This information the system for your business needs. If you need to change set up information such as constants, after implementation you need to ensure the changes do not adversely impact the existing records.</p>
+<p><br />The following sections discuss how to set up:</p>
+<ul>
+<li>Address Book Constants</li>
+<li>Country Constants</li>
+<li>User-defined codes (UDCs)</li>
+<li>Category codes</li>
+<li>Next numbers</li>
+<li>Postal Codes</li>
+<li>Audit log</li>
+</ul>
+<p><a name="constants"></a></p>
+<a name="aref_section33"></a><h4 class="km">Address Book Constants (P0000)</h4>
+<p>You use the Address Book Constant application (P0000) to establish system basics, such as:</p>
+<ul>
+<li>The symbols used to identify the format to use when locating address book numbers.</li>
+<li>To set up Effective Date functionality, Electronic Mail Security and Personal Data Security.&nbsp;&nbsp;The Personal Data Security functionality is available as of 8.11. See the Additional Setup <a href="#Additional">section</a> below for further information</li>
+</ul>
+<p><strong>To set up Address Book Constants:</strong></p>
+<p>&nbsp;<img src="../images/ab01.png" class="kmsmartresize" alt="1" title="1" width="488" /></p>
+<ol>
+<li>Navigate to Address Book Constants (P0000).</li>
+<li>Complete the following fields as required:
+<ul>
+<li>Symbol to Identify A/B Short Number/Alternate Key/A/B Tax ID: Enter a symbol (or blank value) to precede the address book number.&nbsp;&nbsp;Only one of the Address Book number formats can be blank.&nbsp;&nbsp;The blank default is typically set up for the most commonly used Address Book number format.&nbsp;&nbsp;You can search for an address book record by entering the Address Book number proceeded by the designated symbol. Be sure that the symbol you designate (*, /, #, and so on) is not used for another purpose in the system.</li>
+<li>Address by Effective Date - select whether to activate this functionality which enables users to enter multiple addresses for Address Book entities (as of a specific date).</li>
+<li><span style="position: absolute; left: 19.7092px; top: 7px; width: 1145.95px;" id="outer0_12"><span style="position: absolute; left: 36.6028px; top: 124px; width: 864.39px;" id="outer0_31"><br /></span></span>Activate E-Mail Security - select this option to restrict users from viewing the electronic mail of other users in the work center.</li>
+<li>Activate Personal Data Security - as of 8.11 this flag allows you to prevent users from viewing personal data when reviewing address book records.&nbsp;&nbsp;To fully utilize this feature, you must also set up your permissions in the Address Book Data Permissions application (P01138).</li>
+</ul>
+</li>
+</ol>
+<div class="kmnotebox">Note: The Address Book Constants stored in General Constants (F0009) are cached information&nbsp;stored in both Database Caching and Service Cache. If you change settings for any of the constants, you must perform following steps in order for the changes to take effect:
+<ul>
+<li>On fat client, signing off and signing back in will help to reset the cache.</li>
+<li>On web client, it will be required to explicitly reset the cache apart from signing off and signing back in.</li>
+</ul>
+<p>For more details on how to reset Database Caching and Service Cache, refer to <a href="../docs/944015.html">Frequently Asked Questions on Caching in EnterpriseOne.</a></p>
+In some instances, clearing the cache as mentioned above has not helped since F0009 is a bootstrap table and is cached with each call object kernel on the Enterprise Server. In such cases, it's advisable that the JDE services must be bounced for the Enterprise Server.</div>
+<a name="aref_section34"></a><h4 class="km">Country Constants (P0070)</h4>
+<p>You use the Country Constants (P0070)&nbsp;to set up address formats, attention abbreviations and salutation information.</p>
+<p><img src="../images/ab02.png" class="kmsmartresize" alt="2" title="2" width="709" /></p>
+<p><strong>To set up Country Constants:</strong></p>
+<p><img src="../images/ab03.png" class="kmsmartresize" alt="3" title="3" width="599" /></p>
+<ol>
+<li>From Address Book Constants (P0000) take the form exit 'Country Constants'.</li>
+<li>From Work with Country Constants (P0070), click 'Add'.</li>
+<li>From Set Up Country Constants (P0070), complete the following fields as required:
+<ul>
+<li>Country - select a country&nbsp;value from User Defined Code (UDC) table 00/CN. The country code has no effect on currency conversion.</li>
+<li>Address Format ID - select a hard coded value from UDC 00/AF. The code specifies how an address will appear on documents, reports, and mailing labels.</li>
+<li>Attention Abbreviation - enter the abbreviation for the word 'Attention' that the system will print on mailing labels.</li>
+<li>Attention Name Placement - select a value from UDC H00/AT to indicate on which line the attention name will be printed in the mailing address.</li>
+<li>Title Before Attention Name - select this option for the title to be placed before the Who's Who attention name.</li>
+<li>Standard Salutation - enter the personal salutation to be used in an address. The value in this field is associated with the value in the Address Format ID field. If you set up a standard salutation, the salutation appears on every address record that uses that Address Format ID.</li>
+<li>Standard Salutation Placement - select a value from UDC H00/ST to specify the placement of the salutation in relation to the name.</li>
+<li>Postal Code Sign - indicate the special character used to precede postal codes.&nbsp;&nbsp;For example, if you enter 'CH-' for the prefix and '88023' for the postal code, the system prints CH-88023. If you leave this field blank, the system prints only the postal code.</li>
+<li>Print Country Code - If flagged, the country code will be printed in the mailing address. This format is commonly used in Europe.&nbsp;&nbsp;The functionality is included as of Xe Update 7.</li>
+</ul>
+</li>
+</ol>
+<p>&nbsp;</p>
+<p>The table below shows the mailing formats that are shipped with the Address Book system, as well as the items included in each format. If you need more than 16 formats or if a format does not satisfy your business requirements, you must customize your system to accommodate the new formats. Please note that customized formats are not supported by Oracle Global Customer Support. <br /><br />The country, which is optional for these formats, is entered using the Country Constants Revisions application (P0070).</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Mailing Format</th><th class="km" style="width: 50%;">Items Included</th></tr>
+<tr>
+<td class="km" style="width: 50%;">Format 01</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />Postal Code/City <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 02</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City <br />State <br />Postal Code <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 03</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City/Postal Code <br />State <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 04</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City/State/Postal Code <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 05</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City <br />State <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 06</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />Postal Code/State/City <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 07</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 08</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />Postal Code/City/State <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 09</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City/State <br />Postal Code <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 10</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City/Postal Code <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 11</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Postal Code/City <br />Address Block <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 12</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City/State <br />Postal Code <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 13</td>
+<td class="km" style="width: 50%;">Postal Code <br />Mailing Name <br />Address Block <br />City <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 14</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />City <br />County <br />Postal Code <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 15</td>
+<td class="km" style="width: 50%;">Postal Code <br />Address Block <br />City <br />Mailing Name <br />Country (optional)</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Format 16</td>
+<td class="km" style="width: 50%;">Mailing Name <br />Address Block <br />Postal Code/City <br />Country (optional)</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;<a name="UDC"></a></p>
+<a name="aref_section35"></a><h4 class="km">Address Book User Defined Codes (UDCs) (P0004A)</h4>
+<p>User Defined Codes (UDCs) are used to categorize data and standardize your data entry. The following UDC tables are used in Address Book, in addition to those listed for <a href="#Cat_Code">Address Book Category Codes</a> below:</p>
+<ul>
+<li><strong>Search Type - UDC 01/ST</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Search Type codes classify Address Book records and limit the number of records that the system locates when searching for address book records. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>A: Applicant</li>
+<li>C: Customer</li>
+<li>E: Employee</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Standard Industrial Classification (SIC) - UDC 01/SC</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Standard Industrial Classification (SIC) codes can be added to Address Book records. The SIC system is a series of number codes that classify businesses by the types of products or services that they provide. Businesses engaged in the same activity are assigned the same SIC code. The U.S. Department of Commerce and U.S. businesses developed the SIC system. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>0700: Agricultural Services</li>
+<li>1000: Metal Mining</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Salutation Codes - UDC 01/SL</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Salutation Codes represent titles of individuals. Salutations can be used on reports, mailing labels, and so on. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>A: Mr.</li>
+<li>B: Mrs.</li>
+<li>C: Ms.</li>
+<li>D: Dr.</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Electronic Mail Message Type Codes - UDC 01/MT</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Message Type Codes are used to send speed messages to other users. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>1: Asked that you call back.</li>
+<li>2: Will call again.</li>
+<li>3: Returned your call.</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Language Preference Codes - UDC 01/LP</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Language Preference Codes specify the language for documents such as invoices and statements and reports. Before any translations become effective, a Language Code must exist at either the system level or in the user preferences. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>DU: Dutch</li>
+<li>E: English</li>
+<li>F: French
+<div class="kmnotebox">Note: It is recommended that a blank default value is used for the standard/domestic language, rather than entering a value. So if English is the standard/domestic language the value blank is used, rather than 'E'.</div>
+&nbsp;</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Dun &amp; Bradstreet Rating Codes - UDC 01/DB</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Credit Rating Codes are provided by Dun &amp; Bradstreet. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>BA1: High</li>
+<li>BA2: Good</li>
+<li>BA3: Fair</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Experian Credit Rating Codes - UDC 01/TR</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Credit Rating Codes are provided by Experian. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>AAA: Excellent</li>
+<li>BBB: Good</li>
+<li>CCC: Fair</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Type Codes - UDC 01/W0-WT</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Type Codes identify a Who's Who entry for an Address Book record. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>A: Attention name</li>
+<li>B: Billing</li>
+<li>C: Contact name</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Contact Type Codes - UDC 01/CT</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Contact Type Codes categorize contact names, which are associated with a Who's Who entry, by role or function. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>C: Competitor</li>
+<li>D: Decision maker</li>
+<li>I: Influencer</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Relation Type Codes - UDC 01/RT</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Relation Type Codes indicate the relationship between the Who's Who entry and the name in the Related Person table (F01112). Relation Type Codes also can indicate the role or function of an individual.</p>
+</blockquote>
+<ul>
+<li><strong>Electronic Address Type Codes - UDC 01/ET</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Electronic Address Type Codes indicate whether an electronic address is a personal address, such as an email address, or an internet address, such as a Uniform Resource Locator (URL).</p>
+</blockquote>
+<ul>
+<li><strong>Word Search Stop Words - UDC 01/SW</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>It is possible to exclude words from the Word search table by entering the unwanted words in UDC 01/SW. All words residing in UDC 01/SW are excluded from the search of the Word Search Master table. Excluding frequently used words and numbers that are common to most records makes the search more useful and concise. See Additional Setup section below for further information on Word Search.</p>
+<p><strong>Person / Corporation Code (TAXC) - UDC H00/TA</strong></p>
+<p>This code designates the type of taxpayer an entity is. The UDC should contain a blank value as well as the following valid codes:</p>
+<ul>
+<li>C</li>
+<li>P</li>
+<li>N</li>
+<li>0</li>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+<li>4</li>
+<li>5</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Credit Messages - UDC 00/CM </strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Credit Messages notify you of a credit status for a particular Address Book record. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>B: Bad credit risk</li>
+<li>1: Over credit limit</li>
+<li>2: Requires purchase order</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>State and Province Codes - UDC 00/S</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>State and Province Codes represent states or provinces and can be up to three characters. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>BC: British Columbia</li>
+<li>CO: Colorado</li>
+<li>DC: District of Columbia</li>
+<li>IL: Illinois</li>
+</ul>
+</blockquote>
+<ul>
+<li><strong>Word Search Special Characters - UDC&nbsp;H95/SC</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>The Word Search feature can be set up to bypass special characters by adding them to Description 01 or Description 02 of UDC H95/SC. Any special character in this UDC is bypassed when using the Word Search feature to locate Address Book records. The special characters are also removed when searching by Alpha Name field from the header of&nbsp;Work&nbsp;With&nbsp;Addresses (P01012). Whenever an Address Book record is saved, the system will generate&nbsp; the Description Compressed (ABDC) by removing all special characters from the Alpha Name and it will save it in the Address Book Master (F0101). Then the searches are made over the Description Compressed. The Word Search feature does not enable entire words to be bypassed. See&nbsp;<a href="#search" alt="Address Book Word Search (P01BDWRD, R01BDWRD)" title="Address Book Word Search (P01BDWRD, R01BDWRD)" target="_self">Address Book Word Search (P01BDWRD, R01BDWRD)</a> section below for further information on Word Search.</p>
+</blockquote>
+<ul>
+<li><strong>Country Codes - UDC&nbsp;00/CN</strong></li>
+</ul>
+<blockquote style="margin-right: 0px;" dir="ltr">
+<p>Country Codes can&nbsp;contain up to three characters. Examples include:</p>
+<ul style="list-style-type: circle;">
+<li>AU: Australia</li>
+<li>BE: Belgium</li>
+<li>CN: China</li>
+</ul>
+<p>&nbsp;</p>
+</blockquote>
+<p><a name="UDC_setup"></a><strong>To set up UDC tables:</strong></p>
+<ol>
+<li>Fastpath to 'UDC' or navigate to User Defined Codes (P0004A) directly.</li>
+<li>Enter the UDC system Product Code and User Defined Code (eg 00/CN) and click 'Find'.</li>
+<li>Click 'Add' to enter a new value and complete the required fields on the first blank line.</li>
+</ol>
+<p><a name="Cat_Code"></a></p>
+<a name="aref_section36"></a><h4 class="km">Address Book Category Codes</h4>
+<p>Category Codes are a type of User Defined Code (UDC) that you can customize to manage the tracking and reporting requirements of your business. You use Category Codes to organize address book information and standardize data entry.&nbsp;&nbsp;For example: categorize your suppliers by the types of products they supply by using Category Codes 23 to store supplier product information. The following category codes can be set up in the Address Book system:</p>
+<p>&nbsp;</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr><th class="km" style="width: 50%;">Category Code</th><th class="km" style="width: 50%;">Use</th></tr>
+<tr>
+<td class="km" style="width: 50%;">
+<p>&nbsp;</p>
+Address Book Category Codes (UDC 01/01-30)</td>
+<td class="km" style="width: 50%;">The Address Book system contains predefined Category Codes.&nbsp;&nbsp; The Category Code descriptions can be modified, but the product code and type code cannot be changed.&nbsp;&nbsp;For example, you can change the description of UDC table 01/23 from A/B Selection Code 23 to Supplier Products.&nbsp; You use the Address Book Revision program (P01012) to assign category codes to Address Book records.&nbsp;&nbsp;You can define up to 30 address book category codes in UDC table 01/01-01/30. When you set up Address Book Category Codes, it may be advisable to create a blank value in the UDC table. Blank could be the default for the most commonly used value.
+<div class="kmnotebox">Note: JD Edwards EnterpriseOne reserves category code 07 for 1099 reporting in the Accounts Payable system.</div>
+&nbsp;</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Who's Who Category Codes (UDC 01/W0 - 01/WT)</td>
+<td class="km" style="width: 50%;">Who's Who is a list of individuals that you associate with an Address Book record. For example, when you enter an Address Book record for a customer, you might want to identify individuals who work for that company. These individuals are not assigned an address book number but are associated with their company's Address Book number through the Who's Who list. When you set up a Who's Who Category Code, you can assign the Category Code to all who's who entries, if applicable. You can define up to 10 category codes for who's who in UDC table 01/WO - 01/WT.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Contact Information Category Codes (UDC 01/N1 - 01NA)</td>
+<td class="km" style="width: 50%;">Contact information is additional information that you can assign to a Who's Who record. When you set up a Category Code for contact information, you can assign the Category Code to all contact entries, if applicable. You can define up to 10 category codes for contact information in UDC table 01/N1-NA.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Related Person Category Codes (UDC 01/P1 - 01/P5)</td>
+<td class="km" style="width: 50%;">Related persons are individuals who are associated with an individual on a Who's Who record. For example, a related person might be the spouse of a Who's Who entry. When you set up a Category Codes for a related person, you can assign the Category Code to all related person entries, if applicable. You can define up to five category codes for related person information in UDC table 01/P1-P5.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>To set up category code UDC values, follow the steps above '<a href="#UDC_setup">To set up UDC tables</a>'.</p>
+<p>To assign category code values to address book records see the Entering Address Book record section of the Address Book Implementation guide on the <span style="color: #1f497d;" lang="EN-US"><a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network</a></span>.</p>
+<a name="aref_section37"></a><h5 class="km">Updating Category Codes</h5>
+<p>After you enter your address book records, you might need to change category code information. To make changes throughout the Address Book system, run the Global Category Code Update program (R01490). You can update all address book records with the category codes that you changed or you can update specific address book records and category codes.</p>
+<p>If you choose to update only specific records, use a processing option to identify which address book records to update for each category code or leave the processing option blank and use data selection to choose which records to update.</p>
+<p>Set a processing option to create a report that shows the changed records. Otherwise, the system sends a message about the completion of the batch through workflow.</p>
+<a name="aref_section38"></a><h5 class="km">Category Code Reporting</h5>
+<p>The following reports can be used for category code reporting purposes:</p>
+<ul>
+<li>Full Address with Codes (R01403): Prints a list that contains the Mailing Address and Category Codes for Address Book numbers.</li>
+<li>Full Address with Codes (R01403W): Prints a list that contains the Who's Who Name, Mailing Address, and Category Codes for Address Book numbers.</li>
+</ul>
+<p>Further information on these reports can be found in the JD Edwards EnterpriseOne Applications Financial Management Reports Guide, Chapter&nbsp;2 <a href="https://docs.oracle.com/cd/E64610_01/EOAFG/address_book_reports.htm#EOAFG128" alt="Guide" title="Guide">JD Edwards EnterpriseOne Address Book Report</a>s.<a href="https://docs.oracle.com/cd/E64610_01/EOAAB/add_bk_reports.htm#EOAAB00271" alt="Address Book manual" title="Address Book manual" target="_blank"><br /></a></p>
+<p><a name="NN"></a></p>
+<a name="aref_section39"></a><h4 class="km">Address Book Next Numbers (P0002)</h4>
+<p>Next numbers (NN) are used to assign numbers to address book records, based on an automatic numbering system, and to specify whether to assign check digits for a type of next number</p>
+<p>The Address Book (AN8) field can by updated automatically from Next Numbers (P0002, System 01), manually entered through Address Book Batch Upload (R01010Z), or manually assigned when entering&nbsp;a new Address Book record. If issues are encountered with the way an address book number is defaulting into a field, or if the long address book number is displayed when using the visual assist, the Address Book Constants may not have been defined correctly.<br /><br /><br /><strong>To set up Next Numbers:</strong></p>
+<p><img src="../images/ab04.png" class="kmsmartresize" alt="4" title="4" width="645" /><br />&nbsp;</p>
+<ol>
+<li>Fast path 'NN' or navigate to Next Numbers (P0002) and select system '01' for Address Book next numbers.&nbsp;</li>
+<li>Enter the following fields as required:
+<ul>
+<li>Next Number -&nbsp;The number that the system will assign next. The system can use next numbers for voucher numbers, invoice numbers, journal entry numbers, employee numbers, address numbers, contract numbers, and sequential W-2s.&nbsp;</li>
+<li>Check Digit - specifies whether the system adds a number to the end of each next number assigned. For example, if you use check digits and the next number is 2, the system adds a check digit such as 7, making the last two numbers 27. The check digits option provides a method for increasing numbers randomly to prevent the assignment of transposed numbers. In this example, the system would never assign next number 72 while the check digits option is activated. Select this option to add a check digit.</li>
+</ul>
+</li>
+</ol>
+<div class="kmnotebox">Note: It is not recommended that Address Book Next Numbers are changed once Address Book numbers have already been created in the system.&nbsp;</div>
+<p>&nbsp;</p>
+<a name="aref_section310"></a><h4 class="km">Address Book Postal Codes (P0117)</h4>
+<p>If you have many Address Book records to enter, you can speed up data entry by setting up postal codes (zip codes). Once the setup is complete, it is no longer necessary to enter certain information when entering an Address Book record. You simply enter the postal code, and the system will default the city, state, and country.</p>
+<p>Rather than manually entering postal (zip) code information, JD Edwards EnterpriseOne recommends that you obtain a tape from the U.S. Postal Service called Zip Code Revisions.&nbsp;&nbsp;You can create a custom program or use a database utility to upload zip code information to the EnterpriseOne Postal Code Transactions table (F0117).&nbsp;&nbsp; The system stores the postal codes in the Postal Codes (F0017) and Postal Code Address (F0118) tables.</p>
+<p><strong>System Setup</strong></p>
+<p>To activate Postal Code functionality, the following Address Book Revisions (P01012) Processing Options need to be set up:</p>
+<ol>
+<li>Postal Code Editing - Use this processing option to activate postal code editing. Postal code editing verifies that the postal code exists in the Postal Codes table (F0117). If the postal code exists in the F0117 table and the City, County, Country, and State fields are blank, the system uses the information from the F0117 table. If the postal code does not exist in the F0117 table, the system issues a warning message.&nbsp; Valid values are:
+<ul>
+<li>Blank or 0 - Do not activate postal code editing</li>
+<li>1 - Activate postal code editing</li>
+</ul>
+</li>
+<li>Postal Code Address Retrieval - Use this processing option to activate address retrieval of postal codes. If the postal code is valid and address lines one through four are blank, the system can retrieve address information from the Postal Code Address table (F0118). If you activate postal code address retrieval, you must set the Postal Code Editing processing option to 1 to activate postal code editing. Valid values are:
+<ul>
+<li>Blank or 0 - Do not activate postal code address retrieval.</li>
+<li>1 - Activate postal code address retrieval and use the Postal Code Selection Window for multiple addresses. All available addresses for the postal code appear.</li>
+<li>2 - Activate postal code address book retrieval to retrieve the address information for a single address.</li>
+</ul>
+</li>
+</ol>
+<p>With processing option setup for Postal Code Editing if the user tabs out after entering the Postal code the City, Country, County, State information will be populated only if there is a single entry for a particular postal code in the P0117 application (F0117). &nbsp;<br /><br />If the user needs to have multiple entries in the P0117 application and wants to be automatically prompted with the multiple entries as user tabs out after entering the Postal code then the processing option Postal Code address retrieval should be set to 1 and a corresponding entry made within the P0118 Postal Code addresses application (F0118) for each of the respective Postal Code, City and County information in F0117. Note this will only work (user is prompted with P0118S) if the address lines 1 through 4 are left blank in P01012. The address lines can then be populated after postal code is managed.</p>
+<p>Example is:<br />15010 PA Beaver Falls<br />15010 PA Patterson Heights<br />15010 PA Racine</p>
+<p>The workaround to handle multiple entries is if the user tabs out after entering the Postal code and the City, Country, County, State information are not populated then use the Postal code Visual Assist, this will launch P0117S, enter the Postal code in the QBE (query-by-example), click Find, and select the appropriate row. This will populate the City, Country, County, State information into the P01012.</p>
+<p><a name="audit"></a></p>
+<a name="aref_section311"></a><h4 class="km">Audit Log (P0100041, P0100042, P0100043)</h4>
+<p>The audit log is used to record additions and changes to address book records.</p>
+<p>Outbound Processing is a method of writing information from JD Edwards EnterpriseOne systems into a Z-table.&nbsp; JD Edwards EnterpriseOne Address Book has three tables that are used for interoperability (inbound and outbound processing).&nbsp;&nbsp;</p>
+<p>By activating a processing option in the associated Master Business Function (MBF), additions and changes to Address Book information are entered into the related Z-table. Additionally, a copy of the Address Book record before changes can be created, providing both a "before" and "after" image of the record. Then, using the report writing tool, a custom report can be designed to print the information required for individual business tracking purposes.</p>
+<div class="kmnotebox">Note: This process is designed to use the Subsystem Processing to create the 'before' and 'after' records. Whilst doing this, the system creates a 'W' status record in the F986113.</div>
+<p>Tables for Address Book Interoperability with associated Master Business Function:</p>
+<ul>
+<li>F0101Z2 - P0100041</li>
+<li>F03012Z1 - P0100042</li>
+<li>F0401Z1 - P0100043</li>
+</ul>
+<p>It is suggested to specify the Transaction Types that are applicable for each Outbound processing under the "Audit Log (P0100041, P0100042, P0100043)" section in order to avoid confusion:</p>
+<ul>
+<li>P0100041 - JDEAB</li>
+<li>P0100042 - JDECM</li>
+<li>P0100043 - JDESM</li>
+</ul>
+<p><strong>System Setup</strong></p>
+<p>There are two processing options in each of the above MBFs:</p>
+<ul>
+<li>The first processing option must be completed with a valid transaction type for Outbound Processing to occur. Transaction types are specified in User Defined Code (UDC) table 00/TT.&nbsp;&nbsp;The transaction type is recorded in the Transaction Type field (TYTN) of the associated Z-table. Custom reports can&nbsp;be created to run over the Z-table using the value of the transaction type to select records. If Inbound Processing is also used, this is one method of differentiating between inbound and outbound transactions.</li>
+<li>If records are changed, the second processing option writes a "before" image of the record in addition to the "after" image.&nbsp;&nbsp;Records that are added create an "after" image only. This information is recorded in the Transaction Action field (TNAC) as either before image (UB) or after image (UA).</li>
+</ul>
+<p>A version of the various MBFs must be designated in the processing option of the associated entry program:</p>
+<ul>
+<li>Address Book Revisions - P01012</li>
+<li>Customer Master Information - P03013</li>
+<li>Supplier Master Information - P04012&nbsp;</li>
+</ul>
+<a name="aref_section312"></a><h3 class="km"><strong><a name="Additional"></a>Additional Address Book Set Up</strong></h3>
+<p>There are several further set up tasks you may wish to consider for Address Book, depending on your EnterpriseOne release and your business requirements:</p>
+<ul>
+<li>Data Privacy (available from release 8.11)</li>
+<li>Effective Address Date</li>
+<li>External Email</li>
+<li>Address Book Word Search</li>
+</ul>
+<a name="aref_section313"></a><h4 class="km">Data Privacy (P01138)</h4>
+<p>The Address Book Data Security feature enables you to restrict users from viewing sensitive Address Book information.&nbsp;&nbsp;This functionality is available as of 8.11. After performing the required setup for this feature, secured users will be able to see the secured fields, but these fields are populated with asterisks.&nbsp;&nbsp;These fields are also disabled so no changes can be made.<br /><br />Data security can be setup for the following fields:</p>
+<ul>
+<li>Tax ID</li>
+<li>Addl Ind Tax ID (additional tax ID)</li>
+<li>Address.&nbsp;&nbsp;Includes Address Lines 1-7, City, State, Postal Code, Country, and County.</li>
+<li>Phone Number.&nbsp;&nbsp;Includes phone number and phone prefix.</li>
+<li>Electronic Address.&nbsp;&nbsp;Includes only electronic addresses with Type E.</li>
+<li>Day of Birth, Month of Birth, and Year of Birth.</li>
+<li>Gender</li>
+</ul>
+<p>See <a href='../docs/1517572.html'>How to Set Up Address Book Data Privacy (P01138) for further information.</a></p>
+<p><a name="dates"></a></p>
+<a name="aref_section314"></a><h4 class="km">Effective Address Dates</h4>
+<p>When the effective date option is enabled in Address Book Constants (P0000), multiple addresses can be stored for the same Address Book number. This is useful for maintaining the correct mailing address when an organization is in process of changing locations.</p>
+<p>Follow the steps below to enable Effective Address Date functionality:</p>
+<ol>
+<li>Flag the Address By Effective Date option in the Address Book Constants (P0000).&nbsp;&nbsp; When making changes to the Address Book Constants, the cache needs to be cleared for the changes to become effective.</li>
+<li>Update Address Book records in Address Book Revisions (P01012) with new address information and populate the Effective Date on the Mailing Tab.&nbsp; The date can be in the future.&nbsp;&nbsp;The current address will appear until the Effective Address Update (R01840) is run.</li>
+<li>When the address needs to be updated, run the Effective Address Update (R01840). This will update the Address By Date table (F0116) and enter a '1' in the ALEFTF field if the effective date (ALEFTB) has been passed.&nbsp;&nbsp;It will remain blank if the effective date is in the future. Run the Effective Address Update UBE (R01840) as often as necessary to update the system to the current effective address.</li>
+<li>Review your Address Book record; it should now have the correct current address as of the effective date used.</li>
+</ol>
+<div class="kmnotebox">Note - The Effective Address Update UBE will populate the ALEFTF (F0116) field with a '1' per your data selection criteria. The system does not make any changes to old records. The ALEFTF field will always remain populated with the '1'. Along with this field, the system updates the ABEFTB field in the Address Book Master (F0101) with the effective date for the current address. The system will use both tables to return the most current mailing address.</div>
+<div class="kmnotebox">Note -&nbsp;<span>The Effective Address Update UBE should be run regardless of what application or process creates or updates the F0116 records.&nbsp; For example, if new F0116 records are added by the&nbsp;CustomerManager-&gt;processCustomer business service (BSSV) process, the UBE would need to be run.</span></div>
+<p><a name="email"></a></p>
+<a name="aref_section315"></a><h4 class="km">External Email</h4>
+<p>Versions Xe to 8.10:</p>
+<p>An External Mail option from the Tools Exit Bar within the Work Center (P012503)&nbsp;is used to establish a link between the user signed into JD Edwards EnterpriseOne and the user's external e-mail address. This allows the user to send e-mail messages without having to exit JD Edwards EnterpriseOne, as well as receive e-mail notification for all JD Edwards EnterpriseOne jobs. In addition to sending messages to the Work Center, messages will be sent to the user's e-mail address. Users can also access e-mail from the Work Center. <br /><br />To use this feature, set up the following:</p>
+<ul>
+<li>The User Profile must be established with the User ID (P0092).</li>
+<li>An Address Book record&nbsp;must be entered for the same User ID established in the User Profile.&nbsp;</li>
+<li>The e-mail preference and e-mail address must be entered by selecting External Mail from the Tools exit bar within the Work Center.</li>
+<li>Establish the path to e-mail by choosing the e-mail icon from the Work Center. This will prompt a wizard to assist with entering the correct information.</li>
+</ul>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note:&nbsp; The External Mail button has no relation to the e-mail address of any Address Book record except that of the user signed on.</p>
+</div>
+<p>As of release 8.11 base the external email functionality via the Tools row exit is no longer available. For more details see <a href="https://support.us.oracle.com/oip/faces/secure/km/BugSearch.jspx?bugId=10846880">Bug&nbsp;10846880</a>.&nbsp;</p>
+<p>For releases older than 8.11 the External Email option is available but is no longer supported.</p>
+<p class="km">See <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1508543.1&id=1206873.1'>Document 1206873.1</a> E1: WRKFLW: External Mail Setup for Releases 8.9 and Later for further information.<strong> <br /></strong></p>
+<p class="km">&nbsp;</p>
+<p class="km"><strong>Storing E-mail Addresses for Other Address Book Records</strong></p>
+<p><br />To store the e-mail addresses for other Address Book records, enter the address in the Who's Who Remark field (Remark1) (P0111). The Remark field can handle up to 40 characters of free-form text. Who's Who can be accessed from the row menu for Address Book Revisions (P01012). <br /><br />Email addresses can also be stored in the Email/Internet Revisions (P01111) application using the Row Exit from the Who's Who application&nbsp;(P0111). Prior to release 8.11, this field was call 'Electronic Address'.</p>
+<p><a name="search"></a></p>
+<a name="aref_section316"></a><h4 class="km">Address Book Word Search (P01BDWRD, R01BDWRD)</h4>
+<p>The Word Search Build Program (P01BDWRD) allows users to search on any information stored in Address Book tables. The Word Search Build&nbsp;UBE (R01BDWRD) must be run to build the Address Book Word Search Master table (F01815). Data selection can be used to perform additional updates to the tables. If data selection is not used, the program will reprocess all records in this table.</p>
+<p>The Word Search Build UBE (R01BDWRD) updates the Address Book Word Search Master table (F01815). This table enables users to query Address Book records using text strings. All records that share the text string information are displayed. For example, a search for zip code of 8012* will return all records where the first 4 digits of the zip code match the numbers 8012.</p>
+<p>The R01BDWRD has processing options to specify what category of information will be updated into the Address Book Word Search Master table (F01815). The processing options are the following:</p>
+<p style="padding-left: 30px;"><strong>R01BDWRD Processing Options </strong></p>
+<p style="padding-left: 30px;"><strong>Select tab</strong></p>
+<ul>
+<li style="padding-left: 30px;"><span class="StaticText">1. Category Codes - Use this processing option to specify whether to include address book category codes 1-30 in the build available as searchable items.<br /><br />Blank = No<br />1 = Yes</span><span class="StaticText"></span></li>
+</ul>
+<ul>
+<li style="padding-left: 30px;"><span class="StaticText">2. Who's Who and Phones - Use this processing option to specify whether to include Who&rsquo; s Who and Phone related information in the build available as searchable items.<br /><br />Blank = No<br />1 = Yes</span></li>
+</ul>
+<ul>
+<li style="padding-left: 30px;"><span class="StaticText">3. Parent/Child - Use this processing option to specify whether the program includes parent/child information when it builds the AB Word Search Master table (F01815) for searchable items. <br /><br />Blank = No<br />1 = Yes</span></li>
+</ul>
+<p><br />It is possible to exclude words from the Word Search table by entering the unwanted words in User Defined Code (UDC) table 01/SW. All words residing in UDC 01/SW are excluded from the search of the Word Search Master table. Excluding frequently used words and numbers that are common to most records makes the search more useful and concise. <br /><br />You can direct the Word Search feature to bypass special characters by adding them to UDC table H95/SC. Any special characters in this table are bypassed whenever you use the Word Search feature to locate Address Book records. The Word Search feature does not enable you to bypass entire words.</p>
+<a name="aref_section317"></a><h4 class="km">High Impact Bugs</h4>
+<p>As of release Xe, Bug&nbsp;<a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1508543.1&id=10729883" alt="Bug 10729883" title="Bug 10729883" target="_blank">10729883</a> - increased the performance time frame by only updating the AB Word Search Master (F01815).&nbsp; The Address Book Search Word Occurrence table (F01816) is no longer used in release Xe and above.</p>
+<p>As of release 8.12 BUG: 10954922 : B0100009 NEED CHANGES - changed the function that parses the Description Compressed was changed to consider characters in Description 02 of UDC H95/SC in addition to Description 01.</p>
+<p>&nbsp;</p>
+<a name="aref_section318"></a><h4 class="km">Enhancement Bugs</h4>
+<p>The Word Search Build UBE was modified&nbsp;in release B733.2&nbsp;to increase performance. The&nbsp;UBE was changed from R01800 to R01BDWRD. When the UBE was enhanced for performance purposes, the ability to use data selection was&nbsp;affected. &nbsp;Data selection for R01BDWRD is available in release Xe. If data selection is used at the B733.2 release level, R01800 must be used instead of R01BDWRD.</p>
+<div class="kmnotebox">
+<p>Note: See FAQ <a href='../docs/1510896.html'>Address Book Setup - FAQ</a> Frequently Asked Questions on Address Book Set Up (P0000, P0007, P0004A, P0002, P0117, P0100041, P0100042, P0100043, P01138, P95922, P01BDWRD, R01BDWRD) for further information on Address Book Set Up.</p>
+</div>
+<p>&nbsp;</p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

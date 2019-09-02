@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Human Resources Workflow FAQ</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Human Resources Workflow FAQ</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Question 1:</strong>&nbsp; With workflow in-activated (not activated), why does the message "your changes have been submitted for approval and are pending review" show when an attempt is made to terminate an employee in the employee information application (P0801)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 2:</strong>&nbsp; How to turn off workflow?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 3:</strong>&nbsp;&nbsp; Does System allow to Automatically Pay the Unpaid leave balance during the final payroll of the Employee when all the Termination Workflow are Enabled?</a></td></tr></table>
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document describes how to turn off workflow messages.</p>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<a name="aref_section21"></a><h4 class="km"><strong>Question 1:</strong>&nbsp; With workflow in-activated (not activated), why does the message "your changes have been submitted for approval and are pending review" show when an attempt is made to terminate an employee in the employee information application (P0801)?</h4>
+<p><strong>Answer 1:</strong>&nbsp; Access the Object Management Workbench (OMW in the fastpath).&nbsp; Search on Workflow/Process = TERM*.&nbsp; Note that there are a number of termination workflows.</p>
+<p>If workflow for employee termination is not desired, disable all TERM workflows:</p>
+<ul>
+<li>Go into the design form for each TERM workflow to select Disable workflow. Do this also for Workflow/Process= EEMAST1 if changes to the employee master also do not need approval.</li>
+<li>
+<p class="km">When complete, access the Process Task Monitor P98860. Search on any active workflows. Highlight the grid row of the pending workflow for an employee and take the Row Exit to Terminate. This is terminating the workflow(s) previously submitted.</p>
+</li>
+</ul>
+<a name="aref_section22"></a><h4 class="km"><strong>Question 2:</strong>&nbsp; How to turn off workflow?</h4>
+<p><strong>Answer 2:</strong></p>
+<ol>
+<li>Go to OMW</li>
+<li>Click on the Search Tab</li>
+<li>Category = Workflow</li>
+<li>&nbsp;&nbsp;&nbsp; Search Type defaults</li>
+<li>&nbsp;&nbsp;&nbsp; Search = workflow process (ex: TERM*)</li>
+<li>Click Find</li>
+<li>All of the workflow processes on the right hand side need to be set to Inactive</li>
+<li>Click on the 1st option</li>
+<li>Click on the &ldquo;Add Object or User to Project&rdquo; Button dragging to the left hand side</li>
+<li>Highlight the object and click on the Design button in the middle</li>
+<li>Click on the Design Tools Tab</li>
+<li>Click on the Change Workflow Status Button</li>
+<li>Hit OK</li>
+<li>Once they are all changed to Inactive, go to P98860</li>
+<li>Process = workflow process (ex: TERM*)</li>
+<li>Click Find</li>
+<li>If any come up as active, take the row exit to Terminate</li>
+<li>Run Purge Completed Tasks (R01131P)</li>
+<li>Run Purge Completed Processes (R98860P)</li>
+</ol>
+<a name="aref_section23"></a><h4 class="km"><strong>Question 3:</strong>&nbsp;&nbsp; Does System allow to Automatically Pay the Unpaid leave balance during the final payroll of the Employee when all the Termination Workflow are Enabled?</h4>
+<p><strong>Answer 3:</strong> System will not calculate unpaid time automatically for Terminations. Unpaid Leave Balance should be calculated manually.</p>
+</span></div></div></td>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

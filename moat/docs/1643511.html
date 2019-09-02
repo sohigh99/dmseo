@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Build Search Text for Media Object Text</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Build Search Text for Media Object Text</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>The purpose of this document is to discover possible opportunity to create text file search against Media Object text file. This document is not meant to encompass all possible scenario you have to search media object text.<br /> </p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<h3>Business Scenario:</h3>
+<p>We have Media Object (ABGT) for a certain address book information. Currently Word Search functionality only covers data from multiple tables whereas some of crucial information are written through Media Object. So we want to store media object information and in searching any key words, our application has to return valid address book number(s). </p>
+
+
+<h3>Limitation:</h3>
+  <p>The length of Media Object is not greater than 3000 characters. In case total number of characters (including spaces) exceed this below example is not able to handle it. All code has to be written in C business function.<br />  </p>
+
+
+<h3>Technical requirement:</h3>
+<p> 1. Implement business function which can replace invisible special characters (e.g., '\n', '\r' and '\t' - New Line Feed, Carriage Return and Tab) based on input Media Object text<br /> 2. Implment business function to return a words (for example, Oracle Corp Ltd returns Oracle/Corp/Ltd)<br /> 3. Read MO Text through System function in Batch Application</p>
+<p> </p>
+
+
+<h3>Possible Implementation:</h3>
+<table style="border-collapse: collapse; width: 479px; height: 113px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 122pt;" width="163" /> <col style="width: 176pt;" width="234" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 122pt; background-color: #3366ff; color: white;">Function/UBE</th>
+<th style="width: 176pt; background-color: #3366ff; color: white;">Purpose</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><a href="#bsfn1" alt="Rip off special characters in the string" title="Rip off special characters in the string">Rip off Special Characters</a></td>
+<td>This function is to rip off special characters</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><a href="#bsfn2" alt="Parse string into words" title="Parse string into words">Parse String to Words</a></td>
+<td>This function is to split a input string into a series of words using jdeStrtok</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20"><a href="#ube" alt="Create Word Search File" title="Create Word Search File">Create Word Search</a></td>
+<td>This UBE is to create word search table</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li style="font-weight: bold;"><a name="bsfn1"></a>Business Function 1 - (Example) Rip Off New Line and Return Carriage</li>
+<ul>
+<li>Purpose: This function is to replace special characters ('\n', '\r' and '\t')</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure - Rip Off New Line and Return Carriage</li>
+</ul>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 938px; height: 67px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 122pt;" width="163" /> <col style="width: 176pt;" width="234" /> <col style="width: 23pt;" width="31" /> <col style="width: 20pt;" width="27" /> <col style="width: 44pt;" width="58" /> <col style="width: 83pt;" width="110" /> <col style="width: 211pt;" width="281" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 231px; background-color: #3366ff; color: white;">Structure Member Name</th>
+<th style="width: 150px; background-color: #3366ff; color: white;">Data Item</th>
+<th style="width: 23pt; background-color: #3366ff; color: white;">Req</th>
+<th style="width: 20pt; background-color: #3366ff; color: white;">I/O</th>
+<th style="width: 44pt; background-color: #3366ff; color: white;">Alias</th>
+<th style="width: 83pt; background-color: #3366ff; color: white;">Type</th>
+<th style="width: 211pt; background-color: #3366ff; color: white;">Usage</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 231px;" height="20">szInputMOTEXT [3001]</td>
+<td style="width: 150px;">MediaObjectVariableLengthColumn</td>
+<td>Y</td>
+<td>I/O</td>
+<td>TXVC</td>
+<td>String</td>
+<td>This is to get actual value from F00165 table. This parameter can hold up to 3000 characters</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<ul>
+<ul>
+<li>Code Example</li>
+</ul>
+</ul>
+</ul>
+<p> </p>
+<div class="kmcodeblock">     memset(szInputMOTEXT, _J('\0'),sizeof(szInputMOTEXT)); /* Initialize character array */<br />                 <br />     /* Obtain the length of input string szInputMOTEXT */<br />     arrayCounter = jdeStrlen((const JCHAR *)(lpDS-&gt;szInputMOTEXT));<br />                 <br />     /* Replace special character with a space */<br /> <br />     while ( (i &lt; arrayCounter) )<br />     {<br />         c = (lpDS-&gt;szInputMOTEXT[i]);<br />                     <br />         if  (c != _J('\0'))<br />         {<br />             if ( (c != _J('\r')) &amp;&amp; (c != _J('\n')) &amp;&amp; (c != _J('\t')) )<br />             {                <br />             }<br />             else /* else is used to handle it at right position */<br />             {<br />                 c = _J(' '); /* put a space */<br />             }<br />             szInputMOTEXT[j] = c;<br />             i++;<br />             j++;        <br />         }<br />         else<br />         {<br />             szInputMOTEXT[j] = _J('\0');<br />             i = arrayCounter;<br />         }                  <br />     }<br /> <br />     /* Append Null Character at the end of character array */<br />     jdeStrncpy(lpDS-&gt;szInputMOTEXT, (const JCHAR *)(szInputMOTEXT), DIM(lpDS-&gt;szInputMOTEXT));<br />     lpDS-&gt;szInputMOTEXT[30000] = _J('\0');</div>
+<p> </p>
+<ul>
+<li style="font-weight: bold;"><a name="bsfn2"></a>Business Function 2 - (Example) Return Delimited String - CUSTOM</li>
+<ul>
+<li>Purpose: This function is to return each words whenever it meets a space based on input string which returned from &lt;Get Text&gt; system function for Media Object. Refer to E1: MOBJ: How to Use Media Object System Functions (Document 626497.1).</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure - Return Delimited String - CUSTOM</li>
+</ul>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 941px; height: 116px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 122pt;" width="163" /> <col style="width: 176pt;" width="234" /> <col style="width: 23pt;" width="31" /> <col style="width: 20pt;" width="27" /> <col style="width: 44pt;" width="58" /> <col style="width: 83pt;" width="110" /> <col style="width: 211pt;" width="281" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 207px; background-color: #3366ff; color: white;">Structure Member Name</th>
+<th style="width: 195px; background-color: #3366ff; color: white;">Data Item</th>
+<th style="width: 23pt; background-color: #3366ff; color: white;">Req</th>
+<th style="width: 20pt; background-color: #3366ff; color: white;">I/O</th>
+<th style="width: 44pt; background-color: #3366ff; color: white;">Alias</th>
+<th style="width: 83pt; background-color: #3366ff; color: white;">Type</th>
+<th style="width: 211pt; background-color: #3366ff; color: white;">Usage</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 207px;" height="20">szInputMOTEXT [3001]</td>
+<td style="width: 195px;">MediaObjectText</td>
+<td>Y</td>
+<td>I</td>
+<td>MOTEXT</td>
+<td>String</td>
+<td>This is to get actual value from F00165 table. Make it sure the length of this parameter is longer than the value returned by Business Function 1. Otherwise there will be memory override which ends in zombie.</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 207px;" height="20">szOutputObjectSegment [201]</td>
+<td style="width: 195px;">OWObjectName</td>
+<td> </td>
+<td>O</td>
+<td>OMWOBJID</td>
+<td>String</td>
+<td>Return words when it meets a space</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 207px;" height="20">mnSegmentNumber</td>
+<td style="width: 195px;">MathNumeric01</td>
+<td>Y</td>
+<td>I</td>
+<td>MATH01</td>
+<td>MATH_NUMERIC</td>
+<td>The number of words</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 207px;" height="20">cDelimiter</td>
+<td style="width: 195px;">EverestEventPoint01</td>
+<td>Y</td>
+<td>I</td>
+<td>EV01</td>
+<td>Char</td>
+<td>Delimiter. For this example a space</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<ul>
+<ul>
+<li>Code Example - This code example is referenced based on ParseString (B98220D - Parse Delimited String) because this business function can handle up to 200 characters. So other than typedef there is no change in detail.</li>
+</ul>
+</ul>
+</ul>
+<div class="kmcodeblock">   MathNumericToInt(&amp;lpDS-&gt;mnSegmentNumber, &amp;iSegmentNum); <br /> <br />    pSegment = jdeStrtok(lpDS-&gt;szInputMOTEXT, token); /* This API jdeStrtok breaks string into a series of words. Refer below for detail */<br />    for (i = 0; i &lt; iSegmentNum; i++)<br />    {<br />       pSegment = jdeStrtok(NULL, token);<br />    }<br /> <br />    if (pSegment != NULL)<br />    {<br />       jdeStrncpyTerminate(lpDS-&gt;szOutputObjectSegment, pSegment, DIM(lpDS-&gt;szOutputObjectSegment));<br />    }</div>
+<p> </p>
+<div class="kmnotebox">
+<ul>
+<li>API used: jdeStrtok ()
+<ul>
+<li>Description:
+<ul>
+<li>char *jdeStrtok(char *str, const char *delim) breaks string str into a series of tokens using the delimitrer delim.</li>
+</ul>
+</li>
+<li>Declaration</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>char *jdeStrtok(char *str, const char *delim)</li>
+</ul>
+</li>
+<li>Parameters:</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>str -- The contents of this string are modified and broken into smaller strings (tokens).</li>
+<li>delim -- This is the C string containing the delimiters. These may vary from one call to another.</li>
+</ul>
+</li>
+<li>Return Value</li>
+</ul>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>This function returns a pointer to the last token found in string. A null pointer is returned if there are no tokens left to retrieve.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<p> </p>
+<p> </p>
+
+
+<h3><a name="ube"></a>Batch Application - (Example) Word Search for ABGT</h3>
+<ul>
+<li>Purpose: This report is to create a series of words based on</li>
+<li>Possible steps:</li>
+<ul>
+<li>Read Media Object using &lt;Get Text&gt;</li>
+<li>Rip Off New Line and Return Carriage</li>
+<li>Parse Delimited String</li>
+<li>(Remove unnecessary character, word and unessential words)</li>
+<li>Insert it into repository</li>
+</ul>
+<li>Possible implmentation </li>
+</ul>
+<div class="kmnotebox">        Media Objects(ABGT, &lt;Get Text&gt;, <span style="text-decoration: underline;">RV Media Object Text</span>, BC Address Number (F0101)(AN8))<br />         //<br />         // <em>1. Rip off '\n', '\r' and '\t' (invisible c characters)</em><br />        <a href="#bsfn1" alt="Strip off New Line and Carriage Return" title="Strip off New Line and Carriage Return">Rip Off New Line and Return Carriage</a><br />              <span style="text-decoration: underline;">RV Media Object Text</span> &lt;&gt; BF szInputMOTEXT<br />         //<br />         // <em>2. Optional - to count total number of characters</em><br />         RV mnLength = length([RV Media Object Text])<br />         //<br />        // <em>3. Initialize variables</em><br />         VA rpt_cDelimiter_Space = " "<br />         VA rpt_mnSegmentNo_MATH01 = "0"<br />         VA rpt_szParsedString_DL01 = ""<br />         //<br />         // <em>4. To return words whenever it finds a space (delimiter)</em><br />         <a href="#bsfn2" alt="Return series of words" title="Return series of words">Parse Delimited String - CUSTOM</a><br />               <span style="text-decoration: underline;">RV Media Object Text</span> -&gt; BF szInputMOTEXT  /* string which got stripped off '\r', '\n' */<br />              VA rpt_szParsedString_DL01 &lt;- BF szOutputObjectSegment<br />              VA rpt_mnSegmentNo_MATH01 -&gt; BF mnSegmentNumber<br />              VA rpt_cDelimiter_Space -&gt; BF cDelimiter<br />         //<br />         //<em> 5. While loop till it meets NULL Charcter '\0'</em><br />         While VA rpt_szParsedString_DL01 is not equal to &lt;Null&gt;<br />              //<br />              // <em>6. Below routine has to be written to insert/update table which is used to word search</em>.<br />              //<em> For this example, to preview possible word below conditional section gets called. (replace this with actual table I/O)</em><br />              // <em>In case you rip off a certain character and change case, put code here.</em><br />               RV ParsedString_Global = VA rpt_szParsedString_DL01<br />               Do Custom Section(RS parse string)<br />              //<br />              // <em>7. To search next segments</em><br />              VA rpt_mnSegmentNo_MATH01 = [VA rpt_mnSegmentNo_MATH01]+1<br />              Parse Delimited String - CUSTOM<br />               <span style="text-decoration: underline;">RV Media Object Text</span> -&gt; BF szInputMOTEXT  /* string which got stripped off '\r', '\n' */<br />              VA rpt_szParsedString_DL01 &lt;- BF szOutputObjectSegment<br />              VA rpt_mnSegmentNo_MATH01 -&gt; BF mnSegmentNumber<br />              VA rpt_cDelimiter_Space -&gt; BF cDelimiter<br />       End While</div>
+<p> </p>
+<p><big>Other business function to Note:</big></p>
+<table style="border-collapse: collapse; width: 886px; height: 104px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 149pt;" width="199" /> <col style="width: 79pt;" width="105" /> <col style="width: 192pt;" width="256" /> <col style="width: 48pt;" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl63" style="height: 15pt; width: 179px;">Function  Name</th>
+<th class="xl63" style="width: 105px;">Source  Module</th>
+<th class="xl63" style="width: 224px;">Description</th>
+<th class="xl63" style="width: 341px;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; width: 179px;" height="20">AddressBookWordSearchBuild</td>
+<td class="xl64" style="width: 105px;">B0100068</td>
+<td class="xl64" style="width: 224px;">Address Book Word Search Build</td>
+<td style="width: 341px;">This is good example of how to rip off a certain character based on string value defined in UDC H95/SC</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 179px;" height="20">ReplaceCharacterInString_74</td>
+<td style="width: 105px;">B744005</td>
+<td style="width: 224px;">Replace Character In String - COMM - 74</td>
+<td style="width: 341px;">This function enables you to replace a certain character in the input string</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 179px;" height="20">DetermineCarriageReturn</td>
+<td style="width: 105px;">B4205350</td>
+<td style="width: 224px;">Determine Carriage Return Position</td>
+<td style="width: 341px;">To determine the return carriage in the string</td>
+</tr>
+</tbody>
+</table>
+<p>And for string manipulation, refer to &lt;Document 658313.1&gt; E1: BSFN: How to Find and Replace Characters in a String with Blank.</p>
+<p> </p>
+
+
+<h3>Example of this case study: </h3>
+<p>Sample Media Object Text File</p>
+<p style="margin-left: 40px;">&ldquo;Without the Oracle Retail solution we could not have grown beyond our 78 stores, and we are on course to surpass 100 locations next year,&rdquo; says Richard Heyman, CIO, Gordmans. &ldquo;The Oracle solutions enable our multi-distribution center model and have transformed our business, putting us on course to drive better performance. We are leveraging Oracle to improve product selection, inventory turnover, and our ability to respond faster to customer demand.&rdquo; <br /> <br /> The Oracle Retail solutions provide Gordmans with more immediate insight regarding customer demand and item performance, as well as the tools to offer new assortments and provide customers with trending products, brands, and designers. Gordmans is using the Oracle solutions to offer more diverse and compelling assortments.</p>
+<p>Output</p>
+<p style="margin-left: 40px;">&ldquo;Without<br /> the<br /> Oracle<br /> Retail<br /> solution<br /> we<br /> could<br /> not<br /> have<br /> grown<br /> beyond<br /> our<br /> 78<br /> stores,<br /> and<br /> we<br /> are<br /> on<br /> course<br /> to<br /> surpass<br /> 100<br /> locations<br /> next<br /> year,&rdquo;<br /> says<br /> Richard<br /> Heyman,<br /> CIO,<br /> Gordmans.<br /> &ldquo;The<br /> Oracle<br /> solutions<br /> enable<br /> our<br /> multi-distribution<br /> ... (continue till end of whole string)</p>
+
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

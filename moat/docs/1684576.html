@@ -1,0 +1,1747 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Use PriceCalulateSingle (B4500460) Wrapper to Compute Item Price</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Use PriceCalulateSingle (B4500460) Wrapper to Compute Item Price</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<div class="kmnotebox"><strong>Caution</strong>: This document may contain information, software, products, services which are not supported by Oracle Support Services and are being provided &ldquo;as is&rdquo; without warranty. Please refer to the following site for My Oracle Support Terms of use: <a href="http://www.oracle.com/pls/topic/lookup?ctx=mos_en&amp;id=MOSHP983">http://www.oracle.com/pls/topic/lookup?ctx=mos_en&amp;id=MOSHP983</a></div>
+<p>You can simulate sales price only through Sales Order Master Business Function (<em>B4201310 and B4200311 F4211FSEditLine and F4211FSBeginDoc </em>which is making use of CalculateSalesPricesAndCosts (B4201500 - Calculate Sales Price And Cost)) through multiple applications. This implmentation uses up more resources let alone slower performance. So this document is to guide alternative ways to handle this business requirement on How to get Sales Price with Advanced Pricing Schedule.</p>
+<p>Note that information written in this document is not the best practice for this purpose and this wrapper business function may not work for all business scenario you have. And this business function does not encompass all business requirement you may have to perform daily activities. <br /><br /><strong>B4500460 - PriceCalculateSingle (Price Calculate Single)</strong> is to serve as an interoperable Pricing API, retrieving and returning a single unit price while employing a smaller, less complicated datastructure than <strong>CalculateSalesPricesAndCosts (B4201500 - Calculate Sales Price And Cost)</strong>.&nbsp; The function requires only an item number to return a price.&nbsp; This function acts as a&nbsp; "wrapper" to B4201500, masking some of its complexity and defaulting in parameters that B4201500 requires to calculate a price. <br /><br />This document is to guide brief explanation on how it work and it's limitation but this document is not meant to support any issue to be derived in your using this business function. <strong>So ensure that you are capable of debugging business function and it's surrounding kernels because Oracle shall not bear any responsibility for the outcome you get through this wrapper business function.</strong>&nbsp;</p>
+<div class="kmnotebox">
+<p>Note</p>
+<ul>
+<li>There are similar interactive and batch application to enable you to simulate item price as below,
+<ul>
+<li>R45522 (Price List Price Generation)</li>
+<li>P4074 (Check Price and Availability)</li>
+</ul>
+</li>
+<li>Before make use of this business function, perform full cycle of test by modifying each parameters.</li>
+<li>Owing to the number of parameters specified, there is chance not to be able to calculate sales price accordingly if you have more complicated settings</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p>Note that there is no standard application which is calling PriceCalculateSingle (B4500460 - Price Calculate Single). So actual implementation is to be performed by your inhouse developers.</p>
+<p>You are to simulate sales price dynamically to have better profit position or to verify change of your price configuration. Business function , B4500460 - PriceCalculateSingle (Price Calculate Single) shall enable you to fulfil this. Note that implementing this business function is not the best practice rather it is one of possible ways to perform it.</p>
+<p>Alternative way can be,</p>
+<ul>
+<li>Business Service</li>
+<li>Interactive application</li>
+<li>Batch Application</li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Detail Implementation</strong></p>
+<p><big>PriceCalculateSingle (B4500460 - Price Calculate Single)</big></p>
+<ul>
+<li>Purpose: The purpose of this business function is to serve as an interoperable Pricing API, retrieving and returning a single unit price while employing a smaller, less complicated datastructure than B4201500.&nbsp; The function requires only an item number to return a price.&nbsp; This function acts as a "wrapper" to B4201500, masking some of its complexity and defaulting in&nbsp;parameters that B4201500 requires to calculate a price.</li>
+<li>Parameter</li>
+<ul>
+<li>Data Structure: D4500460 - Price Calculate Single</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 1131px; height: 996px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 160pt;" width="213" /><col style="width: 48pt;" width="64" /><col style="width: 88pt;" width="117" /><col style="width: 48pt;" span="2" width="64" /><col style="width: 239pt;" width="318" /></colgroup>
+<tbody>
+<tr style="height: 28.5pt;"><th class="xl64" style="height: 28.5pt; background-color: #3366ff; color: white; width: 111px;">Parameter Name</th><th class="xl64" style="border-left: medium none; background-color: #3366ff; color: white; width: 31px;">Data Item</th><th class="xl64" style="border-left: medium none; background-color: #3366ff; color: white; width: 95px;">Data Type</th><th class="xl64" style="border-left: medium none; background-color: #3366ff; color: white; width: 35px;">Req/Opt</th><th class="xl64" style="border-left: medium none; background-color: #3366ff; color: white; width: 65px;">I/O/Both</th><th class="xl65" style="border-left: medium none; background-color: #3366ff; color: white; width: 659px;">Implemenation</th></tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">mnAddressNumber <span style="font-weight: bold; font-style: italic; text-decoration: underline; color: red;">(1st)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">AN8</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td class="xl66" style="border-left: medium none; width: 659px;">
+<ul>
+<li>Case (input = 0)</li>
+<ul>
+<li>&nbsp; &nbsp; &nbsp; &nbsp;&amp;dsD4201500.mnAddressNo =&nbsp;F0092.AN8 on Login User ID (PpatGetUserIdAddressNumber (B0200098, F0092 Get User ID and Address Book Number))</li>
+</ul>
+<li>Case (input mnAddressNumber != 0)</li>
+<ul>
+<li>&nbsp; &nbsp; &nbsp;&nbsp; &amp;dsD4201500.mnAddressNo = mnAddressNumber</li>
+<li>&nbsp; &nbsp; &nbsp;&nbsp; &amp;dsD4201500.mnShipToNo = mnAddressNumber</li>
+</ul>
+</ul>
+</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">jdDateEffective <span style="font-weight: bold; font-style: italic; text-decoration: underline; color: red;">(2nd)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">EFTJ</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">JDEDATE</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td style="width: 659px;">
+<ul>
+<li>&nbsp;Case (Null Date)</li>
+<ul>
+<li>&nbsp; &nbsp; &nbsp; &nbsp; &amp;dsD4201500.jdPriceEffectiveDate (Date Today) via JDEDATEToday()</li>
+</ul>
+<li>&nbsp;Case (Not Null Date)</li>
+<ul>
+<li>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&amp;dsD4201500.jdPriceEffectiveDate = jdDateEffective</li>
+</ul>
+</ul>
+</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">mnQtyOrdered<span style="font-weight: bold; font-style: italic; color: red;"> (7th)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">UORG</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td style="width: 659px;">
+<ul>
+<li>Case (mnQtyOrdered = 0)</li>
+<ul>
+<li>&amp;dsD4201500.mnQtyOrdered = 1</li>
+<li>&amp;dsD4201500.mnQtyShipped = 1</li>
+</ul>
+<li>Case (mnQtyOrdered &gt; 0)</li>
+<ul>
+<li>&amp;dsD4201500.mnQtyOrdered = (input)&nbsp;(mnQtyOrdered</li>
+<li>&amp;dsD4201500.mnQtyShipped = (input)&nbsp;(mnQtyOrdered</li>
+</ul>
+</ul>
+</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">szUnitOfMeasure <span style="font-weight: bold; font-style: italic; text-decoration: underline; color: red;">(5th)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">UOM</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">char</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td style="width: 659px;">
+<ul>
+<li>&nbsp;Case (Blank)</li>
+<ul>
+<li>dsD4201500.szTransactionUom = F4101.uom1</li>
+<li>dsD4201500.szPricingUom = F4101.uom1</li>
+<li>&amp;dsD4201500.mnConvFactorTransToPrim = 1</li>
+<li>&amp;dsD4201500.mnConvFactorPricingToPrim = 1</li>
+</ul>
+<li>&nbsp;Case (Not Blank)</li>
+<ul>
+<li>dsD4201500.szTransactionUom = (input) szUnitOfMeasure</li>
+<li>dsD4201500.szPricingUom = (input) szUnitOfMeasure</li>
+<li>Call GetItemUoMConversionFactor (B4000520, F41002 Get Item UoM Conversion) to get Conversion Factor when szUnitOfMeasure is not Primary UOM (F4101.UOM1)</li>
+<li>&amp;dsD4201500.mnConvFactorTransToPrim = &amp;dsD4000520.mnConversionFactorFrom_to_To</li>
+<li>&amp;dsD4201500.mnConvFactorPricingToPrim = &amp;dsD4000520.mnConversionFactorFrom_to_To</li>
+</ul>
+</ul>
+</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">szCostCenter <span style="font-weight: bold; font-style: italic; text-decoration: underline; color: red;">(3rd)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">MCU</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">char</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td style="width: 659px;">
+<ul>
+<li>&nbsp;Case (Blank)</li>
+<ul>
+<li>dsD4201500.szBranchPlantDtl = F40095.MCU (on User ID)</li>
+<li>dsD4201500.szHdrBranchPlant = F40095.MCU</li>
+<li>Retrieve F40095 MCU via GetDefaultBranch (B4000370, F40095 Get Default Branch)</li>
+</ul>
+<li>&nbsp;Case (Not blank)</li>
+<ul>
+<li>dsD4201500.szBranchPlantDtl = (input) szCostCenter</li>
+<li>dsD4201500.szHdrBranchPlant = (input) szCostCenter</li>
+</ul>
+</ul>
+&lt;Bug 19027293&gt; - B4500460 IS NOT WORKING (DEPENDENCY WITH B4201500) IN 9.1 &nbsp;is to handle dsD4201500.szHdrBranchPlant which is MCU which retrieves Sales Price</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">mnUnitPrice</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">UPRC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">OUT</td>
+<td style="width: 659px;">&nbsp;</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">szItemNo <span style="font-weight: bold; font-style: italic; text-decoration: underline; color: red;">(4th)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">UITM</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">char</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px; color: red; font-weight: bold;">REQ</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">IN</td>
+<td style="width: 659px;"><ol>
+<li>Call VerifyAndGetItemMaster (X4101, F4101 Get Item Master Row) to validate input szItemNo and return data pointer for item master (in calling B4201500 which is required)</li>
+<li>Call CheckItemBranch (B4100210, F4102 Get Item Branch Row) to get Line Type and store data pointer lpdsF4102</li>
+<li>If there is no matching records stop processing with error code 4363 and 0294</li>
+</ol></td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">szCurrencyCodeForgn <span style="font-style: italic; font-weight: bold; color: red;">(6th)</span></td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">CRCD</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">char</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td style="width: 659px;"><ol>
+<li>Set&nbsp;cCurrencyConversionMethod through API <span style="font-style: italic;">jdeGetCurrencyCode()</span></li>
+<li>Get the Company from the <span style="font-style: italic;">Business Unit by calling RetrieveCompanyFromBusUnit (B0000130, F0006 Get Company from Business Unit)</span></li>
+<li>Get currency conversion rate for multi currency environment through <span style="font-style: italic;">RetrieveCompanyCurrencyCode (B0000128, F0010 Get Company Currency Code)</span></li>
+<li>Assign&nbsp;dsD4201500.szBaseCurrencyCode (= szCurrencyCodeBase)&nbsp; = B0000128.szCurrencyCode</li>
+<li>If (input) szCurrencyCodeForgn is not blank then call <span style="font-style: italic;">GetExchRate (B0000033, F0015 Get Exchange Rate)</span> by assigning &nbsp;{(dsD0000033.szCurrencyCodeFrom = szCustomerCurrencyCode = (input) szCurrencyCodeForgn), (dsD0000033.szCurrencyCodeTo = B0000128.szCurrencyCode), (&amp;dsD0000033.mnAddressNumber = mnAddressNo), (&amp;dsD0000033.jdDateEffectiveRates =&nbsp;&amp;dsD4201500.jdPriceEffectiveDate), (&amp;dsD0000033.jdTransactionDate = &amp;dsD4201500.jdPriceEffectiveDate)}</li>
+<li>Assign &amp;dsD4201500.mnExchangeRate &nbsp;= &amp;dsD0000033.mnCurrConvRateMult &nbsp;(cCurrencyConversionMethod = Y),&nbsp; &amp;dsD4201500.mnExchangeRate = &amp;dsD0000033.mnCurrConvRateDiv (cCurrencyConversionMethod = Z)</li>
+</ol></td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">szCurrencyCodeBase</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">CRDC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">char</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">I/O</td>
+<td style="width: 659px;">&nbsp;Refer szCurrencyCodeForgn</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px; background-color: #ffffcc;" height="26">mnUnitPriceForgn</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px; background-color: #ffffcc;">FUP</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px; background-color: #ffffcc;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px; background-color: #ffffcc;">OUT</td>
+<td style="width: 659px; background-color: #ffffcc;">&nbsp;= &amp;dsD4201500.mnUnitPrice</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px; background-color: #ffffcc;" height="26">mnListPrice</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px; background-color: #ffffcc;">LPRC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px; background-color: #ffffcc;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px; background-color: #ffffcc;">OUT</td>
+<td style="width: 659px; background-color: #ffffcc;">&nbsp;= &amp;dsD4201500.mnListPrice</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px; background-color: #ffffcc;" height="26">mnListPriceForgn</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px; background-color: #ffffcc;">FPRC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px; background-color: #ffffcc;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px; background-color: #ffffcc;">OUT</td>
+<td style="width: 659px; background-color: #ffffcc;">&nbsp;= &amp;dsD4201500.mnForeignListPrice</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px;" height="26">szListPriceUOM</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px;">APUM</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px;">char</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px;">OUT</td>
+<td style="width: 659px;">&nbsp;</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px; background-color: #ffffcc;" height="26">mnAmountExtendedPrice</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px; background-color: #ffffcc;">AEXP</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px; background-color: #ffffcc;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px; background-color: #ffffcc;">OUT</td>
+<td style="width: 659px; background-color: #ffffcc;">&nbsp;= &amp;dsD4201500.mnExtendedPrice</td>
+</tr>
+<tr style="height: 19.5pt;">
+<td class="xl63" style="border-top: medium none; height: 19.5pt; width: 111px; background-color: #ffffcc;" height="26">mnAmountForeignExtPrice</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 31px; background-color: #ffffcc;">FEA</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 95px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 35px; background-color: #ffffcc;">OPT</td>
+<td class="xl63" style="border-top: medium none; border-left: medium none; width: 65px; background-color: #ffffcc;">OUT</td>
+<td style="width: 659px; background-color: #ffffcc;">&nbsp;= &amp;dsD4201500.mnForeignExtPrice</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detail Routine</li>
+<ul>
+<li>Currently there is no parameter for Adjustment Schecule (dsD4201500.szAdjustmentSchedule) so this value is coming from customer master based on mnAddressNumber and Company which is resolved based on szCostCenter you have specified through business function <span style="font-style: italic;">GetSoldToBillingInstructions (B4200100, F0301 Get Sold To Billing Instructions)</span>.</li>
+<li>Currently there is no parameter to set header branch and detail branch so price information is to be pulled based on Header Branch/Plant</li>
+<li>In calling CalculateSalesPricesAndCosts (B4201500 - Calculate Sales Price And Cost) some parameters must be assigned. Refer below section for detail to determine which parameter to map</li>
+</ul>
+<li>Refer to below flow chart for detail routine:</li>
+<li></li>
+</ul>
+<p><img src="../images/b4500460.png" border="0" alt="Flow Chart of B4500460" title="Flow Chart of B4500460" hspace="0" vspace="0" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<ul>
+<li>Related business functions</li>
+<ul>
+<li>B0000033 Get Exchange Rate</li>
+<li>B0000128 Retrieve Company Currency Code</li>
+<li>B0000130 Retrieve Company From Business Unit</li>
+<li>B0200098 PPAT - Get User Id, Address Book Number</li>
+<li>B4000370 Get Default Branch</li>
+<li>B4000520 Get Item UoM Conversion Factor</li>
+<li>B4100210 Check Item Branch</li>
+<li>B4200100 Get Sold To Billing Instructions</li>
+<li>B4201500 Calculate Sales Price And Cost</li>
+<li>X4101 Validate and Retrieve Item Master</li>
+</ul>
+<li>Considerations</li>
+<ul>
+<li>This wrapper business function may not be able to work with complicated settings so it is important for you to determine whether this meets your business requirement or not</li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p><big>CalculateSalesPricesAndCosts (B4201500 - Calculate Sales Price And Cost)</big></p>
+<ul>
+<li>Purpose: This business function computes sales prices including advanced price adjustment if you have set correctly. Note that this document is not meant for explaning how it works rather the list below is to show which column must be mapped and what are the return parameters to calling routine.&nbsp;</li>
+<li>Parameter</li>
+<ul>
+<li>D4201500 - Calculate Sales Price And Cost</li>
+</ul>
+</ul>
+<table style="border-collapse: collapse; width: 1020px; height: 3826px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 160pt;" width="213" /><col style="width: 48pt;" width="64" /><col style="width: 88pt;" width="117" /><col style="width: 48pt;" span="2" width="64" /><col style="width: 239pt;" width="318" /></colgroup>
+<tbody>
+<tr style="height: 30pt;"><th class="xl66" style="height: 30pt; width: 179px; background-color: #3366ff; color: white;">Parameter Name</th><th class="xl66" style="border-left: medium none; width: 85px; background-color: #3366ff; color: white;">Data Item</th><th class="xl66" style="border-left: medium none; width: 147px; background-color: #3366ff; color: white;">Data Type</th><th class="xl66" style="border-left: medium none; width: 56px; background-color: #3366ff; color: white;">Req/Opt</th><th class="xl66" style="border-left: medium none; width: 44px; background-color: #3366ff; color: white;">I/O/Both</th><th class="xl67" style="border-left: medium none; width: 451px; background-color: #3366ff; color: white;">Implemenation</th></tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szComputerID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CTID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td class="xl68" style="border-left: medium none; width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnJobNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">JOBS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnWorkFileLineNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LNIX</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;">mnLastLineNoAssigned</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LNID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOrderType</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DCTO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnOrderNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DOCO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOrderCo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">KCOO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">(input)&nbsp;dsD0000130.szCompany (RetrieveCompanyFromBusUnit)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnLineNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LNID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szAdjustmentSchedule</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ASN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;dsD4200100.szAdjustmentSchedule (via GetSoldToBillingInstructions)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnAddressNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">AN8</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(Input)&nbsp;mnAddressNumber<br /> Either the value you have specified in calling B4500460<br /> Or F4092.AN8 on your E1 user ID</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnShipToNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SHAN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(Input)&nbsp;mnAddressNumber</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnShortItemNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ITM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input)&nbsp; &amp;dsDX4101A.mnShortItemNumber based on the the&nbsp;szItemNo specified in your calling B4500460 which is mandatory value.</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szBaseCurrencyCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CRDC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input) dsD0000128.szCurrencyCode<br /> Or&nbsp;szCurrencyCodeBase&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szCustomerCurrencyCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CRCD</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input) dsD0000128.szCurrencyCode<br /> Or szCurrencyCodeForgn</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnExchangeRate</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CRR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;&amp;dsD0000033.mnCurrConvRateMult or &amp;dsD0000033.mnCurrConvRateDiv (via GetExchRate)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTriangulationRateFrom</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRR1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTriangulationRateTo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRR2</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cCurrencyConversionMethod</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CRCM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;jdeGetCurrencyCode() assigned by B4500460</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cPriceOverride</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PROV</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px; background-color: #ffffcc;" height="22">mnUnitPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px; background-color: #ffffcc;">UPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px; background-color: #ffffcc;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px; background-color: #ffffcc;">OUT</td>
+<td style="width: 451px; background-color: #ffffcc;">&nbsp;B4500460.mnUnitPrice</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px; background-color: #ffffcc;" height="22">mnExtendedPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px; background-color: #ffffcc;">AEXP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px; background-color: #ffffcc;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px; background-color: #ffffcc;">OUT</td>
+<td style="width: 451px; background-color: #ffffcc;">&nbsp;B4500460.mnAmountExtendedPrice</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px; background-color: #ffffcc;" height="22">mnForeignUnitPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px; background-color: #ffffcc;">FUP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px; background-color: #ffffcc;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px; background-color: #ffffcc;">OUT</td>
+<td style="width: 451px; background-color: #ffffcc;">&nbsp;
+<ul>
+<li>Case (szCustomerCurrencyCode = szBaseCurrencyCode)</li>
+<ul>
+<li>B4500460.mnUnitPriceForgn = mnForeignUnitPrice</li>
+<li>B4500460.mnListPriceForgn = mnForeignListPrice</li>
+<li>B4500460.mnAmountForeignExtPrice = mnForeignExtPrice</li>
+</ul>
+<li>Case (szCustomerCurrencyCode != szBaseCurrencyCode)</li>
+<ul>
+<li>B4500460.mnUnitPriceForgn =&nbsp;mnUnitPrice</li>
+<li>B4500460.mnListPriceForgn = mnListPrice</li>
+<li>B4500460.mnAmountForeignExtPrice = mnExtendedPrice</li>
+</ul>
+</ul>
+</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px; background-color: #ffffcc;" height="22">mnForeignExtPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px; background-color: #ffffcc;">FEA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px; background-color: #ffffcc;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px; background-color: #ffffcc;">OUT</td>
+<td style="width: 451px; background-color: #ffffcc;">&nbsp;Refer to mnForeignUnitPrice</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px; background-color: #ffffcc;" height="22">mnListPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px; background-color: #ffffcc;">LPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px; background-color: #ffffcc;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px; background-color: #ffffcc;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px; background-color: #ffffcc;">OUT</td>
+<td style="width: 451px; background-color: #ffffcc;">&nbsp;B4500460.mnListPrice</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignListPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szListPriceUOM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">APUM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cCostOverride</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CSTO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnUnitCost</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UNCS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnExtendedCost</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ECST</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignUnitCost</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FUC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignExtCost</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FEC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnDetachedAdj</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DETD</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignDetachedAdj</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DETF</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szBranchPlantDtl</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">MCU</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;Either B4500460.szCostCenter (when you specified)<br /> Or F40095.MCU based on your User ID through GetDefaultBranch (B4000370, F40095 Get Default Branch)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szLocation</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LOCN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szLot</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LOTN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szCostMethod</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LEDG</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cTransferOrderProcessing</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV01</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cTransferOrderCostMarkup</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV02</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSalesOrderFlag1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SO01</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szHdrBranchPlant</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">MCU</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;B4500460.szCostCenter<br /> Same with szBranchPlantDtl<br /> via&nbsp;&lt;Bug 19027293&gt; - B4500460 IS NOT WORKING (DEPENDENCY WITH B4201500) IN 9.1<br /> Note that Sales Price will be computed based on szHdrBranchPlant</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szCompany</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input) dsD0000130.szCompany (via RetrieveCompanyFromBusUnit based on Cost Center you have specified in B4500460)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">jdTransactionDate</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRDJ</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">JDEDATE</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cExchangeRateOverride</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DCFL</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnCurrencyConverRate</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CRRD</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTriangulationRateFromPrev</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRD1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTriangulationRateToPrev</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRD2</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTransferCost</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TCST</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szTransferOrderToBranch</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TMCU</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQtyShipped</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SOQS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;&nbsp;(input) mnQtyOrdered<br /> or 1 (if you do not specify it)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQtyBackOrdered</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SOBK</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQtyCanceled</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SOCN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQtyOrdered</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UORG</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;(input) mnQtyOrdered<br /> or 1 (if you do not specify it)</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnConvFactorTransToPrim</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CONV</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input)&nbsp;&amp;dsD4000520.mnConversionFactorFrom_to_To<br /> Or 1 when transaction UOM is same with Primary UOM</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnConvFactorPricingToPrim</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CNV3</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input)&nbsp;&amp;dsD4000520.mnConversionFactorFrom_to_To<br /> Or 1 when transaction UOM is same with Primary UOM</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOriginalOrderNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">OORN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOriginalOrderType</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">OCTO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOriginalOrderCo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">OKCO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnOriginalLineNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">OGNO</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSalesOrderFlag8</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SO08</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPricingCategoryLevel</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CLVL</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szProgramId</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSuppressBasePriceRetrieval</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV03</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szTransactionUom</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UOM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp; (input)&nbsp;szUnitOfMeasure (when this parameter is specified in your calling B4500460)<br /> Or, F4101.UOM1</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPricingUom</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UOM4</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp; (input)&nbsp;szUnitOfMeasure&nbsp; (when this parameter is specified in your calling B4500460)<br /> Or, F4101.UOM1</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">jdPriceEffectiveDate</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PEFJ</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">JDEDATE</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input) jdDateEffective<br /> Either DateToday (if you do not specify in your calling B4500460) or the data specified at jdDateEffective</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnFromPotency</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FRMP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnThruPotency</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">THRP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szFromGrade</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FRGD</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szThruGrade</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">THGD</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szCustomerPricingGroup</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PRGP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">idF4102Pointer</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">GENLNG</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">ID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp; (input) lpdsF4102</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSuppressWriteToWF</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV04</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;1 (hard coded from calling routine B4500460). This parameter prevents this routine to write F40UI74. &nbsp;Note that the calling business function B4500460 is not suitable in case you need to handle huge data because it may utilize significant amount of memory.</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cTemporaryPriceYN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TPC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnRelatedKitComponent</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">RKIT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szRelatedKitItemNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">RLIT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSuppressAdvancedPricing</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV05</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cParentMthdOfPriceCalc</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PMTH</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">idF4101Pointer</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">GENLNG</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">ID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input) lpdsF4101</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnDiscountTrade</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRDC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnItemWeight</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ITWT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cCommittedHS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">COMM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnDiscountFactor</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DSPR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cDiscountApplicationType</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FAPP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szLineType</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LNTY</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;(input) F4102.LNTY based on MCU and ITM resolved in B4500460</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSalesOrderFlag9</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SO09</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnCarrier</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CARS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szAgreementNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DMCT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szDutyStatus</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DTYS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szHdrCostCenter_EMCU</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EMCU</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szEndUse</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EUSE</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szRateCodeFrieghtMisc</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FRAT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szLineofBusiness</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">LOB</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szModeOfTransport</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">MOT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPaymentTermsCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PTC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cRateTypeFreightMisc</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">RATT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szRouteCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ROUT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szShippingCommodityClass</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SHCM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szShippingConditionsCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SHCN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szStopCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">STOP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPriceCode1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UPC1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPriceCode2</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UPC2</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPriceCode3</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UPC3</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szZoneNumber</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ZON</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnDiscountCash</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CADC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnDaysBeforeExpiration</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EXDP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnGrossWeight</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">GRWT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnItemVolume</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ITVL</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQtyOrderedInPrimary</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PQOR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQuantityRelieved</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">QRLV</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQuantityShippedToDate</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">QTYT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnQtyOpen</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UOPN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnUserReservedAmount</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">URAT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOrderRepriceCategory</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ORPR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szRepriceBasketPriceCat</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">RPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szVolumeUom</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">VLUM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szWeightUom</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">WTUM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSuppressPriceExtension</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV06</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">1 (hard coded in calling routine B4500460)&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szItemPriceGroup</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PRGR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnConvFactorTransToPricing</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CONV</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSuppressCostRetrieval</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV07</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">IN</td>
+<td style="width: 451px;">&nbsp;1 (Hard coded in calling routine B4500460) not to retrieve Inventory Cost information</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cAdvPriceCalled</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV08</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cSuppressErrorMsg</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV09</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szErrorMessageID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DTAI</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">idF49211Ptr</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">GENLNG</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">ID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szFreightHandlingCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FRTH</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnParentAddressNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PA8</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szDetailBPCurrCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">CRCE</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szPaymentTermsAR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TRAR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szTaxExplanationCode1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EXR1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnHdrBPAddressNo</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">IAN8</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cPaymentInstrumentA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">RYIN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnProcessID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PEID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTransactionID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TCID</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnPercentofProfitMargin</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PRMG</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szReasonCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">RCD</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szDualUOM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UOM2</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnDualQty</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SQOR</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnOverrideBasePrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">OVBPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnOverrideForeignBasePrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">OVFBPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnVolumeTolerancePercentage</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">INCRAM</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szSOEMBFInternalFlags</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">SOEF</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cUsePrefPricingUOMBasePrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EV01</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cPriceAtAmbStdWgt</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">PRAS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTaxedUnitPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TUPRC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnTaxedExtendedPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TAEXP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnUnitTaxAmount</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UTA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnExtendedTaxAmount</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">ETA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignTaxedUnitPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TFUP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignTaxedExtendedPrice</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TFEA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignUnitTaxAmount</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FUTA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnForeignExtendedTaxAmount</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">FETA</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cUseTaxedPrices</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">UTP</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cTaxedPriceOverrideCode</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TPROV</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">jdInternalSOTaxDate</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">DTXJ</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">JDEDATE</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szTaxArea1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TXA1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">szOrderLineTaxExplanationCode1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">EXR1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cTaxableYN</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">TAX1</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">mnVertexJobnumber</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">JOBS</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">MATH_NUMERIC</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+<tr style="height: 16.5pt;">
+<td class="xl65" style="border-top: medium none; height: 16.5pt; width: 179px;" height="22">cVertexActiveFlag</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 85px;">VVTX</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 147px;">char</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 56px;">OPT</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 44px;">NONE</td>
+<td style="width: 451px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Detail Routine</li>
+<li>Releated Business Functions</li>
+<ul>
+<li>B0000027 CurrencyConvForAndDom</li>
+<li>B0000033 Get Exchange Rate</li>
+<li>B4000870 Standard Pricing Adjustments</li>
+<li>B4002000 Compute Unit Or Extended Amount</li>
+<li>B4200070 Get Sales Base Price</li>
+<li>B4200230 F4074 Maintain Price History</li>
+<li>B4200710 CalculateTransferCost</li>
+<li>B4500050 F4072 Calculate Price Adjustments</li>
+<li>B4500090 F4074 Price Adjustment Ledger Server</li>
+<li>N41B0460 Calculate Extended Price for Bulk Orders</li>
+<li>X0005 Get User Defined Codes</li>
+<li>XF4105 Item Cost I/O</li>
+</ul>
+<li>Business services to consider
+<ul>
+<li>get CustomerItem Price</li>
+<li>getCustomerItemPriceV2</li>
+<li>getItemListPrice</li>
+<li>getItemPriceAndAvailability</li>
+<li>getItemPriceAndAvailabilityV2</li>
+<li>getItemPriceAndAvailabilityV3</li>
+</ul>
+</li>
+</ul>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<p><big>Question and Answer</big></p>
+<p>This section is to be expanded based on feedback on the usage of business function B4500460 if any.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1967 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How To Implement Error with Glossary Text and Variables - jdeSetGBRErrorSubText ()</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How To Implement Error with Glossary Text and Variables - jdeSetGBRErrorSubText ()</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This note is a guide on how to implement an error / warning / information message in a certain routine through a business function by explaining existing routine for this implementation. You can add additional routine in existing code or you may add a new function to fulfill this. <br /><br />Before you create any function, review all the available data structure for error and if need be, reference existing business function which set error dynamically.<br /><br /></p>
+<div class="kmnotebox">Note that this process is considered a complex customization which Oracle Global Support and Development cannot support. If you encounter difficulty getting it to work, then you will need to either debug or engage Field Services to work on the project.</div>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h3 class="km"><big>Business Scenario:</big></h3>
+<p>In creating a new address book master information, you want to create an error message as below,<br /> "User 'UserID' is not allowed to create a new address book information when search type is 'SearchType' and country code is 'CountryCode'. Inform your manager.</p>
+<h3 class="km"><br /> <br /> <big>Steps to implement this:</big></h3>
+<ol>
+<li>Create Data Structure 'DE5501012' to handle variables szUserID, szSearchType and szCountryCode using DD Alias USER, AT1 and CTR</li>
+<li>Create DD item '5501013' to call Error Code</li>
+<li>Create Business Function B5501012 to call API jdeSetGBRErrorSubText ()</li>
+<li>Call B5501012&nbsp; from P01012 (Address Book) to indicate warning message on screen</li>
+</ol>
+<p>&nbsp;</p>
+<h3 class="km"><big>Detail Implementation:</big></h3>
+<ul>
+<li><big>Create Data Structure</big> 'DE5501012' to handle variables szUserID, szSearchType and szCountryCode using DD Alias USER, AT1 and CTR</li>
+</ul>
+<p>1. Go to OMW and add Business Function Data Structure</p>
+<ul>
+<li>Object Name: DE5501012</li>
+<li>Description: USER, AT1 and CTR</li>
+<li>Object Type: DSTR - Data Structure</li>
+<li>Product Code: 55 - Reserved for Client</li>
+<li>Product System Code: 55 - Reserved for Client</li>
+<li>Object Use: 360 - Data Structure</li>
+</ul>
+<p>2. Add DD Alias USER, AT1 and CTR. In case you want to implement more descriptive output you may add string values (for example, DL, DL01 and so on)</p>
+<table style="border-collapse: collapse; width: 531px; height: 55px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" span="6" width="64" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 197px; background-color: #3366ff; color: white;">Structure Member Name</th><th style="width: 55px; background-color: #3366ff; color: white;">Data Item</th><th style="width: 48pt; background-color: #3366ff; color: white;">Req</th><th style="width: 48pt; background-color: #3366ff; color: white;">I/O</th><th style="width: 48pt; background-color: #3366ff; color: white;">Alias</th><th style="width: 48pt; background-color: #3366ff; color: white;">Description</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 197px;" height="17">szUserID</td>
+<td style="width: 55px;">User Id</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>USER</td>
+<td>User ID</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 197px;" height="17">szSearchType</td>
+<td style="width: 55px;">AddressType1</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>AT1</td>
+<td>Search Type</td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 197px;" height="17">szCountry</td>
+<td style="width: 55px;">Country</td>
+<td>x</td>
+<td>&nbsp;</td>
+<td>CTR</td>
+<td>Country</td>
+</tr>
+</tbody>
+</table>
+<p><br /> 3. (Design Tools Tab) Create a type definition to generate type definition, which in return give you information as below,</p>
+<table style="border-collapse: collapse; width: 314px; height: 106px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 185pt;" width="246" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt; color: white;"><th style="background-color: #cccccc; width: 185pt; height: 12.75pt;">Structure Location</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt;" height="17">Structure definition is found in file:<br /> C:\E900\PD900\include\DE5501012.h<br /> and in the clipboard.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [OK]</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp; : This information is to be used in the header file of business function you are to create (e.g., B5501012.h). <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Example, &nbsp;</p>
+<div style="margin-left: 80px;">
+<div class="kmcodeblock" style="width: 95%;">#ifndef DATASTRUCTURE_DE5501012<br /> #define DATASTRUCTURE_DE5501012<br /> <br /> typedef struct tagDSDE5501012<br /> {<br /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szUserId[11];<br /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szSearchType[4];<br /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szCountry[4];<br /> } DSDE5501012 , *LPDSDE5501012;<br /> <br /> #define IDERRszUserId_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1L<br /> #define IDERRszSearchType_2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2L<br /> #define IDERRszCountry_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3L<br /> <br /> #endif /* DATASTRUCTURE_DE5501012 */</div>
+<small><br /> </small></div>
+<ul>
+<li><big style="font-weight: bold;">Create Data Dictionary item</big> '5501013' to call Error Code</li>
+<ul>
+<li>(Fast Path) DD then Select "Error Messages"</li>
+<li>Click 'Add' to create a new Error Message</li>
+<li>(Tab) Item Specification</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Alias: 5501013</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Glossary: E for Error Message</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Product Code: 55</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Product Code Reporting: 55</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Description: Wrong Combination &amp;1, &amp;2 and &amp;3</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Error Level: 1 (Error Message). In case you want to set this implementation for Warning or Information change this code to '2' or '3' respectively</li>
+</ul>
+<li>&nbsp;(Tab) Item Glossary</li>
+<ul>
+<li>Alias: 5501013</li>
+<li>Description: Wrong combination &amp;1, &amp;2 and &amp;3. &amp;1 through &amp;3 reference value you are to assign in calling the business function to be created below</li>
+<li>Media Object Text. Example,</li>
+</ul>
+</ul>
+</ul>
+<table style="width: 547px; border-collapse: collapse; height: 42px; margin-left: 96px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 185pt;" width="246" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;">
+<td style="width: 451px; height: 12.75pt;">User &amp;1 is not allowed to create a new address book information<br /> when search type is &amp;2 and country code is &amp;3. Inform your manager</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<ul>
+<ul>
+<li>(Tab) Data Structure Template:</li>
+<ul>
+<li>Choose (radio button) Text Substitution</li>
+<li>(Push button) Browse</li>
+</ul>
+<ul>
+<li>Select 'DE5501012 :USER,AT1 and CTR' which we have created above and click OK to save change made</li>
+</ul>
+</ul>
+</ul>
+<ul>
+<ul>
+<ul>
+<li>Create Business Function B5501012 to call API jdeSetGBRErrorSubText ()</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; 1. Add a Business Function</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Object Name: B5501012</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Description: Custom BSFN to set Substitute Error</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Product Code: 55</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Product System Code: 55</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Object Use: 1</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Source Language: C</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Function Location: Client/Server</li>
+</ul>
+<li>&nbsp;&nbsp;&nbsp; 2. Associate data structure DE5501012 to B5501012</li>
+<li>&nbsp;&nbsp;&nbsp; 3. Create Header File and copy typedef of DE5501012</li>
+<li>&nbsp;&nbsp;&nbsp; 4. Create Source File and assign input value from data structure of DE5501012.&nbsp;</li>
+</ul>
+</ul>
+</ul>
+</ul>
+<p><br /> <big>Example of B5501012.h</big></p>
+<div class="kmcodeblock" style="width: 95%;"><small>/*****************************************************************************<br /> &nbsp;*&nbsp;&nbsp;&nbsp; Header File:&nbsp; b5501012.h<br /> &nbsp;*&nbsp;&nbsp;&nbsp; Description:&nbsp; CustomSetSubstituteError<br /> &nbsp;*&nbsp;&nbsp;&nbsp; History:<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Programmer&nbsp; SAR# - Description<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ----------&nbsp; ----------&nbsp; -------------------------------------------<br /> &nbsp;*&nbsp;&nbsp; Author 01/05/2012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unknown&nbsp; - Created&nbsp; <br /> &nbsp;* &nbsp; Copyright (c) J.D. Edwards World Source Company, 1996<br /> &nbsp;*<br /> &nbsp;* This unpublished material is proprietary to J.D. Edwards World Source <br /> &nbsp;* Company.&nbsp; All rights reserved.&nbsp; The methods and techniques described <br /> &nbsp;* herein are considered trade secrets and/or confidential.&nbsp; Reproduction<br /> &nbsp;* or distribution, in whole or in part, is forbidden except by express<br /> &nbsp;* written permission of J.D. Edwards World Source Company.<br /> &nbsp;****************************************************************************/<br /> #ifndef __B5501012_H<br /> #define __B5501012_H<br /> /*****************************************************************************<br /> &nbsp;* Table Header Inclusions<br /> &nbsp;****************************************************************************/<br /> #include &lt;jdeapp.h&gt;<br /> <br /> /*****************************************************************************<br /> &nbsp;* Structure Definitions<br /> &nbsp;****************************************************************************/<br /> /*****************************************<br /> &nbsp;* TYPEDEF for Data Structure<br /> &nbsp;* DE5501012 : USER, AT1 and CTR<br /> &nbsp;* Copyright Oracle USA<br /> &nbsp;* This is a JDEdwards EnterpriseOne generated file.<br /> &nbsp;* Do not modify this file.<br /> &nbsp;* Only re-generate with the appropriate tool.<br /> &nbsp;* Generation Date : 04/01/2012<br /> &nbsp;*/<br /> #ifndef DATASTRUCTURE_DE5501012<br /> #define DATASTRUCTURE_DE5501012<br /> typedef struct tagDSDE5501012<br /> {<br /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szUserId[11];<br /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szSearchType[4];<br /> &nbsp; JCHAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szCountry[4];<br /> } DSDE5501012 , *LPDSDE5501012;<br /> #define IDERRszUserId_1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1L<br /> #define IDERRszSearchType_2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2L<br /> #define IDERRszCountry_3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3L<br /> #endif /* DATASTRUCTURE_DE5501012 */<br /> <br /> /*****************************************************************************<br /> &nbsp;* Source Preprocessor Definitions<br /> &nbsp;****************************************************************************/<br /> #if defined (JDEBFRTN)<br /> &nbsp;&nbsp;&nbsp; #undef JDEBFRTN<br /> #endif<br /> <br /> #if defined (WIN32)<br /> &nbsp;&nbsp;&nbsp; #if defined (WIN32)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #define JDEBFRTN(r) __declspec(dllexport) r<br /> &nbsp;&nbsp;&nbsp; #else<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #define JDEBFRTN(r) __declspec(dllimport) r<br /> &nbsp;&nbsp;&nbsp; #endif<br /> #else<br /> &nbsp;&nbsp;&nbsp; #define JDEBFRTN(r) r<br /> #endif<br /> /*****************************************************************************<br /> &nbsp;* Business Function Prototypes<br /> &nbsp;****************************************************************************/<br /> JDEBFRTN (ID) JDEBFWINAPI CustomSetSubstituteError&nbsp;&nbsp; (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSDE5501012 lpDS);<br /> #endif&nbsp;&nbsp;&nbsp; /* __B5501012_H */</small></div>
+<p><br /> <br /> Example of&nbsp; B5501012.c</p>
+<div class="kmcodeblock" style="width: 95%;"><small>#include &lt;jde.h&gt;<br /> #define b5501012_c<br /> /*****************************************************************************<br /> &nbsp;*&nbsp;&nbsp;&nbsp; Source File:&nbsp; b5501012<br /> &nbsp;*&nbsp;&nbsp;&nbsp; Description:&nbsp; Custom set Substitue Error<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; History:<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Programmer&nbsp; SAR# - Description<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ----------&nbsp; ----------&nbsp; -------------------------------------------<br /> &nbsp;*&nbsp;&nbsp; Author 01/05/2012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unknown&nbsp; - Created&nbsp; <br /> &nbsp;*&nbsp; Copyright (c) J.D. Edwards World Source Company, 1996<br /> &nbsp;*<br /> &nbsp;* This unpublished material is proprietary to J.D. Edwards World Source Company.<br /> &nbsp;* All rights reserved.&nbsp; The methods and techniques described herein are<br /> &nbsp;* considered trade secrets and/or confidential.&nbsp; Reproduction or<br /> &nbsp;* distribution, in whole or in part, is forbidden except by express<br /> &nbsp;* written permission of J.D. Edwards World Source Company.<br /> &nbsp;****************************************************************************/<br /> #include &lt;b5501012.h&gt;<br /> /**************************************************************************<br /> &nbsp;*&nbsp; Business Function:&nbsp; CustomSetSubstituteError<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Description:&nbsp; Custom Set Substitute Error<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Parameters:<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPBHVRCOM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpBhvrCom&nbsp;&nbsp;&nbsp; Business Function Communications<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPVOID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpVoid&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Void Parameter - DO NOT USE!<br /> &nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LPDSD0800301&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpDS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Parameter Data Structure Pointer&nbsp; <br /> &nbsp;*************************************************************************/<br /> JDEBFRTN (ID) JDEBFWINAPI CustomSetSubstituteError (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSDE5501012 lpDS)&nbsp; <br /> {<br /> &nbsp;&nbsp; /************************************************************************<br /> &nbsp;&nbsp;&nbsp; * Declare structures<br /> &nbsp;&nbsp;&nbsp; ************************************************************************/<br /> &nbsp;&nbsp;&nbsp; DSDE5501012&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dsDE5501012;&nbsp;&nbsp;&nbsp; /* text substitution error*/<br /> &nbsp;&nbsp; /************************************************************************<br /> &nbsp;&nbsp;&nbsp; * Check for NULL pointers<br /> &nbsp;&nbsp;&nbsp; ************************************************************************/<br /> &nbsp;&nbsp; if ((lpBhvrCom == (LPBHVRCOM) NULL) ||<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lpVoid&nbsp;&nbsp;&nbsp; == (LPVOID)&nbsp;&nbsp;&nbsp; NULL) ||<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (lpDS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; == (LPDSDE5501012)&nbsp;&nbsp;&nbsp; NULL))<br /> &nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp; jdeErrorSet (lpBhvrCom, lpVoid, (ID) 0, _J("4363"), (LPVOID) NULL);<br /> &nbsp;&nbsp;&nbsp;&nbsp; return ER_ERROR;<br /> &nbsp;&nbsp; }<br /> &nbsp;&nbsp; /************************************************************************<br /> &nbsp;&nbsp;&nbsp; * Main Processing<br /> &nbsp;&nbsp;&nbsp; ************************************************************************/<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; memset((void *)(&amp;dsDE5501012), (int)(_J('\0')), sizeof(dsDE5501012));<br /> &nbsp;&nbsp;&nbsp; &nbsp; jdeStrncpy(dsDE5501012.szUserId, (const JCHAR *)(lpDS-&gt;szUserId),DIM(dsDE5501012.szUserId));<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeStrncpy(dsDE5501012.szSearchType, (const JCHAR *)(lpDS-&gt;szSearchType), DIM(dsDE5501012.szSearchType));<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; jdeStrncpy(dsDE5501012.szCountry, (const JCHAR *)(lpDS-&gt;szCountry), DIM(dsDE5501012.szCountry));<br /> &nbsp;&nbsp;&nbsp; &nbsp; <br /> &nbsp;&nbsp;&nbsp; &nbsp; jdeSetGBRErrorSubText(lpBhvrCom, lpVoid,0,_J("5501013"), &amp;dsDE5501012); <br /> &nbsp;&nbsp; /************************************************************************<br /> &nbsp;&nbsp;&nbsp; * Function Clean Up<br /> &nbsp;&nbsp;&nbsp; ************************************************************************/<br /> &nbsp;&nbsp; return (ER_SUCCESS);<br /> }</small></div>
+<p>&nbsp;</p>
+<ul>
+<ul>
+<ul>
+<li>4. Call B5501012&nbsp; from P01012 (Address Book) to indicate warning message on screen</li>
+<ul>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 1. Get information on User ID, Search Type and Country</li>
+<li>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 2. Call B5501012 and assign value returned from 1</li>
+</ul>
+</ul>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>
+<li>5. Test above implementation</li>
+</ul>
+</ul>
+<p><img src="../images/err01.png" border="0" alt="Error example" hspace="0" vspace="0" align="bottom" /></p>
+<div style="margin-left: 80px;">Error Wrong Combination SDONGMYE, C and SG&nbsp; Warning<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A form level error has occurred.<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; User SDONGMYE is not allowed to create a new address book information <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when search type is C and country code is SG. Inform your manager.</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<ul>To have document type implementation detail, refer</ul>
+</ul>
+<p><a href="../docs/b5501012.doc" title="How to implement error messages">here</a></p>
+<ul>
+<ul>:</ul>
+</ul>
+<h3 class="km"><br /> <big>Technical review:</big></h3>
+<ul>
+<ul>
+<ul>
+<li>JDE API jdeSetGBRErrorSubText () is making use of jdeGetGlossaryText</li>
+<li>Function:&nbsp;&nbsp; jdeGetGlossaryText(LPSTR lpszDDItemName, LPVOID lpStruct, TEXTTYPE iTextType)</li>
+<ul>
+<li>Purpose: this function will return the short description or glossary with text substitution. For example, The Batch number &amp;1 is invalid. Return text will be - The Batch number 123 is invalid.</li>
+<li>Parameters: lpszDDItemName&nbsp; -&nbsp; Data Dictionary Item</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lpStruct&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Pointer to structure contains substitution text</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; iTextType&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - DDT_ALPHA_DESC for short description</li>
+<li>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - DDT_GLOSSARY for glossary</li>
+<li>&nbsp;Return:&nbsp;&nbsp;&nbsp;&nbsp; Glossary Text (lpszDesc)</li>
+</ul>
+</ul>
+</ul>
+</ul>
+<hr />
+<h3 class="km"><br /> <br /> <big>Data Structure which has definition for error message:</big></h3>
+<ul>
+<ul>&nbsp;&nbsp;&nbsp; : Data Structure starts with DE* (Data Structure Error Message) can be used for setting errors as below,</ul>
+</ul>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 511px; height: 6564px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 65pt;" width="87" /><col style="width: 308pt;" width="411" /></colgroup>
+<tbody>
+<tr style="height: 12.75pt;"><th style="height: 12.75pt; width: 140px; background-color: #3366ff; color: white;">Data Structure</th><th style="width: 366px; background-color: #3366ff; color: white;">Description</th></tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0001</small></td>
+<td style="width: 366px;"><small>Set Error - LT</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0002</small></td>
+<td style="width: 366px;"><small>Set Error - SY, RT, KY</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0003</small></td>
+<td style="width: 366px;"><small>Set Error - LT, DGJ, AA</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0004</small></td>
+<td style="width: 366px;"><small>Set Error - LT, DGJ, DOC, AA</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0005</small></td>
+<td style="width: 366px;"><small>Set Error - LT, DGJ, DOC, DCT, KCO, AA</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0006</small></td>
+<td style="width: 366px;"><small>Set Error - CO, DGJ</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0007</small></td>
+<td style="width: 366px;"><small>Set Error - CO, DFYJ</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0008</small></td>
+<td style="width: 366px;"><small>Set Error - CO, PN, FY, CTRY</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0009</small></td>
+<td style="width: 366px;"><small>Set Error - CO</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0010</small></td>
+<td style="width: 366px;"><small>Set Error - AN8</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0011</small></td>
+<td style="width: 366px;"><small>Set Error - MCU</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0012</small></td>
+<td style="width: 366px;"><small>Set Error - PTC</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0013</small></td>
+<td style="width: 366px;"><small>Set Error - CRCD</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0014</small></td>
+<td style="width: 366px;"><small>Set Error - BPC</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0015</small></td>
+<td style="width: 366px;"><small>Set Error - TXA1</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0016</small></td>
+<td style="width: 366px;"><small>Set Error - SBL, SBLT</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0017</small></td>
+<td style="width: 366px;"><small>Set Error - AID, PEC</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0018</small></td>
+<td style="width: 366px;"><small>Set Error - AID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0019</small></td>
+<td style="width: 366px;"><small>Set Error - ANI</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0020</small></td>
+<td style="width: 366px;"><small>Set Error - MCU, OBJ, SUB</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0021</small></td>
+<td style="width: 366px;"><small>Set Error - DSCA, KY, SY, RT</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0022</small></td>
+<td style="width: 366px;"><small>Set Error - DSCA</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0024</small></td>
+<td style="width: 366px;"><small>Set Error - Item Number</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0025</small></td>
+<td style="width: 366px;"><small>Set Error - Item Number, Branch</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0028</small></td>
+<td style="width: 366px;"><small>Set Error - Item, Co, Glc</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0029</small></td>
+<td style="width: 366px;"><small>Set Error - OBJ</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0030</small></td>
+<td style="width: 366px;"><small>Set Error - SUB</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0031</small></td>
+<td style="width: 366px;"><small>Set Error - CO, DTPN, DGJ</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0032</small></td>
+<td style="width: 366px;"><small>Set Error - PN</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0033</small></td>
+<td style="width: 366px;"><small>Set Error - MCU, OBJ, SUB, SBL, SBLT, CO</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0034</small></td>
+<td style="width: 366px;"><small>Set Error - PEC</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0035</small></td>
+<td style="width: 366px;"><small>Set Error - Alpha Name, Application, Generic Key</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0036</small></td>
+<td style="width: 366px;"><small>Set Error - ThrdUser Id,SYS Code,Next Number Bucket</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0037</small></td>
+<td style="width: 366px;"><small>Set Error - CTID,CO,DCT</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0038</small></td>
+<td style="width: 366px;"><small>Set Warning - Remaining Next Numbers</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0039</small></td>
+<td style="width: 366px;"><small>Set Error - CTID, Table Name</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0040</small></td>
+<td style="width: 366px;"><small>Set Error - Range/Warning Value Too Large</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0041</small></td>
+<td style="width: 366px;"><small>Set Error - JDATE</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0042</small></td>
+<td style="width: 366px;"><small>Set Error - Account Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0043</small></td>
+<td style="width: 366px;"><small>Set Error - Ledger Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0044</small></td>
+<td style="width: 366px;"><small>Set Error - Subledger Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0045</small></td>
+<td style="width: 366px;"><small>Set Error - Business Unit Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0046</small></td>
+<td style="width: 366px;"><small>Set Error - Item Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0047</small></td>
+<td style="width: 366px;"><small>Set Error - Supplier Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0048</small></td>
+<td style="width: 366px;"><small>Set Error - Doc CO, Doc TY</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0049</small></td>
+<td style="width: 366px;"><small>Set Error - Customer Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0050</small></td>
+<td style="width: 366px;"><small>Set Error - Activity Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0051</small></td>
+<td style="width: 366px;"><small>Set Error - Work Order Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0052</small></td>
+<td style="width: 366px;"><small>Set Error - Expense Policy Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0053</small></td>
+<td style="width: 366px;"><small>Set Error - Cost Objects Dimension</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0054</small></td>
+<td style="width: 366px;"><small>Set Error - UOM Conversion DW</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0055</small></td>
+<td style="width: 366px;"><small>Set Error - Currency Exchange Rate DW</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0056</small></td>
+<td style="width: 366px;"><small>Set Error - MCU, AN8</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0057</small></td>
+<td style="width: 366px;"><small>Set Error - GRPPROF, AN8</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0058</small></td>
+<td style="width: 366px;"><small>Set Error - REIMMETH, AN8</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0059</small></td>
+<td style="width: 366px;"><small>Set Error - REIMCRCY, AN8</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0060</small></td>
+<td style="width: 366px;"><small>Set Error - AN8, AN8</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0061</small></td>
+<td style="width: 366px;"><small>Set Error - DCT, DOC, KCO, DGJ.</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0062</small></td>
+<td style="width: 366px;"><small>Set Error - EXPAMT, DL01</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0063</small></td>
+<td style="width: 366px;"><small>Set Error - CRCD, CRCD</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0064</small></td>
+<td style="width: 366px;"><small>Set Error - AN8, ALPH, CTR</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0065</small></td>
+<td style="width: 366px;"><small>Set Error - AN8, ALPH, CTY1, ADDZ</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0066</small></td>
+<td style="width: 366px;"><small>Set Error - SESD</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0067</small></td>
+<td style="width: 366px;"><small>Set Error - ASII</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0085</small></td>
+<td style="width: 366px;"><small>Set Error - Alpha Name, Generic Key, App1, App2</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0088</small></td>
+<td style="width: 366px;"><small>Set Error - Value, Item Desc</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0089</small></td>
+<td style="width: 366px;"><small>Set Error - SDB TYDT</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE00990</small></td>
+<td style="width: 366px;"><small>Direct Connect Communication Doc BSSV Property Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0110</small></td>
+<td style="width: 366px;"><small>Set Error - CO, UDHB</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0111</small></td>
+<td style="width: 366px;"><small>Set Error - CO, CO</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0125</small></td>
+<td style="width: 366px;"><small>Set Error - MSC Parent Business Unit</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0130</small></td>
+<td style="width: 366px;"><small>Set Error - MSC Currency Code</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0135</small></td>
+<td style="width: 366px;"><small>Set Error - MSC Consolidation Name</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0136</small></td>
+<td style="width: 366px;"><small>Set Error - Desc1, Desc2</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0137</small></td>
+<td style="width: 366px;"><small>Set Error - FCNM, FCNM</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0138</small></td>
+<td style="width: 366px;"><small>Set Error - RDLN</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0139</small></td>
+<td style="width: 366px;"><small>Set Error - EVLN</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0140</small></td>
+<td style="width: 366px;"><small>Set Error - EVLN, RDLN</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0142</small></td>
+<td style="width: 366px;"><small>Set Grower Error - DOCO</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0143</small></td>
+<td style="width: 366px;"><small>Set Grower Error - CNTRTID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0144</small></td>
+<td style="width: 366px;"><small>Set Grower Error - Harvest Dates</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0240</small></td>
+<td style="width: 366px;"><small>Set Warning - Harvest Estimate, Sum of Fixed EURs</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0285</small></td>
+<td style="width: 366px;"><small>Set Error - Operation ID, Alpha Name, Process ID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0286</small></td>
+<td style="width: 366px;"><small>Set Error - Vessel Num, Operation ID, Name Alpha, Process ID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0295</small></td>
+<td style="width: 366px;"><small>Set Error - Op Number, Op ID, User Name, Process ID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0296</small></td>
+<td style="width: 366px;"><small>Vessel Number, Op Number, Op ID, User Name, Program ID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE052T</small></td>
+<td style="width: 366px;"><small>Set Error - SDB</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0701</small></td>
+<td style="width: 366px;"><small>Set Error - Math01, Math01, Math01</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0702</small></td>
+<td style="width: 366px;"><small>Set Error - Math01</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE071U</small></td>
+<td style="width: 366px;"><small>Set Error - MCU</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0780</small></td>
+<td style="width: 366px;"><small>Set Error - EURSCD, EURVER</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE08001</small></td>
+<td style="width: 366px;"><small>Set Error - ICRAMT, COVA, COVA</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE08002</small></td>
+<td style="width: 366px;"><small>Set Error -RTAM, RTAM</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0800301</small></td>
+<td style="width: 366px;"><small>Set Error Action Step 499Z or 499U or 499W</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0800366</small></td>
+<td style="width: 366px;"><small>Set Text Substitution Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0800490</small></td>
+<td style="width: 366px;"><small>Text Substitution Error 9</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE093J</small></td>
+<td style="width: 366px;"><small>Set Error - Routing Entry Exists</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0941</small></td>
+<td style="width: 366px;"><small>DE0941 - Set Warning - Job Number</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE0990</small></td>
+<td style="width: 366px;"><small>Set Warning - Farming Operation Withholding Date</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE09E001</small></td>
+<td style="width: 366px;"><small>Set Account Mapping Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE09E129A</small></td>
+<td style="width: 366px;"><small>Exchange Rate Missing</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE111J</small></td>
+<td style="width: 366px;"><small>Set Error 111J, Error while e-mailing VOE letter</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE1180</small></td>
+<td style="width: 366px;"><small>Set Warning - Spray Restricted EUR</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE1190A</small></td>
+<td style="width: 366px;"><small>Invalid UOM Conversion for Grower Operation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE1201</small></td>
+<td style="width: 366px;"><small>AAI and Account Invalid</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE1280</small></td>
+<td style="width: 366px;"><small>Set Warning - Spray Restricted Style</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE13WA</small></td>
+<td style="width: 366px;"><small>Set Error - DL01, ASII</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE161LPN</small></td>
+<td style="width: 366px;"><small>Repost Error for LPN</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE180T</small></td>
+<td style="width: 366px;"><small>Reconciliation Failed - Shipment Confirmation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE180U</small></td>
+<td style="width: 366px;"><small>UOM Conversion &amp;1 to &amp;2 Unsuccessful</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE186001</small></td>
+<td style="width: 366px;"><small>Set Error - DSCA, DSCA</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE200J</small></td>
+<td style="width: 366px;"><small>Set Error - DOC, DCT, KCO, SFX, SFXE</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE200N</small></td>
+<td style="width: 366px;"><small>Set Error - DOC, DCT, KCO, SFX</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE3101</small></td>
+<td style="width: 366px;"><small>Set Error - Value,Category Code</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE320E</small></td>
+<td style="width: 366px;"><small>Set error - ATO#, DSCA, VTXX, VTXX, VTXX</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE320R</small></td>
+<td style="width: 366px;"><small>Set warning - ATO#, ATOS, LITM</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE3601</small></td>
+<td style="width: 366px;"><small>Set Error - DRQJ, DRQJ</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE40G1120A</small></td>
+<td style="width: 366px;"><small>Set Text Substitution Error - Grower</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE40R890A</small></td>
+<td style="width: 366px;"><small>F47173 Duplicate Record Error Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4207010</small></td>
+<td style="width: 366px;"><small>Set Text Substitution Error For Multiple Lines</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4210000A</small></td>
+<td style="width: 366px;"><small>Line Hold Text Substitution</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4210000B</small></td>
+<td style="width: 366px;"><small>Order Hold Text Substitution</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE42103</small></td>
+<td style="width: 366px;"><small>Order Processing Error Template</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE428G</small></td>
+<td style="width: 366px;"><small>Summarized Inventory COGS Batch Failed</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4302420</small></td>
+<td style="width: 366px;"><small>Set Text Substitution Error Procurement</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE43C1150</small></td>
+<td style="width: 366px;"><small>Set Error - Contract Harvest</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE455WIM</small></td>
+<td style="width: 366px;"><small>Set Error - WCCNAME, WPA, WTEMP, and TEMPUOM</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE460Q</small></td>
+<td style="width: 366px;"><small>Set Error GTIN Not Found</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE460R</small></td>
+<td style="width: 366px;"><small>EPC Manager Code Not Found</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE460S</small></td>
+<td style="width: 366px;"><small>Object Class Code Not Found</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE460T</small></td>
+<td style="width: 366px;"><small>Next EPC Serial Number Not Found</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE460V</small></td>
+<td style="width: 366px;"><small>EPC Segment Definition Not Found</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE460W</small></td>
+<td style="width: 366px;"><small>EPC Serial Number Truncated</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE46RF</small></td>
+<td style="width: 366px;"><small>EPC Filter Value Invalid</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE46RG</small></td>
+<td style="width: 366px;"><small>Partition Value Invalid</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487B</small></td>
+<td style="width: 366px;"><small>F4942 Update CUM Shipped Template Substitution Error - Shpmn</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487C</small></td>
+<td style="width: 366px;"><small>F4942 Update CUM Shipped Template Substitution Error - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487D</small></td>
+<td style="width: 366px;"><small>Adjust Demand Message - XAPI Initialize failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487E</small></td>
+<td style="width: 366px;"><small>Adjust Demand Message - XAPI Initialize failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487F</small></td>
+<td style="width: 366px;"><small>Adjust Demand Message - XAPI Finalize failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487G</small></td>
+<td style="width: 366px;"><small>Adjust Demand Message - XAPI Finalize failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487H</small></td>
+<td style="width: 366px;"><small>Adjust Demand Products Message - XAPI Add failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487I</small></td>
+<td style="width: 366px;"><small>Adjust Demand Products Message - XAPI Add failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487J</small></td>
+<td style="width: 366px;"><small>Adjust Demand Products Message - XAPI Add failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487K</small></td>
+<td style="width: 366px;"><small>Adjust Demand Products Message - XAPI Add failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487L</small></td>
+<td style="width: 366px;"><small>Adjust Demand Cartons Message - XAPI Add failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487M</small></td>
+<td style="width: 366px;"><small>Adjust Demand Cartons Message - XAPI Add failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487N</small></td>
+<td style="width: 366px;"><small>Adjust Demand Cartons Message - XAPI Add failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487O</small></td>
+<td style="width: 366px;"><small>Adjust Demand Cartons Message - XAPI Add failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487R</small></td>
+<td style="width: 366px;"><small>Carton Status Advance Failed - Load Confirmation - General</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487S</small></td>
+<td style="width: 366px;"><small>Carton Status Advance Failed - Load Confirmation - Specific</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487T</small></td>
+<td style="width: 366px;"><small>Carton Status Advance Failed - Shipment Confirmation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487U</small></td>
+<td style="width: 366px;"><small>F4942 Update CUM Shipped Template Substitution Error - Shpmn</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487V</small></td>
+<td style="width: 366px;"><small>F4942 Update CUM Shipped Template Substitution Error - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487W</small></td>
+<td style="width: 366px;"><small>Invalid Carton Status - Shipment Confirmation - General</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487X</small></td>
+<td style="width: 366px;"><small>Invalid Carton Status - Load Confirmation - General</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487Y</small></td>
+<td style="width: 366px;"><small>Invalid Carton Status - Load Confirmation - Specific</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE487Z</small></td>
+<td style="width: 366px;"><small>Invalid Carton Status - Shipment Confirmation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488B</small></td>
+<td style="width: 366px;"><small>Sales Order Key Not Found</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488C</small></td>
+<td style="width: 366px;"><small>Carton Charge Order Line Creation Failed - Carton Based EL</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488D</small></td>
+<td style="width: 366px;"><small>Carton Charge Order Line Creation Failed - Carton Based ED</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488E</small></td>
+<td style="width: 366px;"><small>Carton Charge Order Line Creation Failed - Invntry Relief EL</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488F</small></td>
+<td style="width: 366px;"><small>Carton Charge Order Line Creation Failed - Invntry Relief ED</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488G</small></td>
+<td style="width: 366px;"><small>Carton Charge Order Line Creation Failed - Item Based EL</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488H</small></td>
+<td style="width: 366px;"><small>Carton Charge Order Line Creation Failed - Item Based ED</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488I</small></td>
+<td style="width: 366px;"><small>Parent Line Add To Cross Reference Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488J</small></td>
+<td style="width: 366px;"><small>Carton Charge Add To Cross Reference Error - Carton Based</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488K</small></td>
+<td style="width: 366px;"><small>Carton Charge Add To Cross Reference Error - Item Qty Based</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488L</small></td>
+<td style="width: 366px;"><small>Mismatched Carton Charge Basis</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488M</small></td>
+<td style="width: 366px;"><small>Mismatched Carton Charge Basis</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488N</small></td>
+<td style="width: 366px;"><small>Mismatched Carton Charge Basis</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488O</small></td>
+<td style="width: 366px;"><small>Mismatched Carton Charge Basis</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488Q</small></td>
+<td style="width: 366px;"><small>Adjust Demand Cartons - Cache Add failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488R</small></td>
+<td style="width: 366px;"><small>Adjust Demand Cartons - Cache Add failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488S</small></td>
+<td style="width: 366px;"><small>Adjust Demand Products - Cache Add failed - Load</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE488T</small></td>
+<td style="width: 366px;"><small>Adjust Demand Products - Cache Add failed - Shpmnt</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE48S01</small></td>
+<td style="width: 366px;"><small>Set Error - Alpha Name, Generic Key</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4900</small></td>
+<td style="width: 366px;"><small>Set Error - DTAI</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4901</small></td>
+<td style="width: 366px;"><small>Set Error - OTE1REF1</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE4902</small></td>
+<td style="width: 366px;"><small>Set Error - OTWTUOM / OTVOLUOM</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE490X</small></td>
+<td style="width: 366px;"><small>Route Number Not Used</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE498L</small></td>
+<td style="width: 366px;"><small>Set Error - CHKD Control Digit</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE49T207</small></td>
+<td style="width: 366px;"><small>Text Subst for Error 49T207</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE49T224</small></td>
+<td style="width: 366px;"><small>Order Release Line Sales Order Shipment</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE49T400</small></td>
+<td style="width: 366px;"><small>Sell Side Transaction Received</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE49T405</small></td>
+<td style="width: 366px;"><small>Sell Side Shipment Blank</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE500U</small></td>
+<td style="width: 366px;"><small>Invalid Standard Pack Rule</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE70X01</small></td>
+<td style="width: 366px;"><small>XML Generation - Reason Code - LOC - 70</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7401</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR MSG RSN-RRN-CNO - EMEA - 74</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7402</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR PID-VERS-CAUSE - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7403</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR MSG RENA - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7404</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR MSG RENA-RSN - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7405</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR MSG RENA-RSN-RRN - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7406</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR MSG RENA-RSN-RRN-CNO - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7407</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR CO - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7408</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR DL01 - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7409</small></td>
+<td style="width: 366px;"><small>Rep. Fin. DSTR RSN-RRN-CNO-REF-CAUSE- EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7410</small></td>
+<td style="width: 366px;"><small>Rep. Fin. FORM - EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7411</small></td>
+<td style="width: 366px;"><small>Rep. Fin. CO- EMEA - 09</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE74X01</small></td>
+<td style="width: 366px;"><small>XML Generation - Reason Code - LOC - 74</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE765A</small></td>
+<td style="width: 366px;"><small>Set Error - SFX - ARG - 04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE766A</small></td>
+<td style="width: 366px;"><small>Set Error - SFX - ARG - 04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE76BX01</small></td>
+<td style="width: 366px;"><small>XML Element Error Data Structure - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE76BX02</small></td>
+<td style="width: 366px;"><small>XML File Name - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE774S</small></td>
+<td style="width: 366px;"><small>Set Error Level - CO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE774T</small></td>
+<td style="width: 366px;"><small>Set Error Level - LITM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE774U</small></td>
+<td style="width: 366px;"><small>Set Error Level - MCU&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE774V</small></td>
+<td style="width: 366px;"><small>Set Error Level - LOCN/LOTN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE776O</small></td>
+<td style="width: 366px;"><small>Set Error - STAM - ARG - 04&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE776X</small></td>
+<td style="width: 366px;"><small>Set Error - DCT, DCTO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76A</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE7900</small></td>
+<td style="width: 366px;"><small>OWTT Text Substitution</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE801</small></td>
+<td style="width: 366px;"><small>Set Error - TMS Production Sequencing EDI Record</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE802</small></td>
+<td style="width: 366px;"><small>Set Error - TMS Production Sequencing Quantity of One</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE890A</small></td>
+<td style="width: 366px;"><small>Set Duplicate Record Text Substitute Warning</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DE954000</small></td>
+<td style="width: 366px;"><small>Error Text For WS Reference Implementation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEA1A4</small></td>
+<td style="width: 366px;"><small>Set Error - DSCA, EV01</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEF13101</small></td>
+<td style="width: 366px;"><small>Set Error - Parent and Item</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEF3102</small></td>
+<td style="width: 366px;"><small>Parent Item Completions Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEF34S0001</small></td>
+<td style="width: 366px;"><small>Error Message for DFM Plan Quantity DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEF34S0002</small></td>
+<td style="width: 366px;"><small>Error Message for DFM Plan Start Date DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEF34S0003</small></td>
+<td style="width: 366px;"><small>Error DS for Sequence Qty Mismatch</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEH76E099</small></td>
+<td style="width: 366px;"><small>Set Error Level - Item Ledger Entry - CHI - 41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 76H</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEH76E100</small></td>
+<td style="width: 366px;"><small>Set Error Level - Actual Item Ledger Entry - CHI - 41 - 76H</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DEHS001</small></td>
+<td style="width: 366px;"><small>Set Error DOCO - DCTO - KCOO - SFXO</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0001</small></td>
+<td style="width: 366px;"><small>Set Level Batch</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0002</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Voucher</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0003</small></td>
+<td style="width: 366px;"><small>Set Level Voucher</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0004</small></td>
+<td style="width: 366px;"><small>Set Level Payment</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0005</small></td>
+<td style="width: 366px;"><small>Set Level Document</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0006</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Voucher Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0007</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Voucher Journal</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0008</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Voucher Journal Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0009</small></td>
+<td style="width: 366px;"><small>Set Level S/F Journal Entry</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0010</small></td>
+<td style="width: 366px;"><small>Set Level S/F Journal Entry Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0011</small></td>
+<td style="width: 366px;"><small>Set Level Invoice</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0012</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Batch</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0013</small></td>
+<td style="width: 366px;"><small>Set Level Recurring</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0014</small></td>
+<td style="width: 366px;"><small>Set Level Recurring Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0015</small></td>
+<td style="width: 366px;"><small>Batch Out Of Balance PPAT Error Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0016</small></td>
+<td style="width: 366px;"><small>SendRequestForApproval</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0017</small></td>
+<td style="width: 366px;"><small>Send PPAT to Approver</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0018</small></td>
+<td style="width: 366px;"><small>SendRejectionNotice</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0018A</small></td>
+<td style="width: 366px;"><small>SendPPAT_RequisitionRejectedMessage</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0019</small></td>
+<td style="width: 366px;"><small>Set Level - Order Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0020</small></td>
+<td style="width: 366px;"><small>Set Level - Line Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0021</small></td>
+<td style="width: 366px;"><small>Set Level - Job Completed Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0022</small></td>
+<td style="width: 366px;"><small>Set Level - Job Completed With Errors Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0023</small></td>
+<td style="width: 366px;"><small>Indexed Computations Level 3 Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0024</small></td>
+<td style="width: 366px;"><small>Indexed Computations Level 4 Error Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0025</small></td>
+<td style="width: 366px;"><small>Set Level A/R Receipt PrePost error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0026</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Invoice</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0027</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Invoice Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0028</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Invoice Journal</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0029</small></td>
+<td style="width: 366px;"><small>Set Level Store &amp; Forward Invoice Journal Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0030</small></td>
+<td style="width: 366px;"><small>No JE Written ERROR for Mon Acct Valuation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0031</small></td>
+<td style="width: 366px;"><small>No Exchange Rate found.</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0032</small></td>
+<td style="width: 366px;"><small>Send PPAT Request for ECO Approval Text Sub</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0038</small></td>
+<td style="width: 366px;"><small>Send Message for WO Completion</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0046</small></td>
+<td style="width: 366px;"><small>Set Level Payroll Journal Entry</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0047</small></td>
+<td style="width: 366px;"><small>Set Level Payroll Journal Entry Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0050</small></td>
+<td style="width: 366px;"><small>Contact Management Level Error Set</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0054</small></td>
+<td style="width: 366px;"><small>Forecast Record Not Updated To Budget</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM00620</small></td>
+<td style="width: 366px;"><small>Set Level - Configurator Segment Validation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0063</small></td>
+<td style="width: 366px;"><small>Set Level - Configurator Cross Segment Edit Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0064</small></td>
+<td style="width: 366px;"><small>Set Level - Configurator Assembly Inclusion Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0065</small></td>
+<td style="width: 366px;"><small>Set Level Record Contains Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0066</small></td>
+<td style="width: 366px;"><small>Set level Transaction Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0067</small></td>
+<td style="width: 366px;"><small>Set Level Nota Fiscal Generated - Brazil&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 42</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0068</small></td>
+<td style="width: 366px;"><small>Set Level Nota Fiscal Not Generated - Brazil&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 42</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0069</small></td>
+<td style="width: 366px;"><small>Set Level Nota Fiscal Voided / Reversed - Brazil&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - 42</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0070</small></td>
+<td style="width: 366px;"><small>Set Level Nota Fiscal Not Generated / Reversed - Braz - 42</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0078</small></td>
+<td style="width: 366px;"><small>Set Level - Order Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0079</small></td>
+<td style="width: 366px;"><small>Set Level - Line Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0080</small></td>
+<td style="width: 366px;"><small>Set Level - A/R Detail Line Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0081</small></td>
+<td style="width: 366px;"><small>Set Level - G/L Detail Line Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0082</small></td>
+<td style="width: 366px;"><small>Set Level - A/R Finance Charge Customer Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0083</small></td>
+<td style="width: 366px;"><small>Set Level - Order Integrity Issue</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0084</small></td>
+<td style="width: 366px;"><small>Set Level - SBF Transaction Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0094</small></td>
+<td style="width: 366px;"><small>DS for Set Payment Gross to Net Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0098</small></td>
+<td style="width: 366px;"><small>Set Level - Var Num Allocation Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0099</small></td>
+<td style="width: 366px;"><small>Set Level - Account Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0100</small></td>
+<td style="width: 366px;"><small>Company Date Pattern Changed - Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0101</small></td>
+<td style="width: 366px;"><small>Company Currency Code Changed - Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0102</small></td>
+<td style="width: 366px;"><small>Set Level - Transaction</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0103</small></td>
+<td style="width: 366px;"><small>Set Level - Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0104</small></td>
+<td style="width: 366px;"><small>Set Level - Address Number</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0105</small></td>
+<td style="width: 366px;"><small>Set Level - Address Number Invalid State</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0106</small></td>
+<td style="width: 366px;"><small>Set Level - Address Number Invalid Country</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0121</small></td>
+<td style="width: 366px;"><small>SendPPAT_CopyAccountsMessage</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0122</small></td>
+<td style="width: 366px;"><small>Ledger Type Currency Code Changed - Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0124</small></td>
+<td style="width: 366px;"><small>Set Level - Voucher errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0127</small></td>
+<td style="width: 366px;"><small>Set Order Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0128</small></td>
+<td style="width: 366px;"><small>Set Line Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0144</small></td>
+<td style="width: 366px;"><small>Set Level - QM Preference Profile PPPAT Error Msg - DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0146</small></td>
+<td style="width: 366px;"><small>Set Level - No Test Results Value PPAT Error Msg - DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0147</small></td>
+<td style="width: 366px;"><small>Set Level - Test Failed for Item and MCU PPAT Error Msg - DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0148</small></td>
+<td style="width: 366px;"><small>DS for Payroll Level Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0200</small></td>
+<td style="width: 366px;"><small>Set Level 3 Error for Expense Report Reimbursement</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0500</small></td>
+<td style="width: 366px;"><small>Set Level Payroll Lockout Warning</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0581</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - EDI Demand Header</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0582</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - EDI Demand Detail</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0583</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - EDI Demand Schedule</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0820</small></td>
+<td style="width: 366px;"><small>Set Level Pay Grade Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM0821</small></td>
+<td style="width: 366px;"><small>Set Level Pay Grade Warning</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM09612</small></td>
+<td style="width: 366px;"><small>Account not setup in Cross Reference</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM11026</small></td>
+<td style="width: 366px;"><small>Detailed Currency Restatement Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1210</small></td>
+<td style="width: 366px;"><small>Extract Asset Master - Set Level Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1211</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Inbound Transactions</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM12120</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Inbound Meter Readings</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM12120B</small></td>
+<td style="width: 366px;"><small>Set Level Warnings - Inbound Meter Readings</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1310</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Inbound Condition-Based Alerts</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1314</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Condition-Based Alerts Processor</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM13PJ</small></td>
+<td style="width: 366px;"><small>Set Level Errors - PM Projections</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM13PM</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Update PM Schedule Status</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1530</small></td>
+<td style="width: 366px;"><small>Set Level - G/L Detail Line Level Error Set</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1600</small></td>
+<td style="width: 366px;"><small>Set Level - Item in Branch Plant PPAT Error Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1601</small></td>
+<td style="width: 366px;"><small>Set Level - Document # Amount Debit/Credit PPAT Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1602</small></td>
+<td style="width: 366px;"><small>Set Level - Calculation for Driver PPAT Error Message</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1720</small></td>
+<td style="width: 366px;"><small>Set Level Message - Base Warranty Insert Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM1748</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Inbound Warranty Claims</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM3401</small></td>
+<td style="width: 366px;"><small>Set Level Message Contains Error Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM40R01</small></td>
+<td style="width: 366px;"><small>Error Demand Schedule Header</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM40R02</small></td>
+<td style="width: 366px;"><small>Error Set Demand Schedule Detail</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM40R03</small></td>
+<td style="width: 366px;"><small>Error Set Demand Schedule Sales Order</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4101</small></td>
+<td style="width: 366px;"><small>Set Container Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM41B01</small></td>
+<td style="width: 366px;"><small>Set Level Reconciliation</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4280</small></td>
+<td style="width: 366px;"><small>Set Level - Line Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4282</small></td>
+<td style="width: 366px;"><small>Set Level - G/L Detail Line Level Errors G Batch</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4501</small></td>
+<td style="width: 366px;"><small>Set Level - EDI Inbound Promotional Pricing</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4504</small></td>
+<td style="width: 366px;"><small>Set Level - Claim Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4505</small></td>
+<td style="width: 366px;"><small>Set Level - Order Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM45RRP</small></td>
+<td style="width: 366px;"><small>Set Error_Receipt Number</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4701</small></td>
+<td style="width: 366px;"><small>Set Level EDI Line Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4703</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - EDI Acknowledgment Header</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4704</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - EDI Demand Header</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM47071S</small></td>
+<td style="width: 366px;"><small>Set Processing Option Error - R47071S</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM48CM</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Completion Metrics</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM48RP</small></td>
+<td style="width: 366px;"><small>Set Level Errors - Roll Schedule Periods</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM48S01</small></td>
+<td style="width: 366px;"><small>Set Level G/L Journal Generation Err Message Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM48S02</small></td>
+<td style="width: 366px;"><small>Set Level A/R Journal Generation Err Message Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4901</small></td>
+<td style="width: 366px;"><small>Set Level Carrier/Branch/Actual Ship Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4902</small></td>
+<td style="width: 366px;"><small>Set Level Shipment/Routing Step Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4903</small></td>
+<td style="width: 366px;"><small>Set Level Load/Planning Depot Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4904</small></td>
+<td style="width: 366px;"><small>Set Level Rate Name Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4905</small></td>
+<td style="width: 366px;"><small>Set Level Shipment Number &amp; Status Approval Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4906</small></td>
+<td style="width: 366px;"><small>Set Level Load Number &amp; Status Approval Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4907</small></td>
+<td style="width: 366px;"><small>Payment Status Code Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4909</small></td>
+<td style="width: 366px;"><small>G/L Offset Class Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4911</small></td>
+<td style="width: 366px;"><small>Set Level Shipment Number Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4912</small></td>
+<td style="width: 366px;"><small>Set Level Load Number Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4913</small></td>
+<td style="width: 366px;"><small>Set Level Order Key Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4914</small></td>
+<td style="width: 366px;"><small>Set Level Customer Carton Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4915</small></td>
+<td style="width: 366px;"><small>Set Level PO Receipts Begin Doc Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4916</small></td>
+<td style="width: 366px;"><small>Set Level PO Receipts Edit Line Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4917</small></td>
+<td style="width: 366px;"><small>Set Level PO Receipts End Doc Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4918</small></td>
+<td style="width: 366px;"><small>Set Level Freight Request Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4919</small></td>
+<td style="width: 366px;"><small>Set Level Freight Request Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4920</small></td>
+<td style="width: 366px;"><small>Transmission PPAT Structure - DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4921</small></td>
+<td style="width: 366px;"><small>Transmission Transaction PPAT Structure - DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4923</small></td>
+<td style="width: 366px;"><small>Set Level Master Data DS</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4924</small></td>
+<td style="width: 366px;"><small>Set Level Procurement Freight Request Line</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4925</small></td>
+<td style="width: 366px;"><small>Set Level Procurement Freight Request Order</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM4926</small></td>
+<td style="width: 366px;"><small>Set Level Procurement Freight Request Initalize</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T01</small></td>
+<td style="width: 366px;"><small>Set Level Corp Load Data Structure</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T10</small></td>
+<td style="width: 366px;"><small>Set Freight Request XML Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T200</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - Transpo Plan UBE Version</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T201</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - Transpo Plan Shipment</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T202</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - Transpo Plan Ship Unit</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T203</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - Order Release ID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM49T204</small></td>
+<td style="width: 366px;"><small>JDEM Set Level - Order Release Line ID</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5201</small></td>
+<td style="width: 366px;"><small>Set Level - Change Order Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5202</small></td>
+<td style="width: 366px;"><small>Set Level - Batch Created</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5203</small></td>
+<td style="width: 366px;"><small>Set Level - Invoice Created</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5204</small></td>
+<td style="width: 366px;"><small>Set Level - Invoice Not Created Level Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5206</small></td>
+<td style="width: 366px;"><small>Work Order Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5207</small></td>
+<td style="width: 366px;"><small>Set Level - Commitment Generation Level Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5209</small></td>
+<td style="width: 366px;"><small>Transaction ID Errors</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM5210</small></td>
+<td style="width: 366px;"><small>Copy Scenario Error</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM616</small></td>
+<td style="width: 366px;"><small>Set Level_Auto Bank Statement Number</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM616A</small></td>
+<td style="width: 366px;"><small>Set Level_GL Bank Account</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM7001</small></td>
+<td style="width: 366px;"><small>Set Level Batch Number&nbsp; - 70</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM7002</small></td>
+<td style="width: 366px;"><small>Set Level Transaction Number&nbsp; - 70</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM7401</small></td>
+<td style="width: 366px;"><small>Set Level Batch Number&nbsp; - 74</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM7402</small></td>
+<td style="width: 366px;"><small>Set Level Transaction Number&nbsp; - 74</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B01</small></td>
+<td style="width: 366px;"><small>Set NFe error - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B02</small></td>
+<td style="width: 366px;"><small>Set FCO Error - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B03</small></td>
+<td style="width: 366px;"><small>Set MCU Error - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B04</small></td>
+<td style="width: 366px;"><small>Set AN8 Error - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B05</small></td>
+<td style="width: 366px;"><small>Set UKID Error - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B06</small></td>
+<td style="width: 366px;"><small>Set Level NFe XML File Error - BRA - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELM76B07</small></td>
+<td style="width: 366px;"><small>Set Level NFe Unused Error - BRA - 76B</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMCA02</small></td>
+<td style="width: 366px;"><small>CRM Post Synchronization Processing - Address Book</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMCA04</small></td>
+<td style="width: 366px;"><small>CRM Post Synchronization Processing - Address By Date</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMCA05</small></td>
+<td style="width: 366px;"><small>CRM Post Synchronization Processing - Customer</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMCA06</small></td>
+<td style="width: 366px;"><small>CRM Post Synch Processing-E-Addr,Contact,AltAddr,ContactPhon</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMCA07</small></td>
+<td style="width: 366px;"><small>CRM Post Synch Processing-RelatedPersonPhones,RelatedPerson</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMCA09</small></td>
+<td style="width: 366px;"><small>CRM Post Synchronization Process - Parent Number</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELMU741</small></td>
+<td style="width: 366px;"><small>Set Error Level Document Company - UK - 04</small></td>
+</tr>
+<tr style="height: 12.75pt;">
+<td style="height: 12.75pt; width: 140px;" height="17"><small>DELPN916</small></td>
+<td style="width: 366px;"><small>License Plate AutoBuild Failed</small></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: <br />
+<ul>
+<li>Description of above figure may show the member of data structure in issuing error/warning/information</li>
+<li>&nbsp;In case there is substitute error message which meets your requirement, do make use of it</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+<hr />
+<h3 class="km"><br /> <br /> <big>Example of C Functions to have this implementation:</big></h3>
+<ul>
+<ul>In case you need to create your own business function, below list of objects are good example for creation. For this example, error code 078L is defined "Initialization of cache &amp;1 failed". As we can see from this example, &amp;dsDE0022 (Value of pointer - Memory Address) is value as defined from previous line F42UI01.</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>B0800301&nbsp;&nbsp;&nbsp; Set Error Action Step 499Z or 499U or 499W&nbsp;&nbsp;&nbsp;</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>...</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>B4900870&nbsp;&nbsp;&nbsp; Set Error Substitution Text&nbsp;&nbsp;&nbsp;</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>...</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>In case you need to implement simple error message on browser, you may call JDE API jdeSetGBRError ().</ul>
+</ul>
+<p>&nbsp;</p>
+<ul>
+<ul>For example, if you call jdeSetGBRError(lpBhvrCom,lpVoid,(ID)0,_J("4363")), detail message on error on 4363 is to be displayed. For this example, error message is static. Another implemenation can be done by calling jdeErrorSet(lpBhvrCom, lpVoid, (ID)0, _J("4375"), (LPVOID) NULL). For this case the difference is that jdeErrorSet () stops you from handling any further events. @review this statement again ::::</ul>
+</ul>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+<div class="kmnotebox">Note: To have complete reference on EnterpriseOne business function, refer <a href="http://docs.oracle.com/cd/E13780_01/jded/html/docset.html%20">http://docs.oracle.com/cd/E13780_01/jded/html/docset.html </a><br /><ol>
+<li>Search for key words "<strong>Oracle Documentation Library</strong>" which shows Complete library of all documentation for all Oracle products</li>
+<li>Then scroll down to "JD Edwards EnterpriseOne"</li>
+<li>Click hyper link JD Edwards EnterpriseOne</li>
+<li>Look for "E13780-01" JD Edwards EnterpriseOne Tools Guides Release 8.98, which brings you to JD Edwards EnterpriseOne Tools 8.98 Guides</li>
+<li>Select "<strong>JD Edwards EnterpriseOne Tools 8.98 Development Standard for Business Function Programming Guide</strong>" and refer it</li>
+</ol></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

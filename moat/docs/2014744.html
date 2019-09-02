@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview Of Automatic Payment Processing Within EnterpriseOne Accounts Payable</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview Of Automatic Payment Processing Within EnterpriseOne Accounts Payable</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Automatic Payment Set Up Requirements</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section32">1. Voucher Entry Master Business Function (P0400047)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">2a. User Define Codes (UDC) 04/RC</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">2b. User Define Code (UDC) 04/PP</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">3. GL Bank Account Set Up (P0030G)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">4. Payee Control Set Up (X0450, P0450)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">5. Payment Instrument and Print Program Set Up (P0417)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">6. Print Sequences (P0415)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">7. Set up payment information by Business Unit (Optional)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">8. Prevent your Company name from printing on payments. (Optional)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">9. Run Cash Requirements Report (R04431)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>Steps To Create Automatic Payments</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">1. Complete set up requirements</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">2. Supplier Balance Report (R7404002, R7404003)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">3. Use Speed Status Change To Update Voucher(s) (P0411s)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">4. Create a Payment Control Group (R04570)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">5. Write Your Payment Group and Review (P04571, R04571)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section318">6a. Print Your Payments Or</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section319">6b. Print Debit Statements Or</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section320">6c. Complete Electronic Funds Transfer (EFT/ACH) (F04572OW) Or</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section321">6d. Complete EDI Outbound Payment Processing</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section322">7. Update Your Payment Group (P04571, R04575)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section323">8. Post Your Payment Batch (P09801, R09801)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section324"><strong>Deleting or Voiding Automatic Payments</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section325">9. Deleting or Voiding Automatic Payments (P0413V)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section326"><strong>Additional Processes</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section327">How To Create Negative Payment (Supplier Refund) (P0413M)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section328">How To Prevent Duplicate Payment Batches</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section329">How To Set Up Positive Pay</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section330">Understanding Multi Currency With Payment Processing</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section331">How To Use Translation Routine X00500</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section332"><strong>Flow Chart Of Automatic Payment Processing</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section333"><strong>Support Resource</strong></a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview</strong></h3>
+<p>Automatic payments are used to group vouchers and produce multiple payments in a single payment run. Automatic payment processing enables you to manage your payments efficiently and take advantage of favorable discount terms whenever possible. Use automatic payment processing to pay vouchers during your usual payment cycle.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are configuring the JD Edwards EnterpiseOne system to process Automatic Payments.<strong><br /> </strong></p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Automatic Payment Set Up Requirements</strong></h3>
+<table style="width: 1146px; height: 998px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="width: 33%; padding: 4px;">Setup Feature</th>
+<th class="km" style="width: 33%; padding: 4px;">Description</th>
+<th class="km" style="width: 33%; padding: 4px;">Troubleshooting Knowledge Document</th>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section32"></a><h4 class="km">1. Voucher Entry Master Business Function (P0400047)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>To ensure payments for vouchers are assigned to the correct payee, set Processing Option 5: Alternate/Payee on the Defaults tab to one of the following values:
+<ul>
+<li>Blank: This value specifies that the Alternate/Payee (data dictionary item PYE) field is filled with the Supplier Number.</li>
+<li>1: This value specifies that the Payee field is filled with the value entered into the Factor/Special Payee (data dictionary item AN85) in the Supplier Master (P04012).</li>
+</ul>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+  <!-- redirect 1408545.1 to 2425008.2 -->
+<li>For full details refer to <a href='../docs/2425008.html'><em>"Overview of Standard Vouchers in EnterpriseOne Accounts Payable."</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section33"></a><h4 class="km">2a. User Define Codes (UDC) 04/RC</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>(DEU) Germany Set up the Replaced Character (04/RC) UDC. This UDC enables you to specify acceptable characters that the system uses to replace unacceptable characters in a text file.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1991768.html'><em>"Overview of User Define Codes Within EnterpriseOne Accounts Payable Setup (P0004A)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section34"></a><h4 class="km">2b. User Define Code (UDC) 04/PP</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">Enter a value that exists in the Produce Bank File (04/PP) UDC table to specify the program used to print accounts payable payments.</span></li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1406480.html'><em>"How To Write, Update Or Undo Work With Automatic Payment Control Groups Within EnterpriseOne Accounts Payable (P04571, R04571, R04575)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section35"></a><h4 class="km">3. GL Bank Account Set Up (P0030G)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>The AP GL Bank Account is the account the system uses when generating payments. The account must exist in the Account Master (F0901) before it can be defined in Work with GL Bank Accounts (P0030G).  </li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/2015705.html'><em> "Troubleshooting GL Bank Account Set Up (P0030G)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section36"></a><h4 class="km">4. Payee Control Set Up (X0450, P0450)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Payee Control is an audit feature in the Accounts Payable module used to prevent fraud. When changes are made to critical payment information, the system writes a record to the Payee Control table (F0450). </li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/2014777.html'><em>"Troubleshooting Payee Control (X0450, P0450)"</em></a></li>
+<li>or Refer to <a href='../docs/2017047.html'><em>"Frequently Asked Questions Regarding Payee Control Within EnterpriseOne Accounts Payable"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section37"></a><h4 class="km">5. Payment Instrument and Print Program Set Up (P0417)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Payment instruments are used to determine what type of payment is produced for a voucher or group of vouchers. Payment instruments are defined in UDC table 04/PY (Payment Instrument). The Code (data dictionary item KY) in this table is a  single character field and can be any letter, number or symbol.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/2015701.html'><em>"Troubleshooting Payment Instrument and Print Program Set Up and Errors (P0417)"<span id="kmPgTpl:r1:0:ol22" class="xq" style="font-weight: bold; color: black; font-size: 130%;"></span></em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section38"></a><h4 class="km">6. Print Sequences (P0415)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Print Sequences give users control over the order payments are printed. For example, payments may need to be printed in descending order by amount so that the largest payment amounts print first. Sequence IDs configured in Work with Payment Sequences (P0415) are used to establish the printing order and can contain up to six data items from fields in the A/P Payments Worktable that are defined in UDC table H04/SF (Auto Payment Sequence Items). </li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/2015689.html'><em> "Troubleshooting Print Sequence Set Up (P0415)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section39"></a><h4 class="km">7. Set up payment information by Business Unit (Optional)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<p> </p>
+<ul>
+<li>You might need to set up payment information by business unit if you produce payments by business unit. If you do so, payments are processed using:</li>
+</ul>
+<ul class="_mce_tagged_br">
+<li style="list-style-type: none;">
+<ul>
+<li>
+<p style="margin: 0px;">Business unit information from the voucher.</p>
+</li>
+<li>
+<p style="margin: 0px;">Bank account information from the business unit.</p>
+</li>
+</ul>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15084/stup_ap_fr_auto_pmnt_prcsg.htm#EOAAP00077" target="_blank">Section 6 in Chapter 3 of the Accounts Payable online guide.</a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section310"></a><h4 class="km">8. Prevent your Company name from printing on payments. (Optional)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>You can prevent a company name from printing on your payments, one by one, by setting a processing option in the Auto Payments Write/Reset program (P04572) to print company names on payments. The processing option directs the Auto Payments Write/Reset program to print the company name on payments.</li>
+<li>By activating the option on the Automatic Payment Setup program (P0410), you can exclude individual company names from printing on payments even when the processing option on the P04572 is set to print company names. The system stores company payment information in the Company Constants (F0010) table.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15084/stup_ap_fr_auto_pmnt_prcsg.htm#EOAAP00078" target="_blank">Section 7 in Chapter 3 of the Accounts Payable online guide. </a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section311"></a><h4 class="km">9. Run Cash Requirements Report (R04431)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>
+<p><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">The Cash Requirements Report can be used to determine how much money is needed for payments and how much money is available in your bank accounts. It can also be used to review upcoming cash requirements.</span></p>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/660975.html'><em>"How To Run Cash Requirement Report in Accounts Payable (R04431)"</em></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section312"></a><h3 class="km"><strong>Steps To Create Automatic Payments</strong></h3>
+<table style="width: 1145px; height: 1099px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="width: 33%; padding: 4px;">Process Order</th>
+<th class="km" style="width: 33%; padding: 4px;">Description</th>
+<th class="km" style="width: 33%; padding: 4px;">Troubleshooting Knowledge Document</th>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section313"></a><h4 class="km">1. Complete set up requirements</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Complete all required set up listed above to be able to create Automatic Payments.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li class="km"> See "Automatic Payment Set Up Requirements" at the top of this overview document.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section314"></a><h4 class="km">2. Supplier Balance Report (R7404002, R7404003)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>The Generate Supplier Balance AP (R7404003) populates the Supplier Balance Worktable (F74412) with supplier transactions.  This information is then used when running the Supplier Balance Report (R7404002). The way information is grouped in the Supplier Balance Worktable (F74412) table determines how it is printed on the Supplier Balance Report (R7404002).</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li class="km">For full details refer to <a href='../docs/1484327.html'><em> "Customer/Supplier Balance Report (R7404003, R7403B001, R7404002)"<br /></em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section315"></a><h4 class="km">3. Use Speed Status Change To Update Voucher(s) (P0411s)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">Before creating payment groups, vouchers can be reviewed, modified, or released for payment in the Speed Status Change (P0411S) application.</span> </li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/2425008.html'><em>"Overview of Speed Status Change Within EnterpriseOne Accounts Payable (P0411S) [Video]"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section316"></a><h4 class="km">4. Create a Payment Control Group (R04570)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">The Create Payment Groups (R04570) program selects open vouchers to be paid. Only vouchers with a Pay Status (data dictionary item PST) of A (Approved) are selected. the Speed Status Change (P0411S) application can be used to update a voucher's Pay Status (PST) from H (Held) to A (Approved).  The processing options and data selection of the Create Payment Control Groups (R04570) should be used to limit the selection of vouchers to be paid. After a voucher is selected for a payment control group, its Pay Status (PST) is changed from A (Approved) to # (Payment in Process).  The Create Payment Control Groups UBE (R04570) updates three temporary work files.</span><span id="kmPgTpl:r1:ot71" class="kmContent" style="font-size: small; color: black;"> <span style="text-decoration: underline;"></span></span> </li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1300877.html'><em>"How To Create Automatic Payment Control Groups (R04570, P0400047, P0030G, P0417, P0415)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section317"></a><h4 class="km">5. Write Your Payment Group and Review (P04571, R04571)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Once a payment control group is created, next you need to WRITE the payments creating either a live physical check (payment) to Suppliers or creating a Electronic Funds Transfer text file. This process creates a PDF to review, print the checks before you complete the process. Consider this step 1 in Working the payment control group.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>To Troubleshoot issues with Work With Payment Groups refer to <a href='../docs/2018429.html'><em>"Troubleshooting Work With Payment Control Groups (P04571, R04571, R04575)"</em></a></li>
+<li>For full details refer to <a href='../docs/1406480.html'><em>"How To Write, Update Or Undo Work With Automatic Payment Control Groups Within EnterpriseOne Accounts Payable (P04571, R04571, R04575)"</em></a></li>
+<<li>Or refer to <a href='../docs/1384537.html'><em>"Frequently Asked Questions Regarding Writing, Updating, Undoing Work With Payment Groups (P04571, R04571, R04575)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section318"></a><h4 class="km">6a. Print Your Payments Or</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Print your payments to mail out to your Suppliers OR</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1960692.html'><em>"Frequently Asked Questions Regarding Printing Automatic Payments Within EnterpriseOne Accounts Payable (P04572)"</em></a></li>
+<li>Or refer to <a href='../docs/2018440.html'><em>"Troubleshooting Printing Automatic Payments Within EnterpriseOne Accounts Payable (R04572)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section319"></a><h4 class="km">6b. Print Debit Statements Or</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li> <span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">A debit statement is printed for negative payments and is used to notify suppliers when they have been overpaid. By assigning a program to the debit statement component, a separate debit statement form is printed with a payment. A debit statement is automatically generated if debit memos and open vouchers for a supplier net to zero or net to a negative total.</span><span id="kmPgTpl:r1:ot71" class="kmContent" style="font-size: small; color: black;"> <span style="text-decoration: underline;"><br /></span></span></li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1406480.html'><em>"How To Write, Update Or Undo Work With Automatic Payment Control Groups Within EnterpriseOne Accounts Payable (P04571, R04571, R04575)"</em></a></li>
+<li>Or refer to <a href="../docs/1960710.html"> Frequently Asked Questions Regarding Debit Statements Within Automatic Payment Processing in Accounts Payable (P04574)</a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section320"></a><h4 class="km">6c. Complete Electronic Funds Transfer (EFT/ACH) (F04572OW) Or</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Review your EFT/ACH text file in F04572OW to ensure it accurate to send to your bank for processing.</li>
+<li>Note - Here may be when you may want to use Positive Pay process as well.  </li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/2195563.html'<em> "How To Create Electronic Funds Transfer (EFT) Automatic Payments for CTX, PPD and IAT Formats (R04572T1, R04572T2, R04572T3)"<br /></em></a></li>
+<li>Or refer to <a href='../docs/1384875.html'><em>"Frequently Asked Questions Regarding Electronic Funds Transfer (EFT) (R04572T1, R04572T2)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section321"></a><h4 class="km">6d. Complete EDI Outbound Payment Processing</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Using EDI "Electronic Data Interchange" is another format of EFT/ACH that is available as an option.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/661977.html'><em>"How To Set Up and Process EDI Payments (820) (R47052T/R47057/R47058)" </em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section322"></a><h4 class="km">7. Update Your Payment Group (P04571, R04575)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>After you either print or file your payments electronically now you can Update your payment control group which moves the payment group from the temporary payment tables into the permanent payment tables so you can post them to your bank and A/P trade accounts.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href="../docs/1406480.html"> How To Write, Update Or Undo Work With Automatic Payment Control Groups Within EnterpriseOne Accounts Payable (P04571, R04571, R04575)</a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section323"></a><h4 class="km">8. Post Your Payment Batch (P09801, R09801)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">When you create a payment, after updating your automatic payment group and after creating your manual payment, you update the Payment header table (F0413) and Payment detail table (F0414) which stores the voucher detail information. Before posting this batch there is no data in the General Ledger table (F0911) created.  After you post the payment batch, you update the payment header table (F0413) and paymente detail table (F0414) post status field (F0413) and post code field (F0414), if successful, to status of D and the General Ledger table (F0911) will create the payment record (PK or PN) with a post code status, if successful, of P and creates a AE entry for your AP trade account.</span></li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1959943.html'><em>"Understanding Accounts Payable Payment Post Process Within JD Edwards EnterpriseOne Financial Management (R09801, P00241)".</em></a></li>
+<li><a href='../docs/1642828.html'>Troubleshooting Non-Currency Accounts Payable Automatic Payment Batch (K) Post Failure &ndash; Out Of Balance Condition In EnterpriseOne (R09801, P09801)</a>.</li>
+<li><a href='../docs/1642915.html'>Troubleshooting Currency Accounts Payable Automatic Payment Batch (K) Post Failure &ndash; Out Of Balance Condition In EnterpriseOne (R09801, P09801)</a>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section324"></a><h3 class="km"><strong>Deleting or Voiding Automatic Payments</strong></h3>
+<table style="width: 1144px; height: 145px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="width: 33%; padding: 4px;">Process</th>
+<th class="km" style="width: 33%; padding: 4px;">Description</th>
+<th class="km" style="width: 33%; padding: 4px;">Troubleshooting Knowledge Document</th>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<a name="aref_section325"></a><h4 class="km">9. Deleting or Voiding Automatic Payments (P0413V)</h4>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Posted payments cannot be deleted, they must be voided. The Posted (data dictionary item POST) Code of a payment indicates if it has been posted before. The statuses are:
+<ul>
+<li>Blank: The payment was not posted or voided.</li>
+<li>D: The payment was posted.</li>
+<li>P: The payment post ended in an error; the system wrote GL entries to the bank account.</li>
+</ul>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1433338.html'><em>"How To Delete, Void or Unreconcile Automatic and Manual Payments (P0413V, P09131)"</em></a></li>
+<li>Or refer to <a href='../docs/1433454.html'><em>"Frequently Asked Questions Regarding Deleting, Voiding or Unreconciling Automatic and Manual Payments (P0413V, P09131)"</em></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<a name="aref_section326"></a><h3 class="km"><strong>Additional Processes</strong></h3>
+<table style="width: 1147px; height: 495px;" border="1" cellspacing="1" cellpadding="4">
+<tbody>
+<tr>
+<th class="km" style="width: 33%; padding: 4px;">Process</th>
+<th class="km" style="width: 33%; padding: 4px;">Description</th>
+<th class="km" style="width: 33%; padding: 4px;">Troubleshooting Knowledge Document</th>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>
+<a name="aref_section327"></a><h4 class="km">How To Create Negative Payment (Supplier Refund) (P0413M)</h4>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li> This is only available through Manual Payment Processing.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to &lt;Document 2014215.1&gt; - <em>"How To Create a Negative Manual Payment Also Known as a Supplier Refund Payment (P0413M)"</em></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>
+<a name="aref_section328"></a><h4 class="km">How To Prevent Duplicate Payment Batches</h4>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>There may be times where Writing or Updating Payments groups where duplicate payment groups/batches are created. This provides instructions on how to prevent this from occurring.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1957784.html'><em>"Troubleshooting Accounts Payable Duplicate Payment Batches (R09801, P09801)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>
+<a name="aref_section329"></a><h4 class="km">How To Set Up Positive Pay</h4>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li><span id="kmPgTpl:r1:ot71" class="kmContent" style="color: black;">When you use positive pay, you create a file for your bank that includes information for each check that you printed during the day, such as check number, date, amount, and account number. The bank compares the information on the checks that they receive with the information in this file, and if the information for any of the checks does not match the file, the system does not pay the checks</span>.</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href="../docs/651367.html">How To Set Up and Process Positive Pay (R04586, P007101)</a></li>
+<li><em>Or refer to <a href='../docs/642096.html'>"Frequently Asked Questions Regarding Text File Processor (P007101)"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>
+<a name="aref_section330"></a><h4 class="km">Understanding Multi Currency With Payment Processing</h4>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>A foreign currency payment is a payment that is in the foreign (transaction) currency of the voucher. You specify the foreign currency of a payment at the time the payment is entered. When entering a foreign currency payment:
+<ul>
+<li>The foreign currency of a payment must be the same as the transaction currency of the voucher.</li>
+<li>The base currency of the payment must be the same as the domestic (base) currency of the voucher.</li>
+</ul>
+</li>
+<li>Alternate currency payment is available as well. <br />
+<ul>
+<li>Example: Voucher is a foreign currency with USD as base and CAD as foreign, however, you need to pay in EUR.</li>
+</ul>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>To Troubleshoot Multi-Currency Payment Errors refer to <a href='../docs/2017997.html'>Troubleshooting Multi-Currency Payment Error(s)</a></li>
+<li>For full details refer to <a href='../docs/1432621.html'><em>"How To Understand Multi Currency within Automatic and Manual Payments in Accounts Payable"</em></a></li>
+<li>Or refer to <a href='../docs/1432665.html'><em>"Frequently Asked Questions Regarding Multi Currency Automatic Payments Within EnterpriseOne Accounts Payable"</em></a></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>
+<a name="aref_section331"></a><h4 class="km">How To Use Translation Routine X00500</h4>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>Translation routine X00500 is an optional feature for payment processing (either Automatic or Manual) that allows you to convert numeric values into words for a specific country. For example: <br />
+<ul>
+<li>X00500CA converts numeric value to words for Canada. </li>
+</ul>
+</li>
+</ul>
+</td>
+<td class="km" style="width: 33%; padding: 4px;">
+<ul>
+<li>For full details refer to <a href='../docs/1991871.html'><em>"Overview of Translation Routine X00500 Within EnterpriseOne Accounts Payable (X00500)"</em></a></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section332"></a><h3 class="km"><strong>Flow Chart Of Automatic Payment Processing</strong></h3>
+<p>To understand the full cycle of create Automatic Payments you can refer to this flow chart below for details.</p>
+<p><img src="../images/auto01.png" border="0" alt="flowchart" title="flowchart" hspace="0" vspace="0"/></p>
+<p> </p>
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting Automatic Accounting Instructions Within EnterpriseOne Accounts Payable (P0012)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting Automatic Accounting Instructions Within EnterpriseOne Accounts Payable (P0012)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#TRBLSHOOT">Troubleshooting Steps</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>AP Trade Account Related&nbsp; - AAI Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Error ID: 2977</strong> "AAI Account for G/L Class Code Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Error ID: 2976</strong> - "AAI for G/L Class Code Invalid"</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section24"><strong>Bank Account Related&nbsp; - AAI Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Error ID: 2979</strong> - "AAI Account for Bank Account Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Error ID: 2978</strong> - "AAI for Bank Account Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Error ID: 0015I</strong> - "PBC01 and PBC02 AAI Required"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Error ID: 120D</strong> - "'PBCxx' AAI's Not Set Up for Co &amp;1 ."</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section29"><strong>Discount Related - AAI Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section210"><strong>Error ID: 2974</strong> - "AAI Account for Discount Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Error ID: 2972</strong> - "AAI for Discount Account Invalid"</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section212"><strong>Logged Voucher Related - AAI Error</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section213"><strong>Error ID: 3986</strong> - "AAI PQ Account Not Set Up"</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section214"><strong>Multi Currency - AAI Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section215"><strong>Error ID: 087B</strong> - "AAI Account for Alt. Gain/Loss Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section216"><strong>Error ID: 2975</strong> - "AAI Account for Gain/Loss Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section217"><strong>Error ID: 085H</strong> - "AAI Acct. for Alternate Currency Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section218"><strong>Error ID: 087C</strong> - "Alt. Currency Gain/Loss AAIs Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section219"><strong>Error ID: 1130</strong> - "Currency Gain/Loss AAI Account Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section220"><strong>Error ID: 2973</strong> - "Gain/Loss and/or Discount AAIs Invalid"</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section221"><strong>Intercompany Settlements Related - AAI Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section222"><strong>Error ID: 045K</strong> - "InterCo Settlement AAI Error"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section223"><strong>Error ID: 4662</strong> - "InterCo Settlement AAI Error"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section224"><strong>Error ID: 470K</strong> - "InterCo Settlement AAI Error"</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section225"><strong>General AAI Missing Errors</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section226"><strong>Error ID: 023Q</strong> - "AAI Missing"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section227"><strong>Error ID: 023T</strong> -&nbsp; "AAI missing for a specific GL Offset"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section228"><strong>Error ID: 2507</strong> - "AAI Invalid - Use Reference Pgm (F2)"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section229"><strong>Error ID: 0237</strong> - "AAI Not Found"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section230"><strong>Error ID: 031T</strong> - "AAI Account Not Setup"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section231"><strong>Error ID: 1964</strong> - "AAI Account Number Invalid"</a></td></tr></table>
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides troubleshooting suggestions for errors related to automatic accounting instructions within EnterpriseOne Accounts Payable.</p>
+<H2 class=km><A NAME="TRBLSHOOT"></A>Troubleshooting Steps</H2>
+<a name="aref_section21"></a><h3 class="km"><strong>AP Trade Account Related&nbsp; - AAI Errors</strong></h3>
+<a name="aref_section22"></a><h4 class="km"><strong>Error ID: 2977</strong> "AAI Account for G/L Class Code Invalid"</h4>
+<p>CAUSE . . . . The Account Number associated with the Automatic Accounting Instruction (AAI) for the G/L Class Code is invalid.</p>
+<p>RESOLUTION . Use the AAI Display program (P00121) to correct the Account Number associated with the G/L Class Code AAI. NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<p><strong>Scenario:</strong> What causes the "AAI for G/L Class Code Invalid" error when entering a Pre-Payment Voucher?</p>
+<p><strong>Solution:</strong> In case of entering a Prepayment voucher, please check the value specified in Processing Option 1. G/L Offset Account on the Prepayments tab of the Standard Voucher Entry (P0411) application. Depending on the valuse specified,it is required to setup the PCxxxx AAI (where xxxx is GL offset) for the mentioned GL Offset.</p>
+<hr />
+<p>&nbsp;</p>
+<a name="aref_section23"></a><h4 class="km"><strong>Error ID: 2976</strong> - "AAI for G/L Class Code Invalid"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instruction (AAI) for the G/L Class Code does not exist.</p>
+<p>RESOLUTION . Add the missing AAI through the Automatic Accounting Instructions program. NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<p><strong>Scenario:</strong> Recieving Error 2976 "AAI for G/L Class Code Invalid"</p>
+<p><strong>Resolution:</strong> Processing Option Prepayments Tab - GL Offset Account.&nbsp; Use this processing option to set up automatic accounting instructions (AAI item PCxxxx) to predefine classes of automatic offset accounts for accounts. For example, you can assign G/L offsets as follows:<br /><br /></p>
+<ul>
+<li>Blank or 4110 - Trade Accounts Payable</li>
+<li>RETN or 4120 - Retainage Payable</li>
+<li>OTHR or 4230 - Other Accounts Payable (see A/P class code - APC)</li>
+<li>PREP or 4111 - Prepayment A/P Trade Account</li>
+</ul>
+<p>Enter the code for the G/L offset account that the system uses to create prepayment pay items. You must enter a value to allow automatic creation of prepayment pay items. If you leave this field blank (default), the system uses the Standard Voucher Entry program.</p>
+<hr />
+<a name="aref_section24"></a><h3 class="km"><strong>Bank Account Related&nbsp; - AAI Errors</strong></h3>
+<a name="aref_section25"></a><h4 class="km"><strong>Error ID: 2979</strong> - "AAI Account for Bank Account Invalid"</h4>
+<p>CAUSE . . . . The Account Number associated with the Automatic Accounting Instruction (AAI) for the Bank Account is invalid.</p>
+<p>RESOLUTION . Use the AAI Display program (P00121) to correct the Account Number associated with the Bank Account AAI. NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<hr />
+<p>&nbsp;</p>
+<a name="aref_section26"></a><h4 class="km"><strong>Error ID: 2978</strong> - "AAI for Bank Account Invalid"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instruction (AAI) for the Bank Account does not exist.</p>
+<p>RESOLUTION . Add the missing AAI through the Automatic Accounting Instructions program. NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong>Error ID: 0015I</strong> - "PBC01 and PBC02 AAI Required"</h4>
+<p>Cause:The Post Balances by Currency AAI&rsquo; s PBC01 and PBC02 must exist when enabling the Post by Currency flag in the Company Constants program (P0010).</p>
+<p>Resolution: Create the PBC01 and PBC02 AAIs for the company.</p>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Error ID: 120D</strong> - "'PBCxx' AAI's Not Set Up for Co &amp;1 ."</h4>
+<p>CAUSE . . . WARNING ONLY! The "PBCxx" AAI Account Range(s) are not set up correctly for company &amp;1 . This company is flagged in the company constants file for 'Posting Balances by Currency'. At least one "PBC01" AAI specifying a beginning account range should be set up, as well as an ending account range in the "PBC02" AAI. Additional PBC account ranges may also be set up as PBC03, PBC04, etc.<br /><br />RESOLUTION. . Set up the proper "PBCxx" account ranges in Automatic Accounting Instructions. A generic AAI range may be set up for company "00000" to be used by all PBC companies, or a specific AAI range may be set up for an individual company.&nbsp; NOTE: If no other errors occur- red, this batch posted successfully... However, transactions were posted in mixed currency balances, since AA and CA account balances will not specify the originating currency (CRCD) unless the account has a currency code OR falls within a PBC account range in AAIs.</p>
+<hr />
+<a name="aref_section29"></a><h3 class="km"><strong>Discount Related - AAI Errors</strong></h3>
+<a name="aref_section210"></a><h4 class="km"><strong>Error ID: 2974</strong> - "AAI Account for Discount Invalid"</h4>
+<p>CAUSE . . . . The Account Number associated with the Automatic Accounting Instruction (AAI) used to determine the journal entry account number for the Discount account is invalid.</p>
+<p>RESOLUTION . Use the AAI Display program (P00121) to correct the Account Number associated with the Discount AAI.&nbsp; NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<hr />
+<a name="aref_section211"></a><h4 class="km"><strong>Error ID: 2972</strong> - "AAI for Discount Account Invalid"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instruction (AAI) used to determine the journal entry account number for the Discount account does not exist.</p>
+<p>RESOLUTION . Add the missing AAI through the Automatic Accounting Instructions program. NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility. Type the error ID of this error message (2972) in the "Reference #" field and press F2.</p>
+<hr />
+<a name="aref_section212"></a><h3 class="km"><strong>Logged Voucher Related - AAI Error</strong></h3>
+<a name="aref_section213"></a><h4 class="km"><strong>Error ID: 3986</strong> - "AAI PQ Account Not Set Up"</h4>
+<p>Cause. . . . . The Automatic Accounting Instruction required for the Accounts Payable Suspense Trade Account is not set up.</p>
+<p>Resolution . . The Suspense Account method used during the redistribution process has been activated at the company level. If you want to continue with the suspense method, then you must set up an AAI for a PQ account. If you do not want to used the suspense method, then you must turn off the suspense method flag for a particular company in the Company Constants file (F0010).</p>
+<hr />
+<a name="aref_section214"></a><h3 class="km"><strong>Multi Currency - AAI Errors</strong></h3>
+<a name="aref_section215"></a><h4 class="km"><strong>Error ID: 087B</strong> - "AAI Account for Alt. Gain/Loss Invalid"</h4>
+<p>CAUSE . . . . The Account Number associated with the Automatic Accounting Instruction (AAI) used to determine the journal entry account number for the Gain or Loss account for an Alternate Currency Payment or Receipt is invalid.</p>
+<p>RESOLUTION . Use the AAI Display program (P00121) to correct the Account Number associated with the Gain AAI (PY,RY) or Loss AAI (PZ,RZ).</p>
+<hr />
+<p>&nbsp;</p>
+<a name="aref_section216"></a><h4 class="km"><strong>Error ID: 2975</strong> - "AAI Account for Gain/Loss Invalid"</h4>
+<p>CAUSE . . . . The Account Number associated with the Automatic Accounting Instruction (AAI) used to determine the journal entry account number for the Gain or Loss account is invalid.</p>
+<p>RESOLUTION . Use the AAI Display program (P00121) to correct the Account Number associated with the Gain AAI or Loss AAI. NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<hr />
+<a name="aref_section217"></a><h4 class="km"><strong>Error ID: 085H</strong> - "AAI Acct. for Alternate Currency Invalid"</h4>
+<p>CAUSE . . . . The Account Number associated with the Automatic Accounting Instruction (AAI) used to determine the journal entry account number for the Alternate Currency Clearing Account is invalid or is a monetary account.</p>
+<p>RESOLUTION . Use the AAI Display program (P00121) to correct the Account Number associated with the Alternate Currency Clearing Account AAI.</p>
+<hr />
+<a name="aref_section218"></a><h4 class="km"><strong>Error ID: 087C</strong> - "Alt. Currency Gain/Loss AAIs Invalid"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instructions (AAIs) used to determine the journal entry account numbers for the Gain/Loss for Alternate Currency Payments or Receipts do not exist. RESOLUTION . Add the missing AAIs through the Automatic Accounting Instructions program. The AAIs which need to be set up for Alternate Currency Gain/Loss are: PY - Realized Gain on Alternate Currency Payments PZ - Realized Loss on Alternate Currency Payments RY - Realized Gain on Alternate Currency Receipts RZ - Realized Loss on Alternate Currency Receipts</p>
+<hr />
+<a name="aref_section219"></a><h4 class="km"><strong>Error ID: 1130</strong> - "Currency Gain/Loss AAI Account Invalid"</h4>
+<p>CAUSE . . . . If you are using foreign currency accounting, an Automatic Accounting Instruction (AAI) for currency gains and losses must be set up and it must be a valid account in the Account Master file. In Accounts Receivable, the AAIs are "RG " and "RL ". In Accounts Payable, the AAIs are "PG " and "PL ". These may be set up by company or just for the default '000' company.</p>
+<p>RESOLUTION. . Review the setup of your Automatic Accounting Instructions for the items mentioned and add or change as required.</p>
+<hr />
+<a name="aref_section220"></a><h4 class="km"><strong>Error ID: 2973</strong> - "Gain/Loss and/or Discount AAIs Invalid"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instructions (AAIs) used to determine the journal entry account numbers for the Gain/Loss or Discount accounts do not exist.</p>
+<p>RESOLUTION . Add the missing AAIs through the Automatic Accounting Instructions program. The AAIs which need to be set up for Gain/Loss and Discounts are: PG - Realized Gain on Foreign Currency Payments PL - Realized Loss on Foreign Currency Payments PKD - Discounts Available PKL - Discounts Lost NOTE . . . . You may display the invalid AAIs that caused this error by using the "Referenced Program" facility (Option 2).</p>
+<hr />
+<a name="aref_section221"></a><h3 class="km"><strong>Intercompany Settlements Related - AAI Errors</strong></h3>
+<a name="aref_section222"></a><h4 class="km"><strong>Error ID: 045K</strong> - "InterCo Settlement AAI Error"</h4>
+<p>CAUSE . . . . Your AAI for item &amp;1 , company &amp;2 (intercompany settlements) are not set up correctly.</p>
+<p>RESOLUTION. . Verify that you have intercompany settlements setup correctly. If the Intercompany Settlement method is set to '1', you must have an 'ICH' AAI for company '00000'. If the Intercompany Settlement method is set to '1' , '2', or '3' you must have an 'ICCC' AAI set up for all account companies.</p>
+<hr />
+<a name="aref_section223"></a><h4 class="km"><strong>Error ID: 4662</strong> - "InterCo Settlement AAI Error"</h4>
+<p>CAUSE . . . . Your AAI for intercompany settlements are not set up correctly.</p>
+<p>RESOLUTION. . Verify that you have intercompany settlements setup correctly. If the Intercompany Settlement method is set to '1', you must have an 'ICH' AAI for company '00000'. If the Intercompany Settlement method is set to '1', '2', or '3' you must have an 'ICCC' AAI set up for all account companies.</p>
+<hr />
+<p>&nbsp;</p>
+<a name="aref_section224"></a><h4 class="km"><strong>Error ID: 470K</strong> - "InterCo Settlement AAI Error"</h4>
+<p>CAUSE . . . . Your AAI for item &amp;1 , company &amp;2 , (intercompany settlements) is not set up correctly.</p>
+<p>RESOLUTION. . Verify that you have intercompany settlements setup correctly. If the Intercompany Settlement method is set to '1', you must have an 'ICH' AAI for company '00000'. If the Intercompany Settlement method is set to '1', '2', or '3', you must have an 'ICCC' AAI set up for all account companies.</p>
+<hr />
+<a name="aref_section225"></a><h3 class="km"><strong>General AAI Missing Errors</strong></h3>
+<a name="aref_section226"></a><h4 class="km"><strong>Error ID: 023Q</strong> - "AAI Missing"</h4>
+<p>CAUSE . . . . The &amp;1 Automatic Accounting Instruction (AAI) for company &amp;2 does not exist.</p>
+<p>RESOLUTION . Add the missing AAI through the Automatic Accounting Instructions program. For OneWorld: If currency is on, the currency code will be evaluated, if passed. If Allow Multi-Currency Intercompany Transactions is on in the General Accounting Constants, then if the company currency code is different than company zero, and no AAI is set up for the company, the account for company zero will be used and no errors are set. If Allow Multi-Currency Intercompany Transactions is not on, if the company currency code is different than company zero, and no AAI is set up for the company, this error will be given.</p>
+<hr />
+<a name="aref_section227"></a><h4 class="km"><strong>Error ID: 023T</strong> -&nbsp; "AAI missing for a specific GL Offset"</h4>
+<p>CAUSE . . . . The &amp;1 Automatic Accounting Instruction (AAI) for company &amp;2 and GL Offset &amp;3 does not exist.</p>
+<p>RESOLUTION . Add the missing AAI through the Automatic Accounting Instructions program.</p>
+<hr />
+<a name="aref_section228"></a><h4 class="km"><strong>Error ID: 2507</strong> - "AAI Invalid - Use Reference Pgm (F2)"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instruction (AAI) used to determine the journal entry account number either does not exist or specifies an invalid account number.</p>
+<p>RESOLUTION. . Add the missing AAI through the Automatic Accounting Instructions program or update the existing AAI to specify a valid account number. NOTE: You may display the invalid AAIs that caused this error by using the "Referenced Program" facility. Type the error ID (2507) in the "Reference #" field and press function key 2 (F2).</p>
+<hr />
+<a name="aref_section229"></a><h4 class="km"><strong>Error ID: 0237</strong> - "AAI Not Found"</h4>
+<p>CAUSE . . . . The Automatic Accouting Instruction account number is not set up in the AAI file for either the discount taken, discount lost, adjustment reason or job closing.</p>
+<p>RESOLUTION. . The accounts being validated are: A/R . . . . . . Adjustment Reason = 'RA + adjustment reason ' Discount Taken = 'RKD ' VAT Tax Account = 'PT + G/L Offset' A/P . . . . . . Discount Taken = 'PKD ' Discount Lost = 'PKL ' VAT Tax Account = 'RT + G/L Offset' Job Closing . . Prior Year End Balance in Closed Jobs Account = 'JCPB ' Job Revenue Account = 'JCR ' Job Costs Account = 'JCC ' Revenue Account = 'JCCA '</p>
+<hr />
+<a name="aref_section230"></a><h4 class="km"><strong>Error ID: 031T</strong> - "AAI Account Not Setup"</h4>
+<p>CAUSE . . . . The Automatic Accounting Instruction (AAI) does not exist in the Automatic Accounting Instruction Master file (F0012).</p>
+<p>RESOLUTION. . Add the missing AAI through the Single AAI Revisions (P0012) or Multiple AAI Revisions (P00122) program.</p>
+<hr />
+<a name="aref_section231"></a><h4 class="km"><strong>Error ID: 1964</strong> - "AAI Account Number Invalid"</h4>
+<p>CAUSE . . . . The account number specified with an Automatic Accounting Instruction (AAI) for this transaction does not exist in the Account Master file (F0901).</p>
+<p>RESOLUTION. . Change the account number associated with the AAI for this transaction to specify a valid account number.</p>
+<hr />
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

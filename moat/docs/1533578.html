@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Implement SELECT DISTINCT, SELECT ALL and function COUNT(*) through JDE APIs</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document is to show possible implementation on SELECT DISTINCT, SELECT ALL and SQL function count(*) through JDEBase (JD Edwards Database) APIs.</p>
+<p>&nbsp;This document is for developer expert in C and C++ programming language.</p>
+<p>Caution: This document may contain information, software, products or services which are not supported by Oracle Support Services and are being provided &lsquo;as is&rsquo; without warranty. Please refer to the following site for My Oracle Support Terms of Use: <a href="https://support.oracle.com/CSP/ui/TermsOfUse.html">https://support.oracle.com/CSP/ui/TermsOfUse.html</a></p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<p>API Documentation for your tools release<br /> &nbsp;&nbsp;&nbsp; |--- Application Program Interface (API)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- JDEBase<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- Data Manipulation<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- <a href="#selectall" alt="JDB_SelectAll()" title="JDB_SelectAll()">JDB_SelectAll</a> (Example of B03B0211)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- <a href="#selectkeyeddistinct" alt="JDB_SelectKeyedDistinct()" title="JDB_SelectKeyedDistinct()">JDB_SelectKeyedDistinct</a> (Example of B3401800)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |--- <a href="#selectkeyedgetcount" alt="JDB_SelectKeyedGetCount()" title="JDB_SelectKeyedGetCount()">JDB_SelectKeyedGetCount</a> (Example of B0400602)</p>
+<p>&nbsp;<br /> Refer to Oracle&reg; Database SQL Language Reference for SQL (Structured Query Language), go to <a>http://docs.oracle.com/cd/E11882_01/server.112/e26088/toc.htm</a></p>
+<p>Before proceed further, Refer <a href="#opentable" alt="JDB_OpenTable()" title="JDB_OpenTable()">JDB_OpenTable()</a> which is important for listed APIs above.</p>
+<p><big><big><a name="selectall"></a>JDB_SelectAll</big></big><br /> JDB_SelectAll performs a select on a table without a WHERE clause. This causes all records to be selected.</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Example of query:</span><br /> <span style="font-style: italic; color: #3333ff;"> sql&gt; </span><strong style="font-style: italic; color: #3333ff;">SELECT&nbsp; ALL * </strong><span style="font-style: italic; color: #3333ff;">FROM.F4211;&nbsp; or </span><span style="font-weight: bold; font-style: italic; color: #3333ff;">SELECT *</span><span style="font-style: italic; color: #3333ff;"> FROM PRODDTA.F4211;</span></p>
+<p><span style="font-weight: bold; text-decoration: underline;">Syntax:</span><br /> JDEDB_RESULT JDB_SelectAll(HREQUEST hRequest);</p>
+<p style="text-decoration: underline; font-weight: bold;">Parameters:</p>
+<table style="border-collapse: collapse; width: 510px; border-spacing: 1px; height: 37px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 71pt;" width="95" /> <col style="width: 285pt;" width="380" /> <col style="width: 154pt;" width="205" /></colgroup>
+<tbody>
+<tr style="height: 18pt;"><th class="xl63" style="height: 18pt; width: 71pt; background-color: #666666; color: white;">Parameter</th><th class="xl63" style="border-left: medium none; width: 285pt; background-color: #666666; color: white;">Notes</th><th class="xl63" style="border-left: medium none; width: 154pt; background-color: #666666; color: white;">Usage</th></tr>
+<tr style="height: 18pt;">
+<td class="xl64" style="border-top: medium none; height: 18pt; width: 71pt;" width="95" height="24">hRequest</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Valid request handle.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="font-weight: bold; text-decoration: underline;">Return Value:</p>
+<table style="border-collapse: collapse; width: 448px; height: 62px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 135px;">Return Value</th><th style="width: 309px; background-color: transparent;">Description</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 135px;" height="20">JDEDB_PASSED</td>
+<td style="width: 309px;">Return value if this succeeds</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 135px;">JDEDB_FAILED</td>
+<td style="vertical-align: top; width: 309px;">Return value if this fails</td>
+</tr>
+</tbody>
+</table>
+<p><br /> <span style="font-weight: bold; text-decoration: underline;"> Code Example:</span><br /> Example of B03B0211 (refer B30B0211.c file for whole code),&nbsp;</p>
+<div class="kmcodeblock">
+<p><span style="font-style: italic; color: #009900;">*** Break In Code ***</span></p>
+<p>&nbsp;<span style="font-style: italic; color: #009900;">/* Initialize environment handle. */</span><br /> idReturnCode = JDB_InitBhvr(lpBhvrCom, &amp;hUser, (JCHAR *) NULL, JDEDB_COMMIT_AUTO); <span style="font-style: italic; color: #009900;">/* this API sets &amp;hUser - User (specific) Handle/pointer which is to be used in JDB_OpenTable() */</span></p>
+<p><span style="font-style: italic; color: #009900;"> /* Open F03B11 table */</span><br /> &nbsp;idReturnCode = <span style="font-weight: bold; color: #3333ff;">JDB_OpenTable</span>(hUser, NID_F03B11, ID_F03B11_DOC_NUMBER__DOC_TYPE___A,<span style="font-style: italic;"> <span style="color: #009900;">/* User Handle, Table ID, Index */</span></span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nidF03B11Select, 37, (JCHAR *)NULL, &amp;hRequestF03B11);&nbsp;<span style="color: #009900;"> /</span><span style="font-style: italic; color: #009900;">* Set unique name for request handle e.g., hRequestF03B11 which is to be used in JDB_SelectAll() */</span></p>
+<p><span style="font-style: italic; color: #009900;">/* We must go through every record in the F03B11.&nbsp; */</span><br /> idReturnCode = <span style="font-weight: bold; color: red;">JDB_SelectAll</span>(hRequestF03B11);<br /> if (idReturnCode == JDEDB_PASSED)<br /> {<br /> &nbsp;&nbsp; &nbsp;idReturnCode = <span style="color: #3333ff; font-weight: bold;">JDB_Fetch</span>(hRequestF03B11, (void *)&amp;dsF03B11Fetch,(int)0); <span style="font-style: italic; color: #009900;">/* request, return value, nLock (not in use) */</span><br /> &nbsp;&nbsp; &nbsp;while (idReturnCode == JDEDB_PASSED) <span style="font-style: italic; color: #009900;">/* this code shows a typical WHILE loop which scan whole table based on primary key */</span><br /> &nbsp;&nbsp; &nbsp;{<br /> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<span style="color: #009900; font-style: italic;">/* break code to perform manipulation in memory */</span><br /> &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;idReturnCode = <span style="color: #3333ff; font-weight: bold;">JDB_Fetch</span>(hRequestF03B11, (void *)&amp;dsF03B11Fetch,(int)0); <span style="font-style: italic; color: #009900;">/* either implment exit routine or call JDB_Fetch() before End While otherwise, your code falls into infinite looping */</span><br /> &nbsp;&nbsp; &nbsp;} <span style="font-style: italic; color: #009900;">/* End While Loop */</span><br /> } <span style="font-style: italic; color: #009900;">/* End Select All&nbsp; */</span></p>
+<p><span style="font-style: italic; color: #009900;">*** Break In Code ***</span></p>
+</div>
+<p style="font-weight: bold; text-decoration: underline;">Represenation in jdedebug.log:</p>
+<div style="margin-left: 40px;">Entering JDB_InitBhvr <br /> Exiting JDB_InitBhvr with Success (UserHandle <span style="color: #006600;">2BB4BE18</span>) <br /> Entering JDB_OpenTable(Table = F4211) <br /> Exiting JDB_OpenTable(Table = F4211) (UserHandle <span style="color: #006600;">2BB4BE18</span>) (hRequest <span style="font-weight: bold; color: #3333ff;">0D5695E0</span><span style="color: #3333ff;">)</span> with Success <br /> Entering JDB_ClearSelection (hRequest 0D5695E0) <br /> Exiting JDB_ClearSelection with Success <br /> Entering <span style="font-weight: bold;">JDB_SelectAll</span> (hRequest <span style="font-weight: bold; color: #3333ff;">0D5695E0</span><span style="color: #3333ff;">)</span> <br /> ORACLE DBInitReq conn=0B0E23D8 requ=0D5C0718 den60202jems (gsc910) reuse <br /> <span style="font-weight: bold; color: red;">SELECT ALL</span> FROM PRODDTA.F4211 <br /> Exiting JDB_SelectAll with Success <br /> Entering JDB_CloseTable (hRequest 0D5695E0) <br /> Entering JDB_CloseTable(Table = F4211)&nbsp;</div>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li><strong>Refer to <a href="#opentable" alt="JDB_OpenTable()" title="JDB_OpenTable()">JDB_OpenTable()</a> API before change any code</strong></li>
+<li>Above example, B03B0211 does not write SELECT ALL rather it will be appeared as SELECT return columns FROM PRODDTA.F03B11 (Note that WHERE clause is not appended because this will get all data from table)</li>
+<li>In case you want to write SELECT ALL FROM PRODDTA.F03B11, call JDB_OpenTable(hUser, NID_F03B11, <span style="color: red;">0, NULL, 0</span>, (JCHAR *)NULL, &amp;hRequestF03B11);</li>
+<li>Commonly indicate Primary Index for this API</li>
+<li>EnterpriseOne Conversion tools or batch application perform same manipulation. So unless you understand this well, do not use this</li>
+<li>If you need to implement WHILE loop, implement it with care&nbsp;</li>
+<li>JDB_InitBhvr(lpBhvrCom, &amp;hUser, (JCHAR *) NULL, JDEDB_COMMIT_AUTO) puts query explicit automatic commitment. Refer to &lt;Document 1513147.1&gt; E1: DB: JDEDB_COMMIT_MANUAL, JDEDB_COMMIT_AUTO, Transaction Processing Boundaries and Deadlock</li>
+</ul>
+</div>
+<hr />
+<p><big><big><a name="selectkeyeddistinct"></a>JDB_SelectKeyedDistinct</big></big><br /> JDB_SelectKeyedDistinct performs a select on a table, view using the identified index and any custom selection and sequencing. Sending a zero in the number of keys to be used will cause the index to be ignored; however, if custom selection was identified it will always be used in this API. This only selects records matching the index (if used) exactly.<br /> <br /> This eliminates duplicates, if they exist, from the result set. The hRequest used in this API should be obtained from a call to JDB_OpenTable or JDB_OpenView where the table is opened with a specified number of columns. If all columns are requested in JDB_OpenTable or if all keyed columns are included in the Open Table call, then JDB_SelectKeyedDistinct will give identical results as SelectKeyed.</p>
+<p><span style="text-decoration: underline; font-weight: bold;">Example of query:</span><br /> <span style="font-style: italic; color: #3333ff;"> sql&gt; </span><strong style="font-style: italic; color: #3333ff;">SELECT&nbsp; DISTINCT</strong><span style="font-style: italic; color: #3333ff;"> SDKCOO, SDDCTO FROM PRODDTA.F4211&nbsp; WHERE&nbsp; ( SDKCOO = '00001' AND SDDCTO = 'SO' );</span></p>
+<p style="font-weight: bold; text-decoration: underline;">Syntax:</p>
+<p>JDEDB_RESULT JDB_SelectKeyedDistinct(HREQUEST hRequest, ID idIndex, void * lpKey, short nNumKeys);</p>
+<p style="font-weight: bold; text-decoration: underline;">Parameters:</p>
+<table style="border-collapse: collapse; border-spacing: 1px; width: 510px; height: 110px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 71pt;" width="95" /> <col style="width: 285pt;" width="380" /> <col style="width: 154pt;" width="205" /></colgroup>
+<tbody>
+<tr style="height: 18pt;"><th class="xl63" style="height: 18pt; width: 71pt; background-color: #666666; color: white;">Parameter</th><th class="xl63" style="border-left: medium none; width: 285pt; background-color: #666666; color: white;">Notes</th><th class="xl63" style="border-left: medium none; width: 154pt; background-color: #666666; color: white;">Usage</th></tr>
+<tr style="height: 18pt;">
+<td class="xl64" style="border-top: medium none; height: 18pt; width: 71pt;" width="95" height="24">hRequest</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Valid request handle.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 36.75pt;">
+<td class="xl64" style="border-top: medium none; height: 36.75pt; width: 71pt;" width="95" height="49">idIndex</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Valid Index ID to use for the selection. If zero then index of request will be used.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 36.75pt;">
+<td class="xl64" style="border-top: medium none; height: 36.75pt; width: 71pt;" width="95" height="49">lpKey</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Pointer key structure or NULL. If no structure is to be used then pass NULL.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 40.5pt;">
+<td class="xl64" style="border-top: medium none; height: 40.5pt; width: 71pt;" width="95" height="54">nNumKeys</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Number of keys to be used. If ON then the request is valid for caching.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="font-weight: bold; text-decoration: underline;">Return Value:</p>
+<table style="border-collapse: collapse; width: 448px; height: 62px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 135px;">Return Value</th><th style="width: 309px; background-color: transparent;">Description</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 135px;" height="20">JDEDB_PASSED</td>
+<td style="width: 309px;">Return value if this succeeds</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 135px;">JDEDB_FAILED</td>
+<td style="vertical-align: top; width: 309px;">Return value if this fails</td>
+</tr>
+</tbody>
+</table>
+<p style="font-weight: bold; text-decoration: underline;">Code Example:</p>
+<p>Example of B3401800 (refer B3401800.c file for whole code),</p>
+<div class="kmcodeblock"><span style="color: #009900; font-style: italic;">*** Break In Code ***</span><br /> &nbsp; <br /> &nbsp;idJDBReturn = JDB_InitBhvr(lpBhvrCom, &amp;hUser, (JCHAR *) NULL, JDEDB_COMMIT_AUTO);<span style="font-style: italic; color: #009900;"> /* to get &amp;hUser */</span><br /> &nbsp;idJDBReturn = <span style="font-weight: bold; color: #3333ff;">JDB_OpenTable</span>(hUser, NID_F3460, <span style="font-style: italic; color: #009900;">/* you can open table using hUser returned */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID_F3460_ITEM_NUMBER__BRANCH__ESU_ONLY,<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szArray, uNumberInArray, <span style="font-style: italic; color: #009900;">/* szArray defined return columns. If possible, set unique name e.g., szF3460Array */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (JCHAR *)NULL, &amp;hRequestF3460); <span style="font-style: italic; color: #009900;">/*returns hRequestF3460 which is to be used by JDB_SetSelection() and JDB_SelectKeyedDistinct() */</span><br /> &nbsp;&nbsp; if(idJDBReturn == JDEDB_PASSED)<br /> &nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idJDBReturn = <span style="font-weight: bold; color: #3333ff;">JDB_SetSelection</span>(hRequestF3460, dsSelect, uNumberInSelect, JDEDB_SET_REPLACE); <span style="font-style: italic; color: #009900;">/* This API restricts selection of data */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-style: italic; color: #009900;"> /* JDB_SetSequencing() can be called to append Order By in query */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(idJDBReturn == JDEDB_PASSED)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idJDBReturn = <span style="font-weight: bold; color: red;">JDB_SelectKeyedDistinct</span>(hRequestF3460, 0, NULL, 0);<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(idJDBReturn == JDEDB_PASSED)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; while((<span style="font-weight: bold; color: #3333ff;">JDB_Fetch</span>(hRequestF3460, NULL, 0) == JDEDB_PASSED) &amp;&amp;&nbsp; (bContinue == TRUE)) <span style="font-style: italic; color: #009900;">/* for this example, bContinue prevent infinite looping in detail routine commented below */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-style: italic; color: #009900;">/* Do something to manipulate based on unique data returned. In case you get top 100 the logic has to coded here */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br /> &nbsp;&nbsp; }<br /> <span style="font-style: italic; color: #009900;">*** Break In Code ***</span></div>
+<p style="font-weight: bold; text-decoration: underline;">Representation in jdedebug.log:</p>
+<div style="margin-left: 40px;">Entering JDB_InitBhvr <br /> Exiting JDB_InitBhvr with Success (UserHandle <span style="color: #006600;">2A8AF5C0</span>) <br /> Entering JDB_OpenTable(Table = F4211) <br /> Exiting JDB_OpenTable(Table = F4211) (UserHandle <span style="color: #006600;">2A8AF5C0</span>) (hRequest <span style="font-weight: bold; color: #3333ff;">0D44FC58</span>) with Success <br /> Entering JDB_ClearSelection (hRequest 0D44FC58) <br /> Exiting JDB_ClearSelection with Success <br /> Entering JDB_SetSelectionX (hRequest 0D44FC58) <br /> Exiting JDB_SetSelectionX With Success <br /> Entering JDB_SelectKeyedDistinct (hRequest <span style="font-weight: bold; color: #3333ff;">0D44FC58</span>) <br /> ORACLE DBRsetReq conn=0B2323D8 requ=0D4837E8 den60202jems (gsc910) <br /> <span style="font-weight: bold; color: red;"> SELECT&nbsp; DISTINCT</span> SDKCOO, SDDCTO FROM PRODDTA.F4211&nbsp; WHERE&nbsp; ( SDKCOO = '00001' AND SDDCTO = 'SO' ) <br /> Exiting JDB_SelectKeyedDistinct with Success <br /> ORACLE DBFetch conn=0B2323D8 requ=0D4837E8 maxrows=100 <br /> ORACLE usage 20:24:32 (11 FTCH 10 rows 6 LOBs) (0 UPD) (0 INS 0 rows) (0 DEL) (0 MISC) <br /> ORACLE speed 20:24:32 ( 2000 usec per call,&nbsp; 29 FTCH+LOB calls) <br /> Fetched the record <br /> No More Data found <br /> Entering JDB_CloseTable (hRequest 0D44FC58) <br /> Entering JDB_CloseTable(Table = F4211)</div>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>If the SELECT clause contains more than one field, the combination of values from all fields must be unique for a given record to be included in the results.</li>
+<li>The output of a query that uses DISTINCT is not updatable and does not reflect subsequent changes made by other users.</li>
+<li>Currently there is no API like SELECT TOP 100 or SELECT DISTINCT ROW</li>
+<li>Implement while loop with care</li>
+</ul>
+</div>
+<hr />
+<p><big><big><a name="selectkeyedgetcount"></a>JDB_SelectKeyedGetCount</big></big><br /> JDB_SelectKeyedGetCount gets a count of the number of rows in a table using the identified index and / or any custom selection &amp; sequencing. Sending a zero in the number of keys to be used will cause the index to be ignored, however, if custom selection was identified it will always be used in this API. This only counts records matching the index (if used) exactly.<br /> <br /> If no index is used, for example, if lpKey is passed in as a NULL and nNumKeys is passed in as a zero, then a count of all the rows in the table is returned.</p>
+<p><span style="font-weight: bold; text-decoration: underline;">Example of&nbsp; query:</span><br /> <span style="font-style: italic; color: #3333ff;">sql&gt; SELECT SDKCOO, SDDCTO FROM PRODDTA.F4211&nbsp; WHERE&nbsp; ( SDKCOO = '00001' AND SDDCTO = 'SO' )&nbsp; ORDER BY SDDOCO ASC,SDDCTO ASC,SDKCOO ASC,SDLNID ASC;</span><br style="font-style: italic; color: #3333ff;" /> <span style="font-style: italic; color: #3333ff;"> sql&gt; SELECT&nbsp; </span><strong style="font-style: italic; color: #3333ff;">COUNT(*)</strong><span style="font-style: italic; color: #3333ff;">&nbsp; FROM PRODDTA.F4211&nbsp; WHERE&nbsp; ( SDKCOO = '00001' AND SDDCTO = 'SO' );</span></p>
+<p><br /> <span style="font-weight: bold; text-decoration: underline;"> Syntax:</span><br /> Unsigned long JDB_SelectKeyedGetCount (HREQUEST hRequest, ID idIndex, void * lpKey, short nNumKeys)&nbsp;<br /> <br /> <span style="font-weight: bold; text-decoration: underline;"> Parameters:&nbsp;</span></p>
+<table style="border-collapse: collapse; width: 510px; border-spacing: 1px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 71pt;" width="95" /> <col style="width: 285pt;" width="380" /> <col style="width: 154pt;" width="205" /></colgroup>
+<tbody>
+<tr style="height: 18pt;"><th class="xl63" style="height: 18pt; width: 71pt; background-color: #666666; color: white;">Parameter</th><th class="xl63" style="border-left: medium none; width: 285pt; background-color: #666666; color: white;">Notes</th><th class="xl63" style="border-left: medium none; width: 154pt; background-color: #666666; color: white;">Usage</th></tr>
+<tr style="height: 18pt;">
+<td class="xl64" style="border-top: medium none; height: 18pt; width: 71pt;" width="95" height="24">hRequest</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Valid request handle.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 36.75pt;">
+<td class="xl64" style="border-top: medium none; height: 36.75pt; width: 71pt;" width="95" height="49">idIndex</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Valid Index ID to use for the selection. If zero then index of request will be used.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 36.75pt;">
+<td class="xl64" style="border-top: medium none; height: 36.75pt; width: 71pt;" width="95" height="49">lpKey</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Pointer key structure or NULL. If no structure is to be used then pass NULL.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 40.5pt;">
+<td class="xl64" style="border-top: medium none; height: 40.5pt; width: 71pt;" width="95" height="54">nNumKeys</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Number of keys to be used. If ON then the request is valid for caching.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="text-decoration: underline; font-weight: bold;">Return Value:</p>
+<table style="border-collapse: collapse; width: 448px; height: 47px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 338px;">Return Value</th><th style="width: 106px; background-color: transparent;">Description</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 338px;" height="20"><span style="font-style: italic;">Returns number of records</span> in table corresponding to the selection criteria.</td>
+<td style="width: 106px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;<br /> <span style="font-weight: bold; text-decoration: underline;"> Code Example:</span><br /> B0400602 (refer B0400602.c file for whole code)</p>
+<div class="kmcodeblock">
+<p><span style="font-style: italic; color: #009900;">*** Break In Code ***</span><br /> <span style="font-style: italic; color: #009900;">/* Declare variables associated with JDB_SelectKeyedGetCount*/</span><br /> &nbsp;&nbsp; idJDBReturn = JDB_InitBhvr(lpBhvrCom, &amp;hUser, (JCHAR *) NULL, JDEDB_COMMIT_AUTO); <span style="font-style: italic; color: #009900;">/* to return User Handle hUser */</span><br /> &nbsp;&nbsp; idJDBReturn = <span style="font-weight: bold; color: #3333ff;">JDB_OpenTable</span>(hUser, NID_F04572,<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ID_F04572_PCG_NUMBER___PAYMENT__NUMBER,<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; szArray, uNumberInSelect, <span style="font-style: italic; color: #009900;">/* make it sure return columns is initialized and declared correctly */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (JCHAR *)NULL, &amp;hRequestF04572); <span style="font-style: italic; color: #009900;">/* return hRequestF04572 which is to be used in following JDB APIs */</span><br /> &nbsp;&nbsp; if(idJDBReturn == JDEDB_PASSED)<br /> &nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idJDBReturn = <span style="font-weight: bold; color: #3333ff;">JDB_SetSelection</span>(hRequestF04572, dsSelect, uNumberInSelect, JDEDB_SET_REPLACE); <span style="font-style: italic; color: #009900;">/* WHERE clause */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(idJDBReturn == JDEDB_PASSED)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; idJDBReturn = <span style="color: red; font-weight: bold;">JDB_SelectKeyed</span>( hRequestF04572, 0, NULL, 0 ); <span style="font-style: italic; color: #009900;">/* this API must be called before you call JDB_SelectKeyedGetCount which reads returns rows in memory */</span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(idJDBReturn == JDEDB_PASSED)<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ulCount = <span style="font-weight: bold; color: red;">JDB_SelectKeyedGetCount</span>( hRequestF04572, 0, NULL, 0 );<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;if(ulCount &gt; 0)<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;{<br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; <span style="font-style: italic; color: #009900;">/* Do something if needed. Or simply return ulCount */</span><br /> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;}<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br /> &nbsp;&nbsp; }</p>
+<p><span style="font-style: italic; color: #009900;">*** break in code ***</span></p>
+</div>
+<p><span style="font-weight: bold; text-decoration: underline;">Representation in jdedebug.log:</span></p>
+<div style="margin-left: 40px;">Entering JDB_InitBhvr <br /> Exiting JDB_InitBhvr with Success (UserHandle <span style="color: #006600;">2A769D18</span>) <br /> Entering JDB_OpenTable(Table = F4211) <br /> Exiting <span style="font-weight: bold; color: #3333ff;">JDB_OpenTable</span>(Table = F4211) (UserHandle <span style="color: #006600;">2A769D18</span>) (hRequest <span style="color: #3333ff;">2A01E8F8</span>) with Success <br /> Entering JDB_ClearSelection (hRequest 2A01E8F8) <br /> Exiting JDB_ClearSelection with Success <br /> Entering JDB_SetSelectionX (hRequest 2A01E8F8) <br /> Exiting JDB_SetSelectionX With Success <br /> Entering <span style="font-weight: bold; color: #3333ff;">JDB_SelectKeyed</span> (hRequest <span style="color: #3333ff;">2A01E8F8</span>) <br /> ORACLE DBInitReq conn=0B12C9D0 requ=0D2F58B0 den60202jems (gsc910) reuse <br /> SELECT SDKCOO, SDDCTO FROM PRODDTA.F4211&nbsp; WHERE&nbsp; ( SDKCOO = '00001' AND SDDCTO = 'SO' )&nbsp; ORDER BY SDDOCO ASC,SDDCTO ASC,SDKCOO ASC,SDLNID ASC <br /> Exiting JDB_SelectKeyed with Success <br /> ORACLE DBRsetReq conn=0B12C9D0 requ=2A063F58 den60202jems (gsc910) <br /> <span style="color: red; font-weight: bold;"> SELECT&nbsp; COUNT(*)</span>&nbsp; FROM PRODDTA.F4211&nbsp; WHERE&nbsp; ( SDKCOO = '00001' AND SDDCTO = 'SO' ) <br /> ORACLE DBFetch conn=0B12C9D0 requ=2A063F58 maxrows=1 <br /> ORACLE usage 17:44:25 (24 FTCH 2240 rows 0 LOBs) (0 UPD) (0 INS 0 rows) (0 DEL) (0 MISC) <br /> ORACLE speed 17:44:25 ( 1166 usec per call,&nbsp; 24 FTCH+LOB calls) <br /> ORACLE DBFetch conn=0B12C9D0 requ=0D2F58B0 maxrows=100 <br /> Fetched the record <br /> Fetched the record <br /> Fetched the record <br /> No More Data found <br /> Entering JDB_CloseTable (hRequest 2A01E8F8) <br /> Entering JDB_CloseTable(Table = F4211)</div>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>If you do not call JDB_SelectKeyed(), which shall issue error JDB9909007 - Unable to obtain driver request handle</li>
+<li>JDB_OpenTable() determines how to set return columns and WHERE statement (predicates)</li>
+<li>You can not append ORDER BY clause</li>
+</ul>
+</div>
+<hr />
+<p><big><big><a name="opentable"></a>JDB_OpenTable</big></big><br /> JDB_OpenTable opens the table identified by the given table NID and prepares it for input/output processing. After successfully preparing the table for input/output, JDB associates the table with the passed user handle. The user is returned a request handle. This request handle must be used on every subsequent data manipulation call to JDB on this specific table. The request handle must be used only on the specified table until a JDB_CloseTable is called which will free the request handle. This API must be called prior to any other JDB operations on the table identified by the given table NID and must be used in conjunction with JDB_CloseTable.</p>
+<p style="font-weight: bold; text-decoration: underline;">Syntax:</p>
+<p>JDEDB_RESULT JDB_OpenTable(HUSER hUser, NID szTable, ID idIndex, NID *lpColSelect, unsigned short nNumCols, char * szOverrideDS, HREQUEST * hRequest);</p>
+<p style="font-weight: bold; text-decoration: underline;">Parameters:</p>
+<table style="border-collapse: collapse; border-spacing: 1px; width: 674px; height: 254px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 71pt;" width="95" /> <col style="width: 285pt;" width="380" /> <col style="width: 154pt;" width="205" /></colgroup>
+<tbody>
+<tr style="height: 18pt;"><th class="xl63" style="height: 18pt; width: 71pt; background-color: #666666; color: white;">Parameter</th><th class="xl63" style="border-left: medium none; width: 285pt; background-color: #666666; color: white;">Notes</th><th class="xl63" style="border-left: medium none; width: 154pt; background-color: #666666; color: white;">Usage</th></tr>
+<tr>
+<td style="vertical-align: top;">hUser</td>
+<td style="vertical-align: top;">Valid user handle</td>
+<td style="vertical-align: top;">From JDB_InitUser</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">szTable</td>
+<td style="vertical-align: top;">Valid table NID</td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr>
+<td style="vertical-align: top;">idIndex</td>
+<td style="vertical-align: top;">This is the ID of the index to ready for processing. The index used can be changed after a table has been requested. <span style="color: #000099;">If zero, the primary index will be used.</span></td>
+<td style="vertical-align: top;">&nbsp;</td>
+</tr>
+<tr style="height: 18pt;">
+<td class="xl64" style="border-top: medium none; height: 18pt; width: 71pt;" width="95" height="24">*lpColSelect</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Pointer to an array of column NID's or NULL. These columns will be used for rquests to the database. Performance is enhanced if only the required columns are asked for. This is useful when the application is only processing certain columns in the database. <span style="color: #000099;">If all columns are requred then NULL can be passed.</span></td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 36.75pt;">
+<td class="xl64" style="border-top: medium none; height: 36.75pt; width: 71pt;" width="95" height="49">nNumCols</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Number of columns required or zero. This is the number of column NIDs in the lpColSelect array. <span style="color: #000099;">If all columns are required (e.g., if lpColSelect is NULL) then pass zero.</span></td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;</td>
+</tr>
+<tr style="height: 36.75pt;">
+<td class="xl64" style="border-top: medium none; height: 36.75pt; width: 71pt;" width="95" height="49">szOverrideDS</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">Datasource name. This will override the location of the table indicated by the Object Map.</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">&nbsp;NULL for default datasource based on the environment.</td>
+</tr>
+<tr style="height: 40.5pt;">
+<td class="xl64" style="border-top: medium none; height: 40.5pt; width: 71pt;" width="95" height="54">hRequest</td>
+<td class="xl64" style="border-top: medium none; border-left: medium none; width: 285pt;" width="380">NULL or request handle</td>
+<td class="xl65" style="border-top: medium none; border-left: medium none; width: 154pt;" width="205">The output (do not set NULL)</td>
+</tr>
+</tbody>
+</table>
+<p style="font-weight: bold; text-decoration: underline;">Return Value:</p>
+<table style="border-collapse: collapse; width: 448px; height: 62px;" border="2" cellspacing="2" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th style="height: 15pt; width: 135px;">Return Value</th><th style="width: 309px; background-color: transparent;">Description</th></tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 135px;" height="20">JDEDB_PASSED</td>
+<td style="width: 309px;">Return value if this succeeds</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 135px;">JDEDB_FAILED</td>
+<td style="vertical-align: top; width: 309px;">Return value if this fails</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>Other related work</h3>
+<ul>
+  <li><a href="../docs/1082178.html">How to Sum/Aggregate Quantity or Amount using JDE API</a></li>
+  <li><a href="../docs/1337735.html">How to Get MAX/Aggregate using JDE API</a></li>
+</ul>
+
+<p>&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

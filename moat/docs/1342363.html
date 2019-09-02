@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>R00460 Implementing Work Order Z File Exports Using Subsystem Processing P48013 (JDEWO)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>R00460 Implementing Work Order Z File Exports Using Subsystem Processing P48013 (JDEWO)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<H2 class=km><A NAME="GOAL"></A>Goal</H2>
+<p>This document is part of an Information Center - to see other documents related to Shop Floor Control, please use the links provided below: <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1342363.1&id=1443844.2" target="_blank">Information Center: JD Edwards EnterpriseOne Shop Floor Control</a> &gt; <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1342363.1&id=1443847.2" target="_blank">Information Center: Using JD Edwards EnterpriseOne Shop Floor Control</a> &gt; Note 1342363.1</p>
+<p>This document is a guide on how to implement work order header extraction through subsystem routine in Work Order Processing in addition to Question 5 listed on E1: 31: Outbound Interoperability for Shop Floor Management (R4801Z1X &amp; R4801Z1P) - <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1342363.1&id=1323732.1" target="_blank">Document 1323732.1</a>.<br /><br /></p>
+<div class="kmnotebox" style="margin-left: 30px;">Note:<br />
+<ul>
+<li>Not all the interoperability implemented have it's own extraction UBE/Function.</li>
+<li>If possible, implement Business Service, XPI, EDI for interface.</li>
+<li>If there is no standard Extraction UBE, then create your own UBE or Business function to meet your daily business requirement.</li>
+</ul>
+</div>
+<H2 class=km><A NAME="FIX"></A>Solution</H2>
+<a name="aref_section21"></a><h3 class="km">Overview</h3>
+<p>&nbsp;The following steps are to be used on how to hookup work order extraction through subsystem job.</p>
+<a name="aref_section22"></a><h3 class="km">Basic Set Up</h3>
+<p style="margin-left: 30px;">1.&nbsp; Verify if UDC 00/TT - Transaction Type has definition for the transaction type required to perform (e.g. JDEWO):</p>
+<table class="km" style="color: black; margin-left: 30px; width: 592px; height: 56px;" border="1" cellspacing="1" cellpadding="1">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">User Def Code</th><th class="km" style="margin-left: 30px;">Description</th><th class="km" style="margin-left: 30px;">Description</th><th class="km" style="margin-left: 30px;">Special Handling</th><th class="km" style="margin-left: 30px;">Hard Coded</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">JDEWO</td>
+<td class="km" style="margin-left: 30px;">Work Order Header Transaction</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">Y</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;"><br style="color: black;" /> 2.&nbsp; Verify if Transaction Type defined above has definition on Interoperability file for outbound (Flat File Cross-Reference -P47002):</p>
+<table class="km" style="color: black; margin-left: 30px; width: 859px; height: 56px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">Trans</th><th class="km" style="margin-left: 30px;">Trans Description</th><th class="km" style="margin-left: 30px;">Dir Ind</th><th class="km" style="margin-left: 30px;">Dir Ind Description</th><th class="km" style="margin-left: 30px;">Record Type</th><th class="km" style="margin-left: 30px;">Record Type Description</th><th class="km" style="margin-left: 30px;">File Name</th><th class="km" style="margin-left: 30px;">Flat File Name</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">JDEWO</td>
+<td class="km" style="margin-left: 30px;">Work Order Header Transaction</td>
+<td class="km" style="margin-left: 30px;">2</td>
+<td class="km" style="margin-left: 30px;">Outbound</td>
+<td class="km" style="margin-left: 30px;">1</td>
+<td class="km" style="margin-left: 30px;">Header</td>
+<td class="km" style="margin-left: 30px;">F4801Z1</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;"><br style="color: black;" /> 3.&nbsp; Verify UDC 00/TA - Transaction Action:</p>
+<table class="km" style="color: black; margin-left: 30px; width: 594px; height: 170px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">User Def Code</th><th class="km" style="margin-left: 30px;">Description</th><th class="km" style="margin-left: 30px;">Description</th><th class="km" style="margin-left: 30px;">Special Handling</th><th class="km" style="margin-left: 30px;">Hard Coded</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">01</td>
+<td class="km" style="margin-left: 30px;">Cancellation</td>
+<td class="km" style="margin-left: 30px;">D - Delete</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">Y</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;"><strong>02</strong></td>
+<td class="km" style="margin-left: 30px;"><strong>Add</strong></td>
+<td class="km" style="margin-left: 30px;"><strong>A - Add</strong></td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">N</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">03</td>
+<td class="km" style="margin-left: 30px;">Delete</td>
+<td class="km" style="margin-left: 30px;">D - Delete</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">N</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">04</td>
+<td class="km" style="margin-left: 30px;">Change</td>
+<td class="km" style="margin-left: 30px;">C - Change</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">Y</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">06</td>
+<td class="km" style="margin-left: 30px;">Confirmation</td>
+<td class="km" style="margin-left: 30px;">I - Inquiry</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">Y</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">07</td>
+<td class="km" style="margin-left: 30px;">Duplicate</td>
+<td class="km" style="margin-left: 30px;">A - Add</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">N</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;">&nbsp;</p>
+<div class="kmnotebox" style="margin-left: 30px;">Based on Transaction Action Code (e.g. 02 to Add) it reads the first character of Description 02 column. For this example, 02 is the code for Add.<br /> Data Dictionary Alias TNAC (Transaction Action) has to be defined. Withing the application, the Action Code is hard coded to verity the transaction and how a certain routine sets this value.</div>
+<p style="margin-left: 30px;"><br />4.&nbsp; Add Data Export Control record through Data Export Controls program (P0047) that writes the F0047 table as follow:</p>
+<table class="km" style="color: black; margin-left: 30px; width: 1090px; height: 115px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">Trans Type</th><th class="km" style="margin-left: 30px;">Or Ty</th><th class="km" style="margin-left: 30px;">Disply Seq</th><th class="km" style="margin-left: 30px;">Object Name</th><th class="km" style="margin-left: 30px;">Version</th><th class="km" style="margin-left: 30px;">Function Name</th><th class="km" style="margin-left: 30px;">Function Library</th><th class="km" style="margin-left: 30px;">Execute For Add</th><th class="km" style="margin-left: 30px;">Execute For Upd</th><th class="km" style="margin-left: 30px;">Execute For Del</th><th class="km" style="margin-left: 30px;">Execute For Inq</th><th class="km" style="margin-left: 30px;">Flat File Exp Mode</th><th class="km" style="margin-left: 30px;">Ext DB Exp Mode</th><th class="km" style="margin-left: 30px;">Ext API Exp Mode</th><th class="km" style="margin-left: 30px;">Launch Immediately</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">JDEWO</td>
+<td class="km" style="margin-left: 30px;">WO</td>
+<td class="km" style="margin-left: 30px;">1</td>
+<td class="km" style="margin-left: 30px;">R4801Z1X</td>
+<td class="km">XJDE0001</td>
+<td class="km">&nbsp;</td>
+<td class="km">&nbsp;</td>
+<td class="km">1</td>
+<td class="km">1</td>
+<td class="km">0</td>
+<td class="km">0</td>
+<td class="km">0</td>
+<td class="km">0</td>
+<td class="km">0</td>
+<td class="km">1</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<div class="kmnotebox" style="margin-left: 30px;">For this example, whenever data gets added into Work Order Header table (F4801), the defined UBE Outbound Work Order Extraction (R4801Z1X), version XJDE0001 will be executed. <br /> If Launch Immediately is set (to '1'), R4801Z1X|XJDE0001 will be executed whenever a new record is inserted into SVM900.F986113 via Interoperability Generic Outbound Subsystem UBE (R00460).</div>
+<hr />
+<a name="aref_section23"></a><h2>Execution</h2>
+<p style="margin-left: 30px;">Test Case Scenario: whenever a certain work order gets created / updated this information is to be transferred to a 3rd party software based on Outbound Work Order Header table (F4801Z1).<br /> <br /> 1. Set / verify the Processing Option # 1. Transaction Type in Interop tab to 'JDEWO'.<br /><br /> 2. Create a new work Work Order, for instance through Manufacturing Work Order Processing (P48013).<br /><br /> 3. Verify that F4801Z1 file gets populated and a single row of data is inserted into SVM900.F986113 as below.</p>
+<a name="aref_section24"></a><h4 class="km">Outbound Work Order Header file (F4801Z1)</h4>
+<table class="km" style="color: black; margin-left: 30px; width: 881px; height: 98px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">User ID</th><th class="km" style="margin-left: 30px;">Batch Number</th><th class="km" style="margin-left: 30px;">Transaction Number</th><th class="km" style="margin-left: 30px;">Line Number</th><th class="km" style="margin-left: 30px;">Doc Ty</th><th class="km" style="margin-left: 30px;">Trans Type</th><th class="km" style="margin-left: 30px;">Translation Format</th><th class="km" style="margin-left: 30px;">Tran Date</th><th class="km" style="margin-left: 30px;">Dir Ind</th><th class="km" style="margin-left: 30px;"># Lines</th><th class="km" style="margin-left: 30px;">S P</th><th class="km" style="margin-left: 30px;">Trading Partner</th><th class="km" style="margin-left: 30px;">Tr Ac</th><th class="km" style="margin-left: 30px;">Or Ty</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">0</td>
+<td class="km" style="margin-left: 30px;"><strong>125918</strong></td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">WO</td>
+<td class="km" style="margin-left: 30px;">JDEWO</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">2</td>
+<td class="km" style="margin-left: 30px;">0</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">02</td>
+<td class="km" style="margin-left: 30px;">WO</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;" rowspan="1">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">0</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">125919</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">&nbsp;</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">WO</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">JDEWO</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">&nbsp;</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">&nbsp;</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">2</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">0</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">&nbsp;</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">&nbsp;</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">02</td>
+<td class="km" style="margin-left: 30px;" rowspan="1">WO</td>
+</tr>
+</tbody>
+</table>
+<a name="aref_section25"></a><h4 class="km">Subsystem Job Master table (SVM900.F986113)</h4>
+<table class="km" style="color: black; margin-left: 30px; width: 1017px; height: 98px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">Program ID</th><th class="km" style="margin-left: 30px;">Version</th><th class="km" style="margin-left: 30px;">JOBNBR</th><th class="km" style="margin-left: 30px;">JOBSTS</th><th class="km" style="margin-left: 30px;">Opt Cd</th><th class="km" style="margin-left: 30px;">EXEHOST</th><th class="km" style="margin-left: 30px;">ORGHOST</th><th class="km" style="margin-left: 30px;">ENHV</th><th class="km" style="margin-left: 30px;">User ID</th><th class="km" style="margin-left: 30px;">BLOB</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">R00460</td>
+<td class="km" style="margin-left: 30px;">XJDE0001</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">R</td>
+<td class="km" style="margin-left: 30px;">W</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">JPD900</td>
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;"><strong>S.D.O.N.G.M.Y.E.|.0.|.1.2.5.9.1.8.|.2.|.J.D.E.W.O.|.W.O.|.0.2...</strong></td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">R00460</td>
+<td class="km" style="margin-left: 30px;">XJDE0001</td>
+<td class="km" style="margin-left: 30px;">&nbsp;</td>
+<td class="km" style="margin-left: 30px;">R</td>
+<td class="km" style="margin-left: 30px;">W</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">JPD900</td>
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">S.D.O.N.G.M.Y.E.|.0.|.1.2.5.9.1.9.|.2.|.J.D.E.W.O.|.W.O.|.0.2...</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;">&nbsp;</p>
+<div class="kmnotebox" style="margin-left: 30px;">BLOB information can be reviewed only through UTB.<br /> If there is running process of R00460 - Interoperability Generic Outbound Subsystem UBE, above records may not be seen.</div>
+<p style="margin-left: 30px;"><br />4. Run Interoperability Generic Outbound Subsystem UBE (R00460) or through continuously running process of subsystem job R00460. The Processing Log table (F0046) gets populated based on the definition in Data Export Contorl table (F0047).</p>
+<a name="aref_section26"></a><h4 class="km">Processing Log file (F0046)</h4>
+<table class="km" style="margin-left: 30px; width: 805px; height: 79px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">User ID</th><th class="km" style="margin-left: 30px;">Batch Number</th><th class="km" style="margin-left: 30px;">Transaction Number</th><th class="km" style="margin-left: 30px;">Line Number</th><th class="km" style="margin-left: 30px;">Type Trans</th><th class="km" style="margin-left: 30px;">Or Ty</th><th class="km" style="margin-left: 30px;">SEQ</th><th class="km" style="margin-left: 30px;">OBNM</th><th class="km" style="margin-left: 30px;">Version</th><th class="km" style="margin-left: 30px;">EDSP</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">0</td>
+<td class="km" style="margin-left: 30px;"><strong>125918</strong></td>
+<td class="km" style="margin-left: 30px;">2</td>
+<td class="km" style="margin-left: 30px;">JDEWO</td>
+<td class="km" style="margin-left: 30px;">WO</td>
+<td class="km" style="margin-left: 30px;">1</td>
+<td class="km" style="margin-left: 30px;">R4801Z1X</td>
+<td class="km" style="margin-left: 30px;">XJDE0001</td>
+<td class="km" style="margin-left: 30px;">N</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">0</td>
+<td class="km" style="margin-left: 30px;">125918</td>
+<td class="km" style="margin-left: 30px;">2</td>
+<td class="km" style="margin-left: 30px;">JDEWO</td>
+<td class="km" style="margin-left: 30px;">WO</td>
+<td class="km" style="margin-left: 30px;">1</td>
+<td class="km" style="margin-left: 30px;">R4801Z1X</td>
+<td class="km" style="margin-left: 30px;">XJDE0001</td>
+<td class="km" style="margin-left: 30px;">N</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;">&nbsp;</p>
+<div class="kmnotebox" style="margin-left: 30px;">R00460 can be a continuously running process or may be submitted manually.</div>
+<p style="margin-left: 30px;">&nbsp;</p>
+<p style="margin-left: 30px;">5. Verify the jobs triggered by subsystem kernel and processed by queue kernel, UBE kernel and callobject kernel.</p>
+<a name="aref_section27"></a><h4 class="km">Job Control Status Master table (SVM900.F986110)</h4>
+<table class="km" style="margin-left: 30px; width: 1054px; height: 121px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">Submit Type</th><th class="km" style="margin-left: 30px;">Queue</th><th class="km" style="margin-left: 30px;">Queue Type</th><th class="km" style="margin-left: 30px;">Status</th><th class="km" style="margin-left: 30px;">Description</th><th class="km" style="margin-left: 30px;">Priority</th><th class="km" style="margin-left: 30px;">Type</th><th class="km" style="margin-left: 30px;">User</th><th class="km" style="margin-left: 30px;">Job Details</th><th class="km" style="margin-left: 30px;">Host</th><th class="km" style="margin-left: 30px;">Job #</th><th class="km" style="margin-left: 30px;">Environment</th><th class="km" style="margin-left: 30px;">Origination Host</th><th class="km" style="margin-left: 30px;">Process ID</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">BV</td>
+<td class="km" style="margin-left: 30px;">QBATCH</td>
+<td class="km" style="margin-left: 30px;">01</td>
+<td class="km" style="margin-left: 30px;">E</td>
+<td class="km" style="margin-left: 30px;">Done</td>
+<td class="km" style="margin-left: 30px;">5</td>
+<td class="km" style="margin-left: 30px;">UBE</td>
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">R4801Z1X_XJDE0001_90485_PDF</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">90485</td>
+<td class="km" style="margin-left: 30px;">JPD900</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">1580</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">BV</td>
+<td class="km" style="margin-left: 30px;">QBATCH</td>
+<td class="km" style="margin-left: 30px;">01</td>
+<td class="km" style="margin-left: 30px;">E</td>
+<td class="km" style="margin-left: 30px;">Done</td>
+<td class="km" style="margin-left: 30px;">5</td>
+<td class="km" style="margin-left: 30px;">UBE</td>
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">R4801Z1X_XJDE0001_90482_PDF</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">90482</td>
+<td class="km" style="margin-left: 30px;">JPD900</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">1580</td>
+</tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">BV</td>
+<td class="km" style="margin-left: 30px;">QBATCH</td>
+<td class="km" style="margin-left: 30px;">01</td>
+<td class="km" style="margin-left: 30px;">P</td>
+<td class="km" style="margin-left: 30px;">Processing</td>
+<td class="km" style="margin-left: 30px;">5</td>
+<td class="km" style="margin-left: 30px;">UBE</td>
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">R00460_XJDE0001_90481_PDF</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">90481</td>
+<td class="km" style="margin-left: 30px;">JPD900</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">1580</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;">&nbsp;</p>
+<div class="kmnotebox" style="margin-left: 30px;">R4801Z1X gets called SYNCHRONOUSLY through R00460.<br /> If possible, do not set Launch Immediately flag through P0047.<br /> Rather handle it through R00461.<br /> Since R00460 is subsystem process, only one process ID is to be assigned).</div>
+<hr style="margin-left: 30px;" />
+<a name="aref_section28"></a><h4 class="km">Subsystem Job Master table (SVM900.F986113)</h4>
+<table class="km" style="margin-left: 30px; width: 980px; height: 56px;" border="1" cellspacing="1" cellpadding="1" align="middle">
+<tbody style="margin-left: 30px;">
+<tr style="margin-left: 30px;"><th class="km" style="margin-left: 30px;">Job Name</th><th class="km" style="margin-left: 30px;">Version</th><th class="km" style="margin-left: 30px;">Job Type</th><th class="km" style="margin-left: 30px;">Job Status</th><th class="km" style="margin-left: 30px;">Host</th><th class="km" style="margin-left: 30px;">Environment</th><th class="km" style="margin-left: 30px;">Origination Host</th><th class="km" style="margin-left: 30px;">User</th><th class="km" style="margin-left: 30px;">Job #</th></tr>
+<tr style="margin-left: 30px;">
+<td class="km" style="margin-left: 30px;">R00460</td>
+<td class="km" style="margin-left: 30px;">XJDE0001</td>
+<td class="km" style="margin-left: 30px;">S</td>
+<td class="km" style="margin-left: 30px;">R</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC29</td>
+<td class="km" style="margin-left: 30px;">JPD900</td>
+<td class="km" style="margin-left: 30px;">DNVMGSC06</td>
+<td class="km" style="margin-left: 30px;">SDONGMYE</td>
+<td class="km" style="margin-left: 30px;">90481</td>
+</tr>
+</tbody>
+</table>
+<p style="margin-left: 30px;"><br /> 6. Purge the records from F4801Z1 through Outbound Work Order Purge (R4801Z1P)</p>
+<div class="kmnotebox" style="margin-left: 30px;">Note: <br />
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>BLOB information from F986113 is made up of index fields of target table F4801Z1.</li>
+<li>User ID, Batch Number, Transaction Number, Transaction Direction, Transaction Type, Order Type and Transaction Action.</li>
+</ul>
+</li>
+<li>Review relationship among tables written above.
+<ul>
+<li>Multiple kernels are to be used for this implementation so in your hitting any error you may debug by turning log for a specific kernel.</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<p>&nbsp;</p>
+<p class="km">Additional details on the functionality provided by Interoperability Generic Outbound Subsystem UBE (R00460) can be found under the following solutions: E1:&nbsp;Interop: FAQ on R00460 - <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1342363.1&id=1334253.1" target="_blank">Document 1334253.1</a> and E1:&nbsp;40: Interoperability JDEIL and Inventory Transaction - <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1342363.1&id=1334242.1" target="_blank">Document 1334242.1</a>.</p>
+<p>For detailed information on interoperability refer pdf implementation guide <strong>JD Edwards EnterpriseOne Data Interface for Electronic Data Interchange 8.12 and 9.0 <a href="/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1342363.1&id=945544.1" target="_blank">Document 945544.1</a></strong>.<br /><br /></p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

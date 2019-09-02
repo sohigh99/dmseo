@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Account Balance Purge (R09912/F0902/F0902P)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Account Balance Purge (R09912/F0902/F0902P)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Program Functionality</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Setup</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Prerequisites</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Processing Options</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Data Selection</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section36"><strong>Reviewing the Purge Report</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Post Purge Process</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides an overview of using the Account Balance Purge (R09912) to purge account balance (F0902) records.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for both Technical and Finance Functional users who will be involved in the purge of general ledger data in EnterpriseOne system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Program Functionality</strong></h3>
+<p>To increase disk space, you can purge account balance records using the Purge Prior Year Account Balances program (R09912). This program:</p>
+<ul>
+<li>Copies records with a date that is prior to the current fiscal year from the F0902 table to the purge F0902P table.</li>
+<li>Deletes records that have a date that is prior to the current fiscal year.</li>
+<li>Prints a report that lists the number of records that were purged by company, date, and time that the F0902P table was created.</li>
+</ul>
+<div class="kmnotebox">NOTE: Data in the F0902P purge file can only be viewed through a database utility. There is no standard report or application through which you can view this data within EnterpriseOne.</div>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><strong>Setup</strong></h3>
+<a name="aref_section33"></a><h4 class="km">Prerequisites</h4>
+<ol>
+<li>Back up the Account Balance (F0902) table.</li>
+<li>Transactions should be purged for one fiscal year at a time. If multiple years are to be purged, run the purge program multiple times.</li>
+</ol>
+<a name="aref_section34"></a><h4 class="km">Processing Options</h4>
+<p>This report does not have any processing options.</p>
+<a name="aref_section35"></a><h4 class="km">Data Selection</h4>
+<p>It is mandatory to enter a particular fiscal year for the records that you want to purge. You may further specify Company, Account Id and Ledger Type as optional fields for data selection.</p>
+<div class="kmnotebox">NOTE: You can purge F0902 transactions only one year at a time.</div>
+<hr />
+<a name="aref_section36"></a><h3 class="km"><strong>Reviewing the Purge Report</strong></h3>
+<p class="km"><img src="../images/purge10.png" border="0" hspace="0" align="bottom" /></p>
+<p>The resulting report shows the number of F0902 records being purged, sorted by Company and Fiscal Year.</p>
+<hr />
+<a name="aref_section37"></a><h3 class="km"><strong>Post Purge Process</strong></h3>
+<p>After the purge process is complete:</p>
+<ul>
+<li>You should copy the F0902P table to another medium. If you keep this table on your system and you purge again, the system adds newly purged records to the existing F0902P table, which will decrease available disk space.</li>
+<li>You also might want to defragment the F0902 table and rebuild the table indices. Contact your database administrator for more information about this process.</li>
+</ul>
+<hr />
+<a name="aref_section38"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<p class="km"><strong>Question 1: Can I remove unwanted budget F0902 records specific to inactive accounts using R09912 report?</strong></p>
+<p><strong>Answer 1:</strong> You can provide data selection by account ids along with a particular fiscal year while running the R09912 report, but in order for the records to be purged, you need to ensure that the records you wish to purge have dates prior to the current fiscal year.</p>
+<hr />
+<p class="km"><strong>Question 2 Why is the recommendation made to copy the F0902P to another medium?</strong></p>
+<p><strong>Answer 2:</strong> The purge programs are designed to increase disk space by deleting Account Balance (F0902) records that are no longer needed on a daily basis. Disk space should be evaluated prior to executing the purge program. The program will copy records from the F0902 to the appropriate purged file and will utilize more disk space until the purged files can be removed. Its recommended you should copy the F0902P table to another medium to save on disk space.</p>
+<hr />
+<p class="km"><strong>Question 3: If the F0902P is not moved to another medium and the purge is run again, are the records added to the table?</strong></p>
+<p><strong>Answer 3:</strong> If you keep this table on your system and you purge again, the system adds newly purged records to the existing records in the F0902P table. However, this defeats the overall purpose of the purge in reducing disk space. In order to reduce disk space, the table should be copied to another medium.</p>
+<hr />
+<p class="km"><strong>Question 4: Where do I find additional information on available purge programs within EnterpriseOne?</strong></p>
+<p><strong>Answer 4:</strong> Please refer to <a href='../docs/1082128.html'>Archive and Purging within EnterpriseOne for more information.</a></p>
+<hr />
+<p><br /><br /></p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

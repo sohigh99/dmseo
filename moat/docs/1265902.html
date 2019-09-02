@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MBF in E1</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #FF8C00;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Master Business Function in EnterpriseOne</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p><span style="font-weight: bold;">Master Business Function (MBF)</span> is a Business Function written to process a record into the JDE system which is made up of many sub-routines. JD Edwards provides MBFs to allow calling programs to process certain predefined transactions. An MBF encapsulates the required logic, enforces data integrity, and insulates the calling programs from the database structures.This document details general topics on Master Business Function (MBF) in EnterpriseOne including the types of Master Business Functions, purpose of MBFs, their components, how these business functions are called and how to troubleshoot them.</p>
+
+<ul>
+  <li><a href="#what">What is a Master Business Function?</a></li>
+  <li><a href="#why">What is the purpose of using Master Business Function?</a></li>
+  <li><a href="#Q3">Transactional File Master Business Function</a></li>
+  <li><a href="#built">How transaction MBF is built to run?</a></li>
+  <li><a href="#communication">How it calls internal BSFN for Edit Line in complex routine?</a></li>
+  <li><a href="#debug">How to debug issue on Master Business Function?</a></li>
+  <li><a href="#considerations">Considerations</a></li>
+</ul>
+
+<p> </p>
+
+
+<h3 class="km"><a name="what"></a>What is a Master Business Function?</h3>
+<p>In EnterpriseOne, there are two different type of Master Business Functions:</p>
+<ul>
+<li style="color: black;"><big><strong><span style="color: red;">Transaction File</span> Master Business Function</strong></big></li>
+</ul>
+<p style="margin-left: 60px;">XT4111Z1 - Inventory Transactions<br /> XT4113Z1 - Inventory Transfer<br /> XT4114Z1 - Inventory Issue/Adjustment<br /> XT4116Z1- Item Reclassifications<br /> <br /> B4200310/B4200311/B4200312 - Sales Order Entry Master Business Function<br /> N4200790 - Shipment Confirmation along with B4200810 - <span id="form1:panelPage1">LoadOrUnloadShipConfirmCache</span><br /> N4200860 - Backorder Release MBF<br /> B4501000 - Live Promotions Processing Master Business Function</p>
+<p style="margin-left: 60px;">N4900710 - F4215 UnScheduled Delivery MBF<br style="color: black;" /> N4900730 - Disposition Load MBF<br style="color: black;" /> N4900780 - Load Confirm By Compartment MBF<br style="color: black;" /> N4900140 - Create Load MBF</p>
+<p style="margin-left: 60px;">XT4311Z1/XT4311Z2 - Purchase Order Entry<br /> XT4312Z1/XT4314Z2 - Purchase Order Receipts<br /> XT4314ZN/XT4314Z2 - Voucher Match<br /> <br /> X4801/B4800210 - X4801 Work Order Entry Master Business Function along with B4800210 - X4801 Manufacturing Editing Module<br /> <br /> B03B0011 - Invoice Entry Master Business Function<br /> B03B0138/B03B0149 - F03B13 Maintain Receipt Header/F03B14 Maintain Receipt Detail<br /> N03B0176 - Account Netting Master Business Function<br /> <br /> B0400047 - Voucher Entry Master Business Function<br /> B0400016 - A/P Payments Master Business Function<br /> <br /> B0900049 - Journal Entry<br /> <br /> N3002040 - F3002 Bill of Material Master Bsfn<br /> N3001780 - F3003 Master Business Function<br /> B3100770 - Work Order Completion MBF<br /> B3101260 - F3111 Parts List Master Business Function<br /> B3101250 - F3112 Work Order Routings Master Business Function<br style="color: black;" /> B3101040 - F31122 WO Hours &amp; Quantities Master Business Function<br /> B3102270 - Work Order Issues Master Business Function<br /> B3401200 - F3460, Edit Line And Update Master Business Function<br style="color: black;" /> N3700070 - F3701 Test Definitions Master Business Function<br style="color: black;" /> N3700100 - F3702 Specifications Master Business Function<br style="color: black;" /> B3100770 - Work Order Completions MBF<br style="color: black;" /> B3102080 - Co_By Completions MBF<br style="color: black;" /> B3401360 - Process Messages MBF<br style="color: black;" /> N3401430 - F3460 Forecast MBF</p>
+<ul>
+<li style="color: black;"><big><big><strong><a name="masterfile"></a><span style="color: red;">Master File</span> Master Business Function</strong></big></big></li>
+<ul style="color: black;">
+<li>N0100041 - Address Book MBF</li>
+<li>N0100042 - Customer Master -MBF</li>
+<li>N0100043 - Supplier Master-MBF</li>
+<li>N4101060 - F4101 Process Master Data</li>
+<li>N4101070 - Update Item Process Data</li>
+<li>N000700 - Shop Floor Calender - Master Business Function</li>
+<li>B0100052 - Address Book - PO Template for MBF</li>
+<li>B0500575 - Employee MBF</li>
+<li>B0100087 - Who's Who MBF</li>
+<li>B1200260 - Cache Process Asset Master MBF</li>
+<li>B1200280 - Cache Process Equipment Tag MBF</li>
+<li>B4600660 - Warehouse Reservations MBF</li>
+<li>N3700150 - F3711 Test Results MBF</li>
+</ul>
+</ul>
+<p>               <em>(The above is a non-exhaustive list of Master Business Functions.)</em></p>
+<div class="kmnotebox" style="width: 1001px;">Note:<br />
+<ul>
+<li style="font-weight: bold;">Transactional File Master Business Function</li>
+<ul>
+<li>Provide a common set of functions (BeginDoc, EditLine, EditDoc, EndDoc, ClearCache)</li>
+<li style="width: 900px;">This common set of functions contain all of the necessary defaulting and editing for a transaction file.</li>
+<li>Records are dependent on each other</li>
+<li>Logic is broken up by event flow of an application</li>
+<li>The common set of functions (BeginDoc, EditLine, etc) are called in different events in an application.</li>
+<li>Uses cache APIs to hold records being processed</li>
+<li>Support add, change, and delete logic</li>
+<li>See <a href="https://docs.oracle.com/cd/E53430_01/EOTBF/using_bsfns.htm#EOTBF00015" alt="Understanding Transaction Master Business Functions" title="Understanding Transaction Master Business Functions" target="_blank">Understanding Transaction Master Business Functions</a></li>
+</ul>
+<li style="font-weight: bold;">Master File Master Business Function</li>
+<ul>
+<li>Each record is independent</li>
+<li>All logic is processed with one single call</li>
+<li>Generally, you can make one call to an MBF to edit, add, update or delete a master file record.</li>
+<li>One Single data structure</li>
+<li>The fields required to make the request and provide all the necessary values are in one data structure. The data fields should correspond directly with columns in the associated master file.</li>
+<li>No cache is needed.</li>
+<li>Because each master file record is independent of the others, caching is unnecessary.</li>
+<li>Support add, change, delete and inquiry</li>
+<li>See <a href="https://docs.oracle.com/cd/E53430_01/EOTBF/using_bsfns.htm#EOTBF00018" alt="Working with Master File Master Business Functions" title="Working with Master File Master Business Functions" target="_blank">Working with Master File Master Business Functions</a></li>
+</ul>
+<li>These business functions can also be called in Interoperability or EDI Batch Applications.</li>
+<li>XT4111Z1 is unique</li>
+<ul>
+<li>It follows Edit Line, Edit Doc, End Doc and Clear Cache routine</li>
+<li>But this MBF is not called directly from application rather same MBF defined above is calling this routine</li>
+</ul>
+<li>Transaction is explained at &lt;Document 1208208.1&gt; E1: DB: Transaction, Transaction Processing, Commit and Rollback</li>
+<li>If needed check calling applications through Cross Reference Facilities</li>
+<li>Description of objects are coming from F9860.MD (MembersDescription) column (e.g., Shop Floor Calender which has to be Calendar)</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="why"></a>What is the purpose of using Master Business Function?</h3>
+<p><br /> Through master business function,</p>
+<ul>
+<li>To create reusable, application specific code</li>
+<li>To reduce duplicated code</li>
+<li>To ensure that hookup is consistent</li>
+<li>To enforce data integrity</li>
+<li>To support interoperability models</li>
+<li>To allow processing to be distributed through OCM</li>
+<li>To design event-driven architecture</li>
+</ul>
+<p> </p>
+<div class="kmnotebox" style="width: 999px;">Note:<br />
+<ul>
+<li style="width: 963px;">MBFs are similar to the functional servers in WorldSoftware.</li>
+<li>By setting up and maintaining the structure of an MBF, these &ldquo;hook ups&rdquo; that call the functions are in a consistent order.</li>
+<li>Usually, in the EndDoc routine, interoperability sub-routine can be called. Example: B4200310 - F4211FSEndDoc is calling B4201540 - ProcessInteropOutboundRecs (Process Interop Outbound Records).</li>
+<li>If there is any equivalent Batch Application(either Inbound Interoperability or EDI), MBF can be called based on event flow in the Batch Application/UBE.</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="q3"></a>Transactional File Master Business Function</h3>
+<p>What are components of Transaction MBF?<br /> A Transaction MBF is made up of below components:</p>
+<ul>
+<li>Begin Doc</li>
+<li>Edit Line</li>
+<li>Edit Doc</li>
+<li>End Doc</li>
+<li>Clear Cache</li>
+</ul>
+<table style="text-align: left; width: 1171px; height: 556px;" border="1" cellspacing="2" cellpadding="2">
+<tbody>
+<tr>
+<th style="background-color: #009900; width: 94px; vertical-align: top;"> </th>
+<th style="background-color: #009900; width: 217px; color: white; vertical-align: top;">Hook-up</th>
+<th style="background-color: #009900; color: white; vertical-align: top;">What does it do?</th>
+<th style="background-color: #009900; color: white; vertical-align: top;">Remarks</th>
+</tr>
+<tr>
+<td style="width: 94px; vertical-align: top;"><a name="begindoc"></a>Begin Doc</td>
+<td style="width: 217px; vertical-align: top;">- At the end of header processing or before detail data are processed.<br /> - OK button clicked when header and detail is separated.<br /> - Set focus event in header/detail or headerless/detail form.</td>
+<td style="vertical-align: top;">
+<ul>
+<li>Initialize Cache/work file.</li>
+<li>Validate if the control value is populated.</li>
+<li>Initialize/default values.</li>
+<li>Create Cache/work file for Header.</li>
+</ul>
+</td>
+<td style="vertical-align: top;">- Generally used when transaction contains header and detail information. <br /> - Example: Header Information from F4201/F4301 and detail information from F4211/F4311. BeginDoc used for header information that contains customer/supplier information.<br /> - This component is optional when target transaction only have a single row of data (header only for example).</td>
+</tr>
+<tr>
+<td style="width: 94px; vertical-align: top;"><a name="editline"></a>Edit Line</td>
+<td style="width: 217px; vertical-align: top;">In exiting from row (Row Is Exited/Changed - Asynch) or OK button clicked with or without WHILE loop</td>
+<td style="vertical-align: top;">
+<ul>
+<li>Initialize Cache/Workfile if BeginDoc was not called.</li>
+<li style="color: red;">Validate detail information</li>
+<li>Initialize/default values for detail transaction.</li>
+<li style="color: red;"><strong>Create cache</strong>/workfile for Detail.</li>
+</ul>
+</td>
+<td style="vertical-align: top;">- In distribution module this function validate item/item-related information.<br /> - Most of validation will take place through this routine.</td>
+</tr>
+<tr>
+<td style="width: 94px; vertical-align: top;"><a name="editdoc"></a>Edit Doc</td>
+<td style="width: 217px; vertical-align: top;">OK button click</td>
+<td style="vertical-align: top;">
+<ul>
+<li>Validate before commit. If header and detail information need to have tight integrity then it may compare detail cache to header cache</li>
+</ul>
+</td>
+<td style="vertical-align: top;">- This function is optional. If it hits error (or validate failed), form may be closed neither issuing error nor committing cache to transaction files</td>
+</tr>
+<tr>
+<td style="width: 94px; vertical-align: top;"><a name="enddoc"></a>End Doc</td>
+<td style="width: 217px; vertical-align: top;">Post OK button clicked - Asynch</td>
+<td style="color: red; vertical-align: top;">
+<ul>
+<li><strong>Commit cache</strong>/work file to transaction table(s)</li>
+</ul>
+</td>
+<td style="vertical-align: top;">- Mostly this function gets called with Transaction Processing ON asynchronously.<br /> - If it does not hit error (successfully retrieved/committed cache) then ClearCache will be called.</td>
+</tr>
+<tr>
+<td style="width: 94px; vertical-align: top;"><a name="clearcache"></a>Clear Cache</td>
+<td style="width: 217px; vertical-align: top;">Inside End Doc routine or Close/Cancel button clicked</td>
+<td style="vertical-align: top;">
+<ul>
+<li>Clear cache/workfile for header and detail</li>
+</ul>
+</td>
+<td style="vertical-align: top;">- This is to clear any cache created through Begin Doc and Edit Line process.<br /> - User abandon transaction(by clicking Cancel Button) then calling this is important to free memory.<br /> - Some MBF is calling this routine in End Doc.</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox" style="width: 1006px;">Note:<br />
+<ul>
+<li>"Initialize" is to flush/allocate memory and set proper cache name through JDE_InitCache()</li>
+<li>Usually the cache name is made up of object ID (e.g., B4200310) and concatenate Job Number(e.g., 1002) to make it unique. For this example,  cache name will be B42003101002</li>
+<li>This is important when two or more MBF components communicate with others components (refer below How components communicate in a single MBF</li>
+<li>Each components can be called as below in batch application (actual implementation can vary as it can be handled at different section when it needs strict validation to stop transaction from being committed when encountering error data),</li>
+<ul>
+<li>Initialize Section: Begin Doc</li>
+<li>Do Section: Edit Line</li>
+<li>End Section: End Doc</li>
+</ul>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="built"></a>How transaction MBF is built to run?</h3>
+<p><br /> Below is an example of Sales Order creation through P4210 - Sales Order Entry,</p>
+<ul>
+<li>B4200310 - <em>F4211FSBeginDoc </em>(F4211 Begin Document)</li>
+<li>B4200310 - <span style="text-decoration: underline;"><em>F4211FSEditLinePreProcess </em></span>(F4211 Pre Process Value)</li>
+<li>B4200310 - <em>F4211FSEditLine </em>(F4211  Edit Line)</li>
+<ul>
+<li>B4200311 - <span style="text-decoration: underline;"><em>F4211SOEInternalFunctions </em></span>(F4211 Sales Order Entry Internal Functions)</li>
+</ul>
+<li>B4200312 - <span style="text-decoration: underline;"><em>F4211EditDoc </em></span>(F4211 Edit Doc)</li>
+<li>B4200310 - <em>F4211EndDoc </em>(F4211 End Document)</li>
+<li>B4200310 - <em>F4211ClearWorkFile </em>(F4211 Delete Work File)</li>
+</ul>
+<p>are to be build into B4200310.c, B4200311.c and B4200312.c which belongs to Parent DLL CSALES</p>
+<div class="kmnotebox" style="width: 1010px;">Note:<br />
+<ul>
+<li style="width: 969px;">Unlike other BSFN, before it calls F4211FSEditLine, it calls additional business function F4211FSEditLinePreProcess (F4211 Pre Process Value) to assign valid value in calling F4211FSEditLine</li>
+<li style="width: 963px;">F4211FSEditLine (B4200310) is calling internal business function I4200310_F4211FSEditLine(). The actual routine does not exist in B4200310 but exist in B4200311 instead. Both B4200310 and B4200311 belongs to library CSALES.</li>
+<li>So it is important to check internal BSFN B4200311 when it issues error in validating detail information through F4211FSEditLine</li>
+<li>Since B4200311 is an internal Business Function, jdedebug.log will not contain statement like "Calling Business Function F4211SOEInternalFunctions from Application [P4210], Version [ZJDE0001]</li>
+</ul>
+</div>
+<hr />
+<p> </p>
+<h3 class="km"><a name="internal"></a>How it calls internal BSFN for Edit Line in complex routine?</h3>
+<p><br /> Below is example from B420030 in Sales Order Entry,</p>
+<table class="km" style="width: 610px; height: 118px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td class="km">JDEBFRTN(ID) JDEBFWINAPI F4311FSEditLine (LPBHVRCOM lpBhvrCom, LPVOID lpVoid, LPDSD4200310F lpDS)<br /> {<br />    return I4200310_F4211EditLine(lpBhvrCom, lpVoid, lpDS);<br /> }</td>
+</tr>
+</tbody>
+</table>
+<p>   : As we can see above B4200310 has definition on F4211FSEditLine which is calling internal BSFN I4200310_F4211FSEditLine () but you may not be able to find the detail routine of I4200310_F4211FSEditLine in B4200310. In case you want to know what is actual parameter, refer LPDSD4200310F which is data structure to hold order detail<br /> <br /> Below MBFs are configured same manner so it is important to check internal business function for below listed transactions,</p>
+<ul>
+<li>B4200310/B4200311 - Sales Order Entry</li>
+<li>N4200790/B4200810 - Shipment Confirmation</li>
+<li>XT4311Z1/XT4311Z2 - Purchase Order Entry</li>
+<li>XT4312Z1/XT4314Z2 - Purchase Order Receipts</li>
+<li>XT4314ZN/XT4314Z2 - Voucher Match</li>
+<li>X4801/B4800210 - Work Order Header</li>
+</ul>
+<p> </p>
+<hr />
+<p>  </p>
+<h3 class="km"><a name="communication"></a>How internal components/routine communicate with another routine in a MBF?</h3>
+<p><br /> For example in handling Inventory Issue through P4112 which utilizes MBF XT4112Z1 as below,</p>
+<table class="km" style="width: 610px; height: 105px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td class="km">  Get Local Computer ID<br />      VA rpt_WorkStationId_JOBN &lt;&gt; BF szMachineKey<br /> <br /> <strong>  <big>F4114 Begin Document</big></strong><br /> 
+<div style="margin-left: 40px;">    VA rpt_WorkStationId_JOBN -&gt; BF szComputerID<br />    " M30" -&gt; BF szBranchPlant<br />    -&gt; BF mnBatchNumber<br />    SL DateToday -&gt; BF jdBatchDate<br />    "II" -&gt; BF szDocumentType<br />    SL DateToday -&gt; BF jdGLDate</div>
+<br /> <strong>  <big>F4114 Edit Line</big></strong><br /> 
+<div style="margin-left: 40px;">   VA rpt_WorkStationId_JOBN -&gt; BF szComputerID<br />    SL DateToday -&gt; BF jdGLDate<br />    "Inventory Issue" -&gt; BF szGLExplanation<br />    "1" -&gt; BF cUpdateQuantityOnHand<br />    "1" X BF cAllowQtyOverAvailable<br />    "F" -&gt; BF cFromTo<br />    "1" -&gt; BF cDefaultFromPrimaryLocation<br />    SL DateToday -&gt; BF jdTransactionDate<br />    "II" -&gt; BF szDocumentType<br />    SL DateToday -&gt; BF jdBatchDate<br />     VA rpt_BatchNumber_ICU &lt;- BF mnBatchNumber (<a href="#r1">Ref #1</a>)<br />    " M30" -&gt; BF szBranchPlant<br />    "210" -&gt; BF szItemNumber<br />    "1.0000" -&gt; BF mnTransactionQty<br />    "1.00" -&gt; BF mnTransactionProcessType<br />     VA rpt_DocVoucherInvoiceE_DOC &lt;- BF mnDocumentNumber (<a href="#r2">Ref #2</a>)<br style="font-style: italic;" />     VA rpt_JobnumberA_F0911 &lt;- BF mnF0911JobNumber (<a href="#r3">Ref #3</a>)<br />    "00200" -&gt; BF szKeyCompany<br />    VA rpt_JobnumberA_Inventory &lt;- BF mnInvJobNumber (<a href="#r4">Ref #4</a>)<br />    "1" -&gt; BF cProcessJE<br />    "" -&gt; BF mnSecondaryQty</div>
+<br /> <strong>  <big>F4114 End Document</big></strong><br /> 
+<div style="margin-left: 40px;">   "EP4112" -&gt; BF szProgramID<br />    VA rpt_DocVoucherInvoiceE_DOC -&gt; BF mnDocumentNumber (<a name="r2"></a>Ref #2)<br />    VA rpt_WorkStationId_JOBN -&gt; BF szComputerID<br />    "1" -&gt; BF cWriteCardex<br />    "II" -&gt; BF szDocumentType<br />    "1.00" -&gt; BF mnTransactionProcessType<br />    VA rpt_JobnumberA_F0911 -&gt; BF mnF0911Jobnumber (<a name="r3"></a>Ref #3)<br style="font-style: italic;" />    VA rpt_BatchNumber_ICU -&gt; BF mnBatchNumber (<a name="r1"></a>Ref #1)<br />    "1" -&gt; BF cProcessCloseBatch<br />     VA rpt_JobnumberA_Inventory -&gt; BF mnInvJobNumber (<a name="r4"></a>Ref #4)</div>
+<strong><em><br /> </em></strong></td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox" style="width: 970px;">Note:<br />
+<ul>
+<li>It is important to understand how cache is created and it gets utilized through End Doc routine</li>
+<li>Verify what are return values through Edit Line routine</li>
+<li>Assign Job number for individual internal routine as cache were created based on this job number</li>
+<li>For this example,</li>
+<ul>
+<li>Create inventory transaction through XT4111Z1 with job number named ' VA rpt_JobnumberA_Inventory'</li>
+<li>Create Journal transaction through B0900049 with job number named 'VA rpt_JobnumberA_F0911'</li>
+</ul>
+<li>Through Edit Line routine, cache is created based on specified job number</li>
+<li>This routine is important when you need to interface with 3rd party software(e.g., IBM WebSphere Adapter) or business service</li>
+<li><strong>Job Number has to be unique</strong> per unit of transaction otherwise, cache itself won't be handled properly</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="debug"></a>How to debug issue on Master Business Function?</h3>
+<p><br /> Analyze jasdebug.log (at presentation layer) and jdedebug.log (in logic server) which contains runtime flow and business flow respectively</p>
+<ul>
+<li>jasdebug.log: describes how it gets called</li>
+<li>jdedebug.log (CallObject kernel log): how MBF validates data, create cache and commit it</li>
+</ul>
+<p> </p>
+<hr />
+<p> </p>
+<h3 class="km"><a name="considerations"></a>Considerations</h3>
+<p><br /> In thin client configuration, interactive application is more suitable for smaller size of transactions otherwise you may hit 'ASYNCHRONOUS BUSINESS FUNCTION Error', 'Commit Failed', 'Transaction Failed' or Web Client Exception in committing cache to DB.</p>
+<p>In general, interactive application may make use of Cache (based on data structure of work file) whereas batch application will write work file. The main consideration is not to utilize too much cache though it may return better performance in small transactions.<br /> <br /> Since most of JDE applications may have equivalent batch processes, you can utilize these batch applications when trying to process large number of records.</p>
+<table class="km" style="width: 861px; height: 582px;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="background-color: #009900; color: white;">MBF</th>
+<th class="km" style="background-color: #009900; color: white;">Interactive Application</th>
+<th class="km" style="background-color: #009900; color: white;">Batch Application</th>
+</tr>
+<tr>
+<td class="km">XT4114Z1</td>
+<td class="km">P4112 - Inventory Issue</td>
+<td class="km">R47121 - EDI Product Activity Data Edit/Create</td>
+</tr>
+<tr>
+<td class="km">XT4113Z1</td>
+<td class="km">P4113 - Inventory Transfers</td>
+<td class="km">R47121 - EDI Product Activity Data Edit/Create</td>
+</tr>
+<tr>
+<td class="km">XT4114Z1</td>
+<td class="km">P4114 - Inventory Adjustments</td>
+<td class="km">R47121 - EDI Product Activity Data Edit/Create</td>
+</tr>
+<tr>
+<td class="km">XT4116Z1</td>
+<td class="km">P4116 - Item Reclassification</td>
+<td class="km">R47121 - EDI Product Activity Data Edit/Create</td>
+</tr>
+<tr>
+<td class="km">B4200310/B4200311/B4200312</td>
+<td class="km">P4210/P42101 - Sales Order Entry</td>
+<td class="km">R47011 - EDI Inbound Purchase Order Edit/Create</td>
+</tr>
+<tr>
+<td class="km">N4200790</td>
+<td class="km">P4205 - Ship Confirmation</td>
+<td class="km">R47500 - Inbound Transaction Processor<br /> R42500 - Ship Confirm Batch Application</td>
+</tr>
+<tr>
+<td class="km">XT4311Z1/XT4311Z2</td>
+<td class="km">P4310 - Purchase Order Entry</td>
+<td class="km">R4311Z1I - PO Unedited Transaction Inbound Processor</td>
+</tr>
+<tr>
+<td class="km">XT4312Z1/XT4314Z2</td>
+<td class="km">P4312 - PO Receipt</td>
+<td class="km">R47071 - EDI Receiving Advice Edit/Create - Purchasing</td>
+</tr>
+<tr>
+<td class="km">XT4314ZN/XT4314Z2</td>
+<td class="km">P4314 - Voucher Match</td>
+<td class="km">R470412 - EDI Inbound Invoice/Match to P.O. Edit/Create</td>
+</tr>
+<tr>
+<td class="km">X4801</td>
+<td class="km">P48013 - Work Order</td>
+<td class="km">R4701ZI - SCP Inbound Work Orders</td>
+</tr>
+<tr>
+<td class="km">B03B0011</td>
+<td class="km">P03B11 - Invoice Entry</td>
+<td class="km"> </td>
+</tr>
+<tr>
+<td class="km">B03B0138/B03B0149</td>
+<td class="km">P03B102 - Receipt Entry</td>
+<td class="km"> </td>
+</tr>
+<tr>
+<td class="km">B0400047</td>
+<td class="km">P0411 - Voucher</td>
+<td class="km">R470412 - EDI Inbound Invoice/Match to P.O. Edit/Create<br /> R04110Z* - Voucher Batch Processor</td>
+</tr>
+<tr>
+<td class="km">B0400016</td>
+<td class="km">P0413M - A/P Manual Payment</td>
+<td class="km"> </td>
+</tr>
+<tr>
+<td class="km">B0900049</td>
+<td class="km">P0911 - Journal Entry</td>
+<td class="km">R0911Z1 - Store and Forward Journal Entry Upload</td>
+</tr>
+<tr>
+<td class="km">N3002040</td>
+<td class="km">P3002 - Bill of Material</td>
+<td class="km">R3002Z1I - Process Inbound Bill of Masterial</td>
+</tr>
+<tr>
+<td class="km">N3001780</td>
+<td class="km">P3003 - Routing</td>
+<td class="km">R3003Z1I - Process Inbound Processing</td>
+</tr>
+<tr>
+<td class="km">B3101260</td>
+<td class="km">P31113 - Work Order Inventory Issues</td>
+<td class="km">R31113Z1I - Inbound Inventory Issue Transaction</td>
+</tr>
+<tr>
+<td style="vertical-align: top;"> B3401360</td>
+<td style="vertical-align: top;"> P3411 - MRP/MPS Detail Message Revisions</td>
+<td style="vertical-align: top;"> R3411 - MRP/MPS Detail Message Processing</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Only major transaction information has been described here.</li>
+<li>For detail, refer <br />
+<ul>
+<li>&lt;Document 659847.1&gt; - E1: 47: EDI Quick Reference Guide, which are related with Transactional Master Business Function</li>
+<li>&lt;Document 1275030.1&gt; - E1: INTEROP: Interoperability Quick Reference Guide (Interoperability Interface Tables) in EnterpriseOne, which are related with Master Data Master Business Function</li>
+</ul>
+</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+
+
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

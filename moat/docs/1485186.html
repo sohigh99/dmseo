@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Deduction</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Deduction</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Deductions</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31">Process</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Deduction Entry Methods<br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section33"><strong>Deductions Associated with Invoices</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Entering Deductions Associated with Invoices</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Deductions Associated with Receipts</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Entering Deductions Associated with Receipts</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>Researching and Resolving Deductions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Deduction Activity Code Setup</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Applying an Activity Code to a Deduction</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Applying a Credit Memo to a Deduction</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">Creating a Chargeback from an Invoice Deduction</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>Deleting and Voiding Activities and Deductions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">Deleting/Voiding an Activity</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314">Voiding a Deduction</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Deductions</strong></h3>
+<p>A deduction can be used in Accounts Receivable to record an underpayment made by a customer or a declaration from the customer that they intend to make an underpayment. A customer might reduce the amount of a payment for unknown reasons, or for reasons that might be associated with a specific invoice or a group of invoices, such as damaged goods. Deductions are usually taken by customers as compensation or for the lack of products or services. Some common reasons that a customer might take a deduction are:</p>
+<ul>
+<li>Damaged or defective merchandise.</li>
+<li>Shortages in a shipment.</li>
+<li>Promotional allowances.</li>
+<li>Disputed amounts.</li>
+<li>Billing errors.</li>
+</ul>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are setting up and processing deductions in Accounts Receivable.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km">Process</h3>
+<p>The following chart shows the process flow for deduction entry and processing:</p>
+<p><img src="../images/de01.png" border="0" alt="Deduction process flow chart" title="Deduction process flow chart" hspace="0"/></p>
+<p>Deductions can be entered from the customer ledger (P03B2002) at invoice level if the customer declares their intention to make a short payment, prior to payment being received. Deductions can also be entered during receipt entry to record the short payment and to allow research of the deduction at a later stage, whilst still registering receipt of the payment into the Accounts Receivable system. See <a href='../docs/2100346.html'>How To Create, Delete, Void or Mark as NSF a Manual Receipt, Unapplied Cash Receipt, Speed Receipt or Negative Receipt (P03B102, P03B0001)</a> for further information on entering a deduction during manual receipt entry.</p>
+<p>When a deduction is taken against a specific invoice, the system closes that invoice and creates a new invoice (R5 document type) as a placeholder record for the deduction amount. While you research the issue related to a deduction, the open amount associated with the R5 invoice document is not available for receipt application. Deductions are included in the customer&rsquo;s open balance and left open until they are resolved.</p>
+<p>Depending on the internal procedures, you can specify who has the authority to process deductions. For example, the credit and collections department might require a deductions manager to resolve issues related to deductions. You can specify this information in the customer master record (P03013) on the 'Collections' tab, in the Deduction Manager field:</p>
+<p> </p>
+<p><img src="../images/de02.png" class="kmsmartresize" alt="1" title="1" width="1000"/></p>
+<p>Once a deduction is entered and posted it is stored in the A/R Deduction Management table (F03B40). The deduction can then be researched for validity and to determine what action to perform to record the disposition in the Accounts Receivable system.  For example, you might decide that the customer&rsquo;s reason for a deduction is invalid. Therefore, you create a chargeback to re-invoice the customer for the deduction amount.</p>
+<p>Researching an issue related to a deduction might consist of:</p>
+<ul>
+<li>Reviewing the invoice for billing errors, shipment errors, and so on.</li>
+<li>Requesting information from the customer for further clarification.</li>
+<li>Contacting internal departments, such as the sales or credit departments, for additional information about the customer&rsquo;s account.</li>
+</ul>
+<p>During research, you can record the activities that are administered against a deduction. To do this, you use the Deductions Activity Entry (P03B40) form to document the result of each activity. This provides an audit trail that shows how you processed the deduction. Research may result in the following actions being taken:</p>
+<ul>
+<li>Create a chargeback</li>
+<li>Apply credit</li>
+<li>Apply discount</li>
+<li>Request information</li>
+<li>Create a reversal to re-open the invoice</li>
+<li>Create a write-off</li>
+<li>Create a void</li>
+</ul>
+<p>This will update the A/R Deduction Activity table (F03B41). When you resolve deductions, the system creates Receipt Detail records (F03B14) to close the R5 invoice records. You must post the receipt records that the system creates to update the appropriate general ledger accounts using the G/L Post (R09801).</p>
+<div class="kmnotebox">NOTE: From release 9.0, if you use Oracle Demantra, you can enter deductions into the JD Edwards EnterpriseOne Accounts Receivable system when a customer short pays an invoice. You can then send the deduction information to the Settlement Management System within Oracle Demantra for evaluation and determination of the disposition for the deduction. After you determine the appropriate disposition for the deduction, the system sends the information back to the JD Edwards EnterpriseOne Accounts Receivable system so that you can create a write-off or a chargeback. See JD Edwards EnterpriseOne Application Integration with Oracle Demantra Guide, available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a> </div>
+<p> </p>
+<a name="aref_section32"></a><h3 class="km"><strong>Deduction Entry Methods<br /></strong></h3>
+<p>A customer might reduce the amount of their payment for unknown reasons or for specified reasons relating to a particular invoice. For example, a customer might take a deduction for damaged merchandise, billing errors, or discount problems. Therefore, you must be able to research and process deductions so that you can resolve the issue with the customer and accurately account for the deduction in the JD Edwards EnterpriseOne Accounts Receivable system. Whether you generate the deduction at the time of receipt entry or from the Customer Ledger Inquiry (P03B2002) form, the functionality of deduction processing remains the same.</p>
+<p>Depending on the type of deduction, you use one of these methods to enter and access information about deductions:</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 50%;">Method</th>
+<th class="km" style="width: 50%;">Usage</th>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Customer Ledger Inquiry (P03B2002)</td>
+<td class="km" style="width: 50%;">Use the Work with Customer Ledger Inquiry form to enter deductions for disputed items that are not associated with a short payment from a customer. These types of deductions are associated with an invoice, such as notification from the customer that goods are damaged prior to payment being made.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Receipts Entry (Standard Receipts Entry (P03B102))</td>
+<td class="km" style="width: 50%;">Use the Standard Receipts Entry form to enter deductions that are associated with customer receipts, on receipt of a short payment. See <a href='../docs/2100346.html'>How To Create, Delete, Void or Mark as NSF a Manual Receipt, Unapplied Cash Receipt, Speed Receipt or Negative Receipt (P03B102, P03B0001)</a>. You can also use this method to create a standalone deduction, in which the deduction is not associated with a specific invoice.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Drafts Entry (P03B602)</td>
+<td class="km" style="width: 50%;">Use one of the draft entry programs to enter deductions that are associated with customer drafts. See <a href='../docs/760933.html'>How To Set Up and Process Drafts In EnterpriseOne Accounts Receivable (P03B602, R03B671, R03B672, R03B680)</a>. You can also use this method to create a standalone deduction, in which the deduction is not associated with a specific invoice.</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p><strong>Prerequisites</strong><br />Before you enter deductions:</p>
+<ul>
+<li>Assign the deductions manager in the customer master record for inquiry purposes. If a deduction manager is not assigned, the deduction can still be located using 'deduction manager' equal to '*' in P03B40.</li>
+<li>Ensure that you have set up the Deductions Automatic Accounting Instruction (AAI) 'RN' so that the system can locate the deduction suspense account. See <a href='../docs/1982411.html'>Overview and Setup of Accounts Receivable Automatic Accounting Instructions (P0012)</a> for further information on AAI setup.</li>
+</ul>
+<p> </p>
+<a name="aref_section33"></a><h3 class="km"><strong>Deductions Associated with Invoices</strong></h3>
+<p><br />If a customer notifies you before payment about a problem with an invoice, you can access the Customer Ledger Inquiry form (P03B2002) to view the disputed item. Then, you can enter a deduction against the disputed item into the Deduction Management system. This informs the manager of the deduction so that they can research and resolve the deduction at a later time.</p>
+<p>When you enter a deduction associated with an invoice:</p>
+<ul>
+<li>The open amount of the invoice is reduced by the amount of the deduction, or the invoice is closed if the deduction equals the total amount. If the invoice is closed, the system assigns a pay status of 'P' to it.</li>
+<li>The system creates a posted R5 document for the amount of the deduction in the Customer Ledger table (F03B11), which you can display on the Work with Customer Ledger Inquiry form. The R5 document is a temporary placeholder that indicates that an open balance remains for the customer. It contains an audit trail to the original invoice.</li>
+<li>The system creates a receipt batch header record (batch type RB) in the Batches table (F0011)</li>
+<li>The system generates a zero-dollar deduction receipt in the Receipts Header table (F03B13).</li>
+<li>The system also creates a corresponding receipt detail record in the Receipts Detail table (F03B14) with one detail line and the amount of the deduction (no payment amount).</li>
+</ul>
+<p>After you enter a deduction, you must post the receipt batch to generate records in the A/R Deduction Management (F03B40) table so that you can review and resolve the deductions at a later time. After you enter and post deductions associated with invoices, you can review the reason code assigned to the disputed invoice on the Work With Deductions form.</p>
+<p><br />To review the reason code, locate the disputed invoice on the Work With Customer Ledger Inquiry form and select 'Work with Deduction' from the Row menu.</p>
+<p> </p>
+<a name="aref_section34"></a><h4 class="km">Entering Deductions Associated with Invoices</h4>
+<ol>
+<ol>
+<li>Access the Deduction Entry form from the Customer Ledger Inquiry screen (P03B2002) by selecting the invoice associated with the deduction and taking the 'Deduction Entry' row exit.
+<p><img src="../images/de03.png" class="kmsmartresize" alt="2" title="2" width="1000"/></p>
+</li>
+<li>In the Deduction Entry form (P03B40) enter the Deduction Reason Code from User Defined Code (UDC) table 03B/CR, the Deduction Amount and Deduction Opened Date. If you do not enter a date it will default to the system date.
+<p><img src="../images/de04.png" class="kmsmartresize" alt="3" title="3" width="821"/></p>
+</li>
+<li>Click 'OK'.</li>
+<li>An 'R5' document type will be created on the Customer Ledger (F03B11). The open amount of the original invoice is reduced by the deduction amount.
+<p><img src="../images/de05.png" class="kmsmartresize" alt="4" title="4" width="1000"/></p>
+</li>
+<li>Batch Control Records (F0011), Receipts Header (F03B13) and Receipts Detail (F03B14) records are also created. Post the receipts batch, type 'RB', which is created for the deduction entry.</li>
+<li>A record is created in A/R Deduction Management (F03B40), which can then be worked in Work With Deductions (P03B40). The deduction record can be worked in P03B40 by selecting the R5 record in the Customer Ledger Inquiry screen and selecting 'Work with Deduction' from the row exit.</li>
+</ol>
+</ol>
+<p> </p>
+<a name="aref_section35"></a><h3 class="km"><strong>Deductions Associated with Receipts</strong></h3>
+<p>When a customer reduces the amount of their payment, you can enter the amount by which the customer&rsquo;s payment is reduced as a deduction. Many times, a customer does not include a reason for the reduction amount. In this case, you can apply the receipt accordingly and create a deduction in the JD Edwards EnterpriseOne Accounts Receivable system for the amount that the customer did not pay. You can associate the deduction with a specific invoice, if this information is known, or you can enter a standalone deduction if no invoice is specified.</p>
+<p>When you enter a deduction associated with a receipt, the system does this:</p>
+<ul>
+<li>Applies the amount of the receipt and the deduction to the associated invoice (if known), or closes the invoice if the deduction equals the total amount. If the invoice is closed, the system assigns a pay status of 'P' to it. This reduces the original invoice&rsquo;s open balance.</li>
+<li>Creates a posted R5 document in the Customer Ledger table (F03B11) for the amount of the deduction. The R5 document is a temporary placeholder that indicates that an open balance remains for the customer. It is displayed on the Work with Customer Ledger Inquiry form (P03B2002). This document contains an audit trail to the original invoice.</li>
+<li>Generates a deduction receipt in the Receipt Header (F03B13) table. The system also creates a corresponding record in the Receipt Detail (F03B14) table with one detail line and the amount of the deduction.</li>
+</ul>
+<p>To update the A/R Deduction Management (F03B40) table, you must post the receipt batch so that you can review and resolve the deductions at a later time.</p>
+<a name="aref_section36"></a><h4 class="km">Entering Deductions Associated with Receipts</h4>
+<p>See <a href='../docs/2100346.html'>How To Create, Delete, Void or Mark as NSF a Manual Receipt, Unapplied Cash Receipt, Speed Receipt or Negative Receipt (P03B102, P03B0001)</a> for details on entering a standard manual receipt with a deduction. Similar methods are used to enter drafts with deductions. See <a href='../docs/760933.html'>How To Set Up and Process Drafts In EnterpriseOne Accounts Receivable (P03B602, R03B671, R03B672, R03B680)</a></p>
+<div class="kmnotebox">NOTE: You must post receipt and draft records to create deduction records in the A/R Deduction Management table (F03B40). You cannot review or work with deduction records until they are posted.</div>
+<p class="km"> </p>
+<p class="km"> </p>
+<a name="aref_section37"></a><h3 class="km"><strong>Researching and Resolving Deductions</strong></h3>
+<p>After entering a deduction, you must research the reason for the deduction and resolve it accordingly. For example, the deduction manager might contact the customer to determine whether the reason for the deduction is valid or whether additional information is needed before assigning a disposition to it. If a deduction requires further research or action, you can enter a tickler date.</p>
+<p>You can change the details related to deductions or to posted or unposted activities. When you make a change, the system logs it on the Deductions Activity Entry form.</p>
+<p>After researching a deduction, you must determine which action to perform to resolve the problem. To do this, you might use one of the following resolutions.</p>
+<p> </p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 50%;">Action</th>
+<th class="km" style="width: 50%;">Resolution</th>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Request Additional Information</td>
+<td class="km" style="width: 50%;">With this resolution method, you do not specify an amount when assigning the resolution activity code. The associated invoice remains closed and the system leaves the amount of the deduction open in the Deduction Management system so that you can resolve it after you receive the requested information.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Write Off the Deduction</td>
+<td class="km" style="width: 50%;">When you write off the deduction, the system closes the open amount of the R5 invoice deduction record and generates an unposted receipt record in the F03B14 table in a new batch. When you post, the system updates the balance of the write-off account specified by the RAxx AAI (where xx equals the write-off reason code). The system posts the offset to the account specified by the RN AAI. When you resolve a deduction with a write-off, the system does not use the tolerance limits established in the Standard Receipts Entry processing options. The system uses the value in the G/L Offset field for the write-off reason code. When you complete the DA CD field on the Deductions Activity Entry form, the system uses the value from the Write-off Reason Code field as the default value for the G/L Offset field. However, you can override the value in this field. To retrieve the AAI that the write-off activity uses, the system concatenates RA and the value in the G/L Offset field in the detail area. This value is stored in the F03B14 table. The system stores the reason code for the write-off in the Deductions Activity Master table (F03B42). Each deduction activity must have a deduction activity code assigned to it. Each deduction activity code can have its own write-off reason code associated with it. Thus, all deduction activities with the same deduction activity code might have the same write-off reason code.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Create a Chargeback</td>
+<td class="km" style="width: 50%;">When the deduction is resolved as a chargeback to the customer, the system closes the open amount of the R5 invoice deduction record and generates a new RB invoice document. The system generates an unposted record in the F03B14 table in a new batch. When you post the chargeback, the system updates the appropriate A/R trade account specified by the RCxx AAI (where xx equals the value of the chargeback reason code) and the deduction trade account associated with the RN AAI. The system uses the value in the G/L Offset field as a chargeback G/L offset value. When you complete the DA CD field on the Deductions Activity Entry form, the system uses the value from the Chargeback Reason Code field as the default value for the G/L Offset field. However, you can override the value in this field. To retrieve the AAI that the chargeback activity uses, the system concatenates RC and the value for the chargeback G/L offset. This value from the G/L Offset field is stored in the F03B14 table. The system stores the reason code for a chargeback or write-off in the F03B42 table. Each deduction activity must have a deduction activity code assigned to it. Each deduction activity code can have its own chargeback reason code associated with it. Thus, all deduction activities with the same deduction activity code might have the same chargeback reason code.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Create an Unearned Discount</td>
+<td class="km" style="width: 50%;">When you create an unearned discount, the system closes the open amount of the R5 invoice deduction record and generates an unposted record in the F03B14 table in a new batch. When you post the receipt, the system updates the account balance associated with the RKD AAI for the discount amount and the RN AAI for the deduction offset.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Apply a Credit Memo to the Deduction</td>
+<td class="km" style="width: 50%;">If a credit memo exists for the customer, you can apply one or more credit memos to the deduction and reduce the amount of the credit memo by the total or partial amount of the deduction. The system generates two records in the F03B14 table: one for the amount of the deduction and one for the amount of the credit memo. When you post these records, the system creates the proper accounting offset entries to the A/R trade and deduction offset accounts.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Reverse the Deduction</td>
+<td class="km" style="width: 50%;">When you deny a deduction, you reverse it. For example, this might occur when you generate a deduction for 100.00 because the customer was not shipped 100.00 worth of goods, but the deduction manager has evidence that the entire amount of goods was shipped. Reversing the deduction reopens the invoice for the amount of the activity. This amount can be the entire amount of the deduction or a partial amount. If the reversal is entered in error, void the activity. You cannot reverse a standalone deduction because there is no invoice associated with it. You must void it.</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">Void the Deduction</td>
+<td class="km" style="width: 50%;">You void a deduction when you enter one in error. When you void a deduction, the system reopens the invoice and the full amount of the invoice must be paid. See section below on voiding a deduction.</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href='../docs/1982411.html'>Overview and Setup of Accounts Receivable Automatic Accounting Instructions (P0012)</a> for further information on the AAI setup required for the AAIs outlined above.</p>
+<p><br /><strong>Batch Considerations for Processing Deductions</strong></p>
+<p>When you apply activity codes to the deduction invoice records (R5), the system creates F03B14 records that you must post. The system creates the receipt records in a receipt batch (batch type RB). Just like other receipt batches, you must exit the deduction application (P03B40) completely, or the batch remains in an 'In Use' status and is unavailable for posting.</p>
+<p><strong>Prerequisite</strong></p>
+<p>Verify that the appropriate deduction activity codes are set up in the Deduction Activity Master (P03B42). See section below.</p>
+<p> </p>
+<a name="aref_section38"></a><h4 class="km">Deduction Activity Code Setup</h4>
+<p>Before researching and resolving a deduction, you can set up additional activity codes to specify which type of activity the system uses to resolve the deduction.</p>
+<p>The JD Edwards EnterpriseOne Accounts Receivable system provides default activity codes. However, you might want to set up additional codes that meet organization-specific needs. For example, you can set up additional activity codes for write-offs to correspond with specific write-off reason codes.</p>
+<p>You can use activity codes to:</p>
+<ul>
+<li>Provide an audit trail for research tasks.</li>
+<li>Resolve the deduction.</li>
+</ul>
+<p>The system uses codes to assign an action to the deduction. Each action creates a record in the F03B41 table. The system stores deduction activity codes in the F03B42.</p>
+<p><img src="../images/de06.png" class="kmsmartresize" alt="5" title="5" width="1000"/></p>
+<ol>
+<li>On the Work With Deduction Activity Codes form (P03B42), review the default activity codes and click 'Add' if you wish to create further codes.</li>
+<li>Set up deduction activity codes to specify which type of activity the system uses to resolve the deduction. Complete the following fields as appropriate for the type of activity you are entering:
+<ul>
+<li>Deduction Activity Code - Enter the code that represents a specific instruction that is used to resolve a deduction. This field is required.</li>
+<li>Description - Enter a description for your activity code.Activity Tickler Displacement - Enter the number of days that the system adds to the activity date to calculate the deduction tickler date.Chargeback Reason Code - Enter the code that identifies the reason that a chargeback was generated for an invoice during receipt entry. Typical chargeback reason codes are:
+<ul>
+<li>DA: Disputed amounts.</li>
+<li>DD: Unearned (disallowed) discount amount. The system does not accept 'Blank' as a value, even if it is defined in the UDC table.</li>
+</ul>
+</li>
+<li>Write Off Reason Code - A code that identifies the reason that the write-off occurred. Typical reason codes are:
+<ul>
+<li>BD: Bad debt</li>
+<li>DC: Damaged goods</li>
+<li>MW: Minor amount write-off</li>
+<li>TF: Tax or freight dispute</li>
+</ul>
+</li>
+<li>Deduction Reversal - Select this option to create an activity that reverses the deduction. When you use the activity that is created, the system closes the deduction records and reopens the invoice for the amount of the deduction.</li>
+<li>Deduction Discount - Select this option to create an activity that settles the deduction as a discount taken.</li>
+<li>Credit Memo Activity - Select this option to create an activity to apply the deduction to a credit memo.</li>
+</ul>
+</li>
+<li>Click 'OK'.</li>
+</ol>
+<p> </p>
+<p><img src="../images/de07.png" class="kmsmartresize" alt="6" title="6" width="719"/></p>
+<div class="kmnotebox">NOTE: You can leave the Description, Activity Tickler Displacement, Chargeback Reason Code, and Write Off Reason Code fields blank to indicate that you will resolve the deduction using the Request Additional Information activity</div>
+<p> </p>
+<a name="aref_section39"></a><h4 class="km">Applying an Activity Code to a Deduction</h4>
+<p> </p>
+<p><img src="../images/de08.png" class="kmsmartresize" alt="7" title="7" width="1000"/></p>
+<ol>
+<li>Access the Deductions Activity Entry form (P03B40). Navigate directly to P03B40 and locate the required deduction. Or select the specific R5 deduction record in the Customer Ledger Inquiry (P03B2002) screen and take the row exit 'Work with Deduction'.</li>
+<li>Select the deduction in the Work with Deduction (P03B40) screen and click 'Select'. </li>
+<li>In the Deductions Activity Entry screen, complete the following fields:
+<ul>
+<li>Deduction Tickler Date  - Enter the date on which the deduction needs to be researched. This field is optional. If you leave this field blank, the system uses the G/L date of the deduction as the default value.</li>
+<li>Deduction Manager  - Enter the address book record of the deduction manager who needs to research the deduction. This field is optional.</li>
+<li>DA CD (Deduction Activity Code) - Enter a code that represents the activity you wish to assign to the deduction amount, such as writeoff or chargeback. The activity codes must be set up in the Deduction Activity Master (P03B42).
+<div class="kmnotebox">NOTE: When resolving a deduction, you can assign multiple resolution activities. For example, you might decide to create a chargeback for part of the deduction and then write off the remaining amount. To do this, you enter the deduction reason and amount for each portion of the deduction in the detail area of the Deductions Activity Entry form. See the example in the screen shot below,</div>
+</li>
+<li>Activity Amount  - Enter the domestic amount applied to a deduction. The currency associated with this amount appears in the Base Currency Code field (BCRC).</li>
+<li>Activity Date - Enter the date on which the deduction activity was entered.</li>
+<li>G/L Offset - If a Chargeback, Write Off, or Discount code has been set up against the Deduction Activity Code in the Deduction Activity Master (P03B42), it will default into this field. It can be manually overridden.</li>
+</ul>
+</li>
+<li>Click 'OK'. </li>
+<li>If the activity entered closes the deduction amount,  the open amount of the deduction will be closed and the deduction will then display as 'closed' in the Work with Deductions (P03B40) screen. Otherwise it will remain as open for further activities to be entered.</li>
+<li>Post the 'RB' batch entry created for the activity.</li>
+</ol>
+<p> </p>
+<p><img src="../images/de09.png" class="kmsmartresize" alt="8" title="8" width="1000"/></p>
+<a name="aref_section310"></a><h4 class="km">Applying a Credit Memo to a Deduction</h4>
+<p>It is possible to apply a credit memo to a deduction, if a credit memo has been created to credit a customer's account for damaged goods for example and you need to close a pending deduction relating to this issue. A credit memo can only be applied to a deduction if the company and currency are the same on both the credit memo and deduction.</p>
+<p> </p>
+<p><img src="../images/de10.png" class="kmsmartresize" alt="9" title="9" width="1000"/></p>
+<ol>
+<li>Select 'Credit Memos' from the Form menu on the Deductions Activity Entry form (P03B40).</li>
+<li>On the Select Credit Memos form, complete the Credit Memo Activity Code field. You must select a code that is set up for a credit memo activity.</li>
+<li>Select the credit memos that you want to apply against the deduction in the detail area, and click 'Select'. A check mark appears next to the credit memos that you select.</li>
+<li>Click 'Close'. The credit memos that you selected appear on the Deductions Activity Entry form.</li>
+<li>On the Deductions Activity Entry form, override the values in the DA CD, Activity Date, G/L Date, and Activity Amount fields as necessary, and then click 'OK'.</li>
+<li>Post the 'RB' batch.</li>
+</ol>
+<p> </p>
+<p><img src="../images/de11.png" class="kmsmartresize" alt="10" title="10" width="1000"/></p>
+<a name="aref_section311"></a><h4 class="km">Creating a Chargeback from an Invoice Deduction</h4>
+<p>This is a detailed overview of the records created and the changes that occur when creating a chargeback from a deduction associated with an invoice. <br /><br />The following example illustrates the creation of an invoice and the processing of a deduction.</p>
+<p><strong>1. Create the Invoice and Deduction</strong> <br /><br />Use Standard Invoice Entry (P03B2002) to create an unposted invoice for $100.00 for Customer 92277. In the G/L Distribution screen, the revenue account for explanation purposes is 3.5010 (Store Sales). <br /><br />After the invoice is created, find it in Standard Invoice entry, then select the Deduction Entry (P03B40) row exit. Enter the Deduction Reason Code, Deduction Amount of $40.00, and Deduction Opened Date and click OK. <br /><br />Completing the required Deduction Entry fields results in:</p>
+<ul>
+<li>The Open Amount (AAP field in the Customer Ledger (F03B11)) of the invoice is reduce to $60.00 from $100.00.</li>
+<li>A new posted R5 record is created in the F03B11 with an Open and Gross Amount (AG) of $40.00.</li>
+<li>A Receipt Header (F03B13) record is created. Note the values in these significant fields: 
+<ul>
+<li>The record will not have a value in the Receipt Number (CKNU) field. </li>
+<li>The Payment ID (PYID) contains a unique value. This will match the R5 Payment ID in the F03B11. </li>
+<li>The G/L Date (DGJ) is the value specified by the user. This will match the F03B11 G/L Date (DGJ) value of the R5 record. </li>
+<li>The G/L Posted Code (POST) is blank. </li>
+<li>The Batch Number (ICU) contains a unique value created by Next Numbers. This will match the F03B11 Batch Number (ICU) of the R5 record. </li>
+<li>The Amount-Check Amount (CKAM) and Amount Open (AAP) are $0.00. This value will remain until the transaction is posted and the deduction is worked. </li>
+</ul>
+</li>
+<li>An A/R Check Detail (F03B14) record is created. Note the values in these significant fields: 
+<ul>
+<li>The record will not have a value in the Check Number (CKNU) field.</li>
+<li>The Document Number (DOC) matches the F03B11 Document Number (DOC) of the original invoice. </li>
+<li>The Payment ID (PYID) matches the F03B13 PYID value of the R5 record. </li>
+<li>The G/L Date (DGJ) matches the F03B11 DGJ and F03B13 DGJ values of the R5 record. </li>
+<li>The G/L Posted Code (POST) is blank. </li>
+<li>The Batch Number (ICU) matches the F03B11 and F03B13 ICU values of the R5 record. </li>
+<li>The Amount- Check Amount (CKAM) and Amount Open (AAP) are $0.00. This value will remain until the  transaction is posted and the deduction is worked. </li>
+<li>Amount-Deduction (DDA) is $40.00- which matches the Gross Amount (AG) of the F03B11 R5 record.</li>
+</ul>
+</li>
+</ul>
+<p><br /><strong>2. Post the Receipt Batch Containing the Deduction</strong><br /><br />From Receipts Journal Review (P0011) on the Customer Invoice Entry menu (G03B11), post the batch (Batch Type RB) that contains the receipt records created by the deduction. The invoice (R5) record will not be changed. <br /><br />Note the changes to significant F03B13 fields:</p>
+<ul>
+<li>POST is changed from blank to D.</li>
+<li>Document Number-JE (DOCG) changes from 0 to the document number of the journal entry in the  Account Ledger (F0911). This can be verified against the F0911 DOC field for the R5 batch number. </li>
+<li>Document Type-Journal Entry (DCTG) changes from blank to RS. This is the document type of the journal  entry in the F0911. This can be verified against the F0911 DCT field for the R5 batch number.</li>
+</ul>
+<p><br />Note the changes to significant F03B14 fields:</p>
+<ul>
+<li>POST changes from blank to D.</li>
+<li>DOCG changes from 0 to the document number of the F0911 journal entry. This can be verified against  the F0911 DOC field for the R5 batch number. </li>
+<li>DCTG changes from blank to RS. This is the document type of the journal entry in the F0911. This can be verified against the F0911 DCT field for the R5 batch number.</li>
+</ul>
+<p><br />An A/R Deduction Management (F03B40) record is created. Note the values of these significant fields:</p>
+<ul>
+<li>Deduction ID (DCID) contains a unique value. This is the primary key.</li>
+<li>Amount-Open Deduction (DDOA) and Amount-Deduction (DDA) both contain $40.00 for the gross and  open value of the deduction. </li>
+<li>Deduction Reason Code (DDEX) contains the value of the reason code from the Deduction Entry screen. </li>
+<li>Document-Original (ODOC) contains the value of the original invoice. </li>
+<li>Claim Document Number (GDOC) contains the R5 document number. </li>
+<li>Payment ID (PYID) contains the value matching the F03B13 and F03B14 records.</li>
+</ul>
+<p><br />Records are created in the F0911 to record the deduction on the General Ledger. <br /><br /><br /><strong>3. Work the Deduction</strong><br /><br />Once the batch that includes the R5 document is posted, select A/R Deduction Processing (P03B40) on the Manual Receipts Processing menu (G03B12) to access the newly created record in the F03B40. Select the deduction record to access the Deductions Activity Entry screen to resolve the deduction. In this case, the resolution will be a chargeback, although other options include write-offs and unearned discounts. <br /><br />Using Visual Assist in the "DA CD" column, choose the deduction activity code (stored in the Deductions Activity Master (F03B42) table). Once an activity code is selected, the remaining columns in the grid detail of the Deduction Activity Entry screen such as Activity Amount, Activity Date, G/L Date, and G/L Offset should default as the user tabs through the line item. This information should be provided by records created in earlier steps. Click OK. The following occurs:</p>
+<ul>
+<li>No substantive changes to the invoice record.</li>
+<li>On the F03B11 R5 record, AAP changes from $40.00 to $0.00. </li>
+<li>In the F03B11, a new RB record is created. Note the values of these significant fields: 
+<ul>
+<li>The DOC value is populated by Next Numbers (P0002).</li>
+<li>DCT is RB.</li>
+<li>G/L Offset (GLC) is `DA.' This should correspond to the offset code of an existing RC Automatic Accounting Instruction (AAI, P0012).  </li>
+<li>POST contains the value D. </li>
+<li>AG and AAP fields contain the value $40.00. </li>
+<li>Document-Original (ODOC) matches the DOC value for the original invoice record. </li>
+<li>Document Type-Original (ODCT) matches the DCT value for the original invoice record. </li>
+</ul>
+</li>
+<li>No substantive changes to the F03B13 record.</li>
+<li>In the F03B14: 
+<ul>
+<li>There are no substantive changes to the existing F03B14 record.</li>
+<li>A new record is created in the F03B14. Note the values of these significant fields: </li>
+<li>PYID matches the PYID value of the existing F03B14 record. </li>
+<li>File Line Identifier (RC5) contains 2. The original record contains a 1. </li>
+<li>Document Number (DOC) matches the F03B11 DOC value of the original R5. </li>
+<li>POST is blank. </li>
+<li>ICU contains a value created by Next Numbers. This will match the F03B11 ICU value of the RB record. </li>
+<li>AAP contains a value of $0.00. </li>
+<li>Amount-Chargeback (ECBA) contains a value of $40.00-. </li>
+<li>Chargeback Reason Code (ECBR) contains `DA.' </li>
+<li>G/L Offset Chargebacks (GLCC) contains `DA.' This should correspond to the offset code of an existing  RC AAI. </li>
+<li>Document-Original (ODOC) matches the F03B11 DOC value of the RB chargeback record. </li>
+<li>Document Type-Original (ODCT) matches the F03B11 DCT value of the RB chargeback record in the F03B11. </li>
+</ul>
+</li>
+<li>On the existing record in the F03B40, DDOA changes from $40.00 to $0.00.</li>
+</ul>
+<p><br /><br /><strong>4. Post the New Batch Created by Working the Deduction</strong><br /><br />After using P03B40 to work the deduction, the newly created F03B11 RB document exists in a new batch. The RB record can be misleading because it has a POST value of D that indicates the record has been posted to the G/L. The new batch still needs to be posted. Posting the batch creates posted AE and RS documents in the F0911. Before and after this posting, the RB document is available to be matched to new receipts. <br /><br /><br /><strong>5. Closing Considerations</strong><br /><br />Please note the following:</p>
+<ul>
+<li>Creating the same chargeback from a deduction associated with a receipt will have similar, but not exact, results. Please consult the Oracle EnterpriseOne documentation for more information.</li>
+<li>Steps in the process can vary and can affect the records created. For example, not posting in the same order as outlined above can change the number and values of records created in the A/R tables. </li>
+<li>Working deductions in P03B40 into something other than a chargeback can create very different records. </li>
+<li>For example, creating a write-off instead of a chargeback can affect the number of records in the F03B11.</li>
+</ul>
+<p> </p>
+<a name="aref_section312"></a><h3 class="km"><strong>Deleting and Voiding Activities and Deductions</strong></h3>
+<p>You can delete/void activities if you assign an activity to the deduction in error. If the activity is unposted, it can simply be deleted. However, if it has been posted it needs to be voided. In this case the system creates an unapplied receipt for the amount of the deduction when you use the void function.</p>
+<p>If a deduction is created in error, it needs to be voided as the transaction has already been posted to create the entry in the F03B40. Again the system creates an unapplied receipt for the amount of the voided deduction.</p>
+<a name="aref_section313"></a><h4 class="km">Deleting/Voiding an Activity</h4>
+<p>Access the Deduction Activity Entry form (P03B40).<br />To delete/void an activity:</p>
+<ol>
+<li>On the Deduction Activity Entry form, select the activity that you want to delete/void and click 'Delete'. If the activity is posted, the system displays the Void Reason Entry form. If the activity is unposted, the system deletes it.</li>
+<li>On the Void Reason Entry form, complete the Void Reason Code and Void G/L Date fields and click 'OK'.</li>
+<li>If voiding, post the RB batch entry created by the void.</li>
+</ol>
+<a name="aref_section314"></a><h4 class="km">Voiding a Deduction</h4>
+<ol>
+<li>From the Work with Deductions (P03B40) form select the deduction you need to void.</li>
+<li>Select 'Void' from the row exit.</li>
+<li>Enter the Void Reason Code and Void G/L Date.</li>
+<li>Click 'OK'.</li>
+<li>Post the RB batch entry created by the void.</li>
+</ol>
+<p> </p>
+
+
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

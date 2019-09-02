@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document Type Master (F40039) in Distribution and Manufacturing (P40040)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Document Type Master (F40039) in Distribution and Manufacturing (P40040)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p>This document describes possible issues related with F40039 (Document Type Master) and F400391 (Document Type Exclusion Rules).</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h3 class="km">P40040 (Document Type Maintenance)</h3>
+<p>Application P40040 (Document Type Maintenance) is available in EnterpriseOne beginning with release 8.12.</p>
+<p>Document Type Maintenance is a centralized access point which enables you to maintain document type with ease. Through this application a number of UDC values can be added/deleted to control the process of a certain transaction in Inventory, Sales, Procurement, Service Order, Work Order and Shipping per document/order type.</p>
+<p>The P40040 program maintains document type information in these UDC tables:</p>
+<ul>
+<li>UDC 40/DC (Trace/Track Document Types)</li>
+<li>UDC 40/CT ( Commitment Document Types)</li>
+<li>UDC 40/BT (Blanket Order Types)</li>
+<li>UDC 40/IU ((Inventory Update Types)</li>
+<li>UDC 39/TT (Transaction Type)</li>
+<li>UDC 40/NT (Nature of Transaction)</li>
+<li>UDC 40/OC (Category of Order)</li>
+<li>UDC 40/OQ (Other Quantity)</li>
+<li>UDC 40/IB (Interbranch Orders)</li>
+<li>UDC 17/CM (Service Contract Type)</li>
+<li>UDC 48/OT (Work Order Type)</li>
+<li>UDC 46/RS (Carton Status)</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>UDC 41/IN (Inventory Integrity Report) is used for checking integrity between F4111 (Item Ledger) and F0911 (General Ledger). This UDC determines the relationship between Document Types, DMAAIs, and Associated Accounts. So ensure that you add a new document type manually in case you make use of below functionality.<br />
+<ul>
+<li>&lt;Document 625476.1&gt; E1: 41: Item Ledger/Account Integrity Report (R41543)</li>
+<li>&lt;Document 1678098.1&gt; E1: 41: 9.1 Enhancement - Inventory to G/L Reconciliation Process (P41500/R41500/R41501)</li>
+</ul>
+</li>
+<li>When you add information directly into any of these UDC tables, the system updates the F0005 table. The system does not updated the F40039 table. Oracle's recommendation is to populate the document type through P40040.</li>
+</ul>
+</div>
+<p><br /> Where Vertical Feature (UDC 40/VF) and EnterpriseOne System Control (P99410) control the process globally/vertically, the document type master (P40040) enable/disable a certain routine per document type (or, order type).<br /> <br /> In case you need to add additional order/document type [Target], refer exiting document type [Source] which you want to take same process. Once you have created a new document type, verify all values between Source Document type and Target Document type in F40039 - Document Type Master through Databrowser utility and verify that all the necessary UDC values are populated properly.</p>
+<table style="border-collapse: collapse; width: 1215px; height: 2724px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 124pt;" width="165" /> <col style="width: 171pt;" width="228" /> <col style="width: 59pt;" width="79" /> <col style="width: 125pt;" width="167" /> <col style="width: 180pt;" width="240" /> </colgroup>
+<tbody>
+<tr style="height: 18.75pt;">
+<th class="xl69" style="height: 18.75pt; width: 85px; background-color: #009900; color: white;">Category</th>
+<th class="xl68" style="width: 276px; background-color: #009900; color: white;">Active Controls</th>
+<th class="xl68" style="width: 75px; background-color: #009900; color: white;">Column ID in F40039</th>
+<th class="xl65" style="width: 197px; background-color: #009900; color: white;">Values</th>
+<th class="xl65" style="width: 532px; background-color: #009900; color: white;">Reference </th>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 85px;"> </td>
+<td style="vertical-align: top; width: 276px;">Document TypeR</td>
+<td style="vertical-align: top; width: 75px;">DCT*</td>
+<td style="vertical-align: top; width: 197px;">UDC 00/DT</td>
+<td style="vertical-align: top; width: 532px;">Primary Key for F40039</td>
+</tr>
+<tr style="height: 60pt;">
+<td class="xl69" style="height: 60pt; font-weight: bold; width: 85px;" height="80"><big>Inventory</big></td>
+<td class="xl67" style="width: 276px;">(radio button) Transaction Type (TNTP)</td>
+<td class="xl67" style="width: 75px;">TNTP</td>
+<td class="xl66" style="width: 197px;">0 - Ignore<br /> 1 - Incoming<br /> 2 - Outgoing<br /> 3 - Both</td>
+<td style="width: 532px;">A value that specifies if the transaction type is incoming, outgoing, or both. Valid values are:<br />    *   Select all transactions.<br />    1   Select only incoming transactions.<br />    2   Select only outgoing transactions.<br />    3   Select only transaction types that are both incoming and outgoing.<br /> <br /> Above value does not affect actual transactions except Stock Valuation through NER N3900130 - SVCCardexTrigger (Stock Valuation Cardex Trigger) when online valuation is on to write F39120W (Period Detail Work File)  when TNTP is 1, 2 or 3.<br /> <br /> &lt;Document 625399.1&gt; - E1: 39: Advanced Stock Valuation Overview</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">
+<p>(check box) Include in Integrity Report (IRPT)</p>
+<p>Per the help behind the check box, this check box appears to only be applicable to inventory integrity reports, Item Ledger/Account Integrity Report (R41543) and Item Balance/Ledger Integrity Report (R41544). Select this option when the system should include transactions with the specified inventory document type in these two integrity reports.  <br /><br />However, upon further review of the code, there is not any code which checks that check box&rsquo;s value, neither in the P40040 application nor in the two UBEs referenced in the helps. This check box is for future use.<br /><br /></p>
+</td>
+<td class="xl67" style="width: 75px;">IRPT</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">
+<p><span style="color: red;">This feature is not currently activated.</span><br /> Reserved for future use.</p>
+<p> </p>
+</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Cross Docking Supply</td>
+<td class="xl67" style="width: 75px;">A112</td>
+<td class="xl66" style="width: 197px;">cGenericChar12<br /> <br /> 1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">cSupplyOrderType to handle Cross Docking Supply<br /> 1 - Purchase Order<br /> 2 - Work Order <br /> <br /> In a Sales Order, if an F4211 line is cross-dock related(i.e. pegged) to a PO, then the related cross-dock fields must match EXACTLY, the Purchase order fields for the record to be selected<br /> If an F4211 line is cross-dock related(i.e. pegged) to a WO, then the Order number and the Order Type in the related cross-dock fields must match, EXACTLY the WO Order number and Order Type<br /> <br /> &lt;Document 857942.1&gt; - E1: 46: Work Orders Not Shown On Planned Cross-Docking Workbench</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Display Lot Trace/Track</td>
+<td class="xl67" style="width: 75px;">ILTT</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">If you select this option, then inventory transactions with the appropriate document type will be displayed in lot tracing and tracking. If you do not select this option, then the system will process inventory transactions with this document type, but the transactions will not appear in lot tracing and tracking.<br /> <br /> Add/Update/Delete UDC 40/DC - Trace/Track Document Types, with<br />
+<div style="margin-left: 40px;">UDCValue = FC Document TypeR<br /> UDCDescription1 = Description 1 of 00/DT<br /> UDCDescription2 = Description 2 of 00/DT</div>
+<br /> &lt;Document 625954.1&gt; - E1: 30: Lot Trace/Track Inclusion Rules Defined</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Consolidate Lot Trace/Track</td>
+<td class="xl67" style="width: 75px;">LTTC</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">(No Implementation)<br /> If this box is checked, an attempt to consolidate inventory transactions will made.  If unchecked, consolidations will be avoided.</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">Nature of Transaction</td>
+<td class="xl67" style="width: 75px;">NATN</td>
+<td class="xl66" style="width: 197px;">UDC 40/NT<br /> Possible values are, <br />     (blank) - None<br />     B - Bottom<br />     C - Top<br />     I - Issue<br />     M - WO Completion<br />     T  - Transfer</td>
+<td style="width: 532px;">This value is used to tell Lot Trace/Track how to process inventory transactions that have a 'From' side and a 'To' side, as well as 'Bottom' and 'Top' levels.  Examples of From/To transactions are: Inventory Transfers, Inventory Reclassifications, and Work Order Issues/Completions.  Examples of Bottom/Top transactions are: Sales Orders and Purchase Receipts.  An inappropriate value will cause the inventory transaction to be processed incorrectly.<br /> <br /> Add/update/delete UDC 40/DC -Trace/Track Document Types, with<br />
+<div style="margin-left: 40px;">szUDCValue = FC Document TypeR<br /> szUDCDescription1 = Description 1 of 00/DT<br /> szUDCDescription2 = F40039.NATN</div>
+<br /> &lt;Document 625954.1&gt; - E1: 30: Lot Trace/Track Inclusion Rules Defined</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; font-weight: bold; width: 85px;" height="25"><big>Sales</big></td>
+<td class="xl67" style="width: 276px;">Order Category</td>
+<td class="xl67" style="width: 75px;">OCAT</td>
+<td class="xl66" style="width: 197px;">UDC 40/OC</td>
+<td style="width: 532px;">Use this value to identify blanket order types in the Sales Order Management and Procurement systems. Validate Values are, <br />     (blank) Regular Order<br />     1 - Blanket Order<br /> (Note: Though code 2 and 3 are available from UDC 40/OC but these values are not valid for this entry because the purpose of this control is to add/delete UDC 40/BT)<br /> <br /> Add/update/delete UDC 40/BT - Blanket Order Type, with<br />
+<div style="margin-left: 40px;">szUDCValue = FC Document TypeR<br /> szUDCDescription1 = Description1 of 00/DT<br /> szUDCDescription2 = Description2 of 00/DT</div>
+<br /> &lt;Document 625581.1&gt; - E1: 42: How to Create Sales Orders from Blanket Orders (P4210/P42101/P420111)</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">Interbranch Orders</td>
+<td class="xl67" style="width: 75px;">IBOR</td>
+<td class="xl66" style="width: 197px;">UDC 40/IB</td>
+<td style="width: 532px;">(No Implementation)<br /> A value of 1 will identify this order type as an interbranch order type. When you create an interbranch order using the Sales Order Entry (P4210), the system process additional order information, such as cost markup. You would use an Interbranch orders in a situation where the customer places an order with a sales office, but the sales office ships the inventory to the customer from a warehouse facility. The system creates accounting transactions and intercompany invoices for interbranch sales orders during Sales Update and Invoice Print.<br /> <br /> Note: currently Interbranch order is determined by processing option of P4210 (szPOInterbranchOrderTypes)</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">Other Quantity (1/2)</td>
+<td class="xl67" style="width: 75px;">OTQY</td>
+<td class="xl66" style="width: 197px;">UDC 40/OQ</td>
+<td style="width: 532px;">(No Implementation)<br /> This field determines if the Quantity on Other Sales Order 1 or 2 field in the Item Location file is to be updated instead of the Soft Commit or Hard Commit fields.<br /> <br /> Valid Values are, <br />     (Blank) None<br />     1 - Update Sales Order Qty 1 or 2 (F4211)<br />     2 - Update Item Location (F41021)<br /> <br /> cf., Currently F4211.OTQY is used to indicate Quote/Blanket Order with value 1 and 2<br /> <br /> &lt;Document 625559.1&gt; - E1: 42: Inventory Commitments In Sales (R42995/P4210/P42101/R42118/P42117/R42520)</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Relieve On Hand Inventory at Ship Confirm</td>
+<td class="xl67" style="width: 75px;">RELV</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;"><span style="color: red;">This feature is not currently activated.</span><br /> (For future usage) Use this field to indicate whether the quantity committed to this sales order will be relieved from the On Hand Quantity during the Shipment Confirmation process. If this option is disabled, the Shipment Confirmation process will only hard commit the quantity shipped to the appropriate item location.<br /> <br /> Add/update/delete UDC 40/IU - Inventory Update Type, with<br />
+<div style="margin-left: 40px;">szUDCValue = FC Document TypeR<br /> szUDCDescription1 = Description1 of 00/DT<br /> szUDCDescription2 = Description2 of 00/DT</div>
+(If RELV = '1' then insert/update or changed to '0' then delete it from UDC 40/IU)<br /> <br /> &lt;Document 625559.1&gt; - E1: 42: Inventory Commitments In Sales (R42995/P4210/P42101/R42118/P42117/R42520)</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Ship And Debit Processing</td>
+<td class="xl67" style="width: 75px;">A105</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">A code that indicates whether ship and debit processing is activated or inactivated for a document type. Valid values are:<br />    0   Ship and debit processing is inactive.<br />    1   Ship and debit processing is active.<br /> <br /> &lt;Document 625583.1&gt; - E1: 42: Ship and Debit</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">Product Code</td>
+<td class="xl70" style="width: 75px;">SY</td>
+<td class="xl66" style="width: 197px;">UDC 98/SY<br /> Allow Blank</td>
+<td style="width: 532px;">(No Implementation) since next number can be handled up to Company by Fiscal year</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">Order Type Next Number</td>
+<td class="xl70" style="width: 75px;">ORNN</td>
+<td style="width: 197px;"> </td>
+<td style="width: 532px;">(No Implementation) Index for next number table</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">Send Status Notification</td>
+<td class="xl67" style="width: 75px;">A110</td>
+<td style="width: 197px;"> </td>
+<td style="width: 532px;">Only when the value is 1 send notification to customer via XPI Functions B4003000 &amp; B4003020 (cf., A106 in Procurement setup). Do not set value 1 unless you have interface with 3rd party software</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 85px;"> </td>
+<td style="vertical-align: top; width: 276px;">(hidden push button) Consignment</td>
+<td style="vertical-align: top; width: 75px;">CSNOT</td>
+<td style="vertical-align: top; width: 197px;">0 - Non-Consignment Order<br /> 1 - Consignment Billing Order<br /> 2 - Consignment Shipping Order</td>
+<td style="vertical-align: top; width: 532px;">A value to identify the Consignment Order Type.<br /> <br /> Whenever selection changes (push button) consignment is to be called as below,<br /> (Case CSNOT = 0) Non Consignment<br />     Enable Control(FC Relieve On Hand Inventory at Ship Confirm)<br /> (Case CSNOT = 1) Consignment Billing Order<br />     Disable Control(FC Relieve On Hand Inventory at Ship Confirm)<br />     Set RELV = '0'<br /> (Case CSNOT = 2) Consignment Shipping Order<br />     Disable Control(FC Relieve On Hand Inventory at Ship Confirm)<br />     Set RELV = '1'<br /> <br /> &lt;Document 625644.1&gt; - E1: 42: Consignment Sales</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; font-weight: bold; width: 85px;" height="25"><big>Procurement</big></td>
+<td class="xl67" style="width: 276px;">ProcurementOrderCategory</td>
+<td class="xl67" style="width: 75px;">OCAT</td>
+<td class="xl66" style="width: 197px;">UDC 40/OC</td>
+<td style="width: 532px;">(Shared with Order Category in Sales Tab)<br /> Use this value to identify blanket order types in the Sales Order Management and Procurement systems.<br /> <br /> Use this value to identify blanket order types in the Sales Order Management and Procurement systems. Validate Values are, <br />     (blank) Regular Order<br />     1 - Blanket Order<br /> (Note: Though code 2 and 3 are available from UDC 40/OC but these values are not valid for this entry because the purpose of this control is to add/delete UDC 40/BT)<br /> <br /> Add/update/delete UDC 40/BT - Blanket Order Type, with<br />
+<div style="margin-left: 40px;">szUDCValue = FC Document TypeR<br /> szUDCDescription1 = Description1 of 00/DT<br /> szUDCDescription2 = Description2 of 00/DT</div>
+<br /> &lt;Document 625636.1&gt; - E1: 43: Blanket Orders in Purchasing FAQ</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">ProcurmentOtherQuantity</td>
+<td class="xl67" style="width: 75px;">OTQY</td>
+<td class="xl66" style="width: 197px;">UDC 40/OQ</td>
+<td style="width: 532px;">(No Implementation)<br /> (Shared with Order Category in Sales tab)<br /> This field determines if the Quantity on Other Purchase Order field is updated in the Item Location file instead of the On Purchase Order field.<br /> <br /> Valid Values are, <br />     (Blank) None<br />     1 - Update Sales Order Qty 1 or 2 (F4311)<br />     2 - Update Item Location (F41021)<br /> <br /> Currently F4311.OTQY is to be set 1 for quote order based on processing option value</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Commit Procurement Orders</td>
+<td class="xl67" style="width: 75px;">CTPA</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">A code that specifies whether the system automatically commits the amount on a purchase order for a service or a subcontract.<br /> <br /> Add/Update UDC 40/CT - Commitment Document Type, with<br />
+<div style="margin-left: 40px;">UDCValue = DCT<br /> UDCDescription1 = Description 1 of 00/DT<br /> UDCDescription2 = Description 2 of 00/DT</div>
+<br /> &lt;Document 625480.1&gt; - E1: 43: Encumbrance/Commitment Processing</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">Publish Externally</td>
+<td class="xl67" style="width: 75px;">A106</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">A code that specifies whether the system allows you to publish document types externally. If you do not enter a value, the system does not allow you to publish document types externally. Other valid values are:<br />      0 - You cannot publish document types externally.<br />     1 - You can publish document types externally.<br /> <br /> Publish Externally via B4302150 - XPI to 3rd party software<br /> If you are in upgraded environment, the description must be changed as described at enhancement &lt;Bug 10754837&gt; : SETUP DOC TYPES IN P40040 - SAR: 5231668</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">ProcurementSystemCode</td>
+<td class="xl70" style="width: 75px;">SY</td>
+<td class="xl66" style="width: 197px;">UDC 98/SY<br /> Allow Blank</td>
+<td style="width: 532px;">(No Implementation)</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">ProcurementNextNumber</td>
+<td class="xl70" style="width: 75px;">ORNN</td>
+<td style="width: 197px;"> </td>
+<td style="width: 532px;">(No Implementation)</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; font-weight: bold; width: 85px;" height="25"><big>S/WM</big></td>
+<td class="xl67" style="width: 276px;">Contract Type</td>
+<td class="xl67" style="width: 75px;">CSKT</td>
+<td class="xl66" style="width: 197px;">UDC 17/CM<br /> <br />   (Blank) - None<br />   1 - Service Contract<br />   2 - Service Contract Quote<br />   3 - Supplier Contract</td>
+<td style="width: 532px;">A document type that indicates that this document is a service contract in CSMS. You can also use this document type to define the specific contract type. For example, this could be a regular CSMS service contract or it could be a quote for a CSMS service contract.<br /> <br /> This value is to be checked through Entitlement Checking (where code value is 1) or Supplier Recovery Entitlement (where code value is 3)<br /> <br /> Tab name has changed from CSMS to S/WM through enhancement</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; font-weight: bold; width: 85px;" height="25"><big>Work Order Definition</big></td>
+<td class="xl67" style="width: 276px;">Work Order Type</td>
+<td class="xl67" style="width: 75px;">A201</td>
+<td class="xl66" style="width: 197px;">UDC 48/OT</td>
+<td style="width: 532px;">Hard Coded (Do Not Change)<br />
+<ul>
+<li>01 - Non Work Order Related</li>
+<li>02 - Manufacturing Work Order; PRODUCTION_ORDER</li>
+<li>03 - Manufacturing Rework WorkOrder</li>
+<li>04 - Equipment Work Order</li>
+<li>05 - Service Work Order</li>
+<li>06 - Warranty Claim Order</li>
+<li>07 - Supplier Recovery Order</li>
+<li>08 - Engineering Change Order</li>
+<li>09 - Engineering Change Rqst Order</li>
+<li>10 - Real Estate Management</li>
+<li>11 - EPM SUMMARY ORDER</li>
+<li>12 - Rate Schedule</li>
+</ul>
+NOTE: These values should be hard-coded in the UDC 48/OT - Order Type CSOT (Service Order Type) is not appeared in application P40040<br /> <br /> &lt;Document 1098535.1&gt; - E1: 31: Work Order Type Field A201 in Document Master Table F40039</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 85px;"> </td>
+<td style="vertical-align: top; width: 276px;">Service Order Type</td>
+<td style="vertical-align: top; width: 75px;">CSOT</td>
+<td style="vertical-align: top; width: 197px;"> </td>
+<td style="vertical-align: top; width: 532px;">Note: This column does not appear in P40040.<br /> <br /> A document type that indicates a work order. You can also use the document type to define the specific work order type, such as a regular work order or a quote for a work order.<br /> <br /> If Work Order Type (F40039.A201) is IN ("05", "06", "07") then F40039.CSOT = '1' else CSOT = '0'</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; font-weight: bold; width: 85px;" height="25"><big>Shipping</big></td>
+<td class="xl67" style="width: 276px;">Carton Creation Status</td>
+<td class="xl67" style="width: 75px;">A204</td>
+<td style="width: 197px;">UDC 46/RS<br />   (Blank) Blank<br />   10 - Created<br />   20 - Changed<br />   30 - Approved</td>
+<td style="width: 532px;">A user defined code (46/RS) that specifies which status the system uses when creating cartons in the Carton Recommendations table (F4615).<br /> <br /> &lt;Document 1184633.1&gt; - E1: 49: Standard Pack Carton Recommendations (P4615/P4620/P46091/P460131/P460132/R46151)</td>
+</tr>
+<tr style="height: 18.75pt;">
+<td class="xl69" style="height: 18.75pt; width: 85px;" height="25"> </td>
+<td class="xl67" style="width: 276px;">Carton Change Status</td>
+<td class="xl67" style="width: 75px;">A205</td>
+<td style="width: 197px;">UDC 46/RS<br />   (Blank) Blank<br />   10 - Created<br />   20 - Changed<br />   30 - Approved</td>
+<td style="width: 532px;">A user defined code (46/RS) that specifies which status the system uses when changing cartons in the Carton Recommendations table (F4615).</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Recommend Standard Packs</td>
+<td class="xl67" style="width: 75px;">A109</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">Default Value is 0<br /> <br /> &lt;Document 1184633.1&gt; - E1: 49: Standard Pack Carton Recommendations (P4615/P4620/P46091/P460131/P460132/R46151)</td>
+</tr>
+<tr style="height: 30pt;">
+<td class="xl69" style="height: 30pt; width: 85px;" height="40"> </td>
+<td class="xl67" style="width: 276px;">(check box) Enable Shipment Sequencing</td>
+<td class="xl67" style="width: 75px; font-weight: bold;">DTSQ</td>
+<td class="xl66" style="width: 197px;">1 - Checked<br /> 0 - Unchecked</td>
+<td style="width: 532px;">Document Type Sequencing flag that indicates that the Document Type will enable manual entry or production sequencing fields PSJOBNO and JOBSQ.<br /> <br /> This control is to be disabled unless SY49 - Transporation is enabled through P99410 - EnterpriseOne System Control<br /> &lt;Internal_Only&gt;B4210390&amp;B4900240<br /> &lt;/Internal_Only&gt;</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>UDC values mentioned above can be populated manually</li>
+<li>When UDC values control the flow of transaction value can be added/deleted by changing selection for functionality</li>
+<li>Column DTSQ and CSNOT are added in EnterpriseOne application release 8.12 and above. Same columns are implemented in F42UI02 (Header F42UI01 Cache Extension) which is data structure to hold Sales Order Header Information</li>
+<li>UDC 40/IB may not have code 1 (if needed) you may add it to populate Interbranch Orders (IBRO) for information purpose</li>
+<li>CSOT which is set through P40040 does not appear on screen</li>
+<li>F40039 (Document Type Master) data is to be retrieved through N4000039 - F40039GetDocumentTypeInfo (F40039 Get Document Type Info)</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<h3 class="km">P400391 - Document Type Exclusion Rules</h3>
+<p>Document Type Exclusion Rules (P400391) enables you to bypass update of  the Item History (F4115) file during inventory transactions. Since this routine is handled by XT4111Z1 - Inventory Master Business Function, any inventory transaction can invoke this functionality.<br /> <br /> The document Type Maintenance program has been updated to provide form/row exits to Document type exclusion rules (P400391) which allows user overrides of document types at the branch and ALL branch level. In case you want to exclude all the branch/plant for a certain document type, you may define it as "         ALL" .<br /> <br /> F400391 - Document Type Exclusion Rules</p>
+<table style="border-collapse: collapse; width: 782px; height: 220px;" border="1" cellspacing="1" cellpadding="2"><colgroup><col style="width: 48pt;" width="64" /> <col style="width: 149pt;" width="199" /> <col style="width: 293pt;" width="390" /> </colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 48pt; background-color: #009900; color: white;">Column</th>
+<th style="width: 149pt; background-color: #009900; color: white;">Description</th>
+<th style="width: 293pt; background-color: #009900; color: white;">Detail</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">DCT</td>
+<td>Document Type</td>
+<td>DCT value which is defined in P40040 (F40039) - Document Type Maintenance</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">MCU</td>
+<td>Business Unit</td>
+<td>Specific Branch/plant to bypass<br /> Or "         ALL" branch/plant for specific document type</td>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt;" height="20">EIHU</td>
+<td>Exclude Item History Update</td>
+<td>A flag to indicate that a specific Document Type is to be excluded from update to the F4115 Item History Update table when relieving inventory.<br /> <br /> You can set 'Y' for this column to exclude</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">Note:<br />
+<ul>
+<li>Whether set F400391.EIHU with 'Y' or not does not make difference because XT4111Z1 is checking the existence of data rather than the flag in this column</li>
+<li>Question and answer on F400391 can be found at &lt;Document 1338022.1&gt; - E1: 41: F4115: Item History FAQ (F4115/P4115/P43230/P40040)</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<h3 class="km">Links to Implementation Guides</h3>
+<p class="km">Refer to individual implemenation guides for additional information.</p>
+<table style="border-collapse: collapse; width: 1113px; height: 42px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" span="2" width="64" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th style="height: 15pt; width: 542px; background-color: #009900; color: white;">Implemenation Guide</th>
+<th style="width: 567px; background-color: #009900; color: white;">Detail</th>
+</tr>
+<tr style="height: 15pt;">
+<td style="height: 15pt; width: 542px;" height="20">EnterpriseOne Applications Inventory Management Implementation Guide <br />
+<div style="margin-left: 40px;">2 Setting Up the Inventory Management System<br />
+<div style="margin-left: 40px;">2.8 Setting Up Document Type Information<br />
+<div style="margin-left: 40px;">2.8.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15119/setup_inv_mgmnt_system.htm#EOAIM00008" alt="Understanding Document Type Information" title="Understanding Document Type Information" target="_blank">Understanding Document Type Information</a></div>
+</div>
+</div>
+</td>
+<td style="width: 567px;">This is main documenation on Document Type Maintenance</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">EnterpriseOne Applications Sales Order Management Implementation Guide<br />
+<div style="margin-left: 40px;">9 Entering Additional Orders<br />
+<div style="margin-left: 40px;">9.6 Entering Quote Orders<br />
+<div style="margin-left: 40px;">9.6.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15146/enter_additional_orders.htm#EOASO00073" alt="Quote Order Creation and Document Type" title="Quote Order Creation and Document Type" target="_blank">Understanding Quote Orders</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">When the customer confirms the order, you convert the quote order into a sales order. You can also generate a sales proposal based on a quote order. <strong>Quote orders can be designated to relieve or not relieve quantity through the Document Type Maintenance program (P40040)</strong>.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Configurator Implementation Guide<br />
+<div style="margin-left: 40px;">6 Entering Orders for Configured Items<br />
+<div style="margin-left: 40px;">6.13 Entering Credit Orders for Configured Items<br />
+<div style="margin-left: 40px;">6.13.3 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15086/enter_orders_for_cis.htm#EOABC00167" alt="Credit Order for Configured Item" title="Credit Order for Configured Item" target="_blank">Prerequisites</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Set up <strong>a document type for credit orders</strong> in the Document Type Maintenance program (P40040). The document type is usually CO.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">EnterpriseOne Applications Requisition Self Service Implementation Guide<br />
+<div style="margin-left: 40px;">3 Setting Up Direct Connect and Purchase Order Dispatch<br />
+<div style="margin-left: 40px;">3.5 Setting Up Additional Information for PO Dispatch<br />
+<div style="margin-left: 40px;">3.5.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15140/stngup_dirct_cnct_po_disp.htm#EOARS00007" alt="PO Dispatch" title="PO Dispatch" target="_blank">Understanding Additional Setup for PO Dispatch</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">you must verify that document type that you are using for purchase orders exists, and that the Publish Externally option for that document type is selected. You use the Document Types Maintenance program (P40040) to set up this information. The default document type for purchase orders is OP. You can use this document type, or create your own for purchase orders.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 40px;">9 Creating Purchase Orders<br />
+<div style="margin-left: 40px;">9.1 Understanding Purchase Order Creation<br />
+<div style="margin-left: 40px;">9.1.1 Using Purchase Order Dispatch</div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Select the Publish Externally option for the purchase order document type using the Procurement tab in the Document Type Maintenance program (P40040).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">EnterpriseOne Applications Warehouse Management Implementation Guide<br />
+<div style="margin-left: 40px;">2 Setting Up Warehouse Management<br />
+<div style="margin-left: 40px;">2.16 Working with Standard Pack Carton Recommendations<br />
+<div style="margin-left: 40px;">2.16.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15154/putaway_requests.htm#EOAWM00266" alt="Carton Recommendation" title="Carton Recommendation" target="_blank">Understanding Standard Pack Carton Recommendations</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">The system generates the recommendation when creating shipments, based on the type of order established in the Document Type Master table (F40039) and whether you have activated carton recommendation processing for the document type in the Document Type Maintenance application (P40040). When you activate carton recommendations, you can:<br /> Select standard pack recommendations. The system recommends the innermost carton and any additional packaging layers that are set up in standard pack rules.<br /> Specify the Carton Creation Status. This is the status for recommendations created by the system.<br /> Specify the Carton Change Status. The status for recommendations that have been manually changed or Carton Detail has been created. Once the carton is at this status, the system does not automatically re-calculate packaging recommendations if the sales order quantity is changed for an item.<br /> Specify shipment sequencing. The system indicates that the document type enables manual entry of production sequencing fields Job Number (PSJOBNO) and Job Sequence (JOBSQ).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 40px;">6 Working with Putaway Requests<br />
+<div style="margin-left: 40px;">6.2 Creating Putaway Requests<br />
+<div style="margin-left: 40px;">6.2.2 Prerequisites</div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">In the Document Type Maintenance program (P40040), set up document type</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Shop Floor Management Implementation Guide<br />
+<div style="margin-left: 40px;">5 Working with Work Orders and Rate Schedules<br />
+<div style="margin-left: 40px;">5.7 Entering Work Order Headers<br />
+<div style="margin-left: 40px;">5.7.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15143/work_w_wo_rate_schedules.htm#EOASH00021" alt="Work Order Document Type" title="Work Order Document Type" target="_blank">Understanding Work Order Header Entry</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">You need to differentiate each type of work order, such as manufacturing work orders, rework orders, repair orders, engineering change orders, orders for prototypes, and so on, by assigning each of them a unique document type and work order type. You use the Document Type Maintenance program (P40040) to set up these document constants.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">EnterpriseOne Applications Product Data Management Implementation Guide<br />
+<div style="margin-left: 40px;">3 Setting Up Product Data Management<br />
+<div style="margin-left: 40px;">3.6 Defining Document Type Constants for Work Orders<br />
+<div style="margin-left: 40px;">3.6.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15128/set_up_pdm.htm#EOAPD00004" alt="Product Data" title="Product Data">Understanding Document Type Constants</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Document types are used in the software to specify particular types of transactions. You define the characteristics of document types in the Document Type Maintenance program (P40040). The document type constants defined in this program affect all software transactions. The order type for each of the document types must be defined so that the system knows how to process the activity for it. For example, the document type for a manufacturing work order can be set to WO for the correct transactions that relate to the processing of a manufacturing work order.<br /> <br /> To differentiate the various work order document types from each other, you assign a specific order type to each work order document type. For example, a manufacturing work order is associated with order type 02.<br /> <br /> The order type values for work order processing are stored in the UDC table 48/OT (Order Type) and are hard-coded</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 80px;">3.8 Setting Up Engineering Change Management<br />
+<div style="margin-left: 40px;">3.8.2 Prerequisites</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Ensure that the document type for ECOs is set up in Document Type Maintenance program (P40040).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Service Management Implementation Guide<br />
+<div style="margin-left: 40px;">5 Managing Contracts<br />
+<div style="margin-left: 40px;">5.3 Managing Contracts<br />
+<div style="margin-left: 40px;">5.3.11 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15144/managing_work_orders.htm#EOASM00225" alt="Service Management" title="Service Management" target="_blank">Setting Processing Options for the Contract Revisions Program (P1721)</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Contract Type<br /> Enter a value from UDC 00/DT (Document Type - All Documents) that identifies the type of document. The document types for service contracts are defined in the Document Type Master table (F40039) from the Document Type Maintenance program (P40040).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 40px;">6 Managing Work Orders<br />
+<div style="margin-left: 40px;">6.4 Setting Up Work Orders<br />
+<div style="margin-left: 40px;">6.4.3 Prerequisites</div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Set up work order document types in the Document Type Maintenance program (P40040) from the Work Order Setup menu (G1742).<br /> For each document type, enter 1 in the Work Order field.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 80px;">6.5 Creating Work Orders Using the Service Management Workbench Program (P90CD020)<br />
+<div style="margin-left: 40px;">6.5.6 Setting Processing Options for Service Management Workbench (P90CD020)</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Order Type: Enter a value from UDC 00/DT (Document Type - All documents) that identifies the type of document. This code also indicates the origin of the transaction. JD Edwards has reserved document type codes for vouchers, invoices, receipts, and time sheets, which create automatic offset entries during the post program. (These entries are not self-balancing when you originally enter them.) These document types should not be changed:<br />     P: Accounts payable.<br />     R: Accounts receivable.<br />     T: Payroll.<br />     I: Inventory.<br />     O: Purchase order processing.<br />     J: General accounting/joint interest billing.<br />     S: Sales order processing.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 80px;">6.9 Processing Work Orders<br />
+<div style="margin-left: 40px;">6.9.2 Prerequisites</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Set up work order document types in the Document Type Maintenance program (P40040) from the Work Order Setup menu (G1742).<br /> Ensure that the document type on the work order is set to 1 in the Work Order field on the Document Type Maintenance program (P40040).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Engineer to Order Implementation Guide<br />
+<div style="margin-left: 40px;">3 Setting Up Engineer to Order<br />
+<div style="margin-left: 40px;">3.1 Understanding Engineer to Order Setup<br />
+<div style="margin-left: 40px;">3.1.1<a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15106/set_up_eto.htm#EOAEO00001" alt="ETO" title="ETO" target="_blank"> Task Types for ETO Projects</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">JD Edwards EnterpriseOne Engineer to Order enables you to use several different task types as part of the work breakdown structure. Each task type represents a different type of activity that is related to the project that might require different actions on the part of the project manager and responsible project employees. You can use only task types that are set up in the Document Type Maintenance program (P40040).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Capital Asset Management Implementation Guide<br />
+<div style="margin-left: 40px;">4 Setting Up Capital Asset Management<br />
+<div style="margin-left: 40px;">4.2 Understanding UDCs for CAM<br />
+<div style="margin-left: 40px;">4.2.2 Work Order UDCs<br />
+<div style="margin-left: 40px;">4.2.2.1<a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15090/set_up_cap_asset_mngt.htm#EOACA00228" alt="CAM" title="CAM" target="_blank"> Work Order Document Types (00/DT)</a></div>
+</div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Use these codes to differentiate between different types of work order transactions in the general ledger. For example, you can create document types for preventive maintenance work orders, corrective maintenance work orders, and so on.<br /> Work order document type is a key work order code. You define this code in the Document Type Maintenance program (P40040) to indicate that the work order is an equipment work order type.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">EnterpriseOne Applications Real Estate Management Implementation Guide<br />
+<div style="margin-left: 40px;">9 Processing Tenant Work Orders<br />
+<div style="margin-left: 40px;">9.2 Entering Tenant Work Orders<br />
+<div style="margin-left: 40px;">9.2.1 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15138/processtenantworkorder.htm#EOARM00053" alt="Real Estate" title="Real Estate" target="_blank">Understanding Tenant Work Orders</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Use the Tenant Work Order Entry program (P48201) to enter tenant work orders, compare completion to a projected schedule, and track task completion. You must use the Document Type Maintenance program (P40040) to set up the document type for tenant work orders in UDC (user-defined code) table 00/DT.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Kanban Management Implementation Guide<br />
+<div style="margin-left: 40px;">4 Processing Kanban Transactions by Item<br />
+<div style="margin-left: 40px;">4.5 Releasing Quantity from a Blanket Order Using Kanban Processing<br />
+<div style="margin-left: 40px;">4.5.4 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15122/process_kban_by_item.htm#g037ee99c9453fb39_ef90c_10a77f2c279__1e10" alt="kanban" title="kanban" target="_blank">Setting Processing Options for Purchase Order Inquiry (P3160W)</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">Specify the document type (UDC 00/DT) that you associate with the blanket purchase orders from which you will release quantity using kanban processing. If you create a new document type to represent blanket orders, whether for kanban processing or otherwise, you must set up that document type in the Document Type Maintenance program (P40040).</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">JD Edwards EnterpriseOne Applications Customer Relationship Management for Sales Implementation Guide<br />
+<div style="margin-left: 40px;">6 Managing Sales Opportunities<br />
+<div style="margin-left: 40px;">6.4 Creating Quotes and Sales Orders for Opportunities<br />
+<div style="margin-left: 40px;">6.4.2 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e15142/mg_sls_oppts.htm#EOASF00118" alt="CRM" title="CRM" target="_blank">Prerequisites</a></div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">You must also set up Document Type Maintenance (P40040) for Sales Quotes. If you do not set this up, the system will not convert opportunities to quotes. To set up document types for Sales Quotes, enter 2 or 3 in the Order Category field on the Sales tab of the Document Type Revisions form.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">EnterpriseOne Applications Business Interfaces Implementation Guide<br />
+<div style="margin-left: 40px;">12 Work Order - Service<br />
+<div style="margin-left: 40px;">12.2 <a href="http://docs.oracle.com/cd/E16582_01/doc.91/e38040/alm_cust_srvc_wrk_ordr.htm#EOAAA918" alt="BI" title="BI" target="_blank">Work Order - Service Business Services - CustomerServiceManager</a></div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">In the EnterpriseOne system, work orders are stored in the Work Order Master table (F4801). When you create a work order, you must specify the document type that is associated with the work order. The system uses the value in the Document Type field (DCTO) to determine the order type of the work order.<br /> <br /> You use the Document Type Maintenance program (P40040) to maintain document type information. Document type records are stored in the Document Type Master table (F40039). When you enter a document type into the system, you can associate that document type with an order type. Order types might include manufacturing orders, equipment orders, and service work orders. To specify that the document type is associated with service work orders, enter 05 in the Order Type field.<br /> <br /> The getServiceOrder and processServiceOrder operations process only those work orders that have been defined as service work orders. Service work orders must include a document type that is associated with an order type of 05.</td>
+</tr>
+<tr>
+<td style="vertical-align: top; width: 542px;">
+<div style="margin-left: 40px;">77 Purchase Orders<br />
+<div style="margin-left: 40px;">77.3 Purchase Orders Real-Time Events<br />
+<div style="margin-left: 40px;">77.3.1 RTPOOUT<br /> 77.3.2 RTPOOUT2</div>
+</div>
+</div>
+</td>
+<td style="vertical-align: top; width: 567px;">The Document Type of the purchase order must be set up to publish externally. Use the P40040 application to inquire on a document type and select the publish externally check box on the Purchasing tab of the Document Type Revisions form.</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp; </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

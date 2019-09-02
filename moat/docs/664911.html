@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overview of Balance Restatement Method (R11414A)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Overview of Balance Restatement Method (R11414A)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Program Functionality</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Setup</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Multi-Currency Conversion Constant</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Ledger Types Setup (P0025)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Balance Restatement Rates Setup (P1113)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Computations Setup (P1114)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Assigning Computation ID to a Company (P0010)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">Processing Options (R11414A)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Data Selection (R11414A)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section310"><strong>Running the Compute Restated Balances (R11414A)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+
+<hr size=1><p>
+
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview</strong></h3>
+<p>If the organization has companies operating in more than one country, you might have to consolidate financial reporting among the different companies. The Balance Restatement method restates balances into a single currency for consolidated reporting purposes. For example, by restating U.S. dollars to Canadian dollars, you can consolidate reporting with other Canadian companies.</p>
+<p>You can use detailed currency restatement or the balance restatement to restate amounts into one currency. For balance restatement, the system restates the amounts based on Account Balance (F0902) table in the consolidation ledger (AC) or other user-specified ledger type at the balance level, thereby creating fewer records, whereas the Detailed Currency Restatement creates the restated amounts based on the F0911 transactions.</p>
+<p>You might use balance restatement to:</p>
+<ul>
+<li>
+<p>Restate balance sheet accounts at the period-end rate and income statement accounts at an average rate prior to generating consolidated financial reports. For example, you can restate subsidiary company accounts into the parent company currency for consolidated reporting.</p>
+</li>
+<li>
+<p>Combine amounts from up to three different ledgers into one ledger. For example, you can restate the AA (actual amounts) and GP (GAAP adjustments) ledgers into the AC (consolidation) ledger.</p>
+</li>
+<li>
+<p>Restate accounts for <span class="italic">what if</span> budget analysis. For example, you can specify a budget rate that is different from that used in the accounting books for internal comparison purposes.</p>
+</li>
+</ul>
+<p>This method of currency restatement restates balances into a single currency for consolidated reporting purposes.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for Finance Functional users who will be involved in the multicurrency processing in the General Accounting system.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<p> </p>
+<p><img src="../images/bs01.png" border="0" alt="Balance_Currency_Restatement_Example" title="Balance_Currency_Restatement_Example" hspace="0"/></p>
+<p> </p>
+<hr />
+<a name="aref_section31"></a><h3 class="km"><strong>Program Functionality</strong></h3>
+<p>The Compute Restated Balances program (R11414A) restates balances from a source ledger into a consolidation ledger (AC). Based on the exchange rates and computations that you set up, the Compute Restated Balances program:</p>
+<ul>
+<li>Restates a selected period, or all periods up to and including the current period (year to date), as specified in a processing option.</li>
+<li>Applies an individual rate to each period that you are restating, or applies a single rate to all periods.</li>
+<li>Applies a different exchange rate for a specific range of accounts. If an exchange rate does not exist in the Currency Restatement Rates File table (F1113), the system prints a report with blanks in the exchange rate and restated balance columns. If you choose not to print restated balances for zero amounts, all of the accounts in that range are omitted from the report.</li>
+<li>Restates up to three source ledger types to a single destination ledger type. Currency decimals are based on the currency code of the destination ledger type.</li>
+</ul>
+<p>The Compute Restated Balances program uses information from the following tables:</p>
+<ul>
+<li>Account Balance (F0902)</li>
+<li>Account Ledger (F0911)*</li>
+<li>Currency Restatement Rates (F1113)</li>
+<li>Company Conversions Parameter (F1114)</li>
+</ul>
+<p>* Balance restatement uses the F0911 table only if you enter manual journal entries in the AC ledger for adjustments. You can set a processing option to specify whether to include the F0911 adjustments when you run the Compute Balance Restatement program (R11414A).</p>
+<div class="kmnotebox">NOTE: You can run the Compute Restated Balances program as often as necessary. Each time that you run the program, it overwrites existing balances unless you specify a different destination ledger type in a processing option.</div>
+<p>You can run Compute Restated Balances program (R11414A) program in following modes:</p>
+<ul>
+<li>
+<p>Proof mode with report:</p>
+<p>The system prints a report but does not create balances in the destination ledger.</p>
+</li>
+<li>
+<p>Final mode with report:</p>
+<p>The system creates balances in the destination ledger and prints a detailed audit trail.</p>
+</li>
+<li>
+<p>Final mode without report:</p>
+<p>The system creates balances in the destination ledger but does not print a detailed audit trail.</p>
+</li>
+</ul>
+<p><strong>Logic for Restatement</strong></p>
+<p>To restate balances, the Compute Restated Balances program (R11414A):</p>
+<ul>
+<li>Uses the data selection to select only those companies that have been assigned the computation ID that is entered in the processing options.</li>
+<li>Reads the F0902 table to find a beginning balance and period amount in the actual amount (AA) ledger for each GL account in the range of accounts for the specified company.</li>
+<li>Applies calculations based on the calculation method, as follows:
+<ul>
+<li>Period calculation balances for period 1. The system updates beginning balances, restates the balance for the current period, and clears all periods after the current period.</li>
+<li>Period calculation balances for a selected period other than period 1. The system leaves previous balances as is, restates the balance for the current period, and clears all periods after the selected period.</li>
+<li>Year-to-date balances for selected periods. The system restates balances for the selected periods and clears all periods after the selected period.</li>
+</ul>
+</li>
+</ul>
+<div class="kmnotebox">NOTE: Make sure that you restate balances up to and including the appropriate month and not beyond. If the current period is June, restate the year-to-date balances for January through June.</div>
+<ul>
+<li style="list-style-type: none;">
+<ul>
+<li>Amounts for a monetary account. If the currency associated with the destination ledger type matches the currency assigned to the account, the system uses the amounts from the foreign currency (CA) ledger instead of restating amounts from the AA ledger.</li>
+</ul>
+</li>
+<li>Creates or updates the destination ledger, usually ledger type AC (consolidation ledger), in the F0902 table.</li>
+</ul>
+<div class="kmnotebox">NOTE: If you ran the annual close for the AC ledger, the system updated the APYC and APYN fields in the AC ledger at that time. The system calculates retained earnings if the Close to Retained Earnings Account check box on the Ledger Type Rules Setup form is selected for the AC ledger.</div>
+<hr />
+<a name="aref_section32"></a><h3 class="km"><strong>Setup</strong></h3>
+<p>Before you can use balance currency restatement, you must set up certain information that the system uses during processing:</p>
+<a name="aref_section33"></a><h4 class="km">Multi-Currency Conversion Constant</h4>
+<ul>
+<li>Enter 'Z' Divisor or 'Y' Multiplier method for processing multi-currency transactions in General Accounting Constants (P0000).</li>
+<li>For more information on setting up Constants, refer to <a href='../docs/1434211.html'>Overview of General Accounting Constants</a>.</li>
+</ul>
+<hr />
+<a name="aref_section34"></a><h4 class="km">Ledger Types Setup (P0025)</h4>
+<p>When you work with multiple currencies, the system uses ledger types AA (actual amounts) and CA (foreign currency amounts). To perform balance currency restatement, the system also uses the AC ledger type. You can either set up ledger type AC or any user-specified ledger type for balance restatement.</p>
+<p>This ledger contains a partial or complete chart of accounts with transactions in the reporting currency. Assign the currency code of the consolidated reporting currency to ledger type AC. Although ledger type AC is commonly used, the  consolidation ledger type can be any user-specified ledger type.</p>
+<div class="kmnotebox">NOTE: Ensure that ledger type AC (consolidation ledger) or other user-specified ledger type for balance restatement exists in both UDC 09/LT and UDC 11/TL.</div>
+<p>You use the Ledger Type Rules Setup application (P0025) to set up your Ledger Type for Balance Currency Restatement.</p>
+<p><img src="../images/bs02.png" border="0" alt="P0025_Ledger_Type_Rules_Setup_AC" title="P0025_Ledger_Type_Rules_Setup_AC" hspace="0"/></p>
+<p><em>Close to Retained Earnings Account</em><br /><br />Select this check box if you restate the entire chart of accounts for ledger type AC.<br /><br /><em>Use as Restatement "To" Ledger</em><br /><br />Select this check box.<br /><br /><em>Prevent Creation of Journal Entry</em><br /><br />Clear this check box.<br /><br /><em>Denominated Currency Code</em></p>
+<ul>
+<li>Enter the code of the currency in which you restate amounts in this field. A currency code designation for a ledger type applies to all companies using that ledger.</li>
+<li>Ledger type AC requires a currency code to ensure that amounts are restated only in the designated currency and that the amounts have the correct number of decimal places.</li>
+<li>To maintain the integrity of the AC ledger, do not change the currency code that you assign to the ledger after you begin using balance restatement.</li>
+</ul>
+<hr />
+<a name="aref_section35"></a><h4 class="km">Balance Restatement Rates Setup (P1113)</h4>
+<p>For balance restatement, you typically use different exchange rates for different ranges of accounts. For example, you might use a period-end exchange rate to restate balance sheets amounts and a period average exchange rate to restate income statement amounts, as shown below:</p>
+<p><img src="../images/bs03.png" border="0" alt="Balance_Restatement_Rate_Setup_Figure" title="Balance_Restatement_Rate_Setup_Figure" hspace="0"/></p>
+<p>You must provide a rate to restate amounts from one currency to another. You can enter both an average rate for the period and a period-ending rate for each currency that you are restating. You update the table every period with new exchange rates to maintain a record of the rates, along with their effective dates and types.</p>
+<p>You use the Currency Restatement Rates application (P1113) to set up exchange rates to convert amounts from the domestic to the consolidated reporting currency. Balance restatement rates are stored in the Currency Restatement Rates File table (F1113).</p>
+<p><strong>Processing Options</strong></p>
+<p><em>Limits Tab</em></p>
+<p>Tolerance Limit</p>
+<ul>
+<li>Specify the percentage by which revisions to the exchange rate are allowed before the system issues a warning message.</li>
+<li>For example, if you enter 10.0, the system issues a warning message when the exchange rate changes by more than 10 percent.</li>
+</ul>
+<p><strong>Period End Rate Type</strong></p>
+<p><img src="../images/bs04.png" border="0" alt="P1113_Currency_Restatement_Rates_M" title="P1113_Currency_Restatement_Rates_M" hspace="0"/></p>
+<p><strong>Average Rate Type</strong></p>
+<p><img src="../images/bs05.png" border="0" alt="P1113_Currency_Restatement_Rates_A" title="P1113_Currency_Restatement_Rates_A" hspace="0"/></p>
+<dl>
+<dt><em>To Currency</em></dt>
+<dt></dt>
+<dt></dt>
+</dl>
+<ul>
+<li>Enter the currency code to which the account balances will be converted.</li>
+<li>Use this field in the header area to specify the currency code for which you want to review or revise exchange rates.</li>
+<li>Enter '*' to specify all currency codes.</li>
+</ul>
+<dl>
+<dt></dt>
+<dt><em>From Currency</em></dt>
+<dt></dt>
+<dt></dt>
+</dl>
+<ul>
+<li>Enter the currency code from which account balances will be converted.</li>
+<li>Use this field in the header area of the form to specify the currency for which you want to review or revise exchange rates.</li>
+<li>Enter '*' to specify all currency codes.</li>
+</ul>
+<dl>
+<dt></dt>
+<dt></dt>
+<dt><em>Effective Date</em></dt>
+<dt><em> </em></dt>
+<dt></dt>
+</dl>
+<ul>
+<li>Enter the beginning date that an exchange rate is effective for a currency relationship.</li>
+<li>The system uses the effective date that you enter in the header area as search criteria to retrieve and display the exchange rate records on the form.</li>
+<li>In the detail area, the effective date identifies the exchange rate to use for the currency restatement of the period.</li>
+<li>Enter '*' to specify all effective dates.</li>
+</ul>
+<dl>
+<dt><em>Rate Type</em></dt>
+<dt></dt>
+</dl>
+<ul>
+<li>Enter a following code from UDC table 11/RT that specifies the type of exchange rate to use to restate different ranges of accounts to calculate new balances:
+<ul>
+<li>'A': Period Average.
+<ul>
+<li>An average rate for the month, generally used with income statement accounts.</li>
+</ul>
+</li>
+<li>'M': Month-end.
+<ul>
+<li>A period-end rate, generally used with balance sheet accounts.</li>
+</ul>
+</li>
+<li>'H': Historical.
+<ul>
+<li>A historical rate, generally used for fixed asset accounts.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Enter '*' to specify all rate types.</li>
+</ul>
+<p><em>Multiplier</em></p>
+<ul>
+<li>Enter a number that a foreign currency amount is multiplied by to calculate a domestic currency amount.</li>
+<li>The system uses the multiplier to calculate the currency restatement only if Y is entered in the Multi-Currency Conversion (Y,N,Z) field in the General Accounting Constants (P0000).</li>
+<li>The system multiplies the From Currency account balance by the multiplier rate that you enter to derive the To Currency account balance.</li>
+<li>The number in this field can have a maximum of seven decimal positions.</li>
+<li>If more are entered, the system adjusts to the nearest seven decimal positions.</li>
+</ul>
+<div class="kmnotebox">NOTE: For an exchange rate, users enters either multiplier or divisor. The system will calculate the opposite automatically. </div>
+<p><em>Divisor</em></p>
+<ul>
+<li>Enter a number that a foreign currency amount is divided by to calculate a domestic currency amount.</li>
+<li>The system uses the divisor to calculate amounts for currency restatement only if Z is entered in the Multi-Currency Conversion (Y,N,Z) field in the General Accounting Constants.</li>
+<li>The system divides the From Currency account balance by the divisor rate that you enter to derive the To Currency account balance.</li>
+<li>The number in this field can have a maximum of seven decimal positions.</li>
+<li>If more are entered, the system adjusts to the nearest seven decimal positions.</li>
+</ul>
+<hr />
+<a name="aref_section36"></a><h4 class="km">Computations Setup (P1114)</h4>
+<p>You use the Revise Company Currency Conversions form (P1114) to set up computations for balance restatement process.</p>
+<p><img src="../images/bs06.png" border="0" alt="P1114_Computations_Setup" title="P1114_Computations_Setup" hspace="0"/></p>
+<p>For more information on setting up Computations, refer to <a href='../docs/1481550.html'>Overview of Computations Balance Setup.</a></p>
+<a name="aref_section37"></a><h4 class="km">Assigning Computation ID to a Company (P0010)</h4>
+<p>You use the Work with Companies program (P0010) to set up your companies for balance currency restatement under the Currency tab.</p>
+<p><img src="../images/bs07.png" border="0" alt="P0010_Company_Setup" title="P0010_Company_Setup" hspace="0"/></p>
+<p><em>Restatement Computation</em></p>
+<ul>
+<li>Assign a computation ID for each company for which you want to restate balances.</li>
+<li>You can assign the same computation ID to multiple companies.</li>
+<li>To override the computation ID assigned to a company, you can specify a different ID in a processing option for the Compute Restated Balances program (R11414A).</li>
+<li>If you leave this field blank, make sure that you specify the correct computation ID in the processing options when you run the Compute Restated Balances program (R11414A) for this company.</li>
+<li>If you have more than one computation ID for a specific company, leave this field blank and run the Compute Restated Balances program for each computation ID for the company.</li>
+</ul>
+<hr />
+<a name="aref_section38"></a><h4 class="km">Processing Options (R11414A)</h4>
+<p><em>Mode Tab</em></p>
+<p>1. Process Mode</p>
+<p>Enter the mode in which you would will like to run the Compute Restated Balances program (R11414A) program:</p>
+<ul>
+<li>'0': Proof mode with report.
+<ul>
+<li>The system does not update the Account Balances table (F0902), but prints a report that shows the changes that would be made to the fiscal year and period in the F0902 table.</li>
+</ul>
+</li>
+<li>'1': Final mode with a report.
+<ul>
+<li>The system updates the fiscal year and period in the Account Balances table (F0902). The system also prints a report that shows a detailed audit trail changes.</li>
+</ul>
+</li>
+<li>'2': Final mode without a report.
+<ul>
+<li>The system updates the fiscal year and period in the Account Balances table (F0902). The system does not print a report.</li>
+</ul>
+</li>
+</ul>
+<p><em>Period or YTD Tab<br /><br /></em>1. Period or YTD Processing</p>
+<ul>
+<li>Enter '1' to restate all periods in a specific year to date.</li>
+<li>Default of blank will restate only a specific period.</li>
+<li>You can specify the period in the Restatement Period and year in the Restatement Year processing options respectively.</li>
+</ul>
+<p>2. Restatement Period</p>
+<ul>
+<li>If you leave the Period or YTD Processing processing option blank, you use this Restatement Period processing option to specify the period to restate. For example, if you leave the Period or YTD processing option blank, you can enter 8 for the eighth period of the fiscal year.</li>
+<li>If you leave this processing option blank, the system restates the current period as defined for the EnterpriseOne General Accounting system on the Set Up Company form (P0010).</li>
+</ul>
+<p>3. Restatement Year</p>
+<ul>
+<li>If you enter 1 in the Period or YTD processing option, you use this processing option to specify the year to restate. Enter the last two digits of the fiscal year to restate. For example, enter 06 for 2006.</li>
+<li>If you leave this processing option blank, the system restates the current year to date as defined for the EnterpriseOne General Accounting system on the Set Up Company form (P0010).</li>
+</ul>
+<p><em>Zero Balance Tab</em><br /><br />1. Suppress Zero Balances</p>
+<ul>
+<li>Enter '1' to suppress records for processing that do not have activity in the period being restated.</li>
+<li>Default of blank will process all records for the period.</li>
+</ul>
+<p><em>Computation ID Tab</em><br /><br />1. Computation ID</p>
+<ul>
+<li>Specify the computation ID to be used by the restatement program for restating balances for a company.</li>
+<li>This processing option overrides the default computation ID setup in the Company Constants (P0010) under the Currency tab.</li>
+<li>If you enter a computation ID, all of the companies that you include in data selection must be assigned the computation ID you enter, else it would lead to mismatch between the data being selected.</li>
+<li>If you leave this processing option blank, the program uses the default computation ID that is assigned to the Company in the Work with Companies application (P0010).</li>
+</ul>
+<div>
+<div class="kmnotebox">Note: In this particular example, the Computation ID 'H' as setup above in the Computations Setup (P1114) is being used to demonstrate the functioning of Balance Restatement Method.</div>
+</div>
+<p><em>Ledger Tab</em><br /><br />1. Destination Ledger Type</p>
+<ul>
+<li>Enter a specific ledger type to which the program restates amounts.</li>
+<li>If you leave this processing option blank, the program processes all destination ledgers.</li>
+<li>The destination ledger is also known as the To Ledger. For example, you set up three computations for Company 70. Each calculation updates a different destination ledger type.
+<ul>
+<li>If you leave this processing option blank, the program runs all three computations and creates balances for each destination ledger type.</li>
+<li>If you enter a ledger type in this processing option, the program runs only the computations for the destination ledger type you entered.</li>
+</ul>
+</li>
+</ul>
+<p><em>Exchange Rate Tab</em><br /><br />1. Exchange Rate</p>
+<ul>
+<li>Enter '1' to use the exchange rate for the period being restated.</li>
+<li>Default of blank will use the exchange rate for the current period.</li>
+</ul>
+<div class="kmnotebox">NOTE: When restating year-to-date balances, enter <span class="gui-object-action">'1'</span> to restate all periods using the exchange rate for the period selected.</div>
+<p><em>Adjustments Tab</em></p>
+<p>1. Check for Adjustments</p>
+<ul>
+<li>Enter '1' to not include manual journal entry adjustments corresponding to the consolidated ledger type (AC).</li>
+<li>Enter this value only if you have not entered manual journal entry adjustments.</li>
+<li>The program bypasses the search for adjustments during processing.</li>
+<li>Default of blank will only include manual journal entry adjustments from the Account Ledger table (F0911) in the restated balance.</li>
+</ul>
+<a name="aref_section39"></a><h4 class="km">Data Selection (R11414A)</h4>
+<p>You can use data selection to select the companies for which you would like to restate transactions. If you do not specify companies in the data selection, the system selects only those companies that have been assigned the computation ID entered in the processing options (R11414A).</p>
+<hr />
+<a name="aref_section310"></a><h3 class="km"><strong>Running the Compute Restated Balances (R11414A)</strong></h3>
+<p><strong>Reviewing the Report</strong></p>
+<p>R11414A report run for Period '8' processing in Final mode with report.<strong><br /></strong></p>
+<p><img src="../images/bs08.png" border="0" alt="R11414A_Currency_Restatement_Compute" title="R11414A_Currency_Restatement_Compute" hspace="0"/></p>
+<p>When reviewing the report, ensure that:</p>
+<ul>
+<li>Every AA ledger amount has an AC ledger amount.</li>
+<li>No manual journal entries exist for the AC ledger in the translation adjustment or retained earnings account.</li>
+<li>For period processing, the report displays account transactions with a blank in the To Currency Period Posting and To Current Period Balance columns and a + sign to indicate that the account balance by currency amounts appear in the last transaction line for the account.</li>
+<li>For year-to-date processing, the report displays each account transaction by originating currency in the To Current Period Posting and To Current Period Balance columns. It does not display a + sign.</li>
+</ul>
+<hr />
+<a name="aref_section311"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<p>For frequently asked questions, refer to <a href='../docs/664912.html'>Frequently Asked Questions on the Balance Restatement Method.</a></p>
+<hr />
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

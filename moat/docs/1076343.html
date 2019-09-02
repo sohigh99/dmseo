@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Create Jinshui Information in Account Receivable</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Create Jinshui Information in Account Receivable</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+This document is to explain what the contents of Jinshui/JinShui files are which have been created through China Localization Code in EnterpriseOne. Currently EDI interface between tax authority and JDE is required in reporting tax in China.<br><br>According to China localization package, after invoice printing R42565/R03B505 -&nbsp;<em>Print Invoices</em> with 'Localization Country Code' &quot;CN - <em>China</em>&quot;, F75C001 - <em>Chinese GUI cross reference file</em> is populated, and it's saying P007101 - <em>Text File Processor</em> to create/generate flat file for Jinshui Interface.<br><br>Also that documentation states that Inbound Jinshui Interface file can be uploaded back to JDE through P007101 text processor and R75C7101 - <em>Download JinShui return file into J.D. Edwards - China - 75C</em>.<br><br><em><strong><span style="text-decoration : underline;">Disclaimer</span>: Since the request can be varied per JinShui version so the mapping can be changed without having prior notice</strong></em><br><br>
+  <div class="kmnotebox"><strong>Note</strong>: Oracle's JDEdwards may meet requirement suggested by Tax Authorities in China but actual format of data suggested by Tax Authority can be vary. In case as-is format/contents does not meet your legal/legislative requirement, please contact Global Customer Care because Oracle is policy taker rather than policy giver</div><br>
+  <div class="kmnotebox"><strong>Note</strong>: JinShui can be described as VAT Golden Tax System (JinShui). It is required by the tax bureau/authorities that the actual invoice issued to customer should be printed and payable tax amount generated through taxation control system. After the invoice is processed by Golden Tax system, the invoice number<br>assigned by Golden Tax System would be written back to the corresponding invoice record in<br>JDE EnterpriseOne system, for the data tracking purpose.<br></div><br><br><br>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<p class="km">If you are calling JinShui interface through R42565 - Print Invoice, please refer <<Note 1080797.1>> E1: 75C: How to Create Jinshui Information in Sales Order<br></p>
+  <H3 class=km>What is the repository for Text String?</H3>
+  <ul>
+    <li>F007101 - <em>Text Processor Header</em> </li>
+    <li>F007111 - <em>Text Processor Detail Table</em> </li>
+  </ul>
+  <div class="kmnotebox">Note: Above tables are repository for any type of transaction. That is, it is not specific to China Localization</div><br><br>
+  <H3 class=km>What is the sequence of transaction in relation with JinShui text file(for EDI) creation?</H3><br>
+  <ol>
+    <li>R03B505 - <span style="text-decoration : underline;"><em>Print Invoice/(A/R) Print Invoice</em></span>: to call Localization Code of N7000550 and N7000551 
+      <ol>
+        <li>N7000550 - <span style="text-decoration : underline;"><em>R03B505PrintARInvoices</em></span> (R03B505 - Print A/R Invoice): To hand over parameters based on F03B11 </li>
+        <li>N7000551 - <span style="text-decoration : underline;"><em>R03B505PrintARInvoice</em></span> (R03B505 - Process Localization Requirements) which is calling N75C03B1 - <span style="text-decoration : underline;"><em>Create Chinese GUI interface file from A/R</em></span> in following sequence (<em>Read Processing Option template values of R75C03B1</em>)<br>
+          <ol>
+            <li>N75C03B1<em> - <strong><span style="text-decoration : underline;">ProcessGUIHeader</span> </strong></em>(Process GUI Invoice Header) create cache to make use of in writing header and detail </li>
+            <li>N75C03B1 - <span style="text-decoration : underline;"><em>WriteGUIHeader</em></span> (Write GUI Invoice Header) to write GUI invoice header<br></li>
+            <li>N75C03B1 - <span style="text-decoration : underline;"><em>WriteGUIDetail</em></span> (Write GUI Invoice Detail) to write detail data </li>
+            <li>N75C03B1 - <em><span style="text-decoration : underline;">EraseCache</span> </em>(Erase Cache) to delete all the caches created during process </li>
+          </ol>
+        </li>
+        <li>Return to N7000551 </li>
+        <li>Return to N7000550 </li>
+      </ol>
+    </li>
+    <li>Return to calling UBE R03B505 </li>
+  </ol>
+  <div class="kmnotebox">Note: Localization code will be updated through Plug &amp; Play so if the ESU contains any special instruction, apply it with care</div><br><br>
+  <H3 class=km>Where does some of the dynamic information come from?</H3>It is coming from processing option of R75C03B1 - <em>Create Chinese GUI interface file from A/R.</em> Actual parameter is defined as below,<br><br>
+  <table cellspacing="1" cellpadding="1" border="1" style="width: 100%;" class="km">
+    <tbody>
+      <tr>
+        <th class="km">Parameter<br></th>
+        <th class="km">Value<br></th>
+        <th class="km">Member ID<br></th>
+        <td valign="top">Size<br></td>
+      </tr>
+      <tr>
+        <td class="km">1. Print Invoice Type<br></td>
+        <td class="km">Blank = JinShui interface and JDE File<br>1 = JDE Standard Invoice only<br></td>
+        <td class="km">cPrintJDEInvoice<br></td>
+        <td valign="top">1<br></td>
+      </tr>
+      <tr>
+        <td class="km">2. Invoice Remarks<br></td>
+        <td class="km"><br></td>
+        <td class="km">szRemarks<br></td>
+        <td valign="top">30<br></td>
+      </tr>
+      <tr>
+        <td class="km">3. Line Item Unit of Measure<br></td>
+        <td class="km"><br></td>
+        <td class="km">szUnitOfMeasureAsInput<br></td>
+        <td valign="top">2<br></td>
+      </tr>
+      <tr>
+        <td class="km">4. Line Item Quantity<br></td>
+        <td class="km"><br></td>
+        <td class="km">mnUnitsQuantityShipped<br></td>
+        <td valign="top">15<br></td>
+      </tr>
+      <tr>
+        <td class="km">5. Line Item Category Value (Required)<br></td>
+        <td class="km"><br></td>
+        <td class="km">szItemGroup05<br></td>
+        <td valign="top">6<br></td>
+      </tr>
+      <tr>
+        <td class="km">6. Item Description (Required)<br></td>
+        <td class="km"><br></td>
+        <td class="km">szItemDescription<br></td>
+        <td valign="top">30<br></td>
+      </tr>
+      <tr>
+        <td class="km">7. Item Specification<br></td>
+        <td class="km"><br></td>
+        <td class="km">szItemSpecification<br></td>
+        <td valign="top">15<br></td>
+      </tr>
+      <tr>
+        <td class="km">8. Checked By<br></td>
+        <td class="km"><br></td>
+        <td class="km">mnCheckedBy<br></td>
+        <td valign="top">8<br></td>
+      </tr>
+      <tr>
+        <td class="km">9. Received By<br></td>
+        <td class="km"><br></td>
+        <td class="km">mnReceivedBy<br></td>
+        <td valign="top">8<br></td>
+      </tr>
+      <tr>
+        <td class="km">10. Sales Detail String<br></td>
+        <td class="km"><br></td>
+        <td class="km">szSalesDetail<br></td>
+        <td valign="top">3<br></td>
+      </tr>
+      <tr>
+        <td class="km">11. Header Note String<br></td>
+        <td class="km"><br></td>
+        <td class="km">szHeaderNotes<br></td>
+        <td valign="top">3<br></td>
+      </tr>
+      <tr>
+        <td class="km">12. Header Document Name<br></td>
+        <td class="km"><br></td>
+        <td class="km">szHeaderDocName<br></td>
+        <td valign="top">3<br></td>
+      </tr>
+      <tr>
+        <td class="km">13. Enter the Bank Transit Record Type<br>&nbsp;&nbsp;&nbsp;&nbsp; Default: &quot;G&quot;<br></td>
+        <td class="km"><br></td>
+        <td class="km">cBankTransitRecordType<br></td>
+        <td valign="top">1<br></td>
+      </tr>
+    </tbody>
+  </table><br><br>
+  <div class="kmnotebox">Note: <br>
+    <ul>
+      <li>This UBE R75C03B1 is dummy which does not contain any logic. So this implementation is to get a certain record based on the version of R75C03B1 defined in creating text file(s) </li>
+      <li>The value defined in this processing parameters will affect the target files </li>
+    </ul><br>
+  </div><br><br>
+  <H3 class=km>How the JinShui Header File gets created?</H3>
+  <table cellspacing="1" cellpadding="1" border="1" style="width: 100%;" class="km">
+    <tbody>
+      <tr>
+        <th class="km">Seq<br></th>
+        <th class="km">String Value<br></th>
+        <th class="km">Format<br></th>
+        <th class="km">Size<br></th>
+        <th class="km">Source of Data<br></th>
+      </tr>
+      <tr>
+        <td class="km">1<br></td>
+        <td class="km">Virtual Invoice Number<br></td>
+        <td class="km"><br></td>
+        <td class="km">8<br></td>
+        <td class="km">NN(75|1)<br></td>
+      </tr>
+      <tr>
+        <td class="km">2<br></td>
+        <td class="km">Number of detail lines (rows)<br></td>
+        <td class="km"><br></td>
+        <td class="km">3<br></td>
+        <td class="km">Total Number of rows for detail<br></td>
+      </tr>
+      <tr>
+        <td class="km">3<br></td>
+        <td class="km">Customer Name<br></td>
+        <td class="km"><br></td>
+        <td class="km">40<br></td>
+        <td class="km">F0101.ALPH (WHERE AN8 = mnCustomerNumber)<br></td>
+      </tr>
+      <tr>
+        <td class="km">4<br></td>
+        <td class="km">Customer Tax ID<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">F0101.TAX<br></td>
+      </tr>
+      <tr>
+        <td class="km">5<br></td>
+        <td class="km">Customer Address and Phone Number<br></td>
+        <td class="km"><br></td>
+        <td class="km">80<br></td>
+        <td class="km">F0116.ADD1 + ADD2 + F0115.AR1 + PH1<br></td>
+      </tr>
+      <tr>
+        <td class="km">6<br></td>
+        <td class="km">Customer Bank Name and Account<br></td>
+        <td class="km"><br></td>
+        <td class="km">80<br></td>
+        <td class="km">F0030.DL01 (WHERE BKTP='X' and AN8=mnCustomerNumber)<br>+ F0030.CBNK<br></td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;">7<br></td>
+        <td style="vertical-align: top;">Remarks<br></td>
+        <td style="vertical-align: top;"><br></td>
+        <td style="vertical-align: top;">160<br></td>
+        <td style="vertical-align: top;">(To be implemented)<br></td>
+      </tr>
+      <tr>
+        <td class="km">8<br></td>
+        <td class="km">Name for POCheckedBy<br></td>
+        <td class="km">PO Value<br></td>
+        <td class="km">30<br></td>
+        <td class="km">Processing Option value in R75C03B1|Version<br></td>
+      </tr>
+      <tr>
+        <td class="km">9<br></td>
+        <td class="km">Name for POReceivedBy<br></td>
+        <td class="km">PO Value<br></td>
+        <td class="km">40<br></td>
+        <td class="km">F0101.ALPH (for address number of PO CheckBy in Processing Option)<br></td>
+      </tr>
+      <tr>
+        <td class="km">10<br></td>
+        <td class="km">Sales Detail<br></td>
+        <td class="km"><br></td>
+        <td class="km">60<br></td>
+        <td class="km">evt_szSalesDetailString_PDSC (Processing Option of R75C03B1)<br></td>
+      </tr>
+      <tr>
+        <td class="km">11<br></td>
+        <td class="km">Invoice Date<br></td>
+        <td class="km">EMD format<br></td>
+        <td class="km">8<br></td>
+        <td class="km">F03B11.DIVJ<br></td>
+      </tr>
+      <tr>
+        <td class="km">12<br></td>
+        <td class="km">Company Bank Name and Account<br></td>
+        <td class="km"><br></td>
+        <td class="km">50<br></td>
+        <td class="km">F0030.DL01 + F0030.CBNK<br></td>
+      </tr>
+      <tr>
+        <td class="km">13<br></td>
+        <td class="km">Company Address and Phone<br></td>
+        <td class="km"><br></td>
+        <td class="km">80<br></td>
+        <td class="km"><em><span style="text-decoration : underline;"><strong>Ref #1</strong></span></em><br></td>
+      </tr>
+    </tbody>
+  </table><br>
+  <div class="kmnotebox">Note:<br>EMD format: Based on date mask E - 4 digit year, M - 0 padded 2 digit month, D - 0 padded 2 digit day</div><br><blockquote><blockquote><span style="text-decoration : underline;"><em><strong>Ref #1</strong></em></span><br>1. Get F0115.PH1 and AR1 based on F0010.AN8 where F0010.CO = F03B11.KCO<br>2. Get F0116.ADD1, ADD2, ADD3, ADD4 based on F0116.AN8 = F0010.AN8 where F0010.CO=F03B11.KCO<br>3. Strip all the blank and add A Space betweens value computed from 1 and 2<br>4. Compute the length of each values<br>5. If total length of ADD1 + ADD2 + ADD3 + ADD4 + AR1 + PH1 is longer than 80 characters then set output without having AR1 + PH1<br></blockquote></blockquote><br><br>
+  <H3 class=km>How JinShui Detail File gets created through NER N75C03B1?</H3>
+  <table cellspacing="1" cellpadding="1" border="1" style="width: 100%;" class="km">
+    <tbody>
+      <tr>
+        <th class="km">Seq<br></th>
+        <th class="km">String Value<br></th>
+        <th class="km">Format<br></th>
+        <th class="km">Size<br></th>
+        <th class="km">Source of Data<br></th>
+      </tr>
+      <tr>
+        <td class="km">1<br></td>
+        <td class="km">Item Description<br></td>
+        <td class="km">Check PO Value<br></td>
+        <td class="km">30<br></td>
+        <td class="km">POItemDescriptionDefault OR szDescriptionRemark which is F03B11.RMK<br></td>
+      </tr>
+      <tr>
+        <td class="km">2<br></td>
+        <td class="km">Unit of Measure<br></td>
+        <td class="km">Check PO Value<br></td>
+        <td class="km">3<br></td>
+        <td class="km">Processing Option value of R75C03B1<br></td>
+      </tr>
+      <tr>
+        <td class="km">3<br></td>
+        <td class="km">Specification<br></td>
+        <td class="km">Check Po Value<br></td>
+        <td class="km">15<br></td>
+        <td class="km">POItemSpecification OR F03B11.SFX<br></td>
+      </tr>
+      <tr>
+        <td class="km">4<br></td>
+        <td class="km">Quantity<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">POQuantity<br></td>
+      </tr>
+      <tr>
+        <td class="km">5<br></td>
+        <td class="km">Amount<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">F03B11.ACR - F03B11.CTAM<br></td>
+      </tr>
+      <tr>
+        <td class="km">6<br></td>
+        <td class="km">Tax Rate<br></td>
+        <td class="km"><br></td>
+        <td class="km">4<br></td>
+        <td class="km">F4008.TXR1 + TXR2 + TXR3 + TXR4 + TXR5 for specific Tax Area<br></td>
+      </tr>
+      <tr>
+        <td class="km">7<br></td>
+        <td class="km">Category Code<br></td>
+        <td class="km">PO Value<br></td>
+        <td class="km">6<br></td>
+        <td class="km">Processing Option value of R75C03B1<br></td>
+      </tr>
+      <tr>
+        <td class="km">8<br></td>
+        <td class="km">Discount<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">F03B11.ADSC<br></td>
+      </tr>
+      <tr>
+        <td class="km">9<br></td>
+        <td class="km">Tax Amount<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">F03B11.STAM<br></td>
+      </tr>
+      <tr>
+        <td class="km">10<br></td>
+        <td class="km">Discount Tax Amount<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">evt_mnTaxAmount / evt_mnDiscountRate<br></td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;">11<br></td>
+        <td style="vertical-align: top;">Discount Rate<br></td>
+        <td style="vertical-align: top;"><br></td>
+        <td style="vertical-align: top;">15<br></td>
+        <td style="vertical-align: top;">(to be implemented)<br></td>
+      </tr>
+      <tr>
+        <td class="km">12<br></td>
+        <td class="km">Unit Price<br></td>
+        <td class="km"><br></td>
+        <td class="km">15<br></td>
+        <td class="km">0 (hard coded)<br></td>
+      </tr>
+      <tr>
+        <td class="km">13<br></td>
+        <td class="km">Price Method<br></td>
+        <td class="km"><br></td>
+        <td class="km">1<br></td>
+        <td class="km">0 (hard coded)<br></td>
+      </tr>
+    </tbody>
+  </table><br>
+  <H3 class=km>What are other considerations?</H3>
+  <ul>
+    <li>&quot;~~&quot; is to be used in between two columns </li>
+    <li>JinShui data format can be changed without prior notice </li>
+  </ul><br>
+  <H3 class=km>Are there any cross reference file which stored the text file which N75C03B1 create?</H3>Yes the table F75C001 - Chinese GUI cross reference file will contain these information including GUI Number<br>
+  <table cellspacing="1" cellpadding="1" border="1" style="width: 100%;" class="km">
+    <tbody>
+      <tr>
+        <th class="km">Column of F75C001<br></th>
+        <th class="km">JinShui<br></th>
+        <th class="km">Reference<br></th>
+      </tr>
+      <tr>
+        <td class="km">DOC0 - Document<br></td>
+        <td class="km">Document Number in Header File<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">LINN - Line Number<br></td>
+        <td class="km">Line Number in Detail File<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">DOC - Document (Voucher, Invoice, etc.)<br></td>
+        <td class="km">F03B11.DOC<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">DCT - Document Type<br></td>
+        <td class="km">F03B11.DCT<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">KCO - Document Company<br></td>
+        <td class="km">F03B11.KCO<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">SFX<br></td>
+        <td class="km">F03B11.SFX<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">DOCO - Document (Order No, Invoice, etc.)<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">DCTO - Order Type<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">KCOO - Order Company (Order Number)<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">GUI<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">AEXP - Amount - Extended Price<br></td>
+        <td class="km">Amount in Detail File<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">CRR - Currency Conversion Rate - Spot Rate<br></td>
+        <td class="km">F03B11.CRR<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">CRCD - Currency Code - From<br></td>
+        <td class="km">F03B11.CRCD<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">CRDC - Currency Code - To<br></td>
+        <td class="km">F03B11.CRDC<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">RCDS<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">USER - User ID<br></td>
+        <td class="km">SL UserID<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">PID - Program ID<br></td>
+        <td class="km">SL ReportName<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">UPMJ - Date - Updated<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">UPMT - Time - Last Updated<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">JOBN - Work Station ID<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">IVD - Date - Invoice<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">DIVJ<br></td>
+        <td class="km">F03B11.DIVJ<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">CBNK - Bank Account Number - Customer<br></td>
+        <td class="km">evt_szCoBankAcctNo_CBNK<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">DL01 - Description<br></td>
+        <td class="km">evt_szCoBankName_DL01<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">UPRC - Amount - Price per Unit<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">AR1 - Phone Prefix<br></td>
+        <td class="km">evt_CoPhoneAreaCode_AR1<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">PH1 - Phone Number<br></td>
+        <td class="km">evt_PhoneNumberCo_PH1<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">ADD1 - Address Line 1<br></td>
+        <td class="km">evt_szCoAddressLine_DS80<br></td>
+        <td class="km"><br></td>
+      </tr>
+      <tr>
+        <td class="km">C75STCI<br></td>
+        <td class="km"><br></td>
+        <td class="km"><br></td>
+      </tr>
+    </tbody>
+  </table><br>
+  <div class="kmnotebox">Note:<br>Table Data Structure may be changed without having prior notice<br>Mapping can be changed to accommodate requirement from JinShui</div><br>
+  <H3 class=km>Is there any reference in Chinese?</H3>Refer attached files &lt;<a href="../docs/JinShui.pdf">" title="JinShui Format in Chinese">JinShui_Format.pdf</a>&gt; and &lt;<a href="../docs/JinShui2.xls" title="JinShui Format in English">JinShui_Format_in_English.xls</a>&gt;<br><br><br>
+  <div class="kmnotebox"><strong>Note</strong>: If given information does not meet requirement of your local tax authorities, please contact Oracle's Global Customer Support with requested format of your local authorities</div><br><br><br>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

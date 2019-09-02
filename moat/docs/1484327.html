@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Customer/Supplier Balance Report (R7404003, R7403B001, R7404002)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Customer/Supplier Balance Report (R7404003, R7403B001, R7404002)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Overview of the Customer/Supplier Balance Report</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Generate Supplier Balance (R7404003) and Generate Customer Balance (R7403B001)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Setting Processing Options for Generate Supplier Balance (R7404003)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Setting Processing Options for Generate Customer Balance (R7403B001)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Understanding Customer and Supplier Balance Reports (R7404002)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Setting Processing Options for Customer/Supplier Balance Report (R7404002)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section37"><strong>How to compare the A/R trade account to G/L </strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Frequently Asked Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39"><strong>Question 1:</strong> Is it possible to capture a customer's historical data (all open and closed invoices and related receipts) for a given period?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310"><strong>Question 2:</strong> How can the invoice records in the F74412 table be linked with corresponding F03B11 records?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311"><strong>Question 3:</strong>Why are AP Prepayment Vouchers not printing on the Supplier Balance Report (R7404002)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312"><strong>Question 4:</strong> When running the Customer/Supplier Balance Report (R7404002) should the initial balance from this year be equal to the total amount from the previous year?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313"><strong>Question 5:</strong> How can a receipt that was matched to an incorrect customer and subsequently voided be eliminated from the customer balance report (R7404002)?<span style="font-size: small;"><br /></span></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section314"><strong>Question 6:</strong> How to exclude A/P Drafts from Supplier Balance Report (R7404002)?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315"><strong>Question 7:</strong> Is there a project for the redesign of the R7403B001 A/R Generate Customer Balance A/R and/or R7404003 A/P Generate Supplier Balance?</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p> This document details the set up and use of the Customer/Supplier Balance report in JD Edwards EnterpriseOne Accounts Receivable and Accounts Payable.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p> This document is intended for users who are setting up and using the Customer/Supplier Balance report.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Overview of the Customer/Supplier Balance Report</strong></h3>
+<p>The Customer/Supplier Balance report (R7404002) is created from a worktable, Customer/Supplier Balance Worktable (A/P and A/R) (F74412). The table is used for both Accounts Payable and Accounts Receivable reporting and contains information about customer and supplier transactions. The F74412 table is built by running the Generate Supplier Balance (R7404003) and the Generate Customer Balance (R7403B001) programs.</p>
+<p>The Customer/Supplier Balance Worktable (A/P and A/R) (F74412) table contains information collated from the following tables when running the Generate Supplier Balance (R7404003) and the Generate Customer Balance (R7403B001):</p>
+<table style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 50%;">Accounts Payable Tables</th>
+<th class="km" style="width: 50%;">Accounts Receivable Tables</th>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">F0411 Supplier Ledger</td>
+<td class="km" style="width: 50%;">F03B11 Customer Ledger</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">F0413 Accounts Payable Matching Document</td>
+<td class="km" style="width: 50%;">F03B13 Receipts Header</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">F0414 Accounts Payable Matching Document Detail</td>
+<td class="km" style="width: 50%;">F03B14 Receipts Detail</td>
+</tr>
+<tr>
+<td class="km" style="width: 50%;">F0911 Account Ledger</td>
+<td class="km" style="width: 50%;">F03B112 Invoice Revisions</td>
+</tr>
+</tbody>
+</table>
+<p>Two demo versions of the Customer Balance/Supplier report (R7404002) are then provided to run over the F74412 worktable data, one to provide a Customer Balance report (XJDE0001) and one to provide a Supplier Balance report (XJDE0002), depending on the R7404002 <a href="#R7404002_PO" alt="R7404002 Processing Options" title="R7404002 Processing Options">processing option</a> set up.</p>
+<a name="aref_section32"></a><h3 class="km"><strong>Generate Supplier Balance (R7404003) and Generate Customer Balance (R7403B001)</strong></h3>
+<p>The way you select dates and group information in the Customer/Supplier Balance Worktable (A/P and A/R) (F74412) table determines how information is displayed on the Customer Balance Report and the Supplier Balance Report. You can group information in the F74412 table as follows:</p>
+<ul>
+<li>By G/L offset and customer or supplier number.</li>
+<li>By G/L offset and customer parent or supplier parent number.</li>
+<li>By trade account and customer or supplier number.</li>
+<li>By trade account and customer parent or supplier parent number.</li>
+<li>By customer or supplier number only.</li>
+<li>By customer parent or supplier parent number only.</li>
+</ul>
+<p>To specify how information is grouped in the F74412 table, you set the processing options for the Generate Supplier Balance (R7404003) and the Generate Customer Balance (R7403B001) programs. If you group information in the F74412 table by G/L offset, drafts and deductions are excluded from the customer and supplier balance reports. For other groupings, drafts are included.<br /><br />The system rebuilds the F74412 table each time that you run the Generate Supplier Balance and Generate Customer Balance programs. The Generate Supplier Balance program rebuilds only Accounts Payable records, while the Generate Customer Balance program rebuilds only Accounts Receivable records.</p>
+<a name="aref_section33"></a><h4 class="km"><a name="R7404001_PO"></a>Setting Processing Options for Generate Supplier Balance (R7404003)</h4>
+<p>Processing options enable you to specify the default processing for programs and reports.</p>
+<p><em>Select Tab</em> - Use these processing options to specify the dates to use to select transactions.</p>
+<ol>
+<li>Date From and 2. Thru Date - Enter the beginning and ending dates of the range of G/L dates for which you want to select detail transactions. If you leave these processing options blank, the system date is used.
+<div class="kmnotebox">NOTE: The initial balance is calculated based on one day prior to the date you enter.</div>
+</li>
+</ol>
+<p><em>Process Tab</em> - Use these processing options to specify how to group transactions and to specify whether withholding should be displayed on a separate line.</p>
+<ol>
+<li>Group Mode - Specify whether the process should group information by G/L offset, by trade account, or leave the information ungrouped. Values are: <br />
+<ul>
+<li>Blank: No G/L grouping.</li>
+<li>1: Group by G/L Offset.
+<div class="kmnotebox">NOTE: Grouping by G/L Offset excludes drafts.</div>
+</li>
+<li>2: Group by Trade Account.</li>
+</ul>
+</li>
+<li>Process Mode - Specify whether the system groups information by Parent Supplier Number or Supplier Number. Values are:
+<ul>
+<li>Blank: Group by Supplier Number.</li>
+<li>1: Group by Parent Supplier Number.</li>
+</ul>
+</li>
+<li>Withholding Tax - Specify whether the system creates a separate line for withholding tax for each payment document. Values are:
+<ul>
+<li>Blank: Single line per document.</li>
+<li>1: Separate line for Withholding Tax.</li>
+</ul>
+</li>
+</ol>
+<p>There is no report output.</p>
+<p> </p>
+<a name="aref_section34"></a><h4 class="km"><a name="R7403B001_PO"></a>Setting Processing Options for Generate Customer Balance (R7403B001)</h4>
+<p>Processing options enable you to specify the default processing for programs and reports.</p>
+<p><em>Select Tab</em> - Use these processing options to specify the dates to use to select transactions.</p>
+<ol>
+<li>Date From and 2. Thru Date - Enter the beginning and ending dates of the range of G/L dates for which you want to select detail transactions. If you leave these processing options blank, the system date is used.
+<div class="kmnotebox">NOTE: The initial balance is calculated based on one day prior to the date you enter.</div>
+</li>
+</ol>
+<p><em>Process Tab</em> - Use these processing options to specify how to group transactions.</p>
+<ol>
+<li>Group Mode - Specify whether the process should group information by G/L offset, by trade account, or leave the information ungrouped. Values are:
+<ul>
+<li>Blank: No G/L grouping.</li>
+<li>1: Group by G/L Offset.</li>
+<li>2: Group by Trade Account.</li>
+</ul>
+</li>
+<li>Process Mode - Specify whether the system groups information by parent customer number or customer number. Values are:
+<ul>
+<li>Blank: Group by Customer Number.</li>
+<li>1: Group by Parent Customer Number.</li>
+</ul>
+</li>
+</ol>
+<p class="km">There is no report output.</p>
+<a name="aref_section35"></a><h3 class="km"><strong>Understanding Customer and Supplier Balance Reports (R7404002)</strong></h3>
+<p>The Supplier Balance Report and Customer Balance Report are different versions of the same program (R7404002). Whether a specific version of the program produces a Supplier Balance Report or Customer Balance Report depends on the <a href="#R7404002_PO" alt="R7404002 Processing Options" title="R7404002 Processing Options">processing options</a>. You print the supplier and customer balance reports to review the detail of the transactions between the company and the customers or suppliers. The reports also show this information for each customer or supplier for a given date range and selected companies:</p>
+<ul>
+<li>Initial balance</li>
+<li>Debit and credit balance</li>
+<li>Closing balance</li>
+</ul>
+<p><br />The supplier and customer balance reports have these additional features:</p>
+<ul>
+<li>Transactions are printed with debit and credit amounts in separate columns.</li>
+<li>You can print the report with transaction amounts, including draft amounts, displayed in euro (EUR) or another currency.</li>
+<li>You can print the report in summary or detail mode.</li>
+<li>You can use the G/L Class (GLC) for data selection, sequencing, and subtotaling if you group by G/L Offset when you build the Customer/Supplier Balance Worktable (A/P and A/R) (F74412).</li>
+<li>You can determine customer or supplier balances as of a certain date, based on the "from" and "thru" dates specified in the processing options of the Generate Supplier Balance program (<a href="#R7404001_PO" alt="R7404003 Processing Options" title="R7404003 Processing Options">R7404003</a>) and Generate Customer Balance program (<a href="#R7403B001_PO" alt="R7403B001 Processing Options" title="R7403B001 Processing Options">R7403B001</a>).</li>
+<li>Transactions are printed within the period specified in the processing options of the <a href="#R7404001_PO" alt="R7404003 Processing Options" title="R7404003 Processing Options">Generate Supplier Balance </a>and <a href="#R7403B001_PO" alt="R7403B001 Processing Options" title="R7403B001 Processing Options">Generate Customer Balance</a> programs.</li>
+<li>You can compare customer and supplier balances by G/L offset or trade account with the account balances.</li>
+</ul>
+<p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1484327.1&attachid=1484327.1:A&amp;clickstream=no" border="0" alt="Supplier Balance Report" title="Supplier Balance Report" hspace="0"/></p>
+<p><img src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1484327.1&attachid=1484327.1:B&amp;clickstream=no" border="0" alt="Customer Balance Report" title="Customer Balance Report" hspace="0"/></p>
+<p>The supplier and customer balance reports are based on information in the Customer/Supplier Balance Worktable (A/P and A/R) table (F74412). You must build the table using the Generate Supplier Balance program (R7404003) and the Generate Customer Balance program (R7403B001) before you run the customer and supplier balance reports.</p>
+<p>The initial balance is calculated as of one day prior to the date specified in the Date From processing options for the <a href="#R7404001_PO" alt="R7404001 Processing Options" title="R7404001 Processing Options">Generate Supplier Balance</a> and <a href="#R7403B001_PO" alt="R7403B001 Processing Options" title="R7403B001 Processing Options">Generate Customer Balance</a> programs.</p>
+<div class="kmnotebox">NOTE: When a voucher is paid for a supplier who is subject to withholding tax, the amount of withholding tax held can be printed on the line immediately after the payment on the supplier version of the report, depending on how the processing options are set for the <a href="#R7404001_PO">Generate Supplier Balance</a> program.</div>
+<p> </p>
+<a name="aref_section36"></a><h4 class="km"><a name="R7404002_PO"></a>Setting Processing Options for Customer/Supplier Balance Report (R7404002)</h4>
+<p>Processing options enable you to specify the default processing for programs and reports.</p>
+<p><em>Select Tab</em></p>
+<ol>
+<li> Balance from - Specify whether to print an Accounts Payable (supplier) balance report or an Accounts Receivable (customer) balance report. Values are:
+<ul>
+<li>Blank: Print an Accounts Payable report.</li>
+<li>1: Print an Accounts Receivable report.</li>
+</ul>
+</li>
+</ol>
+<p><em>Print Tab</em></p>
+<ol>
+<li>Print Mode - Specify the print mode. Values are:
+<ul>
+<li>Blank: Print detail including initial balance, closing balance, and all of the documents for the selected period.</li>
+<li>1: Print only the closing balance.</li>
+</ul>
+</li>
+</ol>
+<p><em>Currency Tab</em></p>
+<ol>
+<li>As-If Currency - Use this processing option to show amounts in a currency other than the currency in which the amounts are stored in the system. The system converts and shows domestic amounts in this As If currency. For example, an amount in GBP (British Pound) can appear as if it is in EUR (Euro). If you leave this processing option blank, the system prints the amounts in the domestic currency.
+<div class="kmnotebox">NOTE: This processing option enables you to view amounts in a different currency as a hypothetical scenario only. The amounts that appear in the different currency are not saved to the system.</div>
+ </li>
+<li>As-If Currency Date - Specify an As-Of date if you enter a currency code for the As-If Currency processing option. This option processes the exchange rate as of the date you specify. If you leave this processing option blank, the system uses the system date.
+<div class="kmnotebox">NOTE: A valid exchange rate must exist in the exchange rate table between the two currencies based on the As-Of date.</div>
+ </li>
+</ol>
+<a name="aref_section37"></a><h3 class="km"><strong>How to compare the A/R trade account to G/L </strong></h3>
+<p>For each A/R trade account, to compare it to G/L, do the following steps separately:</p>
+<ol>
+<li>Open the AAI application (P0012) by putting AAI in the fastpath</li>
+<li>Inquire on the A/R trade account by inputting its business unit (BU) and object account (OBJ)  (and, if applicable, its subsidiary (SUB)) in the QBE line; do not put in any other selection criteria!</li>
+<li>Make a note of the various RC AAIs and their offsets (there can potentially be more than one), that point to this trade account</li>
+<li>Run R7403B001 and put the offsets found in step 3 in the data selection, as well as the company number; make sure you put in the correct period in the From and Thru values in the processing options. Per Bug 10845833 which has been Returned Not Planned, final disposition states not to use data selection on this UBE. This report needs to read all POSTED transactions to get the balance correctly.  If you set data selection in step 4 to company and export the F74412 records, the Excel file could contain records belonging to other companies, and those needs to be manually removed by the user, and keep only those made on the desired company to do the SUM on.</li>
+<li>Step 4 will create the F74412; export all records in this table where RPSY=03B to Excel (F74412 is a worktable, and therefore gets re-created each time R7403B001 is run</li>
+<li>In the excel spreadsheet do a SUM for the gross amount and open amount columns</li>
+<li>Open Account Balances by Month (P0902P1)</li>
+<li>Inquire on the trade account and compare the Cumulative Amount (AMTA) to the open amount sum from step 6</li>
+</ol>
+<hr />
+<a name="aref_section38"></a><h3 class="km"><strong>Frequently Asked Questions</strong></h3>
+<a name="aref_section39"></a><h4 class="km"><strong>Question 1:</strong> Is it possible to capture a customer's historical data (all open and closed invoices and related receipts) for a given period?</h4>
+<p><strong>Answer 1:</strong> To view historical data for a customer, you can run UBE R7403B001 (Generate Customer Balance) and then R7404002 (Customer/Supplier Balance Report). R7403B001 will create a temporary worktable F74412. UBE R7404002 will show the data in the temp table. </p>
+<p>Note: The AP equivalent, to capture and show a supplier's historical data is R7404003 (Generate Supplier Balance), see below section. </p>
+<hr />
+<a name="aref_section310"></a><h4 class="km"><strong>Question 2:</strong> How can the invoice records in the F74412 table be linked with corresponding F03B11 records?</h4>
+<p><strong>Answer 2:</strong> The fields - Document Number (DOC), Document Type (DCT) and Document Company (KCO) from the invoice in the F03b11 will only get updated onto F74412, if the transactions are created within the date range setup in the processing options under the Select tab.</p>
+<hr />
+<a name="aref_section311"></a><h4 class="km"><strong>Question 3:</strong>Why are AP Prepayment Vouchers not printing on the Supplier Balance Report (R7404002)?</h4>
+<p><strong>Answer 3: </strong>AP Prepayment functionality creates one voucher with a document type of PM, and with two pay items, one negative and one positive. The Generate Supplier Balance Report (R7404003) uses the GL Offset to differentiate vouchers. Because the two pay items have the same document number, they won't print. <br /> <br /> Prepayment vouchers will only be inserted into the F74412 by R7404003, and therefore subsequently print on R7404002, if the Group Mode processing option on the Process Tab of the R7404003 is set to &ldquo;1&rdquo; (Group by G/L Offset).</p>
+<hr />
+<a name="aref_section312"></a><h4 class="km"><strong>Question 4:</strong> When running the Customer/Supplier Balance Report (R7404002) should the initial balance from this year be equal to the total amount from the previous year?</h4>
+<p><strong>Answer 4:</strong> The Total Balance Amount from one year should be exactly the same as the Initial Balance from the next year.</p>
+<hr />
+<a name="aref_section313"></a><h4 class="km"><strong>Question 5:</strong> How can a receipt that was matched to an incorrect customer and subsequently voided be eliminated from the customer balance report (R7404002)?<span style="font-size: small;"><br /></span></h4>
+<p><strong>Answer 5:</strong> In the data selection of the Customer Balance Report (R7404002) use  the Receipt Number (CKNU) not equal to the incorrect receipt number.</p>
+<hr />
+<a name="aref_section314"></a><h4 class="km"><strong>Question 6:</strong> How to exclude A/P Drafts from Supplier Balance Report (R7404002)?</h4>
+<p><strong>Answer 6:</strong> In order to exclude A/P Drafts from being included in Supplier Balance Report (R7404002), Generate Supplier Balance program (R7404003) should be run with Processing Option 4. Drafts set to 1 (Exclude Drafts) in Process tab.</p>
+<hr />
+<a name="aref_section315"></a><h4 class="km"><strong>Question 7:</strong> Is there a project for the redesign of the R7403B001 A/R Generate Customer Balance A/R and/or R7404003 A/P Generate Supplier Balance?</h4>
+<p><strong>Answer 7:</strong> There are several Bugs and Enhancements entered for R7403B001 A/R Generate Customer Balance and R7404003 A/P Generate Supplier Balance. Enhancement Request Bug 26417673was entered to redesign R7403B001 and R7404003. To receive updates regarding this project, monitor the progress of Enh 26417673" title="Enh 26417673.</p>
+<!-- <p>Other related Bugs are the following:</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=11034229" alt="11034229" title="11034229" target="_blank">Bug 11034229</a> - RE-DESIGN CUST./SUPP. REPORT - SAR: 8953630</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=25483711" alt="25483711" title="25483711" target="_blank">Bug 25483711</a> - Chargeback with voids are not displayed correctly R7404002</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=10854999" alt="10854999" title="10854999" target="_blank">Bug 10854999</a> - IB LINE REQUIRED PER COMPANY R7494992 - SAR: 7247313</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=10888483" alt="10888483" title="10888483" target="_blank">Bug 10888483</a> - BOTH AP AND AR INFO ON REPORT R7404002 - SAR: 7653670</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=11013464" alt="11013464" title="11013464" target="_blank">Bug 11013464</a> - IB amount incorrect R7404003 - SAR: 8931735</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=11025171" alt="11025171" title="11025171" target="_blank">Bug 11025171</a> - KCO=0: INCORRECT IB AMOUNTS R7404002 - SAR: 8944069</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=11031136" alt="11031136" title="11031136" target="_blank">Bug 11031136</a> - IB BALANCE AMOUNT NOT CORRECT R7404002 - SAR: 8950442</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=11040145" alt="11040145" title="11040145" target="_blank">Bug 11040145</a> - IB INCORR. AFTER PV VOID R7404003 - SAR: 8959785 Bug 13782777 - R7404003 NOT UPDATING GL DATE IN F74412 R7404003C</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=15996290" alt="15996290" title="15996290" target="_blank">Bug 15996290</a> -Allow Data Structure per Company R7403B001</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=26141830" alt="26141830" title="26141830" target="_blank">Bug 26141830</a> - R7404002 is printing an inocrrect balance due to chargeback</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=28683859 " alt="28683859 " title="28683859 " target="_blank">Bug 28683859</a> - R7404002 SHOWS WRONG RESULT WHEN VOIDING RECEIPT WITH STANDALONE CHARGEBACK</p>
+<p>- <a href="/epmos/faces/BugDisplay?parent=DOCUMENT&sourceId=1484327.1&id=28684188" alt="28684188" title="28684188" target="_blank">Bug 28684188</a> - R7404002 NOT CORRECT FOR STANDALONE CHARGEBACK COMING FROM NEGATIVE RECEIPT </p> -->
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

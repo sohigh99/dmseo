@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Check Price and Price History FAQ</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Check Price and Price History FAQ</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h4 class="km"><strong>Question 1: What is the difference between 'Check Price' and 'Price History' row exits in Sales Order Entry (P4210/P42101)?</strong></h4>
+<p><strong>Answer 1: </strong>'Check Price' enables users to Check Price and (Item) Availability. This function can be useful for sales staff to simulate price by changing values of 'Sold To', 'Ship To', 'Branch/Plant', 'Price Effective Date', 'Adjustment Schedule', 'Quantity From' and 'Pricing UOM'. The values that appear in the Grid are cached and will be changed accordingly as per the 'Advanced Price Schedule' being populated and upon clicking the Find Button.  If the new price is not desired, be sure to 'Cancel' out of the form.  Clicking 'Ok' will change the price on the order detail line.<br /> 'Price History' will give users the actual price applied for the line(s) entered based on Advanced Price Schedule defined.</p>
+<hr />
+<h4 class="km"><strong>Question 2: After applying an ESU, we found that 'Check Price' is disabled. Is this functioning as designed?</strong></h4>
+<p><strong>Answer 2: </strong>Yes this is functioning as designed. This functionality was changed because these orders' price will be the cost of an item. Therefore, since the Check Price row exit will always pull in the price of an item, users will not be allowed to access the Check Price row exit for all transfer, intercompany and interbranch orders. </p>
+<p>Listed bugs below disable 'Check Price' for Transfer Orders, Interbranch and Intercompany Orders:</p>
+<ul>
+<li>9.0 Bug <a href="&lt;&lt;INLINE_BUG:11003887&gt;&gt;" target="_blank">11003887</a>: P4210 AND PRICE FOR ST - SAR: 8921530</li>
+<li>8.12 Bug <a href="&lt;&lt;INLINE_BUG:10997106&gt;&gt;" target="_blank">10997106</a>: P4210 AND PRICE FOR ST - SAR: 8897203</li>
+<li>8.11SP1 Bug <a href="&lt;&lt;INLINE_BUG:11016786&gt;&gt;" target="_blank">11016786</a>: CHECK PRICE P4074 APPLICATION - SAR: 8935087</li>
+</ul>
+<p><br /> <em>NOTE:  Through Bug <a href="&lt;&lt;INLINE_BUG:10834732&gt;&gt;" target="_blank">10834732</a>: WRONG COST CHECK PRICE - SAR: 7012565, the default Branch/Plant in Check Price and Availability (P4074) is:</em></p>
+<p style="margin-left: 30px;"> </p>
+<ul>
+<li><em> Check Price: Header B/P of Sales Order which can be overridden</em></li>
+<li style="list-style-type: none;"></li>
+</ul>
+<ul>
+<li><em> Price History: Detail B/P of Sales Order which is not allowed to be overridden</em></li>
+</ul>
+<hr />
+<h4 class="km"><strong>Question 3: What is the condition that disables 'Check Price'?</strong></h4>
+<p><strong>Answer 3</strong>: Following are the conditions that disable the check price:  </p>
+<ul>
+<li>
+<p>Configured Items</p>
+</li>
+<li>
+<p>Individually Processed Kit Component Lines (see Doc. ID E1: 45: 9.0 Individually Processed Kit Components and Advanced Pricing [ID <a href="&lt;&lt;INLINE_NOTE:1188333.1&gt;&gt;" alt="E1: 45: 9.0 Individually Processed Kit Components and Advanced Pricing" title="E1: 45: 9.0 Individually Processed Kit Components and Advanced Pricing" target="_blank">1188333.1</a>] for additional information)</p>
+</li>
+<li>
+<p>Transfer Order</p>
+</li>
+<li>
+<p>Interbranch Order</p>
+</li>
+<li>
+<p>Intercompany Order</p>
+</li>
+<li>
+<p>Last Status (F4211.LTTR) is equal to '914' - Added in Ship. Conf.</p>
+</li>
+</ul>
+<hr />
+<h4 class="km"><strong>Question 4: What is the difference between Price History (P4074) and Price and Availability Inquiry (P41261) in Processing Option #7 of  Sales Order Entry (P4210), Versions tab?</strong></h4>
+<p><strong>Answer 4</strong>: Price History (P4074) can be used with Advanced Pricing Adjustments.  Price and Availability Inquiry (P41261) is used with Base Pricing to display Trade Discounts and with Standard Pricing to display  Standard Pricing Rules.  See Doc. E1: 41: Comparison of Base Pricing, Standard Pricing, and Advanced Pricing (P4106/P4271/P4072/P4074/P4210) [ID <a href="&lt;&lt;INLINE_NOTE:625607.1&gt;&gt;" alt="E1: 41: Comparison of Base Pricing, Standard Pricing, and Advanced Pricing (P4106/P4271/P4072/P4074/P4210) [ID 625607.1]" title="E1: 41: Comparison of Base Pricing, Standard Pricing, and Advanced Pricing (P4106/P4271/P4072/P4074/P4210) [ID 625607.1]" target="_blank">625607.1</a>] and E1: 41: Standard Pricing Overview and Setup (P4106/R42950/P4210/P42101/P4271) [ID <a href="&lt;&lt;INLINE_NOTE:625608.1&gt;&gt;" alt="E1: 41: Standard Pricing Overview and Setup (P4106/R42950/P4210/P42101/P4271) [ID 625608.1]" title="E1: 41: Standard Pricing Overview and Setup (P4106/R42950/P4210/P42101/P4271) [ID 625608.1]" target="_blank">625608.1</a>].</p>
+<hr />
+<h4 class="km"><strong>Question 5: Under what conditions are there no records in the F4074 table for an order?</strong></h4>
+<p><strong>Answer 5</strong>: When using advanced pricing, there should be at least one record in the F4074 for the base price, whether or not adjustments are applied to the same order line.  If the item does not have a base price, one F4074 record is still created for with zero base price.</p>
+<p>Note: an F4074 record is not written if Advanced Pricing is turned off (ADVP = N) in the Pricing Constants (P41001).<br />Note 2: In World, even if Advanced Pricing is turned off via the Pricing Constants P41009W ADVP field, a F4074 record is written for a normal sales order with a base price file F4106 record.</p>
+<hr />
+<h4 class="km"><strong>Question 6: Why is the Adjustment Schedule in the Price History different from  Adjustment Schedule stored in the Sales Order Header?</strong></h4>
+<p><strong>Answer 6</strong>: A preference may be active for the item/customer combination on the line. In the Preference Master (P40070) check for Preference Type 14, Price Adjustment Schedule.</p>
+<ul>
+<li>Items/Item Groups can have different adjustment schedules attached to them</li>
+<li>The Adjustment Schedule can be manually added to the sales order detail line overriding the default from the Sales Order Header</li>
+</ul>
+<div>For more information on Basic Preference type 14, please review  the following document E1: 45: Basic Preference Type 14 - Price Adjustment Schedule (P40314-F40314) [ID <a href="&lt;&lt;INLINE_NOTE:1366497.1&gt;&gt;" target="_blank">1366497.1</a>]</div>
+<hr />
+<h4 class="km"><strong>Question 7: The system is displaying 'Address Book is Invalid' (Error ID: 0037) within the standalone program </strong><strong>Check Price &amp; Availability (P4074).  When the client enters an Item, Customer Number, and Branch Plant and clicks the 'Find' button, the error occurs.  However, if the customer clicks 'Find' again the error disappears.  How can the client troubleshoot this issue?</strong></h4>
+<p><strong>Answer 7:</strong> Check the following programs:<br /> <br /> 1) Check the Address Book Revision (P01012) to make sure that a valid record exists for the Branch/Plant.<br /> 2) Verify that the B/P Constants (P41001) has the same address book number. <br /> 3) Verify that the address book number matches with the address number defined in the Revise Single Business Unit (P0006). Customer needs to verify that the address number in the 'More Detail' tab of the P0006 is not blank but populated with the correct address number.</p>
+<hr />
+<h4 class="km"><strong>Question 8:  What do the different Price Override Code (PROV) values in the Price Adjustment Ledger File (F4074) represent?</strong></h4>
+<p><strong>Answer 8: </strong>In Price Adjustment Ledger File (F4074) here are the following values and what they mean:</p>
+<p>PROV Flag set to N -&gt; Basket Level Adjustment</p>
+<p>PROV Flag set to blank -&gt; For Price Adjustment Lines</p>
+<p>PROV Flag set to 1 -&gt; The system retrieve the Base price from F4106 (Base Price table) and Sales Price On Override Flag set to N in Pricing Constants.</p>
+<p>PROV Flag set to 2 -&gt; The user Manually Overrides the unit price in Sales Order Detail Revision screen and Sales Price On Override Flag set to Y in Pricing Constants.</p>
+<hr />
+<h4 class="km"><strong>Question 9:  Customer is getting error 0002-Blanks Invalid when trying to add a manual adjustment with a sequence number that is not the last sequence on the table within the Price History (P4074) during order entry.  Is this working as designed and if so is there a workaround?</strong></h4>
+<p><strong>Answer 9:</strong>  An adjustment that is ordained as a manual adjustment can only be added manually to the bottom of the sequence within the price history (P4074) table.  If the user tries to add a sequence number other than the last sequence number available the error 0002- Blanks invalid will be thrown and this is working as designed per <a href="&lt;&lt;INLINE_BUG:12470916&gt;&gt;" alt="Click (or CTRL+Click if using Firefox) to view" title="Click (or CTRL+Click if using Firefox) to view" target="_blank">Bug 12470916</a> : RECORD INVALID ON MANUAL ADD - SAR: 4381269.  The proper way to add an adjustment that is considered a manual adjustment and to place it  within the price history table other than the last position is to use the Row exit &ndash;insert adjustment. The system will add the sequence number below the row selected and then the user can manually update the manual adjustment as required.  This is the only way to add the manual adjustment  in a position other than the last position within the table. </p>
+<hr />
+<h4 class="km"><strong>Question 10: User is required to enter a valid value for ARSN (Adjustment Reason Code) on any manual adjustment change in Price History P4074. Is it possible to use blank or set ARSN with a default value instead of manually having to select a reason code every time a change is done in P4074?</strong></h4>
+<p><strong>Answer 10:</strong>  ARSN cannot be blank or defaulted from DD when manual adjustment is changed in P4074 and this is working as per design. ARSN is used to trace any manual override against F4074. So, if there is no manual override this column has to be remained as blank and if it got overridden then it should contain a specific value. <br />Blank code for UDC 40/AR is not valid due because whether reason code is blank or not is checked at the Event Rule level. Default value is not allowed because this will set F4074.ARSN even for the data with no manual override.</p>
+<hr />
+<h4 class="km"><strong>Question 11: Why is there a Currency Exchange Rate error in Check Price but not Price History? What is the cause of this error?<br /></strong></h4>
+<p><span id="form1:panelPage1"><strong>Answer 11:</strong> When viewing the Price History (P4074) from Sales Order Entry (P4210), price and advanced pricing adjustments are seen without problem. However, when viewing the same data in the stand-alone version of Check Price and Availability (P4074) or via a Row exit from the Sales Order Detail, the system returns the following error: Currency Exchange Rate Not Found - Error ID 0949.</span> The cause is due to <span id="form1:panelPage1">someone turning on currency (setting the Currency Conversion Y/N/Z box &lt;Alias CRYR&gt; to a Y or Z in the General Accounting Constants - P0000), then turning it off (changing the setting to N). </span> Check Price functionality performs a currency validation while the Price History does not.</p>
+<hr />
+<h4 class="km"><strong>Question 12: Why is there no pricing history when order is created thru EDI Inbound 850 - R47011?</strong></h4>
+<p><strong>Answer 12:</strong> Check Request Date field in F47011/F47012 EDI tables and compare the same with adjustment effective date in P4070 &amp; P4072. Request Date should be within the range of effective date in P4070 &amp; P4072 both.</p>
+<hr />
+<h4 class="km"><strong>Question 13:</strong> <strong>In the Price History / Check Price and Availability form (W4074D), what does the &ldquo;Based on Value&rdquo; field (BSDVAL) show?</strong></h4>
+<p><strong>Answer 13</strong>: Where a price adjustment is applied, this field indicates the quantity (or weight, or monetary amount) of the item that was used to calculate the adjustment. It is recorded in the F4074 table. The field is NOT populated for Basis Code 1 or 2 adjustments (% of base or current cost) but it is written for Basis Code 5 adjustments (add on amount). This is for a Line Level adjustment. The field is NOT written to for Basket level adjustments, but it is written for Volume Level adjustments. In the standalone P4074 (Check Price and Availability), if the user changes the value in the &ldquo;Quantity From&rdquo; field and performs the &ldquo;Find&rdquo; action, the value in BSDVAL is updated accordingly.</p>
+<p> </p>
+<div class="kmnotebox">To discuss information further with Oracle experts and industry peers, we encourage you to review, join or start a discussion in the <a href="https://community.oracle.com/community/support/jdedwards_enterpriseone/distribution_-_jde1" target="_blank">JDE1 Distribution Community</a>.<br /> <br /> To look at upcoming or archived Advisor Webcasts please see Advisor Webcast Details (Doc ID <a href="&lt;&lt;INLINE_NOTE:548764.1&gt;&gt;" target="_blank">548764.1</a>) if your topic is not currently scheduled please suggest it.</div>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

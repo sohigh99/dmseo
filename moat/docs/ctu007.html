@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Digital Forensics Plan for Samyang</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+
+		th, td {
+	  		text-align: left;
+	  		padding: 8px;
+		}
+
+		tr:nth-child(even) {background-color: #f2f2f2;}
+
+		th, td {
+	  		border-bottom: 1px solid #ddd;
+		}
+		th {
+			background-color: #B0C4DE; 
+		}
+
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Digital Forensics Plan for Samyang</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+<p>Digital Forensics Plan for Samyang</p>
+
+<h1><a name="_Toc504665473"></a>Company Overview</h1>
+<p>Samyang, a sugar manufacturer in Korea, has more than 90 years of business with over 10,000 employees worldwide. There are multiple sugar cane plantations as suppliers in Indonesia and Brazil who supply Samyang with sugar cane through barge as bulk. The ingredient gets refined in two manufacturing factories in Korea. There are several sales and marketing offices in Seoul, Busan, Tokyo, Shanghai, London, and New York. Lately, there are additional facilities to manufacture finished goods where intermediate goods used to be major products so far.</p>
+<p>The business environment has been changing when sugar is not the controlling price item anymore, and monopoly is not in government&rsquo;s favor in recent years. As a result, lots of new players come to the market with the advanced information technology tools though they are lacking of experience and exiting customers&rsquo; base.</p>
+<p>To cope with the internal and external challenges in sugar market, Samyang has implemented multiple enterprise solutions. The enterprise solutions comprise Oracle&rsquo;s Fusion product for Supply Chain Management (SCM); &nbsp;Oracle&rsquo;s JD Edwards EnterpriseOne as Enterprise Resource Planning (ERP); Oracle&rsquo;s Siebel Business Application for Customer Relationship Management (CRM); and Oracle&rsquo;s e-Commerce solutions for the online sales. Lately, Samyang is considering to migrate all these on-premises to the Oracle cloud to minimize the cost of ownership and soften impending security concerns.</p>
+<p>Each solutions have their designated servers for different purpose of transactions where users can access each systems using single sign on (SSO). Access control is performed using Lightweight Directory Access Protocol (LDAP) and each servers stores customers information, marketing materials, and other proprietary data. Servers for SCM and CRM are sitting in the demilitarized zone (DMZ) servers with multiple firewalls. Both Local Area Network (LAN) and Virtual LAN (VLAN) are the communcation link to the enterprise solutions except e-Commerce sitting in a proxy server which is open to the public through the Internet. For storage network, which sits between logic server and database server, Software-Defined Network (SDN) is in use. SDN mediates the access between application layers and infrastructure layers of computer systems. Each machines are encrypted using endpoint encryption tools.</p>
+
+<hr width="80%">
+
+<h1><a name="_Toc504665474"></a>Abstract</h1>
+<p>The imporance of digital forensics is even paramount in highly connected in modern computing environments because almost all organizations are very much dependent on the modern information technology. The purpose of digital forensics plan is to generate digital evidence in a civil or criminal investigation through the collection, examinization, and analysis of digital data. The proactive aspect of this digital forensic plan is to trobleshoot, monitor, recover, and protect sensitive data in the organization.</p>
+<p>This plan follows a scientific process actively through the observation of threats and vulnerabilities in computer systems and its network, and eventually it plans to mitigate the risk. Firstly, data collection entails the chain of custody, duplicate and validate evidence.&nbsp; Secondly, examine and analyze the collected data through analytical tool and reproduce digital forensics analysis procedure. Lastly, this plan generates reports with conclusion and if needed to testmony of findings.</p>
+<p>When vunerability is a weakness or flaw in a certain system, risk is the probability of a threat agent exploiting a vulnerability and the associated impact. The threats penetrate the operating system, network, and the Internet. Attackers or hackers can bypass physical security, gain access through social engineering, warring, and other types of hacking using logic bomb, trojan horses, virus, and warms.</p>
+<p>The digital crime can leave traces in multile layers of an organization information technology infrastructure including opeating systems data including cache, network and network traffice data, application data and its database, and possibly multiple-source data.</p>
+<p>It is crucial to build incident response team to mitigate the security risks from multiple sources in an organization with skill and knowledge on the networking topology and configuration, intrusion detection system and intrusion prevention system, securing evidenece, documenation. Same personnel should be literate to conduct preliminary investigation, to have basic fluency of forensic tools in computers and networks, to monitor network and its traffic, to preserver evidence, and to write reports on findings.</p>
+<p>It is imperative to build robust evidence through accurate handling, containment, and examination of evidence in the crime scene or the lab on seisured digital media. It is vital to execute proper prepration and containment not to damage any evidence for crimes which encompass evaluating and securing the scene, documenating the scene, collecting evidence which has evidentiary value, and packaging, transporataion, and storage.</p>
+<p>Crime scene investigators and lab technicians need to document both actions taken and their findings in the report to minize the risk because adequate handling, containment, and examinization of the evidence are essential to prevent possible incident to occur for the organization. This reports includes all custodians of the evidence using a Chain of Custody form. And same report should indicate the scope of invistation let alone the methodology and approaches used for investigation.</p>
+
+
+<p>Table of Contents</p>
+<p>1 &nbsp;<a href="#_Toc504665473">Company Overview.. 2</a></p>
+<p>2 &nbsp;<a href="#_Toc504665474">Abstract 4</a></p>
+<p>3 &nbsp;<a href="#_Toc504665475">Analysis. 8</a></p>
+<p>3.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665476">Threats and Vulnerabilities. 8</a></p>
+<p>3.1.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665477">Remote. 9</a></p>
+<p>3.1.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665478">Local 10</a></p>
+<p>3.1.3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665479">Client 11</a></p>
+<p>3.1.4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665480">Denial of Service. 11</a></p>
+<p>3.1.5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665481">Summary. 12</a></p>
+<p>3.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665482">Computer System Incidents. 13</a></p>
+<p>3.2.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665483">Types of Breaches. 13</a></p>
+<p>3.2.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665484">Analysis Process and the role of Incident response team.. 15</a></p>
+<p>3.2.3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665485">Technique to Incident Identification. 16</a></p>
+<p>3.2.4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665486">Identification of Threats and Incidents. 17</a></p>
+<p>3.2.5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665487">Summary. 18</a></p>
+<p>3.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665488">Network and Internet Incidents. 19</a></p>
+<p>3.3.1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665489">Importance of Log Analysis in IDS/IPS. 19</a></p>
+<p>3.3.2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665490">Prevention and Mitigation Plan. 22</a></p>
+<p>4 &nbsp;<a href="#_Toc504665491">Conclusion. 27</a></p>
+<p>5 &nbsp;<a href="#_Toc504665492">Appendix A: Risk Mitigation Technique and Plans. 29</a></p>
+<p>5.1 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665493">Process for Risk Mitigation Strategy. 29</a></p>
+<p>5.2 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665494">Risk Mitigation Plan Activities. 30</a></p>
+<p>5.3 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665495">Risk Mitigation Plan Implementation. 31</a></p>
+<p>5.4 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665496">Technique to Mitigate Common Breaches. 31</a></p>
+<p>5.5 &nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc504665497">Post Incident Review.. 33</a></p>
+<p><a href="#_Toc504665498">References. 35</a></p>
+
+<hr width="80%">
+
+<h1><a name="_Toc504665475"></a>Analysis</h1>
+<h2><a name="_Toc504665476"></a>Threats and Vulnerabilities</h2>
+<p>According to NIST, the threat is the potential for a threat-source to exercise a specific vulnerability, and threat-source is either (a) intent and method targeted at the intentional exploitation of a vulnerability, or (b) a situation and method that may accidentally trigger a vulnerability (NIST, 2012). On the other hand, vulnerability is a flaw or weakness in any aspect of the system (Elky, 2006).</p>
+<p>In moving forward, it is important to review the existing network topology of Samyang to determine the threat and vulnerability because the probable attack is through the network. As depicted in Figure 1, there are groups of users: internal and external where external user are categorized the named users like suppliers and anonymous customers for e-Commerce.</p>
+
+<p><img src="../images/ctu00701.png" border="0" alt="Network Topology" title="Network Topology" hspace="0" vspace="0" /></p>
+
+<p>Figure 1. Network Topology for Samyang</p>
+<p>Based on current network configuration, possible threat agents are remote users, local users, clients. And the attack can cause potential Denial of Service (DoS). Here we review threats and vulnerabilities in detail.</p>
+<h3><a name="_Toc504665477"></a>Remote</h3>
+<p>Remote access is the capability of users to access its secured resources from locations outside company&rsquo;s network (Scarfone, n.d.). Since Samyang is a global business entity, it is inevitable to allow a certain users to access the network remotely to perform daily transaction using ERP and CRM applications. As depicted in Figure 1, all internal and external users have means to access Samyang&rsquo;s network through one or other ways using the Internet.</p>
+<p>As result, this business activity leaves vulnerabilities below (Scarfone, n.d.),</p>
+<ul>
+<li>Devices for remote access are weaker security measurement in using Wi-Fi connection, and the physical security is not robust</li>
+<li>Personal hand held device which does not have control (smartphone, tablet, etc.)</li>
+<li>Lacking of Firewall and antivirus software in these devices</li>
+<li>Using device in hostile environment where is not configured for these usages</li>
+<li>Communication performs in untrusted network.</li>
+</ul>
+<p>Hence, the possible threat from remove access can be (Scarfone, n.d.),</p>
+<ul>
+<li>Someone can monitor and manipulate the communication</li>
+<li>Open up rogue wireless access point</li>
+<li>Exploitation of devices and users including theft or loss of remote access devices</li>
+<li>Loophole for sensitive data through phishing, key loggers, and so on</li>
+<li>Unauthorized access to company&rsquo;s resources.</li>
+</ul>
+<p>Some literature describes the modification of data, eavesdropping, and spoofing when the network is not secured.</p>
+<h3><a name="_Toc504665478"></a>Local</h3>
+<p>Each enterprise solutions (CRM, ERP, SCM, and e-Commerce) which Samyang are running have its application level security to have proper access control. Currently, single-sign-on (SSO) and Lightweight Directory Access Protocol (LDAP) are in place. However, it is high time to review whether all sensitive data are secured properly though vulnerability and threat for the internal users within company&rsquo;s network.</p>
+<p>Some of internal vulnerabilities are (Manky, 2010),</p>
+<ul>
+<li>USB thumb drives which give easier means for users to communicate whereas there is no control on it and Optical media like CD-ROM which can store sensitive data</li>
+<li>Laptop and netbooks give carry around globe where it contains sensitive data</li>
+<li>Remote Desktop capability using single sign on which may allow the access point to other machines</li>
+<li>Smartphones which is personal with camera, recording, and USB connection</li>
+<li>And E-mail can pose as vulnerability in not complying with company&rsquo;s policy.</li>
+</ul>
+<p>So the internal threats are (Whittle, 2008).</p>
+<ul>
+<li>Malicious cyberattacks by technically proficient employees and other illegal activities by the employees</li>
+<li>Social engineering within company to gain access to the machines or data</li>
+<li>Downloading malicious internet contents which firewall failed to filter</li>
+<li>Information leakage through smartphones, USD thumb drives.</li>
+</ul>
+<h3><a name="_Toc504665479"></a>Client</h3>
+<p>It is important for Samyang to provide sufficient information to the customers including online invoice, tracking, cataloging, and supply demand data in the area of CRM, SCM and e-Commerce areas to gain better customers&rsquo; satisfaction. Since suppliers and customers access these applications using the Internet, which repeats the vulnerability of internet where the solutions have its database. It is commonplace to access these systems using mobile devices including smartphones, tablets, and so on, which in turn, possesses vulnerabilities and threats.</p>
+<p>Probable vulnerabilities are (Mookhey, 2004), &nbsp;</p>
+<ul>
+<li>Weak authentication and authorization because there is no background checking</li>
+<li>Insecure wireless access points</li>
+<li>SQL Injection, Cross-site scripting, and remote command execution</li>
+<li>Price or web data manipulation through web scripting.</li>
+</ul>
+<p>On the other hand, the threats are,</p>
+<ul>
+<li>Virus, spywares, adware, Trojan horses, Back doors, Sniffers, and Spoofing</li>
+<li>Phishing</li>
+<li>Data manipulation</li>
+<li>Brute Force threat using exhaustive key search.</li>
+</ul>
+<h3><a name="_Toc504665480"></a>Denial of Service</h3>
+<p>Denial of Service (DoS) is overloading the resources for target till it crashes, which disturbs the availability in information security principle. The resources can be network bandwidth, server memory, application exception handling, CPU usage, hard disk space, database space, and database connection pool. As depicted above, almost all companies fall prey to this types of attack and Samyang is not an exception.&nbsp;</p>
+<p>The vulnerabilities pertain to DoS can be any software,</p>
+<ul>
+<li>Cisco network for both LAN and wireless</li>
+<li>Oracle Enterprise Linux 7.3</li>
+<li>Oracle database 11g</li>
+<li>Oracle WebLogic 11</li>
+<li>And the enterprise solutions are potentially vulnerable in missing any patch</li>
+</ul>
+<p>And threats are (AppliCure, n.d.),</p>
+<ul>
+<li>Ping flooding by sending an overwhelming number of ping packets and peer-to-peer attack which cause a web service down</li>
+<li>Application level flood to exploit bandwidth, race condition in multi-threaded system, buffer overflow in multiple enterprise solutions at Samyang</li>
+<li>Wide open query execution and SQL injection using CPU-intensive query</li>
+<li>Large file upload to the server to use up bandwidth.</li>
+</ul>
+<h3><a name="_Toc504665481"></a>Summary</h3>
+<p>According to Hayes, the very advanced attack comprises six stages as depicted in Figure 2 (Hayes, 2015),</p>
+
+<p><img src="../images/ctu00702.png" border="0" alt="Intrusion Kill Chain" title="Intrusion Kill Chain" hspace="0" vspace="0" /></p>
+
+<p>Figure 2. The Intrusion Kill Chain</p>
+<p>Above figure gives idea on the threat factors well even when the attack is not sophisticated.</p>
+
+
+<h2><a name="_Toc504665482"></a>Computer System Incidents</h2>
+<p>A computer system comprises processor, main memory, I/O module, and system bus. And the definition of computer includes file systems, virtual machines, embedded system, its network, and distributed system. A security breach is the unauthorized access of information to acquire, access, use, or disclose it in computer systems. On the other hand, a threat is a potential for threat-source to exploit or excise to attack a vulnerability, which results in a security breach or a violation of the system&rsquo;s security policy (Elky, 2006). Here we review some of known threats and breaches against computer systems and some of technique to determine the root cause of each breaches.</p>
+<h3><a name="_Toc504665483"></a>Types of Breaches</h3>
+<p>An event is any observable occurrence in a system or network which can gives sign that an incident is occurring (Kissel, 2011). Figure 3 below depicts the model which causes a certain organization at risk (NIST, 2012).</p>
+
+<p><img src="../images/ctu00703.png" border="0" alt="Risk Model with Threat Events" title="Risk Model with Threat Events" hspace="0" vspace="0" /></p>
+
+<p>Figure 3. Risk Model with Threat Event</p>
+<p>Here reviewing five well-known types of security breaches which are malware, phishing, password attacks, ransomware, and denial-of-service (ERM, n.d.).</p>
+<h4>Malware</h4>
+<p>Malware is general term to describe virus. Possible events are 1) delivering known/modified malware to internal organizational information systems; 2) delivering targeted malware for control of internal systems and exfiltration of data; 3) using removable media; 4) planting malware into downloadable software; 5) inserting targeted malware into organizational information systems and its components; 6) injecting specialized malware on system configuration; 7) inserting tempered hardware component into the supply chain; 8) inserting general purpose sniffers; 9) inserting malicious scanning devices; and 10) forge subverted person into organization (NIST, 2012).</p>
+<h4>Phishing</h4>
+<p>Phishing is to access personal information by masking intention. Nowadays some personal information gets gathered using phishing page. Possible events comprise a malicious email to bypass legacy spam filters, firewalls, and gateway security scan. Email with link to lead to another web page which is deceptive. Scammer sends email using the known identification to the one within my contact list. Domain Name System (DNS) cache poisoning to redirect users access. And luring user to sign in fake Dropbox or Google Drive (Bisson, 2015).</p>
+<h4>Password Attacks</h4>
+<p>Brute Force Attack, Dictionary Attack, and Key Logger Attack are common method to find out the password of yours. Possibly performing perimeter network scanning, network sniffing, gathering information using open source discovery in organization, or performing malware-directed internal reconnaissance (NIST, 2012).</p>
+<h4>Ransomware</h4>
+<p>Ransomware usually is targeting the organizations that need access to sensitive data promptly by asking ransom. Possible events are crafted attacks specifically based on deployed information technology information, and the events similar to malware attacks.</p>
+<h4>Denial-of-Service</h4>
+<p>The adverse event of denial-of-service (DoS) is that a website is inundated with requests or data until the system crashes. Common way is using a host of personal computer. Possible events are conducting communication interception, wireless jamming, attacking using unauthorized ports, protocols, and services.</p>
+<h3><a name="_Toc504665484"></a>Analysis Process and the role of Incident response team</h3>
+<p>As reviewed above, security breaches are commonplace. The table 1 describes how we identify the attack and set the countermeasure for the attack to prevent and minimize the adverse impact to the organization.</p>
+<p>Table 1. The Identification of Breaches and Role of Incident Response Team</p>
+<table style="width:75%">
+  <tr>
+    <th>Security Breaches</th>
+    <th>Analysis Process for Identification</th> 
+    <th>Role of Incident Response Team</th>
+  </tr>
+  <tr>
+    <td>Malware</td>
+    <td>
+    	<li>Code (static) analysis to view actual code</li>
+    	<li>Behavioral (dynamic) analysis to identify when executed, whom talk to, what, and how it runs (Distler, 2007)</li>
+    </td> 
+    <td>
+    	<li>Deny all outbound SMTP traffic except for the identified SMTP serves</li>
+    	<li>Containment phase process – remove affected host, cable, redefine firewall</li>
+    </td> 
+  </tr>
+  <tr>
+    <td>Phishing</td>
+    <td>
+    	<li>The email message contains a mismatched URL, poor spelling, and grammar</li>
+    	<li>URLs contain misleading domain name</li>
+    	<li>The message asks for personal information</li>
+    	<li>The offer is exceptionally good</li>
+    	<li>The message makes unrealistic threats</li>
+    	<li>The message appears to be form of a government agency (Posey, 2015</li>
+    </td> 
+    <td>
+    	<li>Disable the ‘abuse box’ of Email</li>
+    	<li>Organize all possible email and sender</li>
+    	<li>Collaborative work with other team to find out the real threats</li>
+    	<li>Educate the employees</li>
+    </td> 
+  </tr>
+    <tr>
+    <td>Password Attacks</td>
+    <td>
+    	<li>Identify POP2 password cracking</li>
+    	<li>Port scanning (Packtpub online, n.d.)</li>
+    </td> 
+    <td>
+    	<li>Filter the access based on protocols</li>
+    	<li>Check FTP communication</li>
+    	<li>A cyber security Capture the Flag (CTF)</li>
+    	<li>Check network traffic</li>
+    	<li>Examine sniffing attacks</li>
+    </td> 
+  </tr>
+    <tr>
+    <td>Ransomware</td>
+    <td>
+    	<li>File system activity – deletion of log, trigger alerts</li>
+    	<li>User behavior analytics (Ng, 2017)</li>
+    </td> 
+    <td>
+    	<li>Rapid containment</li>
+    	<li>Protect, contain, and isolate high value asset</li>
+    	<li>Device guard</li>
+    	<li>Keep operating system and software up to date</li>
+    	<li>Harden endpoints some defender tools (Microsoft online, n.d.)</li>
+    </td> 
+  </tr>
+    <tr>
+    <td>Denial-of-Service</td>
+    <td>
+    	<li>Check web stats</li>
+    	<li>netstat -an in HTML server</li>
+    	<li>Check log files in HTML server (Thatcher Online, 2013)</li>
+    </td> 
+    <td>
+    	<li>Check the performance of HTML client</li>
+    </td> 
+  </tr>
+</table>
+
+
+
+<p>Incident response comprises preparation, identification, containment, eradication, recovery, and lesson learned. So the role of incident response team repeats each steps for an individual security breaches (Distler, 2007).</p>
+<h3><a name="_Toc504665485"></a>Technique to Incident Identification</h3>
+<p>There are various means and techniques to identify the security breaches which can cause millions dollars of loss for the organization attacked.</p>
+<p>Table 2. Techniques for Threats Identification</p>
+
+<table style="width:60%">
+  <tr>
+    <th>Security Breaches</th>
+    <th>Techniques</th> 
+  </tr>
+  <tr>
+    <td>Malware</td>
+    <td>
+    	<li>Basic Static Analysis: File name, MD5 checksums or hashes, file type, file size</li>
+    	<li>Basic Dynamic Analysis: domain names, IP Address, file path, registry keys, file location (Scott, 2017)</li>
+    </td> 
+  </tr>
+  <tr>
+    <td>Phishing</td>
+    <td>
+    	<li>The technique to identify phishing are vary because of the variety of methods: Spear phishing, Email/Spam, Web Based Delivery, Link Manipulation, Keyloggers, Trojan, Malvertising, Session Hijacking, Content Injection, Phishing through search engine, Voce phishing, SMS Phishing</li>
+    	<li>Intrusion Detection System (IDS) is mostly commonly used technique to determine the attacks</li>
+    </td> 
+
+  </tr>
+    <tr>
+    <td>Password Attacks</td>
+    <td>
+    	<li>Event log analyzer</li>
+    	<li>Protocol analyzer</li>
+    	<li>Accountability and Authentication tool</li>
+    	<li>ASCII decode</li>
+    </td> 
+
+  </tr>
+    <tr>
+    <td>Ransomware</td>
+    <td>
+    	<li>Intrusion Prevention (IPS) to detect activity over the network</li>
+    	<li>Network File Share Protection</li>
+    </td> 
+
+  </tr>
+    <tr>
+    <td>Denial-of-Service</td>
+    <td>
+    	<li>Ping servers – Time to live 503 request time out error</li>
+    	<li>Log analysis solution which determines spike in traffic</li>
+    </td> 
+
+  </tr>
+</table>
+
+
+
+<p>Whatever the types of incident, it is important to go through to review information below to collect the evidence (Brezinski &amp; Killalea, 2002),</p>
+<ul>
+<li>CPU Registers and Cache in RAM</li>
+<li>Routing table, Process table to determine the application executed, and Kernel statistics</li>
+<li>Temporary File Systems in C Drive</li>
+<li>All remote logging and monitoring data</li>
+<li>Physical configuration of hardware and network topology</li>
+<li>Any archived data</li>
+</ul>
+<h3><a name="_Toc504665486"></a>Identification of Threats and Incidents</h3>
+<p>Based on breaches in security incident, breaches take place in multiple threat sources.</p>
+<h4>Remote</h4>
+<p>The internal users outside company&rsquo;s network are more vulnerable than local client regardless Firewalls and Virtual Private Network (VPN) even when IDP/IPS are in place. Hence, any breaches associated with network incident are related with users with remote access.</p>
+<h4>Local</h4>
+<p>The local users are highly dependent on the network infrastructure which company has implemented. However, the attacker can target any of user or machine as entry point of attack when getting information on configuration and network. Anti-virus software, IDS/IPS help security specialist to identify the breach threats effectively.</p>
+<h4>Client</h4>
+<p>Numerous phishing and ransomware attackers exploit the system through the portal to access the company&rsquo;s network. Tighten rules for access control identifies the threat.</p>
+<h4>DoS and DDoS</h4>
+<p>Common way to determine Denial-of-Service (DoS) or distributed DoS (DDoS) are by examining the unusual slow network performance, unavailability of a certain website, disconnection of network and so on.</p>
+<h3><a name="_Toc504665487"></a>Summary</h3>
+<p>This section focuses on the attacks which is specific to data breaches. Since the security principle is Confidentiality, Integrity, and Availability (CIA), the risks of Malware, Phishing, Password Attacks, Ransomware, and Denial-of-Service can damage the business and reputation greatly for Samyang. To protect data properly, Samyang need review below (MIT, n.d.),</p>
+<ul>
+<li>A Data Security Review;</li>
+<li>Create a proper plan to review data security status and its policies;</li>
+<li>Categorize confidential data and less important data;</li>
+<li>Timely housekeeping &ndash; archive or purge; and</li>
+<li>Implement physical security.</li>
+</ul>
+
+
+<h2><a name="_Toc504665488"></a><a name="_Toc504503089"></a>Network and Internet Incidents</h2>
+<p>The business nature of Samyang requires highly distributed network because of broad suppliers in oversea and newly implemented e-Commerce to the public. Figure 4 represents when Intrusion Detection System (IDS) is in place to access corporate network.</p>
+
+<p><img src="../images/ctu00704.png" border="0" alt="IDS/TPS" title="IDS/TPS" hspace="0" vspace="0" /></p>
+
+<p>Figure 4.IDS/IPS for Samyang</p>
+<p>Here we review the importance of Log Analysis in above configuration and its prevention and mitigation plan in detail including Log based Intrusion Detection System (LIDS).</p>
+<h3><a name="_Toc504665489"></a><a name="_Toc504503090"></a>Importance of Log Analysis in IDS/IPS</h3>
+<p>It is meaningful to review the difference between Intrusion Detection System (IDS) and Intrusion Prevention System (IPS) as depicted in Figure 5. Nonetheless, it is important for Samyang to review the cost factor in these systems.</p>
+
+<p><img src="../images/ctu00705.png" border="0" alt="IDS vs. TPS" title="IDS vs. TPS" hspace="0" vspace="0" /></p>
+
+<p>Figure 5. IDS vs. IPS</p>
+<p>Table 3 describes the basic function of IDS and IPS (Scarfone &amp; Mell, 2007).</p>
+<p><i>Table 3. Function of IDS and IPS</i></p>
+<table style="width:50%">
+  <tr>
+    <th>IDS</th>
+    <th>IPS</th> 
+  </tr>
+  <tr>
+    <td>Recording information related with observed event</td>
+    <td>Stopping the attack itself</td>
+  </tr>
+  <tr>
+    <td>Notifying security administrator of important observed event</td>
+    <td>Changing the security environment</td>
+  </tr>
+   <tr>
+    <td>Producing reports</td>
+    <td>Change the contents of attacks</td>
+  </tr>
+</table>
+
+
+
+
+<h4>Intrusion Detection System and Protection System (IDPS)</h4>
+<p>Intrusion detection is the technique of monitoring a certain events occurred in a computer system or network through possible signs for incident including violation of security policies. Hence, Intrusion Detection System (IDS) is software to automate the detection of attack (Gupta, 2012). There are two IDS models in use for many companies, where are Host-based and Network-based, and many anti-virus applications work such manner because both models have its weak points. Another model to discuss is Log-based Intrusion Detection System (LIDS) to detect attacks, security policy violation, and the misuse of computer systems using the logs generated by IDPS. The primary goals of IDPS using Security Information and Event Management (SIEM) as follows (Scarfone &amp; Mell, 2007),</p>
+<ul>
+<li>Identifying incidents and supporting incident response efforts;</li>
+<li>Identifying security policy problems;</li>
+<li>Documenting the existing threat to an organization; and</li>
+<li>Deterring individual from violating security policies.</li>
+</ul>
+<h4>Log Management</h4>
+<p>Both Big Data and Artificial Intelligence (AI) are pervasive in each industry to have better decision making in recent years. To some extent, the LIDS follows same approach as these with primary decision source (Log) and its analysis (Intelligence). The usage or usefulness of logs are evolved from a simple troubleshooting to optimize system/network performance, to record the actions of users, and to supply data for investigating malicious activity (Kent &amp; Souppaya, 2006). The sources of computer security logs comprise the logs from security software (antivirus software, firewall, and IDS/IPS), operating systems for both client, server, networking equipment, and various applications. As the volume of logs grow exponentially it is essential to have computer security log management to generate, transmit, store, analyze, and dispose it (Kent &amp; Souppaya, 2006).</p>
+<h4>Threat and Vulnerability Identification using Log</h4>
+<p>There are common detection methodologies which enable incident response team to identify the threats and vulnerabilities in the system and networks as below (Scarfone &amp; Mell, 2007),</p>
+<ul>
+<li><em>Signature-Based Detection</em>: the process of comparing a pattern against observed events to identify possible incidents. Attempt using a user name root which violates a security policy. Email attachment with execution file which is a typical malware. Log entry indicates host&rsquo;s auditing is disabled.</li>
+<li><em>Anomaly-based Detection</em>: the process of comparing normal activities against observed events using profiles encompassing users, hosts, network connections, or applications in an organization. Hence, it is effective in detecting new threats. The way to identify threat and vulnerability using this model is through the event logs like, consuming abnormal system resources, sending unusual email, initiating too much network connection, and executing unusual (out of profile) activities.</li>
+<li><em>Stateful Protocol Analysis</em>: the process of comparing benign protocol activities which is vendor developed universal one against observed events. Identifying unexpected sequence of commands. Keep on tracking the authenticator used for every session. Recording the authenticator used for suspicious activity. Checking whether individual command is reasonable or not including maximum and minimum arguments length.</li>
+</ul>
+<h3><a name="_Toc504665490"></a><a name="_Toc504503091"></a>Prevention and Mitigation Plan</h3>
+<p>The focal points of security transits from the infrastructure landscape to user security focus with the environments: complex computer systems, hidden network infrastructure, malicious software, viruses, warms, and risk of identity/asset theft (Antonelli, 2006). Hence, the objectives are</p>
+<ul>
+<li>How to secure the network</li>
+<li>How to secure the user</li>
+<li>How to specify the types of threats to protect and the level of monitoring system and network usage to comply with security policies.</li>
+</ul>
+<p>In this section, possible steps to prevent intrusion and techniques to mitigate current vulnerabilities where the vulnerabilities lie in people and policy, process, and technology.</p>
+
+<p>Previously, the benefits of IDPS entail as below (Gupta, 2012),</p>
+<ul>
+<li>Detect/prevent unauthorized access</li>
+<li>Meet/comply regulatory and legal requirement</li>
+<li>Enables forensic analysis</li>
+<li>Track suspicious behavior</li>
+<li>IT troubleshooting and network operation</li>
+<li>Monitor user activity</li>
+<li>Best practice and framework.</li>
+</ul>
+<p>Here we review detail on the objective constructed during IPDS review.</p>
+<h4>Steps to Prevent Future Attacks</h4>
+<p>Preventing attacks through network and the Internet needs careful analysis and planning to stop an attacker from unauthorized modification, destruction, or disclosure. When it comes to network, firewalls, network scanning, and security risk assessment are most important steps where password security, social engineering, and secure remote login are important ones in securing user.</p>
+<p>Security risk assessments addresses the potential adverse impact to the organizational operations, individuals, assets addressing people and policy, process, and technology. Same encompasses the use of information systems, and the information processed, stored, and transmitted (NIST, 2012).</p>
+<p>Commonly, the security risk assessment follows as below (Elky, 2006),</p>
+<ul>
+<li>Identify security threats in network and Internet:</li>
+<li>Identify vulnerabilities:</li>
+<li>Relate threats to vulnerabilities where risk is the exercise of a threat against a vulnerability:</li>
+<li>Define likelihood</li>
+<li>Define impact</li>
+<li>And assess risk</li>
+</ul>
+<p>As system development lifecycle, the framework of security risk assessment for preventive purpose are (NIST, 2012),</p>
+<ul>
+<li>Categorize &ndash; threat sources, threat events, and vulnerabilities in organization and its environment.</li>
+<li>Select &ndash; inform and guide the selection of security controls on requirements, assumptions, constraints, priorities, trade-offs.</li>
+<li>Implement &ndash; implementation of selected security control.</li>
+<li>Assess &ndash; assess security control assessments with output which identifies vulnerabilities.</li>
+<li>Authorize &ndash; enable authorizing officials to make security risk-based decision.</li>
+<li>Monitor &ndash; as the last steps to evaluate the effectiveness of security control, changes in systems, and compliance to the regulation, policies, standards, and guidance.</li>
+</ul>
+<p>In other words, the prevention steps encompasses security policy, security awareness, and access control using identification, authentication, and authorization.</p>
+<h4>Steps to Mitigate Current Vulnerabilities</h4>
+<p>Mitigation includes remedying the flaw or supply some compensatory control to reduce or minimize impact associated with vulnerabilities. At once relating threats with vulnerabilities, it follows the step below (Palmaers, 2013),</p>
+<ul>
+<li>Preparation &ndash; to limit the scope of implementation</li>
+<li>Vulnerability scan</li>
+<li>Define remediation actions &ndash; analyze the vulnerabilities, determine the associated threats, and provide input on remediation</li>
+<li>Implement remediating actions</li>
+<li>Rescan</li>
+</ul>
+<p>Well-known threats comprise unauthorized access, inappropriate access of resources, disclosure of data, unauthorized modification, disclosure of network traffic, spoofing of network traffic, disruption of network function. Where threats are errors and omission, fraud and theft, disgruntled employees, physical and infrastructure, malicious hackers, and malicious application (Ahmad &amp; Habib, 2010). Common attacks in the network comprise 1) Denial of Service (DoS, to user up resource), 2) Distributed DoS (DDoS, to flood the resource or bandwidth), 3) man in the middle, 4) social engineering, 5) virus, 6) warms, 7) buffer overflow, 8) packet sniffing, 9) FTP bounce, and 10)smurf which exploits the common network toll like ping.</p>
+<p>It is important to review current security technologies to mitigate the vulnerabilities as below,</p>
+<ul>
+<li><em>Firewall</em> not to allow unauthorized users off the network</li>
+<li><em>Virtual Private Network (VPN)</em> to give business partners (both suppliers and customers) and employees secure access to the network</li>
+<li><em>Intrusion detection and prevention</em> to detect and stop threats before they harm the network</li>
+<li><em>Content security</em> to protect the network from virus, spyware, and other attacks</li>
+<li><em>Secured wireless network (Wi-Fi)</em> to supply safe network access to visitors and mobile employees</li>
+<li><em>Identity management</em> to give control over who/what can access the network</li>
+<li><em>Compliance validation</em> to ensure that any devices accessing the network meet the security requirements (Cisco, n.d.).</li>
+</ul>
+
+<hr width="80%">
+
+<h1><a name="_Toc504665491"></a><a name="_Toc504503092"></a>Conclusion</h1>
+<p>The purpose of digital forensics plan for Samyang is to explore threats and vulnerability in computer systems and network to guide and implement proper mitigation plan, and to provide countermeasure against security risk. Since digital forensic plan follows typical scientific method, focus was made in internal system configurations and external threats including various threat sources.</p>
+<p>Based on threat sources, remote, local, and client, various vulnerabilities are discovered in the area of people and policy, process, and technology area. Detail vulnerabilities are inadequate policies and procedures, security through obscurity, misconfigured operating systems and embedded devices, in appropriate wireless communication, lacking of intrusion detection, and lack of change management.</p>
+<p>There are various types of breaches affecting computer systems. Well-known breaches are malware, phishing, password attack, ransomware, and denial-of-service. After analyze the source of attack, proper incident response action need taking where the incident response life cycle which comprises 1) preparation; 2) detection and analysis; 3) containment, eradication and recovery; and 4) Post-incident activities.</p>
+<p>The log analysis mechanism through instruction detection/prevention system (IDPS) are most important to prevent known attacks and potential attacks. The primary purpose of IDPS is to identify incidents, security policy problem, document exiting threats, and deter individual when violating security policies. Network-based, wireless, network behavior analysis, and host-based IDPS have its own merit and capabilities with prevention capabilities.</p>
+<p>The purpose of the incident management process are (proactively) to mitigate the adverse effect of incidents against normal business operations with precursor sign and (reactively) to restore services and operations to the production environment as quick as possible using indicator sign. Digital forensics gets more important in both law enforcement and corporate security department because crimes are associated with some digital means. Not to mention, it is important to have fluent forensic tool set where the logs, data, and information grows exponentially. These tools function like big data artificial intelligence, which analyze given information and maintain solid proof of any criminal activities.</p>
+<h1><a name="_Toc504503093"></a>&nbsp;</h1>
+
+<h1>&nbsp;</h1>
+<h1><a name="_Toc504665492"></a>Appendix A: Risk Mitigation Technique and Plans</h1>
+<p>Since risk assessment is most important process in risk management plan, it is noteworthy as depicted in Figure 6 (NIST, 2012),</p>
+
+<p><img src="../images/ctu00706.png" border="0" alt="Risk Management Process" title="Risk Management Process" hspace="0" vspace="0" /></p>
+
+<p>Figure 6. Risk Management Process</p>
+<p>Above figure emphasizes on the important of communication within organization when risk is understood.</p>
+<h3><a name="_Toc504665493"></a>Process for Risk Mitigation Strategy</h3>
+<p>So far, the steps for risk assessment methodology follows 1) Identifying threats; 2) Identifying Vulnerabilities; 3) Relating Threats to Vulnerabilities; 4) Defining Likelihood; 5) Defining Impact; and 6) Assessing Risk (Elky, 2006). And various mitigation strategies were provided based on threat-vulnerability relationship. The primary purpose of risk identification (step 1, 2) and analysis (step 3 through 6) is to prepare for risk mitigation. Possible process for risk mitigation strategy are (NAP, 2005),</p>
+<ul>
+<li>Characterizing on the cause of security risks which was identified and quantified</li>
+<li>Evaluation of risk interactions and common causes</li>
+<li>Identification of alternative mitigation strategies, methods, and tools</li>
+<li>Assessment and prioritization of mitigation alternatives</li>
+<li>Selection and commitment of resources required for risk mitigation alternatives</li>
+<li>Communication on planning results to all risk stakeholders to implement it.</li>
+</ul>
+<h3><a name="_Toc504665494"></a>Risk Mitigation Plan Activities</h3>
+<p>Risk mitigation planning comes into picture after risk is analyzed as depicted in Figure 7.</p>
+
+<p><img src="../images/ctu00707png" border="0" alt="Risk Mitigation Process" title="Risk Mitigation Process" hspace="0" vspace="0" /></p>
+
+<p>Figure 7. Risk Mitigation Process</p>
+<p>The risk mitigation plan (RMP) is based on realistic, achievable, measurable means containing followings (AcqNotes, n.d.),</p>
+<ul>
+<li>A title with the identified risk</li>
+<li>Plan date</li>
+<li>Contact point who is responsible for controlling the identified root cause</li>
+<li>Risk description including summary of performance, schedule, and resource impact, likelihood, consequence, and controlling scope</li>
+<li>Why root cause exist</li>
+<li>The options to mitigate it including alternatives</li>
+<li>Definition of events and activities to reduce the risk, success criteria for each event</li>
+<li>Risk status</li>
+<li>The fallback approach</li>
+<li>A management recommendation</li>
+<li>Approval level.</li>
+</ul>
+<p>Table 4 represents a plan of Action &amp; Milestones (POAM) (Elky, 2006),</p>
+<p><i>Table 4. Sample of Plan of Action &amp; Milestones</i></p>
+
+<table style="width:50%">
+  <tr>
+    <th>Risk</th>
+    <th>Strategy</th> 
+    <th>POC</th> 
+    <th>Resource ($)</th> 
+    <th>Milestones</th> 
+    <th>Target Completion</th> 
+    <th>Actual Completion</th> 
+  </tr>
+  <tr>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+    <td> </td>
+  </tr>
+</table>
+
+
+
+
+<h3><a name="_Toc504665495"></a>Risk Mitigation Plan Implementation</h3>
+<p>Based on a Risk Mitigation Plan (RMP), a risk mitigation plan implementation is to be sure successful risk mitigation. The contents and procedure encompasses (AcqNote, n.d.),</p>
+<ul>
+<li>Planning, budget, and requirements</li>
+<li>Provide a coordination means with management and other risk stakeholders</li>
+<li>Lead the teams to execute the Risk Mitigation Plan (RMP) which are defined and approved</li>
+<li>Risk reporting requirement for continues monitoring as depicted in Figure 6 and 7</li>
+<li>Document the history of change made if any.</li>
+</ul>
+<h3><a name="_Toc504665496"></a>Technique to Mitigate Common Breaches</h3>
+<p>As reviewed earlier, the most prevailing threats are malware, phishing, password attacks, ransomware, and denial-of-service in modern computing environment. And vulnerabilities lie in people and policy (organization level), process (mission/business process level), and technology (information system level). Common threat events are 1) performing reconnaissance including gathering information; 2) crafting attack tools; 3) delivering /embedding/installing malicious capabilities; and 4) exploiting and compromising before actual attack takes place. Here review the technique to mitigate the common breaches at high level (McGinley, 2017),</p>
+<ul>
+<li>Take security managers to the top</li>
+<li>Adopt a defensive security posture in the organization</li>
+<li>Iterate a data management plan</li>
+<li>Create an incident response team</li>
+<li>Establish and train incident response team</li>
+<li>Develop better relationship with customers and suppliers (McGinley, 2014)</li>
+</ul>
+<p>On the other hand, to keep up with security principles,</p>
+<ul>
+<li>Confidentiality: Encryption, Authentication, Access Control, Patch and update management, Antivirus software, Firewalls, and Intrusion Prevention System</li>
+<li>Integrity: Authentication, Authorization, Data validation, Audit, and Backup</li>
+<li>Availability: Firewall, Uninterruptable power supply (UPS), Redundancy, Physical security, and Backup.</li>
+</ul>
+<p>Detail technique depicted in Figure 8 (CMU, n.d.),</p>
+
+<p><img src="../images/ctu00708.png" border="0" alt="Risk Mitigation Techniques" title="Risk Mitigation Techniques" hspace="0" vspace="0" /></p>
+
+<p>Figure 8. Risk Mitigation Techniques</p>
+<ul>
+<li>Defense in Depth: multiple layers of security to protect assets</li>
+<li>Firewall: to protect network based attack</li>
+<li>Intrusion Detection and Prevention Systems (IDPS): to stop the malicious traffic or security breach</li>
+<li>Antivirus Software: to detect, quarantine, and remove malware.</li>
+</ul>
+<h3><a name="_Toc504665497"></a>Post Incident Review</h3>
+<p>As the last process of incident management lifecycle, post-incident activities include (Cichonski et al., 2012),</p>
+<ul>
+<li>Create a follow up report;</li>
+<li>Hold a lessons learned meeting; and</li>
+<li>Retain evidence.</li>
+</ul>
+<p>Commonly Post Incident Review encompassed items above as an effective way to improve incident response planning and procedure based on &ldquo;lesson learned.&rdquo; Through this report, organization can identify and correct weaknesses, and determine strengths. Table 6 represents a template for Post Incident Report which is the outcome of Post Incident Review (UWSUPER, 2014).</p>
+<p>Table 6. Post Incident Report Template</p>
+<table border=".1">
+<tbody>
+<tr>
+<td width="623">
+<p><strong>Post Incident Report </strong></p>
+
+<p>Incident Summary</p>
+<p>Incident Details</p>
+<p>Resolution/Restoration of Services</p>
+<p>Technical Lessons Learned/Action Items</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The positives</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Improvements</p>
+<p>Communication Lessons Learned/Action Items</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Initial Issue communication</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Strength</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Weakness</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Notification to the security stakeholders</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Strength</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Weakness</p>
+</td>
+</tr>
+</tbody>
+</table>
+
+<p>The post incident report should include (ServiceNow online, 2017),</p>
+<ul>
+<li>The triggering incident which leads to the security incident</li>
+<li>Changed, problems, and vulnerability associated with the incident</li>
+<li>A description on the security incident</li>
+<li>The entire activity log with all works done, response activities and tasks</li>
+</ul>
+<p>The primary purpose of &ldquo;lesson learned&rdquo; meeting is to go through possible opportunities which can prevent and mitigate similar incident in the future by answering questions below (Cichonski et al., 2012),</p>
+<ul>
+<li>What is the incident happened, and when it is occurred?</li>
+<li>How staff and management performed the incident handling?</li>
+<li>Do they follow the documented procedure? Were those documents adequate?</li>
+<li>What is the piece of information needed immediately?</li>
+<li>Did steps or action prevent the recovery?</li>
+<li>How same staff and management deal with it when similar incident happen?</li>
+<li>The information sharing with other team or group can be improved?</li>
+<li>What will be corrective action to inhibit similar issue in the future?</li>
+<li>What would be precursors or indicators to exam in the future?</li>
+<li>What kind of tools will be useful to detect, analyze, and mitigate the incident may come in the future?</li>
+</ul>
+
+
+
+
+<h1><a name="_Toc504665498"></a><a name="_Toc504503094"></a>References</h1>
+<ul>
+<li>AcqNote. (n.d.). <em>Risk Mitigation Plan (RMP)</em>. Retrieved January 24, 2018, from <a href="http://acqnotes.com/acqnote/tasks/risk-mitigation-plan">http://acqnotes.com/acqnote/tasks/risk-mitigation-plan</a></li>
+<li>AcqNote. (n.d.). <em>Risk Mitigation Plan Implementation</em>. Retrieved January 24, 2018, from <a href="http://acqnotes.com/acqnote/tasks/risk-mitigation-plan-implementation">http://acqnotes.com/acqnote/tasks/risk-mitigation-plan-implementation</a></li>
+<li>Ahmad, N. &amp; Habib, M. K. (2010). <em>Analysis of Network Security Threats and Vulnerabilities by Development &amp; Implementation of a Security Network Monitoring Solution</em>. Retrieved January 23, 2018, from <a href="https://pdfs.semanticscholar.org/287d/b9144f1c0fbd806e566df4c90568dfdd1103.pdf">https://pdfs.semanticscholar.org/287d/b9144f1c0fbd806e566df4c90568dfdd1103.pdf</a></li>
+<li>Antonelli, C. (2006). <em>Network Security: Prevention, Detection and Mitigation</em>. Retrieved January 23, 2018, from <a href="https://www.researchgate.net/publication/267998403_Network_Security_Prevention_Detection_and_Mitigation_Content">https://www.researchgate.net/publication/267998403_Network_Security_Prevention_Detection_and_Mitigation_Content</a></li>
+<li>AppliCure. (n.d.). <em>Prevent Denial of Service (DoS) Attacks</em>. Retrieved January 17, 2018, from <a href="http://www.applicure.com/solutions/prevent-denial-of-service-attacks">http://www.applicure.com/solutions/prevent-denial-of-service-attacks</a></li>
+<li>Bisson, D. (2016). <em>6 Common Phishing Attacks and How to Protect against Them</em>. Retrieved January 20, 2018, from <a href="https://www.tripwire.com/state-of-security/security-awareness/6-common-phishing-attacks-and-how-to-protect-against-them/">https://www.tripwire.com/state-of-security/security-awareness/6-common-phishing-attacks-and-how-to-protect-against-them/</a></li>
+<li>Brezinski, D., &amp; Killalea, T. (2002).&nbsp;<em>Guidelines for evidence collection and archiving</em>. Retrieved February 18, 2007, from <a href="http://www.ietf.org/rfc/rfc3227.txt">http://www.ietf.org/rfc/rfc3227.txt</a></li>
+<li>Cichonski, P. Millar, T. Grance, T. Scarfone, K. (2012). <em>Computer Security Incident Handling Guide, Recommendations of National Institute of Standards and Technology</em>. Retrieved January 11, 2018, from <a href="http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf">http://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf</a></li>
+<li>Cisco. (n.d.). <em>Network Security Checklist</em>. Retrieved January 22, 2018, from <a href="https://www.cisco.com/c/en/us/solutions/small-business/resource-center/secure-my-business/network-security-checklist.html">https://www.cisco.com/c/en/us/solutions/small-business/resource-center/secure-my-business/network-security-checklist.html</a></li>
+<li>CMU. (n.d.). <em>Methods for Mitigating Security Threats</em>. Retrieved January 25, 2018, from <a href="https://oli.cmu.edu/jcourse/workbook/activity/page?context=e6f7bf0980020ca600bd3056fa1100ea">https://oli.cmu.edu/jcourse/workbook/activity/page?context=e6f7bf0980020ca600bd3056fa1100ea</a></li>
+<li>Distler, D. (2007). <em>Malware Analysis: An Introduction</em>. Retrieved from January 21, 2018, from <a href="https://www.sans.org/reading-room/whitepapers/malicious/malware-analysis-introduction-2103">https://www.sans.org/reading-room/whitepapers/malicious/malware-analysis-introduction-2103</a></li>
+<li>Elky, S. (2006). <em>An Introduction to Information System Risk Management</em>. SANS Technology Institute. Bethesda, MD. Retrieved August 21, 2017, from <a href="https://www.sans.org/reading-room/whitepapers/auditing/introduction-information-system-risk-management-1204">https://www.sans.org/reading-room/whitepapers/auditing/introduction-information-system-risk-management-1204</a></li>
+<li>Gupta, S. (2012). <em>Logging and Monitoring to Detect Network Intrusions and Compliance Violations in the Environment</em>. Retrieved January 22, 2018, from <a href="https://www.sans.org/reading-room/whitepapers/detection/logging-monitoring-detect-network-intrusions-compliance-violations-environment-33985">https://www.sans.org/reading-room/whitepapers/detection/logging-monitoring-detect-network-intrusions-compliance-violations-environment-33985</a></li>
+<li>Hayes, D. R. (2015). <em>A practical guide to computer forensics investigations</em>. Indianapolis, IN Pearson.</li>
+<li>IBM. (2014). <em>Post Incident Review</em>. Identify and correct weaknesses, determine weakness. Retrieved January 25, 2018, from <a href="https://www-01.ibm.com/common/ssi/cgi-bin/ssialias?htmlfid=QLS12427USEN">https://www-01.ibm.com/common/ssi/cgi-bin/ssialias?htmlfid=QLS12427USEN</a></li>
+<li>Kent, K. Souppaya, M. (2006). <em>Guide to Computer Security Log Management</em>. Retrieved January 23, 2018, from <a href="http://ws680.nist.gov/publication/get_pdf.cfm?pub_id=50881">http://ws680.nist.gov/publication/get_pdf.cfm?pub_id=50881</a></li>
+<li>Kissel, R. (2011). <em>Glossary of Key Information Security Terms</em>. Retrieved January 20, 2018, from <a href="http://ws680.nist.gov/publication/get_pdf.cfm?pub_id=907638">http://ws680.nist.gov/publication/get_pdf.cfm?pub_id=907638</a></li>
+<li>Manky, D. (2010). <em>Top 10 Vulnerabilities inside the Network</em>. Retrieved January 16, 2018, from <a href="https://www.networkworld.com/article/2193965/tech-primers/top-10-vulnerabilities-inside-the-network.html">https://www.networkworld.com/article/2193965/tech-primers/top-10-vulnerabilities-inside-the-network.html</a></li>
+<li>McGinley, M. T. (2014). <em>Practice Tips for Mitigating Data-Breach Risk and Liability</em>. Retrieved January 25, 2018, from <a href="http://apps.americanbar.org/litigation/committees/criminal/articles/spring2014-0414-practice-tips-mitigating-data-breach-risk-liability.html">http://apps.americanbar.org/litigation/committees/criminal/articles/spring2014-0414-practice-tips-mitigating-data-breach-risk-liability.html</a></li>
+<li>Microsoft online. (n.d.). <em>Ransomware FAQ</em>. Retrieved January 21, 2018, from <a href="https://www.microsoft.com/en-us/wdsi/threats/ransomware">https://www.microsoft.com/en-us/wdsi/threats/ransomware</a></li>
+<li>Mookhey, K.K. (2004). <em>Common Security Vulnerabilities in e-commerce Systems</em>. Retrieved January 17, 2018, from <a href="https://www.symantec.com/connect/articles/common-security-vulnerabilities-e-commerce-systems">https://www.symantec.com/connect/articles/common-security-vulnerabilities-e-commerce-systems</a></li>
+<li>NAP. (2005). The Owner&rsquo;s Role in Project Risk Management. Retrieved January 24, 2018, from <a href="https://www.nap.edu/read/11183/chapter/7">https://www.nap.edu/read/11183/chapter/7</a></li>
+<li>NIST. (2012). <em>Guide for Conducting Risk Assessments</em>. NIST Special Publication 800-30, Revision 1. U.S. Department of Commerce. Washington, DC. Retrieved January 20, 2018, from <a href="http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-30r1.pdf">http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-30r1.pdf</a></li>
+<li>Ng, C. (2017). <em>The Complete Guide to Ransomware</em>. Retrieved January 21, 2018, from <a href="https://blog.varonis.com/the-complete-ransomware-guide/">https://blog.varonis.com/the-complete-ransomware-guide/</a></li>
+<li>Packtpub online. (n.d.). <em>Detect Password Cracking Attempts</em>. Retrieved January 21, 2018, from <a href="https://www.packtpub.com/mapt/book/networking_and_servers/9781784393335/3/ch03lvl1sec22/detect-password-cracking-attempts">https://www.packtpub.com/mapt/book/networking_and_servers/9781784393335/3/ch03lvl1sec22/detect-password-cracking-attempts</a></li>
+<li>Posey, B. (2015). <em>10 Tips for Spotting a Phishing Email</em>. Retrieved January 21, 2018, from <a href="https://www.techrepublic.com/blog/10-things/10-tips-for-spotting-a-phishing-email/">https://www.techrepublic.com/blog/10-things/10-tips-for-spotting-a-phishing-email/</a></li>
+<li>Scarfone, K. (n.d.). <em>Security Concerns with Remote Access</em>. Retrieved January 16, 2018, from <a href="https://csrc.nist.gov/CSRC/media/Events/HIPAA-Security-Rule-Implementation-and-Assurance/documents/NIST_Remote_Access.pdf">https://csrc.nist.gov/CSRC/media/Events/HIPAA-Security-Rule-Implementation-and-Assurance/documents/NIST_Remote_Access.pdf</a></li>
+<li>Scarfone, K. &amp; Mell, P. (2007). <em>Guide to Intrusion Detection and Prevention Systems (IDPS)</em>. Retrieved January 23, 2018, from <a href="http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-94.pdf">http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-94.pdf</a></li>
+<li>ServiceNow. (2017). <em>Post Incident Review</em>. Retrieved January 25, 2018, from <a href="https://docs.servicenow.com/bundle/geneva-security-management/page/product/planning_and_policy/concept/c_PostIncidentReview.html">https://docs.servicenow.com/bundle/geneva-security-management/page/product/planning_and_policy/concept/c_PostIncidentReview.html</a></li>
+<li>Scott, J. (2017). <em>Detecting Malware through Static and Dynamic Techniques</em>. Retrieved January 21, 2018, from <a href="https://technical.nttsecurity.com/post/102efk4/detecting-malware-through-static-and-dynamic-techniques">https://technical.nttsecurity.com/post/102efk4/detecting-malware-through-static-and-dynamic-techniques</a></li>
+<li>Thatcher Development Software. (2013). <em>How to Detect a Denial of Service (DoS) Attack</em>. Retrieved January 21, 2018, from <a href="http://www.gregthatcher.com/Azure/Ch2_DetectingDenialOfService.aspx">http://www.gregthatcher.com/Azure/Ch2_DetectingDenialOfService.aspx</a></li>
+<li>UWSUPER. (2014). <em>UW-Superior Technology Services Post Incident Report</em>. Retrieved January 25, 2018, from <a href="https://www.uwsuper.edu/technology/news/upload/Post-Incident-Review-Network-Outage-November-2014.pdf">https://www.uwsuper.edu/technology/news/upload/Post-Incident-Review-Network-Outage-November-2014.pdf</a></li>
+<li>Whittle, S. (2008). <em>The Top Five Internal Security Threats</em>. Retrieved January 16, 2018, from <a href="http://www.zdnet.com/article/the-top-five-internal-security-threats/">http://www.zdnet.com/article/the-top-five-internal-security-threats/</a></li>
+</ul>
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
+

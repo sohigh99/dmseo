@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Troubleshooting the Cash Receipts Review and Post Process in Accounts Receivable Within EnterpriseOne (R09801, P00241)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Troubleshooting the Cash Receipts Review and Post Process in Accounts Receivable Within EnterpriseOne (R09801, P00241)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#TRBLSHOOT">Troubleshooting Steps</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section21"><strong>Accounts Receivable Cash Receipts Posting (R09801) Issues</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Issue 1</strong><strong>: </strong>Error<em>:  "AAI Invalid"</em> and/or "<em>Account Number xxxx is Invalid</em> in Work Center" and/or "Blanks Invalid"</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Issue 2: </strong>Cannot apply an RU to an open invoice - the GL Date is grayed out.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Issue 3:</strong> Batches post by Pay Item (Offset Method of S)  but AR Constants setup to use the Offset Method of B (by Batch).</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Issue 4:</strong>  Error: <em>"PBCO" "Record In Current Year But Prior Period"</em>.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section26"><strong>Issue 5: </strong>Unable to post a zero receipt transaction to GL with transaction created in F0911.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section27"><strong>Issue 6:  </strong>Receipts post to the wrong account<strong>.</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section28"><strong>Issue 7:</strong> Why did I receive error "Bank Currency Code Incorrect" when entering a cash receipt?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section29"><strong>Issue 8:</strong> When posting a foreign or alternate currency receipt, why do we get error &ldquo;Account Currency Code Invalid&rdquo;? Our bank account's currency code is blank in the P0901.</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section210"><strong>Batch Header Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section211"><strong>Issue 1: </strong>Batch header screen does not display amounts with decimals.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section212"><strong>Issue 2: </strong>Error: <em>Not Authorized to Change Batch Status</em>.</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section213"><strong>Batch Approval and Post Security (P00241) Questions</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section214"><strong>Issue 1:  </strong>Batch Header in error and cannot post with some Business Unit and/or Company Row Security.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section215"><strong>Issue 2:</strong> User cannot post their own batches when setup as an <em>Approved By</em> user.</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section216"><strong>Issue 3:  </strong>Cannot approve and post batches after <em>Manager Approval of Input</em> in A/R Constants (P0000) and A/R Batch Security in Batch Approval/Post Security Constants (P00241) setup.</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p> Troubleshooting common errors when posting EnterpriseOne Accounts Receivable Manual Cash Receipts batches.</p>
+<H2 class=km><A NAME="TRBLSHOOT"></A>Troubleshooting Steps</H2>
+<a name="aref_section21"></a><h3 class="km"><strong>Accounts Receivable Cash Receipts Posting (R09801) Issues</strong></h3>
+<a name="aref_section22"></a><h4 class="km"><strong><a name="AAIerror"></a>Issue 1</strong><strong>: </strong>Error<em>:  "AAI Invalid"</em> and/or "<em>Account Number xxxx is Invalid</em> in Work Center" and/or "Blanks Invalid"</h4>
+<p><strong>Resolution 1:</strong>  The system returns AAI, Account Number or Blanks Invalid errors when either:</p>
+<ul>
+<li>the Automatic Accounting Instructions (AAIs) are not set up, or</li>
+<li>the AAIs are set up incorrectly, or</li>
+<li>the account number associated to an AAI is not setup in the account master. </li>
+</ul>
+<p>The exact AAI that is used depends on the type of transaction being posted. Typically for cash receipts, verify the following AAI&rsquo;s and their associated Account Master (F0901) records are setup:</p>
+<p>The following AAI's are edited for during Accounts Receivable transaction entry and processing, including the post process:</p>
+<ul>
+<ul>
+<li><em><strong>RC Default Trade Account</strong></em><br /> A/R Trade (holding) account. Contains Document Type AE transactions created by the GL Post (R09801). Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Business Unit is optional.</li>
+<li><em><strong>RB Default Bank Account</strong></em><br /> The bank account is based on the company number entered on the receipt. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Whatever offset are set up for the RCxxxx AAI must also be set up for RBxxxx. For example if RCTRAD is set up, RBTRAD must also be set up. Business Unit is required. </li>
+<li><strong><em>RKD Discount Taken</em></strong><br /> Expense account for discounts taken and created when a receipt is posted. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. </li>
+<li><em><strong>RT A/R Taxes</strong></em><br /> Tax account for taxes when the invoice is posted to GL. Either RT or RTyyyy (where yyyy = value in G/L Offset field entered in the Tax Rate/Area set up) is used depending on which Tax Explanation Code is used.   Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Use Tax uses RT. VAT tax uses RTyyyy. Tax Explanation Code 'B' (combination of VAT and Use tax) uses both RT and RTyyyy. For this code, in the Tax Rate/Area setup, the first line is used for VAT, which requires a G/L Offset, and the second line is the Use tax, which ignores the G/L Offset field.</li>
+</ul>
+</ul>
+<p>The following AAIs can also be edited for during receipts processing and posting, specifically, depending on the receipts process being performed:</p>
+<ul>
+<ul>
+<li><em><strong>RCUC Unapplied Cash Receipt</strong></em><br /> Automatic offset account for unapplied receipts not specific to an invoice. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. If RCUC is not set up, RCxxxx is not used as the default, where xxxx is the G/L Offset. Instead an error will be issued. Business Unit is optional. If left blank, the BU from the customer's Address Book record is used.</li>
+<li><em><strong>RCLC Logged Receipts</strong></em><br /> Default asset account for automatic offsets when posting a receipt for a non-identified customer. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><strong><em>RAxx Write-off Reason Code</em></strong><br /> Expense account used for write-offs. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. The xx code must be set up in User Defined Code (UDC) table and represents the write-off reason, such as BD for bad debit. (Example: RABD is the AAI.).  Business Unit is optional. If blank, the BU from the invoice that is being written off is used.</li>
+</ul>
+</ul>
+<p>  To further troubleshoot the cause and correct setup, link to <a href='../docs/1983922.html'>Troubleshooting Account Receivable Automatic Accounting Instruction AAI Errors.</a></p>
+<div align="center"><hr align="center" size="2" width="100%" /></div>
+<a name="aref_section23"></a><h4 class="km"><strong>Issue 2: </strong>Cannot apply an RU to an open invoice - the GL Date is grayed out.</h4>
+<p><strong>Resolution 2:</strong>  Post the RU entry.  The Original receipt entry must be posted for the GL Date to open up and allow the adjustment to be entered.   </p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Issue 3:</strong> Batches post by Pay Item (Offset Method of S)  but AR Constants setup to use the Offset Method of B (by Batch).</h4>
+<p class="km"><strong>Resolution 3:</strong> Transactions should post using the Batch Offset Method assigned in the AP or AR constants (P0000). However, if it is set to B, for posting by batch, the system may automatically change the offset method to an S on a batch to batch basis if there are multiple currencies within a batch.<span id="form1:panelPage1">The system cannot post by batch if multiple currencies are involved because the amounts are incompatible</span>.</p>
+<hr />
+<a name="aref_section25"></a><h4 class="km"><strong><a name="PBCO"></a>Issue 4:</strong>  Error: <em>"PBCO" "Record In Current Year But Prior Period"</em>.</h4>
+<p class="km"><strong>Resolution 4:</strong> PBCO is an acronym for Post Before Cut Off, which means that you are attempting to post records to a prior period. Because posting records to a prior period affects your financial statements and reports, be sure you get approval from your financial management team before continuing.  Also, each of the resolutions involves changing a system setting. You should complete the task after hours or when you know no one is posting batches.</p>
+<p class="km">Do <span style="text-decoration: underline;">one</span> of the following to resolve the PBCO error:</p>
+<ul>
+<li>In the General Accounting Constants (P0000), select the value of the <em>Allow PBCO Postings</em> field to turn this option and allow posting to prior periods. When this is turned on, the system generates a warning message to prevent accidental posting to prior period.</li>
+</ul>
+<p class="km"><img src="../images/arpost01.png" src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1988636.1&attachid=1988636.1:2&amp;clickstream=no" border="0" alt="allow PBCO" title="allow PBCO" hspace="0" vspace="0" /></p>
+<div class="kmnotebox">Remember: You must clear cache after any changes to the Constants. For more information refer to Q10 of <a href='../docs/944015.html'>Frequently Asked Questions on Caching in EnterpriseOne</a>.</div>
+<p>-or-</p>
+<ul>
+<li>Change the period number in the Company Numbers and Names program (P00105) to the period that represents the G/L date on the transactions for <span style="text-decoration: underline;">both</span> G/L period and A/R period:</li>
+</ul>
+<p><img src="../images/arpost02.png" src="/epmos/main/downloadattachmentprocessor?parent=DOCUMENT&sourceId=1988636.1&attachid=1988636.1:1&amp;clickstream=no" border="0" alt="current period" title="current period" hspace="0" vspace="0" /></p>
+<ol>
+<li>In Company Names and Numbers (P0010), change the Current Period and Accounts Receivable Current Period for each of these companies back to the desired period.</li>
+<li>After the Current Period is modified,<span style="text-decoration: underline;"> clear the cache for the changes to become effective</span>.</li>
+<li>Post the transaction.</li>
+<li>In Company Names and Numbers (P0010), set the Current Period and Accounts Receivable Current Period back to the actual current period, and finally<span style="text-decoration: underline;"> clear the cache again</span>.</li>
+</ol>
+<div class="kmnotebox">Note: You should complete the task after hours, or when you know no one is posting batches. If you have concerns about financial reports, refer to the section on posting to a prior period or a prior year in Knowledge <a href='../docs/1967291.html'> "Understanding The Receipt Post Process Within JD Edwards EnterpriseOne Accounts Receivable (R09801)"</a>.</div>
+<hr />
+<a name="aref_section26"></a><h4 class="km"><strong><a name="noZero911"></a>Issue 5: </strong>Unable to post a zero receipt transaction to GL with transaction created in F0911.</h4>
+<p><strong>Resolution 5:</strong> The posting report show Offset method as Y (one offset per document). It is system function as per design not creating any transaction during receipt posting as this is a zero value receipt, debit and credit transaction go to the same offset account. In order to create double entries for zero receipt transaction, you need to change the AR offset method to S (Single offset per pay item). By changing the offset method to S will affect all AR batch posting to GL, all document posted to GL will create transaction base on the pay item.</p>
+<hr />
+<a name="aref_section27"></a><h4 class="km"><strong><a name="wrongAccount"></a>Issue 6:  </strong>Receipts post to the wrong account<strong>.</strong></h4>
+<p><strong>Resolution 6: </strong> When you post cash receipts, the accounts used are directed by Automatic Accounting Instructions, with the possible exception of the bank account.  The bank account defaults into the Receipts Entry program from the AAI item RB, or RBxxxx (where xxxx is the associated GL Offset, if defined) when you enter cash receipts, but it can be manually changed at time of receipt entry.  The post program always uses the bank account defined in the header of the receipts entry screen.  If any other accounts are not what you expect, you need to review your AAI setup:</p>
+<p>The following AAI's are edited for during Accounts Receivable transaction entry and processing, including the post process:</p>
+<ul>
+<ul>
+<li><em><strong>RC Default Trade Account</strong></em><br /> A/R Trade (holding) account. Contains Document Type AE transactions created by the GL Post (R09801). Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Business Unit is optional.</li>
+<li><em><strong>RB Default Bank Account</strong></em><br /> The bank account is based on the company number entered on the receipt. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Whatever offset are set up for the RCxxxx AAI must also be set up for RBxxxx. For example if RCTRAD is set up, RBTRAD must also be set up. Business Unit is required. </li>
+<li><strong><em>RKD Discount Taken</em></strong><br /> Expense account for discounts taken and created when a receipt is posted. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. </li>
+<li><em><strong>RT A/R Taxes</strong></em><br /> Tax account for taxes when the invoice is posted to GL. Either RT or RTyyyy (where yyyy = value in G/L Offset field entered in the Tax Rate/Area set up) is used depending on which Tax Explanation Code is used.   Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Use Tax uses RT. VAT tax uses RTyyyy. Tax Explanation Code 'B' (combination of VAT and Use tax) uses both RT and RTyyyy. For this code, in the Tax Rate/Area setup, the first line is used for VAT, which requires a G/L Offset, and the second line is the Use tax, which ignores the G/L Offset field.</li>
+</ul>
+</ul>
+<p>The following AAIs can also be edited for during receipts processing and posting, specifically, depending on the receipts process being performed:</p>
+<ul>
+<ul>
+<li><em><strong>RCUC Unapplied Cash Receipt</strong></em><br /> Automatic offset account for unapplied receipts not specific to an invoice. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. If RCUC is not set up, RCxxxx is not used as the default, where xxxx is the G/L Offset. Instead an error will be issued. Business Unit is optional. If left blank, the BU from the customer's Address Book record is used.</li>
+<li><em><strong>RCLC Logged Receipts</strong></em><br /> Default asset account for automatic offsets when posting a receipt for a non-identified customer. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><strong><em>RAxx Write-off Reason Code</em></strong><br /> Expense account used for write-offs. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. The xx code must be set up in User Defined Code (UDC) table and represents the write-off reason, such as BD for bad debit. (Example: RABD is the AAI.).  Business Unit is optional. If blank, the BU from the invoice that is being written off is used.</li>
+</ul>
+</ul>
+<p>  To further troubleshoot the cause and correct setup, link to <a href='../docs/1983922.html'>Troubleshooting Account Receivable Automatic Accounting Instruction AAI Errors.</a></p>
+<hr />
+<a name="aref_section28"></a><h4 class="km"><strong>Issue 7:</strong> Why did I receive error "Bank Currency Code Incorrect" when entering a cash receipt?</h4>
+<p><strong>Resolution 7:</strong> Error "Bank Currency Code Incorrect" is issued when the GL Bank Account of the cash receipt is in a currency different than the receipt&rsquo;s transaction currency or the receipt company&rsquo;s currency.</p>
+<hr style="width: 100%;" width="100%" />
+<p> </p>
+<a name="aref_section29"></a><h4 class="km"><strong>Issue 8:</strong> When posting a foreign or alternate currency receipt, why do we get error &ldquo;Account Currency Code Invalid&rdquo;? Our bank account's currency code is blank in the P0901.</h4>
+<p><strong>Resolution 8:</strong> This error is set by the Post (R09801) if any of the G/L accounts used by the post has a currency code on it that is different from the foreign or alternate transaction currency. This could be any of the accounts attached to any AAIs used by the post, so you need to check these via the P0012:</p>
+<ol>
+<li>Inquire on A/R AAIs for the company of the payment by putting R* in the QBE field above the Item column.<br /><br /></li>
+<li>Check the accounts associated with any RCxxx/RCyyyy and RBxxx/RByyyy AAI and any multicurrency AAI (RGxxx, RLxxx, RVxxx, RWxxx, RRxxx, RYxxx, RZxxx, R8xxx, and R7xxx).<br /><br /></li>
+<li>Make sure that either:
+<ul style="list-style-type: disc;">
+<li>all G/L accounts attached to any of the RCxxx/RCyyyy and RBxxx/RByyyy and multicurrency AAIs have a blank currency code,</li>
+</ul>
+</li>
+</ol>
+<p style="margin-left: 60px;">or</p>
+<ol>
+<li style="list-style-type: none;">
+<ul style="list-style-type: disc;">
+<li>for the RCxxx and RBxxx ones that every combination of RC/RB with currency code as offset is set up.</li>
+</ul>
+</li>
+</ol>
+<p><strong> </strong></p>
+<hr style="width: 100%;" width="100%" />
+<p> </p>
+<p> </p>
+<a name="aref_section210"></a><h3 class="km"><strong>Batch Header Questions</strong></h3>
+<a name="aref_section211"></a><h4 class="km"><strong>Issue 1: </strong>Batch header screen does not display amounts with decimals.</h4>
+<p><strong>Resolution 1: </strong>A batch can contain transactions in different currencies and each currency can use a different number of decimal places. To avoid multi currency decimal issues, the amounts are displayed without decimals. In addition, the Batch Control Record table F0011 does not have currency information.</p>
+<hr />
+<a name="aref_section212"></a><h4 class="km"><strong>Issue 2: </strong>Error: <em>Not Authorized to Change Batch Status</em>.</h4>
+<p><strong>Resolution 2:</strong> This error is returned when the Post Security Constants (P00241) is set up to secure the user from approving or posting batches. To rectify this issue, remove the user from the list of Secured Users or turn off post security. After either adjustment is made, clear the cache for the changes to take effect.</p>
+<hr />
+<a name="aref_section213"></a><h3 class="km"><strong>Batch Approval and Post Security (P00241) Questions</strong></h3>
+<a name="aref_section214"></a><h4 class="km"><strong>Issue 1:  </strong>Batch Header in error and cannot post with some Business Unit and/or Company Row Security.</h4>
+<p><strong>Resolution 1:</strong> Users who submit batches for posting cannot have any row security assigned to them.</p>
+<hr />
+<a name="aref_section215"></a><h4 class="km"><strong>Issue 2:</strong> User cannot post their own batches when setup as an <em>Approved By</em> user.</h4>
+<p><strong>Resolution 2:</strong> USER1 needs to include their User ID in the Secured Users list under the Approved By record to have the authority to approve their own batches.</p>
+<hr />
+<a name="aref_section216"></a><h4 class="km"><strong>Issue 3:  </strong>Cannot approve and post batches after <em>Manager Approval of Input</em> in A/R Constants (P0000) and A/R Batch Security in Batch Approval/Post Security Constants (P00241) setup.</h4>
+<p><strong>Resolution 3: </strong><em>Approved B</em>y users and<em> Secured</em> users must also be configured to complete the setup of the Batch Approval/Post Security. Define these through the Batch Approval / Post Security Constants (P00241),from the Form exit.</p>
+<hr />
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

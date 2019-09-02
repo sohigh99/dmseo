@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Case Study on UBE Error "Unable to initialize"</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Case Study on UBE Error "Unable to initialize"</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Symptoms</BIG></span></big></big></h2>
+
+<p>UBE R31410 ends in error when being submitted to the Job Queue getting an <strong>E</strong>rror State when timing out after an 1 hour and the Call Object Kernel process is attached to Kanban Process (DcLink Process).</p>
+<ul>
+<li>UBE is submitted through Call Object Kernel (e.g., ProcessID for COBK = 1234)</li>
+<li>A user logs out of EnterpriseOne (or times out)</li>
+<li>(Log In)</li>
+<li>Same Process ID (e.g., 1234) is assigned for same user</li>
+<li>UBE ends in error as below, in submitting same report through Call Object kernel:</li>
+</ul>
+<p>&nbsp;<span style="text-decoration: underline;">UBE log appended to CallObject Kernel log (namely JDEDEBUG.log)</span>:</p>
+<div style="margin-left: 40px;">--UBE--[6]-- ubeReport_EntryPoint START <br /> <span style="color: red;">--UBE--[0]-- Unable to initialize </span><br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (COBK) KERNEL type = KERNEL_NET <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (COBK) INSERT INTO SVM7334.F986110 (JCJOBQUE, JCJOBPTY, JCJOBSTS, JCENHV, JCUSER, JCPSWD, JCJOBTYPE, JCSBMDATE, JCSBMTIME, JCJOBNBR, JCEXEHOST, JCORGHOST, JCPROCESSID, JCACTDATE, JCACTTIME, JCSRVBLOBA, JCFUNO, JCPRTQ, JCFNDFUF1, JCFNDFUF2) VALUES ('DCSHOP','5','<span style="color: red; font-weight: bold;">E</span>','DUA7334','DCLINK7','******',' ',112276,90655.000000,251490.000000,'nzaxs26ch','nzaxs26ch',24182950.000000,112276,90655.000000,LONGVARBINARY_DATA,'UBE','6010','Printer In BLOB','R31410_DC0018_251490_PDF')</div>
+<p>&nbsp;</p>
+<div class="kmnotebox">
+<p><strong>Notes:</strong></p>
+<ul>
+<li>As defined in UDC H93/LL (UBE Logging Level), it is important to check log with key words "--UBE--[0]" because UBE kernel represent log.</li>
+<li>Job Status (F986110.JCJOBSTS) is written through UBE Kernel.</li>
+<li>Additional information on UBE logging level as defined in UDC H93/LL (UBE Logging Level)</li>
+</ul>
+<p>&nbsp;</p>
+<table style="border-collapse: collapse; width: 299px; height: 139px;" border="1" cellspacing="1" cellpadding="1"><colgroup><col style="width: 48pt;" width="64" /> <col style="width: 116pt;" width="155" /></colgroup>
+<tbody>
+<tr style="height: 15pt;"><th class="xl63" style="height: 15pt; width: 48pt;">Code</th><th class="xl63" style="width: 116pt;">Description&nbsp;&nbsp;</th></tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt; color: red; font-style: italic;" height="20"><strong>0</strong></td>
+<td class="xl64" style="color: red; font-style: italic;"><strong>Error Messages</strong></td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">1</td>
+<td class="xl64">Informative Messages</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">2</td>
+<td class="xl64">Section Level Messages</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">3</td>
+<td class="xl64">Object Level Messages</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">4</td>
+<td class="xl64">ER Level Messages</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">5</td>
+<td class="xl64">SQL Statements</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl64" style="height: 15pt;" height="20">6</td>
+<td class="xl64">UBE Function Messages</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><span style="text-decoration: underline;">Example of clean log</span>:<br /> <br /> --UBE--[6]-- ubeReport_EntryPoint START <br /> Oct&nbsp; 1 17:01:42 ** 24182950&nbsp;&nbsp; &nbsp;KERNEL type = KERNEL_UBE <br /> --UBE--[0]-- Start Time : 17:01:42 <br /> --UBE--[6]-- Call jdeActiveRptFlag to get report Updateable flag in thread ID 0 <br /> Oct&nbsp; 1 17:01:42 ** 24182950&nbsp;&nbsp; &nbsp;ORACLE DBInitReq conn=20174278 requ=209840c8 nzaxs26ch (ERPD) new <br /> Oct&nbsp; 1 17:01:42 ** 24182950&nbsp;&nbsp; &nbsp;UPDATE UA7334.F983051&nbsp; SET VRPID='R31410&nbsp;&nbsp;&nbsp; ',VRVERS='DC0018&nbsp;&nbsp;&nbsp; ',VRREPORTID=0l,VRVERSIONID=0l,VRJD='"WK" Release Work Order - Shop Floor (status = 40)',VREXCL='0',VRUSER='LWESTON&nbsp;&nbsp; ',VRVCD=112122,VRVED=112275,VRPROPTMID=0l,VRPOID=0l,VROPCR='1',VRVLISTMODE=2,VRVERTXTID=2l,VRCHKOUTSTS='N',VRCHKOUTDAT=112122,VRUSR0='JTROUGHT&nbsp; ',VRVRSAVAIL='Y',VRENHV='UA7334&nbsp;&nbsp;&nbsp; ',VRMKEY='NZ2KS19CH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ',VRPODATA=LONGVARBINARY_DATA,VRDSTNM='T31410&nbsp;&nbsp;&nbsp; ',VRVCC1='&nbsp;&nbsp; ',VRVCC2='&nbsp;&nbsp; ',VRVCC3='&nbsp;&nbsp; ',VRVCC4='&nbsp;&nbsp; ',VRVCC5='&nbsp;&nbsp; ',VRFRMTSTR=' ' WHERE&nbsp; ( VRPID = 'R31410' AND VRVERS = 'DC0018' ) <br /> --UBE--[6]-- UBEReport_LoadSpecifications Start <br /> --UBE--[1]-- Currency Flag is Z <br /> --UBE--[1]-- Output is disabled. No PDF file will be created for this report. <br /> --UBE--[6]-- Processing Init Report at Report Level <br /> --UBE--[6]-- UBEReport_StartProcessing Start <br /> --UBE--[1]-- No ER detected for INIT_REPORT event.&nbsp; Clearing values for report level RV and ER Variables. <br /> --UBE--[6]-- Processing Do Init Printer at Report Level <br /> --UBE--[6]-- K2Print START <br /> --UBE--[0]-- Printer Name is JDE_Default_Print_Queue <br /> --UBE--[6]-- K2PRINT END <br /> --UBE--[2]-- Starting UBE Message Loop <br /> --UBE--[2]-- Process Init Report Header Section <br /> --UBE--[2]-- Process Init Section <br /> --UBE--[2]-- InitSection for Work Order Processing</p>
+<p>(End of exmple)</p>
+<p>&nbsp;</p>
+<p>Same issue is happening in client's environment in handling Kanban process which callobject kernel is calling R31410.</p>
+<p>1. Log in to ERP8 (e.g., JPD7334 where default UBE and BSFN are mapped to server)<br /> 2. (G3115) P3157 - Kanban consumption then look for existing Kanban<br /> 3. Highlight it and (row exit) Check Out (which submits R31410 to server)<br /> 4. Log out<br /> 5. Log in (so same user handle attaches to exiting callobject kernel process)<br /> 6. Look for Kanban through P3157 and highlight to (row exit) Check In (this is to check out again so if there is another kanban skip this)<br /> 7. Highlight it and (row exit) Check Out<br /> 8. Go to WSJ and verify that Submitted Job R31410 ends in error --UBE--[0]-- Unable to initialize<br /> &nbsp;&nbsp;: It is working fine in our testing environment</p>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Changes</BIG></span></big></big></h2>
+
+<p><span id="form1:panelPage1">Upgraded DSI version to DcLink7 which request Kanban processing through XML request in logic server. </span></p>
+<p><span id="form1:panelPage1">By default, timeout settings for DSI integration is 1 hour. Now issue is coming DSI process got timeout and new connection got associated same CallObject Kernel process ID then this DSI routine always fails.</span></p>
+
+
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Cause</BIG></span></big></big></h2>
+
+<p>Missing &lt;Bug 11045770&gt; - DLI FAILS WHEN USER COUNT IS 0 - SAR: 8965675<br /><br />It is documented in DLI (Datalogics Inc.) manuals that <strong>the runtime (DLI runtime) once terminated cannot be initialized again during process life time</strong>. The above mentioned limitation causes the reports to fail when launched <strong>synchronously(via BSFN (CallObject Kernel))</strong> on a COB user count has just gone back to zero (no active users).</p>
+<p>So in this case, the issue is because <em>PrtPDFGen</em> cannot be prepared.</p>
+<div class="kmnotebox">
+<p><strong>Notes:</strong></p>
+<ul>
+<li>DLI is a component in generating PDF file</li>
+<li>The result is the same whether suppressing output or not</li>
+</ul>
+</div>
+<p>&nbsp;</p>
+
+
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Solution</BIG></span></big></big></h2>
+
+<p>Upgrade to Tools Release 24.1.3 or above.&nbsp; Check for Tools Release availability on the <a href="https://updatecenter.oracle.com/apps/WebSearch/updatecenter.jsp">Update Center</a>.&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Related issue</strong>:</p>
+<p>Refer to &lt;Document 787018.1&gt; - E1: UBE: Large UBEs Faill with Error UBE0000084: Function: PDFLib_Initialize, Code: 1074593792</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FAQ - Frequently Asked Questions Regarding Printing Automatic Payments Within EnterpriseOne Accounts Payable (P04572)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>FAQ - Frequently Asked Questions Regarding Printing Automatic Payments Within EnterpriseOne Accounts Payable (P04572)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#FAQ">Questions and Answers</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section21"><strong>Question 1:</strong>  Is it possible to print more than ten lines of detail on a check stub?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section22"><strong>Question 2: </strong> Is it possible to create separate payments based on a voucher's business unit or job number?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section23"><strong>Question 3: </strong> Why is the Invoice Number truncated on the check stub?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section24"><strong>Question 4:</strong> If the Pre-Note Code is activated on the Supplier Master (F0401) record for a supplier, and the payment instrument for this supplier is set to call R04572T2 (via Payment Instrument Defaults (P0417)), where does the Standard Check Print (R04572) version come from?</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section25"><strong>Question 5: </strong> Is there an option to remove the asterisks from the printed check?</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<p>This document provides frequently asked questions regarding printing Automatic Payments within EnterpriseOne Accounts Payable (R04572).</p>
+<H2 class=km><A NAME="FAQ"></A>Questions and Answers</H2>
+<a name="aref_section21"></a><h4 class="km"><strong><a name="maxpmtdetaillines"></a>Question 1:</strong>  Is it possible to print more than ten lines of detail on a check stub?</h4>
+<p><strong>Answer 1: </strong> Printing more than ten lines of detail requires modifying the standard check print programs (R04572x). The standard check print program is designed to print on letter sized (8 1/2 in. x 11 in.) paper. The top one-third of the page is blank, the middle one-third of the page is the check stub, and the bottom one-third of the page is the check. To prevent wasted check stock, set Processing Option 2: Print Attachments on the Print tab of the Create Payment Control Groups (R04570). Checks printed with the attachments option activated, indicate "See Attachments" on the stub and all detail lines for the payment are printed on an attachment (R04573).</p>
+<hr />
+<a name="aref_section22"></a><h4 class="km"><strong>Question 2: </strong> Is it possible to create separate payments based on a voucher's business unit or job number?</h4>
+<p><strong>Answer 2:</strong>  To create separate payments by business unit or job number, use the Create Payment Groups (R04570) version XJDE0006 (Business Unit Option). The data selection on this version is set to sequence payments by business unit. To view the business unit value in the grid of the Work with Payment Groups application (P04571), activate the Display Business Units processing option in this application.</p>
+<hr />
+<a name="aref_section23"></a><h4 class="km"><strong>Question 3: </strong> Why is the Invoice Number truncated on the check stub?</h4>
+<p><strong>Answer 3: </strong> Although the Invoice Number (data dictionary item VINV) field has a length of 25 characters, 19 characters is the maximum that can print on the standard check stub.</p>
+<hr />
+<a name="aref_section24"></a><h4 class="km"><strong>Question 4:</strong> If the Pre-Note Code is activated on the Supplier Master (F0401) record for a supplier, and the payment instrument for this supplier is set to call R04572T2 (via Payment Instrument Defaults (P0417)), where does the Standard Check Print (R04572) version come from?</h4>
+<p>Note: the payment instrument pointing to R04572T2 is not the blank payment instrument, but T for example.</p>
+<p><strong>Answer 4:</strong> R04572 will use a version with the same name as the version defined for R04572T2 in P0417. For example given the following:</p>
+<ul>
+<li>a version of R04572T2 is set up and is called TEST0001</li>
+<li>this version is set up for the R04572T2 payment instrument in P0417</li>
+<li>the Pre-Note Code for a supplier is checked on the Supplier Master record (F0401)</li>
+</ul>
+<p>When writing the payment group created for this supplier&rsquo;s vouchers with this payment instrument, Work with Payment Groups (P04571) will try to find a R04572 version called TEST0001. If it exists, R04572 TEST0001 is called.</p>
+<p>If it does not exist, R04572 ZJDE0001 is called.</p>
+<hr />
+<p> </p>
+<a name="aref_section25"></a><h4 class="km"><strong>Question 5: </strong> Is there an option to remove the asterisks from the printed check?</h4>
+<p><strong>Answer 5: </strong> There is currently no setting to remove the asterisks.</p>
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

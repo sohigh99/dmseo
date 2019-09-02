@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How to Enter and Process Standard Invoices in EnterpriseOne Accounts Receivable (P03B2002, P03B11, P03B11SI, P03B0011)</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>How to Enter and Process Standard Invoices in EnterpriseOne Accounts Receivable (P03B2002, P03B11, P03B11SI, P03B0011)</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Overview of Accounts Receivable Invoice Processing</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section31">Understanding Invoice Entry Methods</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Standard Invoice Entry (P03B11)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Setting Processing Options for Standard Invoice Entry (P03B11)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Understanding the Invoice Entry Master Business Function (P03B0011)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section35">Setting Processing Options for Invoice Entry Master Business Function (P03B0011)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">How to Enter Standard Invoices (P03B11)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Using a Model for the G/L Distribution Entry</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section38">How to Enter Invoices Out of Balance</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Credit Memos</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Invoices with Discounts</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section311"><strong>Speed Invoice Entry (P03B11SI)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section312">Setting Processing Options for Speed Invoice Entry (P03B11SI)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section313">How to Enter Speed Invoices (P03B11SI)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section314"><strong>Review and Revise Invoices</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section315">Reviewing or Revising Unposted Invoices</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Using Invoice Journal Review (P0011)</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section317">Using Customer Ledger Inquiry (P03B2002)</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section318"><strong>Delete and Void Invoices</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section319">Deleting an Unposted Invoice</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section320">Voiding a Posted Invoice</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section321"><strong>General Ledger Posting</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section322"><strong>Invoicing Enhancements from Release 8.9 (With ESU for XE and ERP8.0)</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section323">Business Unit Enhancement</a></td></tr></table>
+
+<hr size=1><p>
+
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Overview of Accounts Receivable Invoice Processing</strong></h3>
+<p>Effective management of invoice processing is fundamental to the accounts receivable department. Typically, invoices have to be created before you receive payment from the customer. Most invoices are generated from other systems, such as the JD Edwards EnterpriseOne Sales Order Management system. However, at times you will need to enter and revise invoices for customers directly within the Accounts Receivable system.</p>
+<p>Invoice processing consists of three stages:</p>
+<ol>
+<li>Invoice entry.</li>
+<li>Review, revise and approve invoices for posting.</li>
+<li>Post invoices to the general ledger.</li>
+</ol>
+<p>Entering an invoice creates a batch type 'IB' and creates unposted records in the following tables:</p>
+<ul>
+<li>Batch Control Records (F0011)</li>
+<li>Customer Ledger (F03B11)</li>
+<li>Account Ledger (F0911)</li>
+</ul>
+<p>These batches then need to be reviewed and approved for posting to the Account Balances (F0902) and Account Ledger (F0911) tables</p>
+<p class="km">The system assigns document types to invoices and credit memos that you specify in the processing options for the Invoice Entry Master Business Function (MBF) Processing Options program (P03B0011). As standard, an invoice is assigned a document type of 'RI' and a credit memo is assigned a document type of 'RM' but your own user defined document types can also be selected. The document types need to be set up in User Defined Code (UDC) tables 00/DT Document Type - All Documents and 00/DI Document Type - Invoices Only.</p>
+<div class="kmnotebox">NOTE: Country-specific functionality for processing invoices exists for Argentina, Chile, Poland, Peru, Russia, and Venezuela. See JD Edwards EnterpriseOne Globalizations for more information.</div>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for users who are setting up or using the invoice process in the EnterpriseOne Accounts Receivable module</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h4 class="km">Understanding Invoice Entry Methods</h4>
+<p>Invoices can be entered using two main methods:</p>
+<ul>
+<li>Standard Invoice Entry (P03B11). This method provides the most flexibility and options.</li>
+<li>Speed Invoice Entry (P03B11SI). This method provides less flexibility and fewer options than standard invoice entry. However, it provides a quicker way of entering invoice and general ledger information.</li>
+</ul>
+<p>To help determine which method of invoice entry you should use, consider these advantages and limitations of Standard and Speed Invoice Entry:</p>
+<p>When using Standard Invoice Entry (P03B11) you can:</p>
+<ul>
+<li>Create installment payments using an installment payment term. See <a href='../docs/1411304.html'>How to Set Up Payment Terms and Advanced Payment Terms Within JD Edwards Enterprise One Financial System</a> for further information on setting up Payment Terms.</li>
+<li>Use multiple pay items.</li>
+<li>Set up recurring invoices.</li>
+<li>Modify, delete, and void invoices.</li>
+<li>Use and create model journal entries.</li>
+<li>Override the G/L offset.</li>
+</ul>
+<p>When using Standard Invoice Entry you cannot:</p>
+<ul>
+<li>Enter invoices as quickly because you use two forms to enter invoice and G/L distribution information</li>
+</ul>
+<p>When using Speed Invoice Entry (P03B11SI) you can:</p>
+<ul>
+<li>Use one entry program to enter both invoice and G/L distribution information.</li>
+<li>Enter limited invoice information quickly.</li>
+</ul>
+<p>When using Speed Invoice Entry you cannot:</p>
+<ul>
+<li>Create installment payments.</li>
+<li>Modify, delete, or void invoices.</li>
+<li>Set up recurring invoices.</li>
+<li>Enter more than one pay item per invoice.</li>
+<li>Create or use model journal entries.</li>
+<li>Override the G/L offset.</li>
+</ul>
+<a name="aref_section32"></a><h3 class="km"><strong>Standard Invoice Entry (P03B11)</strong></h3>
+<p class="km">Invoice records are created to bill a customer for goods or services. Standard Invoice Entry (P03B11) is a two stage entry. First the invoice is entered, you then need to enter the G/L distribution information. Typically a credit to a revenue account is entered. When you post the invoice, the system debits the offset to an A/R Trade account that you specify in the automatic accounting instructions (AAIs). If you routinely distribute invoices to multiple G/L accounts, you can set up a journal entry to use as a model. The system uses default information that you set up in the customer master (F03012) record when you enter an invoice but some of this can be overridden at invoice entry stage if required.</p>
+<p class="km"><br /> In addition to entering basic information for a standard invoice, you can enter and revise other types of information. For example, you might want to enter an invoice for multiple line items with different due dates or tax information, or you might want to enter a recurring invoice.</p>
+<div class="kmnotebox">NOTE: You cannot enter partially paid invoices into the system.</div>
+<p class="km">The Standard Invoice Entry (P03B11) is accessed from the Customer Ledger Inquiry program (P03B2002). You specify the version of the Standard Invoice Entry program that you want to use in the processing options of the Customer Ledger Inquiry program. The Standard Invoice Entry version is then controlled by the processing options that are set up below for P03B11, and also the Invoice Entry MBF (P03B0011).</p>
+<p class="km"><strong>Prerequisites:</strong></p>
+<ul>
+<li class="km">Set up customer records in Customer Master Information (P03013).</li>
+<li class="km">Set the appropriate processing options for Standard Invoice Entry (P03B11) and Invoice Entry MBF (P03B0011).</li>
+<li class="km">Set up the necessary AAI item RC (Receivables Class). See AAIs for Accounts Receivable in the Accounts Receivable Implementation Guide for specific information about how the system uses the AAI item RC. These are located at <a href="http://www.oracle.com/technetwork/documentation/jdedent-098169.html" alt="OTN - JD Edwards EnterpriseOne Documentation" title="OTN - JD Edwards EnterpriseOne Documentation">Oracle Technology Network</a></li>
+</ul>
+<a name="aref_section33"></a><h4 class="km">Setting Processing Options for Standard Invoice Entry (P03B11)</h4>
+<p class="km">Processing options enable you to specify the default processing for programs and reports.</p>
+<p class="km"><em>Display </em><em>Tab</em> - These processing options specify whether the system displays fields for purchase orders, taxes, and foreign amounts on the Standard Invoice Entry form.</p>
+<ol>
+<li class="km">Purchase Order Fields - Specify whether to display the purchase order fields. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not display fields.</li>
+<li class="km">1: Display fields.</li>
+</ul>
+</li>
+<li class="km">Tax Information Specify whether to display tax information for an invoice. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Display tax information.</li>
+<li class="km">1: Do not display tax information. If you specify not to display tax information, you disable tax processing when entering invoices.</li>
+</ul>
+</li>
+<li class="km">Domestic and Foreign Fields - Specify whether the system displays both domestic and foreign amount fields in the detail area of the Standard Invoice Entry form. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not display domestic and foreign amount fields.</li>
+<li class="km">1: Display domestic and foreign amount fields. These fields will appear on the form:
+<ul style="list-style-type: square;">
+<li class="km">Domestic Gross Amount</li>
+<li class="km">Domestic Discount Available</li>
+<li class="km">Domestic Taxable Amount</li>
+<li class="km">Domestic Tax</li>
+<li class="km">Foreign Gross Amount</li>
+<li class="km">Foreign Discount Available</li>
+<li class="km">Foreign Taxable Amount</li>
+<li class="km">Foreign Tax</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p class="km"><em>Versions Tab</em> - Use these processing options to specify the version of the master business functions for the system to use to process invoices.</p>
+<ol>
+<li class="km">Invoice Entry MBF (P03B0011) Version - Specify the version to use for the Invoice Entry MBF program (P03B0011). If you leave this processing option blank, the system uses version ZJDE0001.</li>
+<li class="km">Journal Entry MBF (P0900049) Version - Specify the version to use for Journal Entry MBF (P0900049). If you leave this processing option blank, the system uses version ZJDE0001. For more information on the set up of P0900049 please see the General Accounting Implementation Guide for your release. The Implementation Guides are available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a> </li>
+</ol>
+<a name="aref_section34"></a><h4 class="km">Understanding the Invoice Entry Master Business Function (P03B0011)</h4>
+<p class="km">A master business function (MBF) is a central location for standard business rules about entering documents, such as invoices, vouchers, and journal entries. Master business functions have processing options. You complete the MBF processing options, and then specify the version of the MBF that you want the system to use in the processing options of the entry program.The system uses the Invoice Entry MBF Processing Options (P03B0011) when invoices are created using these programs:</p>
+<ul style="list-style-type: disc;">
+<li class="km">Standard Invoice Entry (P03B11)</li>
+<li class="km">Speed Invoice Entry (P03B11SI)</li>
+<li class="km">Batch Invoice Processor (R03B11Z1A)</li>
+</ul>
+<p class="km">Additionally, invoices are generated from applications in these systems:</p>
+<ul style="list-style-type: disc;">
+<li class="km">Sales Order Management</li>
+<li class="km">Contract and Service Billing</li>
+<li class="km">Real Estate Management</li>
+</ul>
+<p class="km">The individual programs using the Invoice MBF have a processing option to state which version of the MBF will be used. If no version is explicitly specified, the system uses version ZJDE0001.</p>
+<a name="aref_section35"></a><h4 class="km">Setting Processing Options for Invoice Entry Master Business Function (P03B0011)</h4>
+<p class="km">Processing options enable you to specify the default processing for programs and reports.</p>
+<p class="km"><em>Defaults Tab</em> - These processing options specify the default values for the system to use for various fields.</p>
+<ol>
+<li class="km">Service/Tax Date Specify the date that the system assigns in the Service/Tax Date field. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Use the G/L date</li>
+<li class="km">1: Use the invoice date <br /> <br />
+<div class="kmnotebox">NOTE: When you enter the invoice, you can override the default value in this processing option.</div>
+</li>
+</ul>
+</li>
+<li class="km">Pay Status Code - Specify the value that the system assigns in the Pay Status Code field. If you leave this processing option blank, the system uses the value that is set up in the data dictionary for item 'PST' (pay status).</li>
+<li class="km">Standard Invoice Document Type - Specify the document type that the system assigns to invoices. The document type that you specify must exist in both user-defined code (UDC) 00/DT Document Type - All Documents and 00/DI Document Type - Invoices Only. If you leave this processing option blank, the system uses document type 'RI'.</li>
+<li class="km">Credit Memo Document Type - Specify the document type that the system assigns to credit memos. The document type that you specify must exist in both UDC 00/DT Document Type - All Documents and 00/DI Document Type - Invoices Only. If you leave this processing option blank, the system uses document type 'RM'.</li>
+<li class="km">Credit Memo Due Date - Specify the due date to use for credit memos. This processing option was added as of version 8.9 by Bug 12489062 PAYMENT TERMS FOR DEBIT MEMOS - SAR: 5445252. Prior to 8.9, credit memos always used the G/L date as the due date.
+<ol>
+<li class="km"><strong>Note</strong> - If you leave this processing option blank and the credit memo has positive lines, the system will assign the due date accoring to the sign (+ or -) of each line: the G/L date for negative lines and the payment terms date due for positive lines.</li>
+</ol>
+</li>
+<li class="km"> Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Use the G/L date as the due date.</li>
+<li class="km">1: Use the due date that is specified by the payment terms code.</li>
+</ul>
+</li>
+</ol>
+<p class="km"><em>Edits Tab</em> - These processing options specify the rules for entering the invoice date.</p>
+<ol>
+<li class="km">Invoice Date &gt; Today&rsquo;s Date - Specify whether the system returns a warning message, an error message, or no message when the invoice date is beyond today&rsquo;s date. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: No message</li>
+<li class="km">1: Warning</li>
+<li class="km">2: Error</li>
+</ul>
+</li>
+<li class="km">Invoice Date &gt; G/L Date Specify whether the system returns a warning message, an error message, or no message when the invoice date is beyond the G/L date. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: No message</li>
+<li class="km">1: Warning</li>
+<li class="km">2: Error</li>
+</ul>
+</li>
+</ol>
+<p class="km"><em>Taxes Tab</em> - This processing option specifies whether to allow the entry of value-added tax (VAT) (tax explanation code 'V') on foreign invoices.</p>
+<ol>
+<li class="km">VAT on Foreign Transactions - Specify whether to allow VAT on invoices that are entered in a foreign currency. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not allow VAT</li>
+<li class="km">1: Allow VAT</li>
+</ul>
+</li>
+</ol>
+<p class="km"><em>Currency Tab</em> - These processing options specify the rules for using exchange rates.</p>
+<ol>
+<li class="km">Exchange Rate Date - Specify the date that the system uses to retrieve the exchange rate. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Use the invoice date.</li>
+<li class="km">1: Use the G/L date.</li>
+</ul>
+</li>
+<li class="km">Effective Date Edit - Specify whether the system validates the effective date that it uses to retrieve the exchange rate against the general ledger date that you enter on the receipt. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not validate the effective date.</li>
+<li class="km">1: Validate the effective date. The system issues a warning when the effective date of the exchange rate that is retrieved from the Currency Exchange Rates table (F0015) is not in the same period as the general ledger date of the invoice.</li>
+</ul>
+</li>
+<li class="km">Exchange Rate Tolerance Limit - Specify the tolerance limit for changes in exchange rates during invoice entry. If the calculated amount is greater or less than the tolerance amount that you specify, you will receive a warning message during invoice entry. For example, '5' specifies a tolerance limit of 5 percent. If you try to enter an exchange rate that is 6 percent greater or less than the previous rate entered, you will receive a warning message. In this way, the system helps to ensure that the exchange rate that you enter is reasonable, thus alerting you to possible data entry errors. <span class="StaticText">Blank = No tolerance limit</span></li>
+</ol>
+<p class="km"><em>Versions Tab</em> - This processing option specifies the version of the Invoice Interoperability Processing Options program (P03B0190) to run.</p>
+<ol>
+<li class="km">Interoperability (P03B0190) Version - Specify the version of the Invoice Interoperability Processing Options program (P03B0190) that the system uses. If you leave this processing option blank, the system uses version ZJDE0001.</li>
+</ol>
+<a name="aref_section36"></a><h4 class="km">How to Enter Standard Invoices (P03B11)</h4>
+<p><img src="../images/ar001.png" border="0" alt="Standard Invoice Entry" title="Standard Invoice Entry" hspace="0" vspace="0"/> </p>
+<p class="km">From <em><span id="jdeFormTitle0" style="overflow-x: hidden;" title="Customer Ledger Inquiry - Work with Customer Ledger Inquiry">Customer Ledger Inquiry - Work with Customer Ledger Inquiry</span></em> (P03B2002) click 'Add' to access <em>Standard Invoice Entry</em> (P03B11):</p>
+<ol>
+<li class="km">(OPTIONAL). To assign the document number, document type, and document company, complete the Document No/Type/Co optional fields in the header area. Usually you should let the system assign the document number from Next Numbers (P0002), the document type from the Invoice Entry MBF (P03B0011) processing options, and the document company from the company number that you assign to the invoice. The system assigns this information when you click 'OK' at the end of this task.</li>
+<li class="km">Complete the Customer, Company, Invoice Date, and G/L Date fields in the header area. <br /> <br />
+<div class="kmnotebox">NOTE: You can use company 00000 for default values such as dates and automatic accounting instructions. You cannot use company 00000 for transaction entries, such as invoice entry.</div>
+</li>
+<li class="km">(OPTIONAL) Override the value in the Payment Terms field, if necessary. These are defaulted from the Customer Master (F03012)</li>
+<li class="km">(OPTIONAL) Select 'Additional Info' from the Form menu to access the Additional Information form.</li>
+<li class="km">(OPTIONAL) Override the value for any of the fields on the Additional Information form, if necessary, and then click 'OK' to return to the Standard Invoice Entry form.</li>
+<li class="km">In the detail area of the Standard Invoice Entry form, complete the Gross Amount field for each pay item. Other field values such as Pymt Terms (Payment Terms) and Discount Available will default once you tab out of the detail line.</li>
+<li class="km">(OPTIONAL) In the detail area, complete the Remark, Pymt Terms, Business Unit, Due Date, and G/L Offset fields for each pay item. <br />
+<ul style="list-style-type: disc;">
+<li class="km">Payment Terms: The system completes the Pymt Terms field with the value that is assigned in the header portion of the form, but you can override it for any or all invoice pay items. <br /> <br />
+<div class="kmnotebox">NOTE: If you change the payment terms code after you have entered the pay item, you must clear the values in the Discount Available, Due Date, and Discount Due Date fields so that the system can calculate new values.</div>
+</li>
+<li class="km">Due Date: The system calculates the due date based on the payment term that is entered, or you can enter it manually. If you enter a negative invoice (credit memo), the system will use the G/L date as the due date prior to 8.9. From 8.9, a processing option in the master business function (P03B0011) controls how the system calculates the due date for credit memos.</li>
+<li class="km">G/L Offset: is defaulted from the Customer Master (F03012) record but can be overridden manually. The G/L Offset is the code that determines the trade account that the system uses as the offset when you post invoices. The system concatenates the value entered to the Automatic Accounting Instruction (AAI) item RC (for Accounts Receivable) to locate the trade account. For example, if you enter TRAD, the system searches for the AAI item RCTRAD (for receivables).</li>
+</ul>
+</li>
+<li class="km">Click 'OK' to access the G/L Distribution form.</li>
+<li class="km">On the G/L Distribution form, complete the Account Number and Amount fields in the detail area for each G/L distribution line.</li>
+<li class="km">(OPTIONAL) Complete the Explanation -Remark field, and click 'OK'. <br /> <br />
+<div class="kmnotebox">NOTE: If you are using Advanced Cost Accounting, you might also need to complete the Cost Object and Object Type fields. See JD Edwards EnterpriseOne Advanced Cost Accounting Implementation Guide. The Implementation Guides are available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a></div>
+</li>
+</ol>
+<p class="km"><img src="../images/ar002.png" border="0" alt="G/L Distribution screen" title="G/L Distribution screen" hspace="0" vspace="0"/><br />  </p>
+<a name="aref_section37"></a><h4 class="km">Using a Model for the G/L Distribution Entry</h4>
+<p class="km">To simplify the entry process, you can set up and use model journal entries. You set up model journal entries when you have vouchers and invoices that use the same account distribution. The General Accounting Implementation Guide contains further information on setting up Model Journal Entries. The Implementation Guides are available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a></p>
+<p class="km">Once your model journal entry has been set up, you can select it during invoice entry as you enter the G/L distribution for the transaction, or you can set up a default model for the system to use on the customer master record in Customer Master Information (P03013). To select during G/L distribution entry, select 'Model Journals' from the Form menu on the G/L Distribution form. You can then add or revise the actual journal entry based on the information from the model.</p>
+<a name="aref_section38"></a><h4 class="km">How to Enter Invoices Out of Balance</h4>
+<p>Normally, two sides of the transaction are entered when you enter an invoice: the invoice and the G/L distribution. Both sides are required to be equal before the transaction can be complete. The "Remaining" field on the G/L Distribution form indicates the amount of additional debit/credit that needs to be entered for the transaction to be in balance.  If you leave the G/L distribution form before completing the entry, you lose the information in the invoice and must re-enter the transaction again. However, if you need to save work prior to completing the G/L distribution side, you can exit an invoice out of balance, and then complete the G/L distribution entry at a later date. The General Ledger Post program (R09801) usually requires every transaction in the batch to be in balance, unless the batch header (F0011) record has been specifically marked to 'allow post out of balance'. So you cannot accidentally post the batch in the interim, however as an additional measure you may also wish to set the data selection on the post program to only post batches in balance. This can be done by setting the data selection to include 'Post Out of Balance (F0011) (POB) [BC]' equal to 'N' on the General Ledger Post version of R09801 used to post invoice batches.</p>
+<p>Access the Standard Invoice Entry form (P03B11).<br /> To enter an invoice out of balance:</p>
+<ol>
+<li>Follow the steps to enter a standard invoice.</li>
+<li>On the G/L Distribution form, complete the Account Number and Amount fields with available information.</li>
+<li>To save the entry out-of-balance, select 'Features' from the Form menu.</li>
+<li>On Features, select the 'Allow Exit Out Of Balance' option.</li>
+<li>Click 'OK'.</li>
+<li>On the G/L Distribution form, click 'OK'.</li>
+</ol>
+<p>To complete the entry at a later time, locate the invoice in the Customer Ledger Inquiry (P03B2002) and select the invoice to go to Standard Invoice Entry (P03B11)</p>
+<ol>
+<li>Select 'G/L Distribution' from the Form menu.</li>
+<li>Complete the G/L Distribution entry.</li>
+<li>Click 'OK'.</li>
+</ol>
+<a name="aref_section39"></a><h4 class="km">Credit Memos</h4>
+<p class="km">On occasion you may need to enter a credit to a customer's account, for example when a customer is overcharged. To enter a credit memo you follow the same steps as you do when entering a standard invoice, but the gross amount is entered as a credit. Generally, a credit memo is assigned a document type of RM but this is controlled by the value entered in the Invoice Entry MBF (P03B0011) processing options. The system uses a separate set of next numbers (P0002) to assign the document number for credit memos than it does for invoices. Prior to release 8.9, the system assigns the G/L date as the due date for credit memos. From 8.9 the credit memo due date can be either the due date that is specified by the payment terms code or the G/L date. Again this is controlled by a processing option on the Invoice Entry MBF (P03B0011).</p>
+<p class="km">The system will calculate a discount for the credit memo if the payment term is set up appropriately. The system calculates a negative discount in the Discount Available field. To remove the negative discount, override the Payment Terms field with a payment term that does not calculate a discount and clear the Discount Available field before you click 'OK'.</p>
+<a name="aref_section310"></a><h4 class="km">Invoices with Discounts</h4>
+<p>You can enter invoices with discounts as incentive to receive payments early. When entering an invoice with a discount, the system calculates the discount and net due dates according to the payment terms that are assigned to the transaction.</p>
+<p><br /> Three methods are available for entering discounts:</p>
+<ol>
+<li>Using payment terms. You enter an invoice, specifying the payment terms. See <a href='../docs/1411304.html'>How to Set Up  Payment Terms and Advanced Payment Terms Within JD Edwards Enterprise One Financial System</a> for further information on payment terms<strong>. </strong>The system calculates the discount available and due dates from the payment terms. If you want to override the discount amount to zero, you must establish a payment term that does not calculate a discount, then use that payment term on the Standard Invoice Entry form. If you change a payment term to recalculate a new discount amount or due date, remove the system-calculated information by clearing these fields:
+<ul style="list-style-type: disc;">
+<li>Discount Available</li>
+<li>Discount Due Date</li>
+<li>NetDueDate</li>
+</ul>
+</li>
+<li>Manually entering a discount amount, ensuring the payment term used does not calculate discount automatically. You enter an invoice, specifying the discount available and, optionally, discount and net due dates.</li>
+<li>Manually entering a discount percentage, ensuring the payment term used does not calculate discount automatically. You enter an invoice, specifying the discount percentage and, optionally, discount and net due dates.</li>
+</ol>
+<p class="km"> </p>
+<a name="aref_section311"></a><h3 class="km"><strong>Speed Invoice Entry (P03B11SI)</strong></h3>
+<p>As an alternative to Standard Invoice Entry (P03B11), you can use Speed Invoice Entry (P03B11SI) to enter high-volume, simple invoices. When you enter speed invoices, you enter invoice and G/L distribution information on one form. This method works best for invoices that have a single pay item, which includes a single due date and a single tax rate area, and to enter invoices that are not recurring.</p>
+<p>When using Speed Invoice Entry, you cannot revise or delete an invoice using P03B11SI.</p>
+<div class="kmnotebox">NOTE : When you use Speed Invoice Entry, the system does not display the G/L Offset field. The system retrieves the value, if one exists, from the customer master record (F03012). If you want to override the value, you must use the Standard Invoice Entry program.</div>
+<p class="km">Unlike Standard Invoice Entry (P03B11), Speed Invoice Entry (P03B11SI) can be accessed directly from a user menu and does not need to be accessed from the Customer Ledger Inquiry (P03B2002).</p>
+<p class="km"><strong>Prerequisites:</strong></p>
+<ul style="list-style-type: disc;">
+<li class="km">Set up customer records in Customer Master Information (P03013).</li>
+<li class="km">Set the appropriate processing options for Speed Invoice Entry (P03B11SI) and Invoice Entry MBF (P03B0011).</li>
+<li class="km">Set up the necessary AAI item RC (Receivables Class). See AAIs for Accounts Receivable in the Accounts Receivable Implementation Guide for specific information about how the system uses the AAI item RC. These are located at <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network</a></li>
+</ul>
+<a name="aref_section312"></a><h4 class="km">Setting Processing Options for Speed Invoice Entry (P03B11SI)</h4>
+<p class="km">Processing options enable you to specify the default processing for programs and reports.</p>
+<p class="km"><em>Display Tab</em> - These processing options specify whether the system displays the tax and purchase order fields on the form.</p>
+<ol>
+<li class="km">Tax Fields - Specify whether to display the Tax/Rate Area, Tax Expl Code (tax explanation code), Tax Amount, and Taxable Amount fields on the Speed Invoice Entry form. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not display the tax fields.</li>
+<li class="km">1: Display the tax fields.</li>
+</ul>
+</li>
+<li class="km">Purchase Order Fields - Specify whether to display the P.O. No/Type/Co (Purchase Order Number, Type, and Company) field on the Speed Invoice Entry form. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not display the purchase order fields.</li>
+<li class="km">1: Display the purchase order fields.</li>
+</ul>
+</li>
+<li class="km">Service/Tax Date Field - Specify whether to display the Service/Tax Date field on the Speed Invoice Entry form. Values are:
+<ul style="list-style-type: circle;">
+<li class="km">Blank: Do not display the Service/Tax Date field.</li>
+<li class="km">1: Display the Service/Tax Date field.</li>
+</ul>
+</li>
+</ol>
+<p class="km"><em>Versions Tab</em> - These processing options specify the version of the program to use when you add an invoice.</p>
+<ol>
+<li class="km">Invoice Entry MBF Version (invoice entry master business function version) - Specify the version of the Invoice Entry MBF program (P03B0011) to use. If you leave this processing option blank, the system uses version ZJDE0001.</li>
+<li class="km">Journal Entry MBF Version - Specify the version of the Journal Entry MBF program (P0900049) to use. If you leave this processing option blank, the system uses version ZJDE0001. For more information on the set up of P0900049 please see the General Accounting Implementation Guide for your release. The Implementation Guides are available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a></li>
+</ol>
+<p class="km"><em>Defaults Tab</em> - This processing option specifies how the system displays credit amounts.</p>
+<ol>
+<li class="km">Display Credit Amounts - Specify whether to display credit amounts as positive or negative numbers. Values are:
+<ul>
+<li class="km">Blank: Display credit amounts as negative numbers.</li>
+<li class="km">1: Display credit amounts as positive numbers.<strong><br /> </strong></li>
+</ul>
+</li>
+</ol>
+<p class="km"> </p>
+<p class="km">Also see section on Setting Processing Options for Invoice Entry Master Business Function (P03B0011)<strong>.</strong></p>
+<a name="aref_section313"></a><h4 class="km">How to Enter Speed Invoices (P03B11SI)</h4>
+<p>Access the Speed Invoice Entry form (P03B11SI)</p>
+<p><img src="../images/ar003.png" border="0" alt="Speed Invoice Entry" title="Speed Invoice Entry" hspace="0" vspace="0"/></p>
+<ol>
+<li>On Speed Invoice Entry, to identify the invoice, complete the following fields:
+<ul style="list-style-type: disc;">
+<li>Customer</li>
+<li>Company</li>
+<li>Gross Amount</li>
+<li>Invoice Date</li>
+<li>G/L Date</li>
+</ul>
+</li>
+<li>Complete the following optional fields:
+<ul style="list-style-type: disc;">
+<li>Remark</li>
+<li>Pay Status</li>
+</ul>
+</li>
+<li>To override default and system-calculated information, complete the following fields:
+<ul style="list-style-type: disc;">
+<li>BU</li>
+<li>Tax Rate/Area</li>
+<li>Pay Terms</li>
+<li>Tax Expl Code</li>
+<li>Pay Instr</li>
+<li>Due Date</li>
+<li>Tax Amount</li>
+<li>Disc Due Date</li>
+<li>Taxable Amount</li>
+<li>Currency</li>
+</ul>
+</li>
+<li>To enter G/L distribution information, complete the following fields in the detail area:
+<ul style="list-style-type: disc;">
+<li>Account Number</li>
+<li>Amount - Depending on how you set the processing options, you enter this amount as a<br /> positive or negative number.</li>
+</ul>
+</li>
+<li>Complete the following optional field in the detail area:
+<ul style="list-style-type: disc;">
+<li>Remark</li>
+</ul>
+</li>
+<li>Click 'OK'.</li>
+</ol>
+<p> </p>
+<a name="aref_section314"></a><h3 class="km"><strong>Review and Revise Invoices</strong></h3>
+<a name="aref_section315"></a><h4 class="km">Reviewing or Revising Unposted Invoices</h4>
+<p>Before posting invoice batches you may need to review and revise transactions. There are several ways to view invoice transactions. You can use the Customer Ledger Inquiry (P03B2002) to view all invoices for a specific customer or you can use the Invoice Journal Review (P0011) to view the invoice 'IB' batch and drill down into the invoice records within each batch. Each program will allow you to filter and select your invoice(s)/invoice batch(es) and drill down to the Standard Invoice Entry screen (P03B11) to make any changes as required. Some changes are also possible on posted invoices, such as payment terms and amounts. Any changes to amounts on a posted invoice will reset the batch header to unposted so the changes can be updated to the General Ledger again using the General Ledger Post (R09801).</p>
+<div class="kmnotebox">NOTE: Some fields such as company, G/L date, document number, fiscal year, century are considered key fields in the Customer Ledger (F03B11) and Account Ledger (F0911). Changes to these fields are not permitted, whether the invoice is posted or unposted. If you need to make a change to a key field, the invoice will need to be deleted/voided and re-entered with the correct values.</div>
+<p>A further option is to use the Speed Status Change program (P03B114). For more information on the set up and use of Speed Status Change please see the Accounts Receivable Implementation Guide for your release. The Implementation Guides are available on the <a href="http://www.oracle.com/technology/documentation/jdedent.html">Oracle Technology Network.</a></p>
+<a name="aref_section316"></a><h4 class="km">Using Invoice Journal Review (P0011)</h4>
+<p> <img src="../images/ar004.png" border="0" alt="Invoice Journal Review" title="Invoice Journal Review" hspace="0" vspace="0"/></p>
+<p>Access the Invoice Journal Review form (P0011).</p>
+<p><br /> <strong>To review or revise unposted invoices</strong>:</p>
+<ol>
+<li>Select required batch from Invoice Journal Review - Work with Batches screen and click 'OK'</li>
+<li>To verify that the amount of the journal entry is equal to the amount of the invoice, review the J.E. Bal (journal entry balanced) field.</li>
+<li>To review general ledger information, select G/L Distribution from the Row menu.</li>
+<li>Click 'Cancel' to return to Invoice Journal Review.</li>
+<li>To revise invoice information, select Invoice Entry from the Row menu.</li>
+<li>On Standard Invoice Entry (P03B11), change the information in any field that the system allows.</li>
+<li>Select G/L Distribution from the Form menu.</li>
+<li>On G/L Distribution, revise the information in any available field and click 'OK'.</li>
+</ol>
+<div class="kmnotebox">NOTE: If you revise an invoice that is posted, the system automatically changes the batch status from posted to the default entry status, either pending or approved, depending on the setting in the A/R constants (P0000). If you revise an amount, you must post the batch again to update the F0911 and F0902 tables. The post processes only the changed transaction.</div>
+<a name="aref_section317"></a><h4 class="km">Using Customer Ledger Inquiry (P03B2002)</h4>
+<p><img src="../images/ar005.png" border="0" alt="Customer Ledger Inquiry" title="Customer Ledger Inquiry" hspace="0" vspace="0"/></p>
+<p><strong>To revise unposted invoices</strong>:</p>
+<ol>
+<li>From Customer Ledger Inquiry (P03B2002), locate the invoice you want to revise, and then click 'Select'.</li>
+<li>On Standard Invoice Entry (P03B11), revise the information in any available field, and then click 'OK'.</li>
+<li>On the G/L Distribution form, make any required changes to the Account Number and Amount fields, and then click 'OK'.</li>
+</ol>
+<p><strong>To revise posted invoices</strong>:</p>
+<ol>
+<li>From Customer Ledger Inquiry (P03B2002), locate the invoice that you want to revise, and then click 'Select'.</li>
+<li>On Standard Invoice Entry (P03B11), revise the information in any available field, and then click 'OK'. If you change the gross amount, you might need to revise the discount amount. The system does not recalculate the discount when you change the gross amount. If you change the gross amount, the system displays the G/L Distribution form automatically on clicking 'OK'.</li>
+<li>On the G/L Distribution form, complete the Account Number and Amount fields on a new grid line to create a balancing entry if you have changed the gross amount on the previous step. Enter the amount as a credit.</li>
+<li>To revise general ledger information only, on Standard Invoice Entry, select 'G/L Distribution' from the Form menu, revise the desired fields, and then click 'OK'.</li>
+</ol>
+<div class="kmnotebox">NOTE: If you revise an invoice that is posted, the system automatically changes the batch status from posted to the default entry status, either pending or approved, depending on the setting in the A/R constants (P0000). If you revise an amount, you must post the batch again to update the F0911 and F0902 tables. The post processes only the changed transaction.</div>
+<p> </p>
+<a name="aref_section318"></a><h3 class="km"><strong>Delete and Void Invoices</strong></h3>
+<p> </p>
+<div class="kmnotebox">
+<p>NOTE: To void or delete a paid or partially paid invoice, whether the invoice itself is posted or not, you must first void or delete the customer&rsquo;s receipt(s) that paid the invoice, post the void of the receipt, and only then proceed to void or delete the invoice. </p>
+<p>For more information on voiding A/R cash receipts, please review knowledge article E1: 03B: How To Create and Manage Manual Receipts In EnterpriseOne Accounts Receivable (P03B102, P03B0001) (<a href='../docs/2100346.html'>How To Create, Delete, Void or Mark as NSF a Manual Receipt, Unapplied Cash Receipt, Speed Receipt or Negative Receipt In EnterpriseOne Accounts Receivable (P03B102, P03B0001)</a>), section 'Deleting and Voiding Receipt Information'.</p>
+</div>
+<p> </p>
+<a name="aref_section319"></a><h4 class="km">Deleting an Unposted Invoice</h4>
+<p>You can delete an <em><strong>unpaid</strong></em> invoice before it is posted. When you delete an invoice, the system does not keep a record of the deletion; the record is removed from the system. The system removes deleted invoices from these tables:</p>
+<ul>
+<li>F03B11</li>
+<li>F03B112</li>
+<li>F0911</li>
+</ul>
+<p>If the batch does not contain any other invoices, the system also deletes the Batch Control Record; otherwise, it updates the record.</p>
+<div class="kmnotebox">NOTE: You cannot delete or void invoices with these document types: R1, RU, RB, and R5. These types of invoices are generated from the receipt system and have a batch type of RB, not IB. The system creates these documents with a posted code of D, regardless of whether the receipt batch is posted.</div>
+<p><strong>Deleting an Invoice</strong></p>
+<p>To delete an unposted invoice, locate the invoice that you want to delete on the Customer Ledger Inquiry form (P03B2002) and click 'Delete', and then click 'OK' to confirm the deletion.</p>
+<div class="kmnotebox">NOTE: Once a invoice is voided, you are not able to undo the void or "void a void".  You must post the void and re-enter the invoice in again.</div>
+<p><strong>Deleting an Invoice Pay Item</strong></p>
+<p>You must delete invoice pay items from Standard Invoice Entry (P03B11). If you delete an invoice pay item from Customer Ledger Inquiry (P03B2002), the system deletes all associated invoice pay items. Therefore, use Customer Ledger Inquiry to select the invoice pay item, and then click 'Select'. On Standard Invoice Entry, select the invoice pay item and click 'Delete', and then click 'OK' to confirm the deletion.</p>
+<a name="aref_section320"></a><h4 class="km">Voiding a Posted Invoice</h4>
+<p>To remove a posted invoice or invoice pay item from the general ledger, you must void it and then post the batch again. You cannot delete a posted invoice.</p>
+<p>When you void an invoice, the system:</p>
+<ul>
+<li>Updates the gross amount to zero.</li>
+<li>Removes the posted code from the invoice.</li>
+<li>Updates the payment status code to P (paid).</li>
+<li>Creates a record in the F03B112 table as an audit trail for the change in gross amount.</li>
+<li>Updates the A/R Post Status field (ISTR) in the Customer Ledger record (F03B11) to 1.</li>
+</ul>
+<p>The system displays the value of this field in the Revisions Made column in Customer Ledger Inquiry. After you void an invoice, you must post the batch again. To void a paid or partially paid invoice, you must first void the customer&rsquo;s payment.</p>
+<p> </p>
+<p><strong>Voiding an Invoice</strong></p>
+<p align="left">To void a posted invoice, open the Customer Ledger Inquiry form (P03B2002) and take the following steps:</p>
+<ol>
+<li>Locate the invoice that you want to void, and then click 'Delete'.
+<div class="kmnotebox">NOTE: If you select an invoice with multiple pay items, the system voids all pay items.</div>
+</li>
+<li>On Confirm Delete, click 'OK'.</li>
+<li>On Enter Void Information, complete the <em>Void G/L Date</em> and <em>Invoice Revision Code</em> fields, and then click 'OK'.
+<ul style="list-style-type: disc;">
+<li>Void G/L Date - Enter the date to which the system posts voided transactions. Do not enter a G/L date for a previous or future period.</li>
+<li>Invoice Revision Code - Enter the code that identifies the reason that an invoice pay item was voided.</li>
+</ul>
+</li>
+<li>On Void Confirmation, click 'OK' to confirm the void.</li>
+<li>To verify the void, locate the voided invoice on Work With Customer Ledger Inquiry, and click 'Select' to access Standard Invoice Entry.</li>
+<li>To review the amounts that the system reversed in the Customer Ledger, select 'Invoice Revisions' from the Row menu on Standard Invoice Entry.</li>
+<li>To review the reversing entries that the system creates in the F0911 table when you void an invoice, select G/L Distribution from the Form menu on Standard Invoice Entry.</li>
+</ol>
+<p class="km"><strong>Voiding an Invoice Pay Item</strong></p>
+<p>You must delete invoice pay items from Standard Invoice Entry (P03B11). If you delete an invoice pay item from Customer Ledger Inquiry (P03B2002), the system deletes all associated invoice pay items.</p>
+<p>To delete or void an invoice pay item, access the Work with Customer Ledger Inquiry form (P03B2002). Select the invoice pay item you want to void and click 'Select':</p>
+<p>Access the Standard Invoice Entry form.</p>
+<ol>
+<li>Select the invoice pay item that you want to void, and click 'Delete'.</li>
+<li>On the Confirm Delete form, click 'OK'. </li>
+<li>On the Enter Void Information form, complete the <em>Void G/L Date</em> and<em> Invoice Revision Code</em> fields, and click 'OK'.</li>
+<li>On the Void Confirmation form, click 'OK' to confirm the void.</li>
+<li>On the G/L Distribution form, complete the Account Number and Amount fields on a new detail line to create a balancing entry. Enter the amount as a credit.</li>
+</ol>
+<p> </p>
+<a name="aref_section321"></a><h3 class="km"><strong>General Ledger Posting</strong></h3>
+<p class="km"><br /> After you review and approve invoices, you post them to the general ledger. When you submit a batch of invoices for posting, the system:</p>
+<ul>
+<li class="km">Selects unposted, approved invoices and validates each transaction.</li>
+<li class="km">Creates automatic offsets to the A/R trade and tax accounts in the Account Ledger (F0911).</li>
+<li class="km">Posts accepted transactions to the Account Balances table (F0902).</li>
+<li class="km">Marks the invoices as posted in the Customer Ledger (F03B11), Invoice Revisions (F03B112), and Account Ledger (F0911) tables.</li>
+<li class="km">Sends workflow messages to the work center.</li>
+<li class="km">Prints a general ledger post report, a post detail error report, or both.</li>
+</ul>
+<p>See <a href='../docs/1967296.html'>Overview Of Invoice Post Process Within JD Edwards EnterpriseOne Accounts Receivable (R09801)</a> for further information on posting invoices.</p>
+<a name="aref_section322"></a><h3 class="km"><strong>Invoicing Enhancements from Release 8.9 (With ESU for XE and ERP8.0)</strong></h3>
+<a name="aref_section323"></a><h4 class="km">Business Unit Enhancement</h4>
+<p>An enhancement to the Standard Invoice Entry program (P03B11) allows specification of a business unit for each invoice pay item, instead of one business unit for each invoice. For systems that interface with Accounts Receivable, such as Contract Billing, Service Billing, and Real Estate Management, business unit values for each pay item are accepted. The enhancement will be included in 8.9 (via &lt;Bug 12490061&gt;). This functionality may be added to Xe environments by applying the ESU for &lt;Bug 10757719&gt; and to 8.0 environments by applying the ESU for Bug 10757750<.</p>
+<p>Prior to this enhancement, the business unit assigned to the customer's Address Book record was retrieved for use on the invoice. This value could be overridden during invoice entry by accessing the Additional Information form. With this enhancement, the business unit is displayed in the detail area of each pay item. Choose to use the value retrieved from Address Book, override the value for all pay items by assigning a different value on the Additional Information form, or override the value for one or more pay items individually. <br /> <br /> <strong>Updating the Account ID (AID)</strong> <br /> <br /> When an invoice is created, the Account ID field (AID) of the Customer Ledger record (F03B11) is updated based on the account derived from the Automatic Accounting Instruction (AAI) item RCxxxx (where xxxx is the G/L offset). The AAI is selected based on the information provided on the invoice (currency, G/L offset, and company) and the information specified on the AAI. <br /> <br /> If no business unit is specified on the AAI item, the business unit from the invoice pay item, in conjunction with the object and subsidiary specified on the AAI, is used as the offset account when the invoice is posted. <br /> <br /> <strong>Revising the Business Unit</strong> <br /> <br /> The value of the business unit can be changed for any unposted invoice pay item, however, once the invoice is posted, it cannot be modified using Standard Invoice Entry. This includes invoices that were posted and then revised. The posted code is removed on posted invoice records that are revised and the Revisions Made field (ISTR) is updated to 1. If the posted code (PC column) is D or the ISTR field (Revisions Made column) is 1, no changes to the business unit are allowed. <br /> <br /> The value of the business unit can be changed using Speed Status Change (P03B114), however, the AID field is not updated based on the new value. For companies that use the business unit field for reporting purposes, this allows a change without altering the accounting. <br /> <br /> <strong>Batch Invoice Processing</strong> <br /> <br /> It is possible to process batch invoices that have a multiple business units specified. The business units must exist in the Business Unit Master table (F0006).</p>
+<p> </p>
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

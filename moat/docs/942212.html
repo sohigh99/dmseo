@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Data Selection of Sales Order Batch Price/Cost Update (R42950) in Running Calling UBE in Local Environment</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Data Selection of Sales Order Batch Price/Cost Update (R42950) in Running Calling UBE in Local Environment</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+<h3 class="km">Issue</h3>
+<p>The data selection of Sales Order Batch Price/Cost Update R42950) when called by Print Invoice (R42565) and Sales Update (R42800) does not match. For testing purpose, we have run R42565/R42800 on local machine.  It takes long time to run with huge data selection for R42950.  What wentr wrong?</p>
+<h3 class="km">Solution</h3>
+<p>This is working as designed, working per the current design. <br /><br />This functionality will be working fine only when:</p>
+<ul>
+<li>Calling UBE (R42565/R42800) are running in server</li>
+<li>Called Version of R42950 does not contain any Data Selection in it</li>
+</ul>
+<p>See <a href="&lt;&lt;INLINE_NOTE:656362.1&gt;&gt;" target="_blank">656362.1</a> to understand RuntimeCache and UBEOverride in Spec directory of your Logic/Batch Server<br /><br />The different results seen when running on the server versus running on the full client are caused by BSFN B0000196 - UseReportDataSelection (Use Report Data Selection)</p>
+<ul>
+<li>When submitting Print Invoice to the server, it gets data selection (RDASPEC) of R42565 (for example) Z:\JDEdwards\E900\DDP\6016\PD900\spec\<strong>UBEOverride</strong>\ where runtime Data Selection is stored in clicking Submit Button</li>
+<li>When submitting Print Invoice locally, data selection is retrieved on the Local machine(by override location) from localspec (DS Local - PD900 Specs)
+<ul>
+<li>SELECT * FROM SPEC_ESU900A.F98761ESU900A WHERE ( RSOBNM = 'R42565' AND RSVERS = 'XJDE0019' AND RSRCRDTP = 7.000000 AND RSGNCID1 = 1 )</li>
+<li>SELECT * FROM SPEC_ESU900A.F98761ESU900A WHERE ( RSOBNM = 'R42565' AND RSVERS = '+' AND RSRCRDTP = 7.000000 AND RSGNCID1 = 1 )</li>
+</ul>
+</li>
+</ul>
+<p>The functionality of B0000196 - UseReportDataSelection is working only when R42565/R42800 are submitted to the server.  The local RDASPEC does not store runtime data selection information.  The RDASPEC difference between the server and client is in constructing runtime data selection. For this example, R42565, R42800 and R42950 are making use of same table (F4211 - Sales Order Detail). The data selection can be inherited from calling UBE to called UBE.<br /><br /></p>
+<div class="kmnotebox"><strong>Note</strong><br />
+<ul>
+<li>Runtime Data Selection refers to the data selection defined when the data selection is reviewed/revised during UBE submission:</li>
+<ul>
+<li>1. Go to Batch Versions and inquire on R42565 - Print Invoice</li>
+<li>2. Select a Version. In the version prompt, note there are two user override options, Data Selection and Data Sequence.</li>
+<li>3. Select the option for Data Selection then populate the Data Selection window.</li>
+</ul>
+<li>Runtime Data Selection refers to the runtime cache which is constructed based on the Data Selection window. If there is any Appended Data Selection in 'Initialize Section' event, it will not take effect on the data selection of R42950.</li>
+</ul>
+</div>
+<p><br />Currently R42950 can be called from the following options:</p>
+<ol>
+<li>Standalone</li>
+<li>Called by Print Invoice (R42565)</li>
+<li>Called by Sales Update (R42800)</li>
+<li>Called by Orders Affected by Price Chg (R40821)</li>
+</ol>
+<blockquote>cf., For subsystem version only RI values will affect the result</blockquote>
+<blockquote>a. <strong>Mode 1<br /></strong>
+<blockquote>B0000196 - UseReportDataSelection (Use Report Data Selection)<br />R42565 -&gt; szReportName<br />RI szVersion -&gt; szVersion<br />1 -&gt; idSectionID</blockquote>
+b. <strong>Mode 2<br /></strong>
+<blockquote>B0000196 - UseReportDataSelection (Use Report Data Selection)<br />R42800 -&gt; szReportName<br />RI szVersion -&gt; szVersion<br />6 -&gt; idSectionID</blockquote>
+c. <strong>Mode 3<br /></strong>
+<blockquote>this does not specify any information other than mode as R42950 is to be called at the end of transaction (written at 'End Section' event)</blockquote>
+</blockquote>
+<p>Meanwhile, to call R42950 before/after calling UBEs:</p>
+<blockquote>A. Print Invoice (R42565)<br />
+<ul>
+<li>Tab: Cost/Price Update</li>
+<li>Parameters</li>
+<ul>
+<li>Item #1. Update Cost: 1 (= Update Item Costs)</li>
+<li>Item #2. Sales Price/Cost Update Versions (R42950): Specific Version - if you do not specify this parameter the default version ZJDE0001 is used</li>
+</ul>
+</ul>
+B. Sales Update (R42800) <br />
+<ul>
+<li>Tab: Cost Update</li>
+<li>Parameters</li>
+<ul>
+<li>Item #1. Update Cost: 1 (= Update Item Costs)</li>
+<li>Item #2. Sales Price/Cost Update Versions (R42950): Specific Version - if you do not specify this parameter the default version ZJDE0001 is used</li>
+</ul>
+</ul>
+C. Orders Affected by Price Chg (R40821)<br />
+<ul>
+<li>Tab: Process</li>
+<li>Parameters</li>
+<ul>
+<li>Item #3. Enter a value of '1' to update price: 1 (= Update Cost before you run R40821)</li>
+<li>Item #4. If you have entered a '1' for previous selection. Set Version</li>
+</ul>
+</ul>
+</blockquote>
+<div class="kmnotebox">NOTE: In case the customer's case Daily Business Logic requires it (e.g., R42565) to be run in Local (check PDF result and print) make it sure that the data selection of R42950 is to be same data selection which is waiting for Print Invoice (For instance, ShipDate = 'SL Date Today' and Next Status = 'Waiting for Invoice').</div>
+<p> </p>
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

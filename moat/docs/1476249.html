@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Receivable Foundation</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Accounts Receivable Foundation</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+<table><tr><td width='0'></td><td><A HREF="#PURPOSE">Purpose</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section11"><strong>Accounts Receivable Overview</strong></a></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#SCOPE">Scope</A></td></tr></table>
+<table><tr><td width='0'></td><td><A HREF="#BODYTEXT">Details</A></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section31"><strong>Accounts Receivable Integrations</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section32"><strong>Accounts Receivable Implementations</strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section33">Global Implementation Steps</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section34">Accounts Receivable Implementation Steps</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section35"><strong>Setting Up Accounts Receivable Constants (P0000)<br /></strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section36">Setting System Constants</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section37">Setting Company Constants</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section38"><strong>Setting Up Enhanced Accounts Receivable Constants (P0000)<br /></strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section39">Line of Business Processing</a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section310">Activating Line Of Business </a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section311">Date Effective Category Codes</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section312"><strong>User Defined Codes (UDCs)</strong> <strong>(P0004A)</strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section313"><strong>Setting Up Accounts Receivable Next Numbers (P0002)<br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section314"><strong>Accounts Receivable Automatic Accounting Instructions (AAIs) (P0012)<br /></strong></a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section315"><strong>AAI Basic Overview Video Presentation (Video)<br /></strong></a></td></tr></table>
+<table><tr><td width=40>&nbsp;</td><td><a href="#aref_section316">Accounts Receivable AAI Search Sequence</a></td></tr></table>
+<table><tr><td width=20>&nbsp;</td><td><a href="#aref_section317"><strong>Set Up Accounts Receivable Automatic Accounting Instructions (P0012)</strong></a></td></tr></table>
+
+<hr>
+
+<H2 class=km><A NAME="PURPOSE"></A>Purpose</H2>
+<a name="aref_section11"></a><h3 class="km"><strong>Accounts Receivable Overview</strong></h3>
+<p>An accounts receivable department plays an important role in managing the cash flow of a business:</p>
+<ul>
+<li><strong>Processing Invoices  - </strong>The accounts receivable department is responsible for processing invoices for goods and services sold to customers. Often these invoices are generated from other departments such as Sales. </li>
+<li><strong>Processing Payments</strong> <strong>Received</strong> - The accounts receivable department primarily ensures that payments received from customers - which are commonly known as receipts - are applied to invoices, and that cash is registered into the system as soon as possible. Several factors need to be considered in these goals, for example the due date of the invoices and whether a discount can be applied.</li>
+<li><strong>Statistical Reporting </strong>- The accounts receivable department might want to track payment information about their customers to generate statistical information about payment habits. By compiling this information, businesses can be in a position to provide more proactive customer support and more effectively manage cash flow.</li>
+</ul>
+<p>The JD Edwards EnterpriseOne Accounts Receivable system from Oracle helps you manage the cash flow with the flexibility that you need for effective cash management. It provides real-time information so that you can make immediate decisions about extending credit, forwarding to collections, and applying cash.</p>
+<p>With the JD Edwards EnterpriseOne Accounts Receivable system, you can streamline the day-to-day functions of the entire accounts receivable department. You can simplify and accelerate the process of applying receipts and you will have up-to-date information that improves communication between the billing and the credit and collections departments.</p>
+<H2 class=km><A NAME="SCOPE"></A>Scope</H2>
+<p>This document is intended for EnterpriseOne users who are setting up the Accounts Receivable module for use within their organization.</p>
+<H2 class=km><A NAME="BODYTEXT"></A>Details</H2>
+<a name="aref_section31"></a><h3 class="km"><strong>Accounts Receivable Integrations</strong></h3>
+<p>The JD Edwards EnterpriseOne Accounts Receivable system integrates with these EnterpriseOne systems:</p>
+<ul>
+<li>Contract and Service Billing</li>
+<li>General Accounting system</li>
+<li>Real Estate Management system</li>
+<li>Sales Order Management system</li>
+<li>Service Management system</li>
+</ul>
+<p>The EnterpriseOne Accounts Receivable system works with other EnterpriseOne systems to ensure that all information is fully integrated into the general ledger and customer ledger.</p>
+<a name="aref_section32"></a><h3 class="km"><strong>Accounts Receivable Implementations</strong></h3>
+<p>This section provides an overview of the steps that are required to implement the JD Edwards EnterpriseOne Accounts Receivable system.</p>
+<p>In the planning phase of the implementation, take advantage of all JD Edwards EnterpriseOne sources of information, including the installation guides and troubleshooting information.</p>
+<p>When determining which electronic software updates (ESUs) to install for JD Edwards EnterpriseOne Accounts Receivable, use the JD Edwards EnterpriseOne and World Change Assistant. Change Assistant is a Sun Microsystems, Inc. Java-based tool, which reduces the time required to search and download ESUs by 75 percent or more. It enables you to install multiple ESUs at one time. Refer to &lt;Document 859978.1&gt; Installing and Running Change Assistant.<em><br /></em></p>
+<a name="aref_section33"></a><h4 class="km">Global Implementation Steps</h4>
+<p>There are a number of set up tasks which are shared across multiple EnterpriseOne Financial modules and further information is contained in the Implementation guides listed below:</p>
+<ol>
+<li>Set up companies, fiscal date patterns, and business units. See <em>JD Edwards EnterpriseOne Application Fundamentals Implementation Guide.</em></li>
+<li>Set up accounts, and the chart of accounts. <em>See <a href='../docs/2394187.html'>Overview of the Chart of Accounts (P0901)</a> and JD Edwards EnterpriseOne Application Fundamentals Implementation Guide.</em></li>
+<li>Set up the General Accounting constants. <em>See <a href='../docs/1434211.html'>Overview of General Accounting Constants (P0000).</a></em></li>
+<li>Set up multicurrency processing, including currency codes and exchange rates. See <em>JD Edwards EnterpriseOne Multicurrency Processing  Implementation Guide</em>.</li>
+<li>Set up ledger type rules. <em>See <a href='../docs/1430503.html'>Overview of Ledger Types Setup (P0025).</a></em></li>
+<li>Enter address book records. <em>See JD Edwards EnterpriseOne Address Book Implementation Guide</em>.</li>
+</ol>
+<p>The Implementation Guides are available <a href="http://docs.oracle.com/cd/E64610_01/index.htm" alt="Guides" title="Guides" target="_blank">here</a>.<a href="http://www.oracle.com/technology/documentation/jdedent.html"></a></p>
+<!-- <p>If you are upgrading your EnterpriseOne release, see also <a href='/epmos/faces/DocumentDisplay?parent=DOCUMENT&sourceId=1476249.1&id=1451984.1'>Document 1451984.1</a>  E1: UPG: 03: 03B: Overview Of Upgrading Accounts Receivable Application Module From EnterpriseOne Xe to EnterpriseOne 9.x (9.0 and 9.1) Application Release Levels.</p> -->
+<a name="aref_section34"></a><h4 class="km">Accounts Receivable Implementation Steps</h4>
+<p>Before you use the JD Edwards EnterpriseOne Accounts Receivable system, you need to define information that the system uses during processing. For example, you must select whether to use line of business processing and date-effective category codes, whether you require management approval for posting transaction batches, how you want to define reason codes for write-offs, deductions, and chargebacks, and how you want to set up payment terms. The system setup for Accounts Receivable enables you to configure the system for your business needs and to set up default values that can save you time when processing transactions.</p>
+<p>Within the Accounts Receivable module there are a number of initial system set up tasks required:</p>
+<table style="width: 790px; height: 552px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="207">
+<p><strong>Feature</strong></p>
+</td>
+<td valign="top" width="338">
+<p><strong>Set Up Task</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="207">
+<p><strong>Accounts Receivable Constants</strong></p>
+</td>
+<td valign="top" width="338">
+<p>Establish system basics, such as:</p>
+<ul>
+<li>Whether the system verifies that the amount and number of documents in a batch of transactions balance to the totals that you enter separately.</li>
+<li>Whether you require management approval of batches of transactions before posting.</li>
+<li>Whether you want the system to create automatic offsets in batch or in detail.</li>
+<li>The aging method, number of days, and time intervals for aging reports and online inquiries.</li>
+<li>Whether you want the system to process delinquency notices and statements for customers.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top" width="207">
+<p><strong>Enhanced Accounts Receivable Constants</strong></p>
+</td>
+<td valign="top" width="338">
+<p>Specify whether to use line of business processing or date-effective category codes:</p>
+<ul>
+<li>Line of business processing: If you do business with one customer that is differentiated by multiple lines of business, you can distinguish these customers by product, division, or geography.</li>
+<li>Date-effective category codes: If you use category codes, this option enables you to assign effective dates to them.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td valign="top" width="207">
+<p><strong>User Defined Codes (UDC)</strong></p>
+</td>
+<td valign="top" width="338">
+<p>Define codes, such as document types and reason codes, that are appropriate for the business needs.</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="207">
+<p><strong>Next Numbers (NN)</strong></p>
+</td>
+<td valign="top" width="338">
+<p>Establish an automatic numbering system for documents.</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="207">
+<p><strong>Automatic Accounting Instructions (AAIs)</strong></p>
+</td>
+<td valign="top" width="338">
+<p>Set up AAIs that the system uses to identify the appropriate account numbers when it automatically creates journal entries for transactions. Define which accounts that the system updates for accounting purposes, such as offset, suspense, and default bank accounts.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong> </strong></p>
+<p>Before using the Accounts Receivable module it is also necessary to set up:</p>
+<ul>
+<li>Customer master information and customer bank information.</li>
+</ul>
+<p>Additionally you may also need to set up and/or review:</p>
+<ul>
+<li>Payment terms. See <a href='../docs/1411304.html'>How To Set Up Payment Terms and Advanced Terms Within JD Edwards EnterpriseOne Financial System (P0014, P00145, P00146).</a></li>
+<li>Algorithms, execution lists, and customer master records for automatic receipts processing. See <a href='../docs/1458481.html'>Automatic Receipt Set Up in EnterpriseOne Accounts Receivable (P03B50, P03B52, R03B50A, R03B50B, R03B50D, R03B50E, R03B50F).</a></li>
+<li>Date patterns, activity codes, delinquency policies, fee instructions, credit insurance policies, and credit and collection managers for credit and collections management processing. See <a href='../docs/644234.html'>How to Set Up, Process and Purge Delinquency Notices and the Accounts Receivable Implementation Guide.</a></li>
+<li>Batch approval and post security for invoices and receipts. Set up approved and secured users.</li>
+<li>Drafts and Deduction Processing. See <a href='../docs/760933.html'>Draft Setup and Processing in EnterpriseOne Accounts Receivable</a> and <a href='../docs/1485186.html'>Deduction Processing in EnterpriseOne Accounts Receivable.</a></li>
+</ul>
+<a name="aref_section35"></a><h3 class="km"><strong>Setting Up Accounts Receivable Constants (P0000)<br /></strong></h3>
+<p>Constants provide a basic framework for how the EnterpriseOne Accounts Receivable system works, based on the business needs. When you set up Accounts Receivable constants, you set up controls for the entire system, as well as establish information by company (such as aging information). For example, you can specify whether management approval is required for posting invoices and receipts, and how the system generates automatic entries when accounts receivable batches are posted.</p>
+<p>When setting up Accounts Receivable constants, you can specify whether to process accounts receivable by line of business and whether to use date-effective category codes using the Enhanced Accounts Receivable Constants. The system stores Accounts Receivable constants in the F0009 and F0010 tables.</p>
+<div class="kmnotebox">NOTE:Do not change system constants after you set up the system. If you do make changes, you must be thoroughly familiar with the information because constants are central to the system processes. You should also ensure that only authorized personnel can access and maintain the constants.</div>
+<a name="aref_section36"></a><h4 class="km">Setting System Constants</h4>
+<p><img src="../images/ar01.png" class="kmsmartresize" alt="1" title="1" width="866"/></p>
+<p>A/R Controls Section: These constants control the Accounts Receivable system for all companies. They are set up for company 00000 only, as the default company:</p>
+<ol>
+<li>From System Setup (P0000), select &lsquo;Accounts Receivable Constants&rsquo;.</li>
+<li>Click &lsquo;Find&rsquo; and select &lsquo;Company 00000&rsquo;.</li>
+<li>Set the following fields to the desired value:
+<ul style="list-style-type: disc;">
+<li><strong>Batch Control Required</strong> - If you want to specify the total number of documents to enter in a batch and the corresponding amount, you can select this option. By selecting this option, the system displays the Batch Control form (P0011) prior to entering a batch transaction, on which you enter information about the batch. This form enables you to compare what you actually entered against what you specified that you would enter, which helps you minimize entry errors.</li>
+<li><strong>Manager Approval of Input</strong> - If you select this option, the system assigns a pending status to all invoice and receipt batches, which require batch approval before you can post them.</li>
+<li><strong>General Ledger Interface</strong> - Select this option if you are using the JD Edwards EnterpriseOne General Accounting system. Failure to select this option results in one-sided entries that negate any integrity reporting.</li>
+<li><strong>Offset Method</strong> - When you post transactions to the general ledger, you can select whether to create one offsetting entry per batch 'B', one offsetting entry per transaction 'Y', or one offsetting entry per pay item 'S'.
+<div class="kmnotebox">NOTE: If on the General Accounting Constants (P0000) the Multicurrency Conversion field is set to either Y or Z and if the Detailed Intercompany Settlements field contains a value of either '2' or '3', then you must specify an Offset Method of either 'S' or 'Y' in the Accounts Receivable [and Accounts Payable] Constants. <br />If not, the system returns an error when you post the batch. <br />See <a href='../docs/1416193.html'>Overview of Intercompany Settlement Methods (P0000)</a> and <a href='../docs/1434211.html'>Overview of General Accounting Constants (P0000)</a> for more information.</div>
+</li>
+</ul>
+</li>
+<li>Set the default Company Constant fields in the 'Cash Management' and 'Aging Information' sections to the desired value. See section below.</li>
+<li>Click &lsquo;OK&rsquo;.</li>
+</ol>
+<a name="aref_section37"></a><h4 class="km">Setting Company Constants</h4>
+<p>When you set up Accounts Receivable constants, you can designate cash management options and default aging information by company. The constants enable you to specify whether to print statements and delinquency notices, process automatic receipts, and use different aging categories and dates for collection purposes.</p>
+<p>These are set up on Company 00000 as default values, which are then copied to all other companies that have been set up in the JD Edwards EnterpriseOne General Accounting system. At this point, the companies contain the default values from Company 00000. Therefore, you only need to revise the information for the companies that you want to be different from company 00000.</p>
+<p>Although you establish default settings for the cash management options on a company basis, you can override those settings at the customer level when you set up customer information. Many Accounts Receivable reports and batch processes enable you to specify aging information in the processing options that override the default values in the constants.</p>
+<p><img src="../images/ar02.png" class="kmsmartresize" alt="2" title="2" width="860"/></p>
+<ol>
+<li>From System Setup (P0000), select &lsquo;Accounts Receivable Constants&rsquo;.</li>
+<li>Click &lsquo;Find&rsquo; and select your specific company, &lsquo;Company 00001&rsquo; for example.</li>
+<li>The AR Controls field values are defaulted from those set up for Company 00000 and will be grayed out for all other companies.</li>
+<li>The following fields are defaulted from those set for Company 00000. If you wish to change these to a company specific value, make changes and click 'OK':</li>
+</ol>
+<ul style="list-style-type: disc;">
+<li><strong>Delinquency Notice </strong>- Select this option to print delinquency notices for the company based on the notification instructions that are set up for the policy that you assign to the customer.
+<div class="kmnotebox">NOTE: This option exists in both the Customer Master Information program (P03013) and the Accounts Receivable Constants program (P0000). In the Accounts Receivable Constants program, the option controls whether notices are printed for invoices that are entered for a specific company. In the Customer Master Information program, the option controls whether notices are printed for a customer.</div>
+ </li>
+<li><strong>Auto Receipt - </strong>Select this option to process receipts in the EnterpriseOne Accounts Receivable system using the automatic receipt processing programs. The option must be activated for both the customer and the company in the Accounts Receivable constants for the system to process automatic receipts.</li>
+<li><strong>Print Statement </strong>- Select this option to print statements for the customer.
+<div class="kmnotebox">NOTE: This option exists in both the Customer Master Information program (P03013) and the Accounts Receivable Constants program (P0000). In the Accounts Receivable Constants program, the option controls whether statements are printed for invoices that are entered for a specific company. In the Customer Master Information program, the option controls whether statements are printed for invoices entered for the customer.</div>
+ </li>
+<li><strong>Age as of Date (DAG) - </strong>Enter the date that the system uses to determine the aging category to which invoices are assigned. The system compares the aging date to the invoice date, statement date, due date, or G/L date, which is defined by the value in the Date Type field (AGE) (also referred to as Aging - Date Based On), and then uses the value in the Aging Method field (AGEM) to determine which aging category to update. If you use method '1', Aging Days, the aging categories are defined in the Aging Days fields (CRDY, AGR1, AGR2, AGR3, AGR4, AGR5, AGR6, and AGR7) in the Accounts Receivable constants. If you leave this field blank, the system uses the current date.
+<div class="kmnotebox">NOTE: The JD Edwards EnterpriseOne Sales Order Management system also uses this date for credit checks. Leave this field blank to ensure that the credit checks are always current.</div>
+ </li>
+<li><strong>Aging Method (AGEM) - </strong>Enter the code that designates which aging categories that the system uses to assign invoices. The system uses the date that is specified in the Age as of Date field (DAG) and the value that is specified in the Date Type field (AGE) to calculate the aging for each invoice, and then assigns them to the aging category specified by this code. Values are:
+<ul style="list-style-type: circle;">
+<li><em>1: </em>Aging days. The system assigns invoices to the aging categories specified in the Aging Days fields. The aging categories are user&ndash;defined.</li>
+<li><em>2: </em>Fiscal periods. The system uses the fiscal periods defined by the date pattern assigned to the company record as the aging categories.</li>
+<li><em>3: </em>Calendar. The system uses each calendar month as an aging category.</li>
+</ul>
+</li>
+<li><strong>Date Type (AGE) </strong>- Enter the code that specifies which date on the invoice record to use to calculate aging. The system compares the date on the invoice record to the date in the Age as of Date field (DAG) to determine the aging, and then updates the aging category based on the method specified in the Aging Method field (AGEM). Values are:
+<ul style="list-style-type: circle;">
+<li><em>I: </em>Invoice date</li>
+<li><em>D: </em>Due date</li>
+<li><em>G: </em>G/L date</li>
+<li><em>S: </em>Statement date</li>
+</ul>
+</li>
+<li><strong>Aging Days - Beginning </strong>and <strong>thru (CRDY, AGR1 - AGR7) - </strong>Enter a number to define the number of days in the aging categories. The system uses the value that you enter in the Beginning field (CRDY) in conjunction with the value of AGR1. The system uses values in the thru fields in conjunction with CRDY and AGR2 to define the current and first aging categories.</li>
+</ul>
+<p><strong> </strong></p>
+<a name="aref_section38"></a><h3 class="km"><strong>Setting Up Enhanced Accounts Receivable Constants (P0000)<br /></strong></h3>
+<p>You use the Enhanced Accounts Receivable Constants to specify whether to use line of business processing and date-effective category codes.</p>
+<a name="aref_section39"></a><h4 class="km">Line of Business Processing</h4>
+<p>Line of Business processing was designed to allow users to distinguish various Accounts Receivable needs of a customer for different departments, locations, products and divisions. When implemented, the user is able to process Accounts Receivable information such as credit limits, payment terms and default tax information for each customer by company. When using Line of Business processing, multiple Customer Master By Line Of Business (F03012) records are needed for a customer in order to assign different terms for different products and business obligations.</p>
+<p class="km"><strong>Example</strong></p>
+<p class="km">Corporation XYZ (Customer Number 123) has branches in Delaware (Company 00001), California (Company 00002) and Florida (Company 00003) and each branch has unique Accounts Receivable processing needs.  Corporation XYZ has established the need to utilize the Line of Business processing feature, therefore three separate Customer Master Records must be established in the F03012 for each of the branches.  These records will be keyed to the same Address Book number (123), but with different company numbers.  Corporation XYZ (Customer Number 123) is established once within the Address Book Master (F0101).  With Line of Business enabled, Delaware is defined as Company 00001 in the F03012, California as Company 00002 in the F03012 and Florida as Company 00003. The branches&rsquo; unique identification is defined in the Customer Master (F03012).</p>
+<a name="aref_section310"></a><h4 class="km">Activating Line Of Business </h4>
+<p>The Line of Business feature is an Accounts Receivable Constant.  The first step to enable this feature is to activate the Constant.</p>
+<p><img src="../images/ar03.png" class="kmsmartresize" alt="3" title="3" width="864"/></p>
+<ol>
+<li>From System Set Up (P0000), select &lsquo;Accounts Receivable Constants&rsquo;.</li>
+<li>Click &lsquo;Find&rsquo; to display available companies and select Company 00000.</li>
+<li>Take the &lsquo;Enhanced A/R&rsquo; form exit.  The following options appear:</li>
+<ul>
+<li><strong>World Software A/R</strong> - This is the only option for Enterprise World users.  The option is not available in 8.9 and later releases.</li>
+<li><strong>A/R</strong> - One customer record is used for all EnterpriseOne companies. Prior to 8.9, the option is "OneWorld A/R." </li>
+<li><strong>A/R &ndash; Line of Business</strong> - This option allows the use of multiple companies for one EnterpriseOne customer. Prior to 8.9, the option is "OneWorld A/R - Line of Business,".</li>
+</ul>
+<li>Select 'A/R- Line of Business' and click &lsquo;OK'.</li>
+</ol>
+<p><img src="../images/ar04.png" class="kmsmartresize" alt="4" title="4" width="353"/></p>
+<p> </p>
+<div class="kmnotebox">NOTE:<strong><em>  </em></strong>The Accounts Receivable Constants stored in General Constants (F0009) are cached information stored in both Database Caching and Service Cache. If you change settings for any of the constants, you must perform following steps in order for the changes to take effect:
+<ul>
+<li>On fat client, signing off and signing back in will help to reset the cache.</li>
+<li>On web client, it will be required to explicitly reset the cache apart from signing off and signing back in.</li>
+</ul>
+<p>For more details on how to reset Database Caching and Service Cache, refer to <a href="../docs/944015.html">Frequently Asked Questions on Caching in EnterpriseOne.</a></p>
+In some instances, clearing the cache as mentioned above has not helped since F0009 is a bootstrap table and is cached with each call object kernel on the Enterprise Server. In such cases, it is advisable that the JDE services must be bounced for the Enterprise Server.</div>
+<p>Further steps related to Line of Business Processing are documented in the Customer Master section of the Accounts Receivable Implementation guide for your release, available <a href="http://docs.oracle.com/cd/E64610_01/EOAAR/toc.htm" alt="Guide" title="Guide" target="_blank">here</a>.</p>
+<div class="kmnotebox">NOTE: It is not recommended to turn the Line of Business flag on or off once you have started to use the system and Oracle Support is unable to support any issues arising from the changing of this value with existing live data. The Line of Business information is stored in the Customer Master Table (F03012), which is shared across multiple applications such as CSMS, Contract Billing, Service Billing and Sales Order Processing. Each of these applications refers to the Accounts Receivable Constants to determine which F03012 record (company 00000 or company specific) to use in creation of the F03B11, F03B112, F03B13, and F03B14 records. When choosing to utilize either OneWorld A/R or OneWorld A/R - Line of Business, it is recommended to make a decision regarding which feature is best suited for business needs and remain with that solution. This is because Line of Business processing is data sensitive and effects all records added by company with different default criteria, credit collection techniques, and reporting needs. Due to the complexities of this feature, some ramifications of its use may be unforeseeable.</div>
+<p> </p>
+<a name="aref_section311"></a><h4 class="km">Date Effective Category Codes</h4>
+<p>If you are using the Advanced Pricing system, you might want to select the Date Effective Category Code option on the Enhanced A/R Constants form. You use customer category codes in the Advanced Pricing system to specify the customer group and pricing to use for the customer base. By selecting this option, you can set up multiple sets of category codes for a single customer by effective date. This option enables the Advanced Pricing system to adjust the pricing based on the effective date for each customer group.</p>
+<p>When you select the Date Effective Category Code option, the system displays Form menu options from the Customer Master (P03013) application that enable you to set up category codes with effective dates. If you do not select this option, the system hides these menus.</p>
+<p>When you use date-effective category codes, you cannot enter category code values in the customer master record (F03012). Instead, you enter them in a date-effective category code record (F03012A) and run Update Effective Date Category Codes (R03012A) to update the customer record. See <a href='../docs/625713.html'>Activating Date Effective Category Codes</a>. The Date Effective Category Code is an Accounts Receivable Constant. The first step to enable this feature is to activate the Constant.</p>
+<ul>
+<li>From System Setup (P0000), select &lsquo;Accounts Receivable Constants&rsquo;.</li>
+<li>Click &lsquo;Find&rsquo; to display available companies and select Company 00000.</li>
+<li>Take the &lsquo;Enhanced A/R&rsquo; form exit.</li>
+<li>Select &lsquo;Date Effective Category Codes&rsquo; and click &lsquo;OK&rsquo;.</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">NOTE:  The Accounts Receivable Constants, stored in General Constants (F0009) is a cached table.  See note above for clearing the cache for changes to take effect.</div>
+<p>Further steps related to Date Effective Category Codes are documented in <a href='../docs/625713.html'>Activating Date Effective Category Codes</a></p>
+<p> </p>
+<a name="aref_section312"></a><h3 class="km"><strong>User Defined Codes (UDCs)</strong> <strong>(P0004A)</strong></h3>
+<p>Many fields throughout JD Edwards EnterpriseOne systems accept only UDC values. When you enter an invoice, for example, a UDC specifies the document type of the invoice. The system does not accept values that are not defined in a UDC table. You can use the UDC tables to add and modify values to your business requirements. However some UDCs are hard-coded and some also contain a special handling code to direct the system to perform a specific function. These are generally marked as such in the UDC tables and should not be changed.</p>
+<p>It is also possible in some UDC tables to set up a 'blank' value to be used as the default. In this way, users are not required to enter a value in the field linked to the UDC table, unless they wish to set up a value other than the default.</p>
+<p>The following list contains the UDCs used in Accounts Receivables. These can be set up and reviewed using User Defined Codes (P0004A):</p>
+<p> <img src="../images/ar05.png" class="kmsmartresize" alt="5" title="5" width="967"/></p>
+<p><strong>Address Book Credit Message Codes (00/CM)</strong></p>
+<p>You can assign codes to notify you of a customer&rsquo;s credit status (00/CM). These credit messages are used throughout all systems. Examples are:</p>
+<ul style="list-style-type: circle;">
+<li><em>1: </em>Over credit limit.</li>
+<li><em>2: </em>Requires P.O.</li>
+<li><em>3: </em>Not on contract maintenance.</li>
+<li><em>7: </em>On credit hold per accounting.</li>
+<li><em>B: </em>Bad credit risk.</li>
+<li><em>C: </em>Cash basis only or C.O.D. (collect on delivery).</li>
+</ul>
+<p><strong>Discount Reason Codes (00/DE)</strong></p>
+<p>You can assign a discount reason code during receipt or draft entry for tracking purposes or when you want to use multiple discount accounts. If you set up Automatic Accounting Instruction (AAI) item <a href="#RKD_AAI">RKD<em>xxx </em></a>(where <em>xxx </em>is the reason code), the system uses the account that is associated with the AAI item. To track discounts by tax rate area, use discount reason codes that are the same as the tax rate area code. Examples of discount reason codes are:</p>
+<ul style="list-style-type: circle;">
+<li><em>ADJ: </em>Adjusted discount</li>
+<li><em>ONT: </em>Ontario tax rate area</li>
+<li><em>QUE: </em>Quebec tax rate area</li>
+<li><em>UE: </em>Unearned discounts that were granted</li>
+</ul>
+<div class="kmnotebox">NOTE: If you do not use discount reason codes, verify that blank is set up as a value for this UDC. Otherwise, the system returns an error when you enter a receipt or draft and grant a discount.</div>
+<p><strong>Document Type Codes (00/DT)</strong></p>
+<p>When you enter a transaction, the system assigns a document type, such as invoice or credit memo, based on the specified UDC. The document type, along with the document number and document company, constitute the link between transactions in the JD Edwards EnterpriseOne Accounts Receivable and the General Accounting systems. There are two types of documents that you set up in UDC table 00/DT for Accounts Receivable:</p>
+<ul style="list-style-type: circle;">
+<li>Invoice document type codes.</li>
+<li>Receipt document type codes.</li>
+</ul>
+<p><strong>Invoice Document Type Codes (00/DT)</strong></p>
+<p>The invoice document type identifies the type of invoice. You must set up a code for each type of document that you use when you enter invoices. If the document type is hard-coded, you cannot assign other document types for that type of invoice. All invoice document types that are set up in UDC 00/DT should also be set up in UDC 00/DI. You set up default invoice and credit memo document types in the Invoice Entry MBF Processing Options program (P03B0011).</p>
+<p>This table lists invoice document types and a description of each:</p>
+<table border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 20%;">Document Type</th>
+<th class="km" style="width: 20%;">Description</th>
+<th class="km" style="width: 60%;">Use</th>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RI</td>
+<td class="km" style="width: 20%;">Invoice</td>
+<td class="km" style="width: 60%;">The system assigns this document type when you enter an invoice.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RR</td>
+<td class="km" style="width: 20%;">Recurring Invoice</td>
+<td class="km" style="width: 60%;">The system assigns this hard-coded document type when you enter an invoice and specify the number of payments and frequency.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RM</td>
+<td class="km" style="width: 20%;">Credit Memo</td>
+<td class="km" style="width: 60%;">The system assigns this document type to the invoice when you issue a credit memo.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RB</td>
+<td class="km" style="width: 20%;">Chargeback Invoice</td>
+<td class="km" style="width: 60%;">The system creates an invoice with this hard-coded document type when you designate an invoice that has not been fully paid as a chargeback in the receipt system.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RF</td>
+<td class="km" style="width: 20%;">Delinquency Fee</td>
+<td class="km" style="width: 60%;">The system creates an invoice with this hard-coded document type when you generate delinquency fees. Delinquency fees are also known as finance charges.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RU</td>
+<td class="km" style="width: 20%;">Unapplied Receipt</td>
+<td class="km" style="width: 60%;">The system creates an invoice with this hard-coded document type when you enter receipts that are not applied against any invoices.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">R1</td>
+<td class="km" style="width: 20%;">A/R Draft</td>
+<td class="km" style="width: 60%;">
+<p>The system creates an invoice with this hard-coded document type when you enter drafts.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<p class="km"><strong>Receipt Document Type Codes (00/DT)</strong></p>
+<p>Receipt document types are also known as matching document types. They cannot exist by themselves. You must attach (or match) each to a corresponding original document, except for logged receipts. For example, a receipt is a matching document that must always have a corresponding invoice as the original document. All matching document types are hard-coded, and consequently additional 00/DT receipt document types cannot be added to the system.</p>
+<p>Unlike invoice document type codes, receipt document type codes are set up only in UDC table 00/DT.</p>
+<p>The system provides these codes to use for matching documents when you enter and post receipts:</p>
+<table border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="width: 20%;">Document Type</th>
+<th class="km" style="width: 20%;">Description</th>
+<th class="km" style="width: 60%;">Use</th>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RC</td>
+<td class="km" style="width: 20%;">Receipt</td>
+<td class="km" style="width: 60%;">The system assigns this document type when a receipt is entered.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RO</td>
+<td class="km" style="width: 20%;">Void Receipt</td>
+<td class="km" style="width: 60%;">The system assigns this document type when a receipt is voided.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RS</td>
+<td class="km" style="width: 20%;">Spread Receipt</td>
+<td class="km" style="width: 60%;">The system assigns this document type when a credit memo is applied to an invoice on a zero amount receipt. This document type is not assigned when applying an unapplied receipt to an invoice.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RV</td>
+<td class="km" style="width: 20%;">Insufficient Funds Receipt</td>
+<td class="km" style="width: 60%;">The system assigns this document type when a customer has insufficient funds in the bank to pay the payment.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RU</td>
+<td class="km" style="width: 20%;">Unapplied Receipt</td>
+<td class="km" style="width: 60%;">The system assigns this document type to a receipt that is not applied to a specific invoice.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RL</td>
+<td class="km" style="width: 20%;">Logged Receipt</td>
+<td class="km" style="width: 60%;">The system assigns this document type to a receipt that is not associated with a customer or payor.</td>
+</tr>
+<tr>
+<td class="km" style="width: 20%;">RR</td>
+<td class="km" style="width: 20%;">Rounding Record</td>
+<td class="km" style="width: 60%;">The system assigns this document type when a foreign currency receipt is either fully applied on the foreign side, but not fully applied on the domestic side, or fully unapplied on the foreign side but not fully unapplied on the domestic side due to rounding issues. This rounding record is at the receipt level and is not associated with any particular invoice pay item.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Invoice Document Type Codes (00/DI)</strong></p>
+<p>All invoice document types that are set up in Document Type Codes (00/DT) must also be set up in Invoice Document Type Codes (00/DI). The invoice document type identifies the type of invoice. You must set up a code for each type of document that you use when you enter invoices in UDC table 00/DI. If the document type is hard-coded, you cannot assign other document types for that type of invoice. See <a href="#Invoice_Doc_Type">table</a> for 00/DT for further examples of invoice document types.</p>
+<p><strong>Payment Status Codes (00/PS)</strong></p>
+<p>Payment status codes (00/PS) indicate whether an invoice is approved, pending, paid, and so on. You assign a payment status code if you need to change the status that the system has assigned. These payment status codes are hard-coded:</p>
+<ul>
+<li><em>A: </em>Approved for payment.</li>
+<li><em>D: </em>Draft accepted.</li>
+<li><em>E: </em>Draft - expired not collected.</li>
+<li><em>G: </em>Draft deposited not due.</li>
+<li><em>H: </em>Held pending approval.</li>
+<li><em>P: </em>Paid in full.</li>
+<li><em>R: </em>Retainage.</li>
+</ul>
+<p><strong>Payment Instrument Codes (00/PY)</strong></p>
+<p>Payment instrument codes (00/PY) specify various methods of payment. You can assign a payment instrument code to invoices to differentiate them for different types of processing. Examples of payment instruments used in the JD Edwards EnterpriseOne Accounts Receivable system include:</p>
+<ul>
+<li><em>A: </em>Auto debits</li>
+<li><em>D: </em>Draft by invoice</li>
+<li><em>F: </em>Draft by statement</li>
+<li><em>T: </em>Electronic funds transfer</li>
+</ul>
+<p><strong>Credit Manager Codes (01/CR) and Collection Manager Codes (01/CM)</strong></p>
+<p>You can assign codes to specify who is responsible for updating and approving credit information, such as credit limits, and who is responsible for approving collections information, such as delinquency fees and notices. For the manager who is represented by this code to receive workflow messages, you must also specify the manager&rsquo;s address book number in the Description 2 field.</p>
+<div class="kmnotebox">NOTE:The Credit Manager UDC (01/CR) requires that you also set up blank as a value. You must enter some character in the Description 1 field, such as a period, to set up the code as blank.</div>
+<p><strong>Dun &amp; Bradstreet Rating Codes (01/DB)</strong></p>
+<p>You can assign codes (01/DB) to identify the Dun &amp; Bradstreet credit rating for customers. Examples are:</p>
+<ul>
+<li><em>BA1: </em>High</li>
+<li><em>BA2: </em>Good</li>
+<li><em>BA3: </em>Fair</li>
+<li><em>BA4: </em>Limited</li>
+</ul>
+<p><strong>Language Preference Codes (01/LP)</strong></p>
+<p>You can assign codes (01/LP) to identify the language for invoices, statements, and so on. Examples are:</p>
+<ul>
+<li>Blank (default): Domestic language</li>
+<li><em>F: </em>French</li>
+<li><em>G: </em>German</li>
+</ul>
+<p><strong>Experian Rating Codes (01/TR)</strong></p>
+<p>You can assign codes (01/TR) to specify the Experian credit ratings for customers. Examples are:</p>
+<ul>
+<li><em>AAA: </em>Excellent</li>
+<li><em>BBB: </em>Good</li>
+</ul>
+<p><strong>Aging Vocabulary Codes (03B/AG and H00/AG)</strong></p>
+<p>You can assign aging vocabulary codes (03B/AG and H00/AG) to specify the terminology on the A/R aging reports.</p>
+<p>Examples for UDC 03B/AG include:</p>
+<ul>
+<li><em>1: </em>Over</li>
+<li><em>2: </em>Previous</li>
+<li><em>3: </em>Future</li>
+<li><em>4: </em>Current</li>
+</ul>
+<p>Examples for UDC H00/AG include:</p>
+<ul>
+<li><em>D: </em>Due date</li>
+<li><em>G: </em>G/L date</li>
+<li><em>I: </em>Invoice date</li>
+<li><em>S: </em>Statement date</li>
+</ul>
+<p><strong>Chargeback Reason Codes (03B/CB)</strong></p>
+<p>You must assign a chargeback reason code (03B/CB) to explain the reason for entering chargeback for the invoice. Examples are:</p>
+<ul>
+<li><em>DA: </em>Disputed amounts</li>
+<li><em>DD: </em>Disallowed discount amount</li>
+<li><em>SP: </em>Short payment</li>
+<li><em>SU: </em>Spread unapplied amount</li>
+</ul>
+<p><strong>Collection Reason Codes (03B/CL)</strong></p>
+<p>You can assign collection reason codes (03B/CL) to explain why an invoice is delinquent. Examples are:</p>
+<ul>
+<li><em>BK: </em>Customer in bankruptcy</li>
+<li><em>DP: </em>Disputed by customer</li>
+<li><em>NP: </em>Delinquent or nonpayment</li>
+</ul>
+<p><strong>Deduction Reason Codes (03B/CR)</strong></p>
+<p>You must assign a deduction reason code (03B/CR) when you create a deduction to indicate the reason that you entered it. Examples are:</p>
+<ul>
+<li><em>DA: </em>Disputed amount</li>
+<li><em>DG: </em>Damaged goods</li>
+<li><em>GR: </em>Goods returned</li>
+<li><em>PD: </em>Pricing discrepancy</li>
+<li><em>SS: </em>Short shipment</li>
+<li><em>UD: </em>Undefined claim</li>
+</ul>
+<p><strong>Paid Late Codes (03B/PL)</strong></p>
+<p>Paid late codes (03B/PL) indicate whether a customer pays an invoice on time or whether it is paid late. The system assigns this code to the Paid Late field (PDLT) in the Receipts Detail table (F03B14) when you run the Statistics History Update program (R03B16A). Values are:</p>
+<ul>
+<li><em>0: </em>Invoice paid on time</li>
+<li><em>1: </em>Invoice paid late</li>
+</ul>
+<p><strong>Activity Priority Codes (03B/PR)</strong></p>
+<p>Activity priority codes (03B/PR) specify the sequence in which the system displays action items for credit and collection management purposes. The action item with the highest priority should be assigned priority '1'. These activity priority codes are hard-coded:</p>
+<ul>
+<li><em>1: </em>Priority 1</li>
+<li><em>2: </em>Priority 2</li>
+<li><em>3: </em>Priority 3</li>
+<li><em>4: </em>Priority 4</li>
+<li><em>5: </em>Priority 5</li>
+</ul>
+<p><strong>Write-Off Reason Codes (03B/RC)</strong></p>
+<p>When you write off a portion of an invoice, you must assign a reason code (03B/RC) to describe the adjustment to the invoice amount. The reason code that you assign corresponds to the AAI item<a href="#RA_AAI"> RA<em>xx </em></a>(where <em>xx </em>is the reason code) that the system uses to locate the account that you want to debit. Examples are:</p>
+<ul>
+<li><em>BD: </em>Bad debit</li>
+<li><em>CN: </em>Concession</li>
+<li><em>DA: </em>Disputed amount</li>
+<li><em>MW: </em>Minor write-off amount</li>
+<li><em>RV: </em>Revisions - data entry error</li>
+<li><em>TF: </em>Disputed tax or freight</li>
+<li><em>VD: </em>Void - duplicate entry</li>
+<li><em>WO: </em>Miscellaneous write-off</li>
+</ul>
+<p>Enter '1'in the Special Handling field for each reason code for which you want to accumulate write-off amounts in the Minor Write-Off (MWO) field in the AR Statistical History (F03B16) and AR Statistical Summary (F03B16S) tables. If you leave the Special Handling field blank, the system accumulates the associated amounts in the Bad Debt (BDBT) field.</p>
+<p>The system accumulates these write-off amounts when you run the Statistics History Update program (R03B16A).</p>
+<p><strong>Standard Receipt and Draft Type Input Codes (03B/RE)</strong></p>
+<p>Type input codes (03B/RE) indicate how receipts and drafts are applied to invoices. These examples are hard coded for standard receipts entry and the draft entry programs:</p>
+<ul>
+<li><em>10: </em>Simple invoice match.</li>
+<li><em>11: </em>Match automatic chargeback discount.</li>
+<li><em>15: </em>Match with write-off.</li>
+<li><em>16: </em>Match with chargeback.</li>
+<li><em>17: </em>Match with deduction.</li>
+<li><em>25: </em>Standalone write-off.</li>
+<li><em>26: </em>Standalone chargeback.</li>
+<li><em>27: </em>Standalone deduction.</li>
+<li><em>30: </em>Partial NSF (used in draft processing only).</li>
+<li><em>36: </em>Partial NSF chargeback (used in draft processing only).</li>
+</ul>
+<p><strong>Speed Receipt Type Input Codes (03B/SA)</strong></p>
+<p>Speed receipt type input codes (03B/SA) specify the input method to use to enter receipts using the Speed Receipts Entry (P03B0001) method. These speed receipt type input codes are hard-coded:</p>
+<ul>
+<li><em>1: </em>Unapplied receipt</li>
+<li><em>2: </em>Balance forward receipt</li>
+<li><em>3: </em>Logged receipt</li>
+<li><em>4: </em>General ledger</li>
+</ul>
+<p><strong>Void/NSF Reason Code (03B/VR)</strong></p>
+<p>Void reason codes (03B/VR) indicate the reason for which a receipt is voided or designated as NSF. Examples are:</p>
+<ul>
+<li><em>DSP: </em>Dispute</li>
+<li><em>ECK: </em>Error check</li>
+<li><em>NSF: </em>NSF receipt</li>
+<li><em>PNS: </em>Partial NSF</li>
+<li><em>RF: </em>Refund</li>
+<li><em>VOD: </em>Void receipt</li>
+</ul>
+<a name="aref_section313"></a><h3 class="km"><strong>Setting Up Accounts Receivable Next Numbers (P0002)<br /></strong></h3>
+<p>When you create a document such as an invoice, a voucher, or a journal entry, you can assign a document number to uniquely identify the document or let the Next Numbers program (P0002) assign one. If you choose to manually assign a document number instead of using next numbers, you must enter the number during data entry.  Next numbers is an automatic numbering utility. The Next Numbers program assigns numbers to documents using one or both of these:</p>
+<ul>
+<li>Standard next numbers. The system finds the next available number in the Next Numbers - Automatic table (F0002) and assigns that number to the document.</li>
+<li>Next numbers by company and fiscal year. The system finds the next available number by company and fiscal year or by company only in the Next Numbers by Company/Fiscal Year - Automatic table (F00021).</li>
+</ul>
+<p>Follow these rules when you work with next numbers:</p>
+<ul>
+<li>Do not use blank as a next number value.</li>
+<li>Do not change a next number. Changing the numbers can result in duplicate numbers, as well as the inability to locate previously added numbers. If you must change a next number, change it to a greater value only. </li>
+<li>Do not delete next number values. If you delete a next number value, you might get unexpected results.</li>
+<li>Do not change the sequence of the next numbers in the table. Next numbers work in conjunction with the data dictionary. Each data dictionary item that uses next numbers contains a next-numbering index value that corresponds to the line number that contains the next number value for that data item. Each next number must remain on its current line because programs reference a specific line in the table. For example, in the General Accounting system, the next number for journal entries must be on the second line.</li>
+</ul>
+<p>You can have the system assign check digits for any set of standard next numbers. The check digit feature prevents errors that are caused by transposition during data entry. For example, activating check digits in the address book for suppliers prevents a voucher from being assigned to the wrong supplier if digits are transposed during voucher entry. Use check digits for next numbers only when a transposition error is likely to occur during data entry.</p>
+
+
+<p><strong>Next Numbers By System</strong></p>
+<p><strong><img src="../images/ar06.png" class="kmsmartresize" alt="6" title="6" width="465"/><br /></strong></p>
+<p>To access system next numbers, you can use fast path 'NN' or navigate to Next Numbers (P0002). Next select the system in which to set up next numbers, i.e. 03B for "Accounts Receivable", 04 for "Accounts Payable" or 09 for "General Ledger".</p>
+<p><img src="../images/ar07.png" class="kmsmartresize" alt="7" title="7" width="643"/></p>
+<ol>
+<li><strong>Next Number</strong> - Enter the number that the system will assign next. The system can use next numbers for voucher numbers, invoice numbers, journal entry numbers, address numbers, and so on. You must use the next number types that are already established (and located under the Use column) unless your company provides custom programming. </li>
+<li><strong>Chk Dgt (check digit)</strong>  - Select to specify that the system add a number to the end of each next number that is assigned. For example, if you are using check digits and the next number is 2, the system will add a check digit such as 7, making the last two numbers 27. The check digits option provides a method for increasing numbers randomly to prevent the assignment of transposed numbers. In this example, the system would never assign next number 72 with check digits activated.</li>
+</ol>
+<p><strong>Next Numbers by Company and Fiscal Year</strong></p>
+<p>The system can assign a unique set of next numbers to invoices and other documents for a specific company and fiscal year. This is helpful if your organization needs to have a consecutive document number for each company by fiscal year. This section lists a prerequisite and discusses how to:</p>
+<ul>
+<li>Select a method for next numbers by company and year.</li>
+<li>Set up next numbers by company and year.</li>
+<li>Add a fiscal year to an existing record.</li>
+<li>Remove a fiscal year from an existing record.</li>
+</ul>
+<p><br /><strong>Selecting a Method for Next Numbers by Company and Fiscal Year</strong></p>
+<p>Next Numbers by Company and Fiscal Year are controlled by the Next Number Constants. To access Next Number Constants, you can use fast path 'NN' or navigate to Next Numbers (P0002). Take the form exit 'NN Constants' and select the option to implement next numbers by company and fiscal year (method 1 or 2).</p>
+<p><img src="../images/ar08.png" alt="8" title="8" width="525"/></p>
+<ul>
+<li>Method 1 -Implement next number by company/fiscal year. If a company record is not set up for a document type, a next number will be created and the next number will default to '1'.</li>
+<li>Method 2 -  Implement next number by company/fiscal year. If a company record is not set up for a document type, the standard next numbers set up will be used. </li>
+</ul>
+<div class="kmnotebox">NOTE: If method 1 or 2 is already selected on the Next Numbers Constants form and next numbers by company or document already exist, you must delete the next numbers before you can change the method. Changing the method and next number set up once a system is live may cause unexpected results and is not recommended.</div>
+<p><br /><strong>Set Up Next Numbers by Company and Fiscal Year</strong></p>
+<p><img src="../images/ar09.png" class="kmsmartresize" alt="9" title="9" width="1000"/></p>
+<p><br />Once a method for Next Numbers by Company/Fiscal Year has been selected, you need to set up the next numbers (NN). To set up next numbers by company and fiscal year, take the form exit 'NN by Co/FY' from Work with Next Numbers (P0002). Enter document company in the header and click 'Find' to display any existing records. To add a new NN line, go to bottom of the grid and enter the following in the first blank line:</p>
+<ul>
+<li><strong>Document Type</strong> - Enter a value from user defined code (UDC) table 00/DT that identified the origin and purpose of the transaction.</li>
+<li><strong>Same As Doc Type</strong> (same as document type) - If you set up next numbers by company or by company and fiscal year, a document type can share the same next number sequence as another document type. For example, you create a recurring invoice (document type RR). The recurring invoice that you create should use the same next number sequence as regular invoices (document type RI). In this example, you would set up the document type RR with a same as document type of RI. Enter a value that identifies a document type in user-defined code (UDC) table 00/DT.</li>
+<li><strong>Fiscal Year</strong> - A number that identifies the fiscal year. Generally, you can either enter a number in this field or leave it blank to indicate the current fiscal year (as defined on the Company Setup form (P0010)). Specify the year at the end of the first period rather than the year at the end of the fiscal period. For example, a fiscal year begins October 1, 2011 and ends September 30, 2012. The end of the first period is October 31, 2011. Specify the year 11 rather than 12.</li>
+<li><strong>Imbed Digits</strong>- Enter the number of digits that the system imbeds in a document number to represent the fiscal year. Imbed digits apply only to next numbers by fiscal year. Values are:
+<ul>
+<li>1: Imbed one digit.  The last digit of the fiscal year will be imbedded in the first position of the resulting document number. For example, in 20012345, the first digit represents the last '2' from 2012, and the remainder of the number (0012345) is the next number.</li>
+<li>2: Imbed two digits. The last two digits of the fiscal year will be imbedded in the first two positions of the resulting document number. For example, in 12012345, the first two digits represent the 12 from 2012, and the remainder of the number (012345) is the next number.</li>
+</ul>
+</li>
+<li><strong>Check Digit</strong> - An option that specifies whether the system adds a number to the end of each next number assigned. For example, if you are using check digits and the next number is 2, the system will add a check digit such as 7, making the last two numbers 27. The check digits option provides a method for increasing numbers randomly to prevent the assignment of transposed numbers. In this example, the system would never assign next number 72 while the check digits option is activated. Enter a check digit to use this option or leave blank if not required.</li>
+<li><strong>Next Number</strong> - The number that the system will assign next for the specified document type/document company/fiscal year.</li>
+<li><strong>Auto Reset</strong> - Enter the number that you want the system to use when resetting next numbers for a new fiscal year. The system begins next numbering for a new year with the number that you specify. Auto reset applies only to next numbers by fiscal year. </li>
+</ul>
+<p>If a company record is not set up for a specific document type, the results vary, depending on the method selected on Next Numbers Constants, as follows:</p>
+<ul>
+<li>If you are using method 1, the system creates a record for each company that you do not set up and starts numbering with 1 for all companies.</li>
+<li>If you are using method 2, the system uses the starting number shown on Set Up Next Numbers by System (standard next numbers) for each company that you do not set up.</li>
+</ul>
+<p><strong>Adding a Fiscal Year to an Existing Record</strong><br />To add a fiscal year to a record that already exists for a company with no fiscal year defined, you must delete the existing record on the Next Numbers by Co/Fiscal Year form. Then add a new record for the company and include the fiscal year. <br /><br /><strong>Removing a Fiscal year from an Existing Record</strong><br />To remove a fiscal year from an existing record for a company and fiscal year, you must delete the existing record on the Next Numbers by Co/Fiscal Year form. Then add a new record for the company, but do not include the fiscal year.</p>
+<p> </p>
+<a name="aref_section314"></a><h3 class="km"><strong>Accounts Receivable Automatic Accounting Instructions (AAIs) (P0012)<br /></strong></h3>
+<p class="km">Each time you enter a transaction for which the system creates journal entries, the system needs to locate the appropriate account numbers. It does this by reviewing the AAI table for codes that correspond to the transaction. For example, AAIs direct the system to the accounts receivable trade account to debit when you post invoices or the correct bank account to debit when you post receipts.<br /><br />The name of an AAI item, such as RC, is hard-coded. AAI items for Accounts Receivable always start with the letter 'R'. For example, RC is the AAI item for the receivables class (trade) account, and RB is for the receivables bank account. Each AAI item has account codes consisting of a business unit (optional for some AAIs - see note below), an object, and optionally, a subsidiary, which are mapped to the chart of accounts.</p>
+<div class="kmnotebox">Note - For a list of frequently asked questions regarding missing AAI errors refer to knowledge <a href='../docs/1477671.html'>FAQ - Frequently Asked Questions about Accounts Receivable Setup (P0002, P0004A, P0012)</a> for full details.</div>
+<p class="km"> </p>
+<p><strong>AR AAI Error Messages:</strong></p>
+<p>Review this section if you are experiencing any of these error messages listed below:</p>
+<p><img src="../images/ar10.png" border="0" alt="AAI_error_codes" title="AAI_error_codes" hspace="0" vspace="0"/></p>
+<div class="kmnotebox">Note: If you do not define a business unit in the AAI items RA, RC, RKD, RFC, and RFD, the system assigns the security business unit from the invoice. The security business unit, which is assigned to the customer Address Book record, is used as a default business unit when you enter invoices. If you do not assign a business unit to the AAI, the business unit from the invoice is concatenated with the object account of the AAI and is used as the account number. This process provides additional flexibility and enables specific accounts to be tracked by the business unit.</div>
+<a name="aref_section315"></a><h3 class="km"><strong>AAI Basic Overview Video Presentation (Video)<br /></strong></h3>
+<p>Refer to the attachment section at the end of this knowledge document to download a copy of video "AR AAI Basic Overview Video Presentation (11:48)".</p>
+<a name="aref_section316"></a><h4 class="km">Accounts Receivable AAI Search Sequence</h4>
+<p>Each AAI has a hierarchical sequence by which the system searches for an account number. If you are using multicurrency and enter a transaction in CAD for Co 00001 with a G/L offset INCO, the system searches for the A/R trade account (AAI RCxxxx) using the following sequence, where xxxx represents the currency and/or GL offset:</p>
+<ol>
+<li>The system searches for the AAI item RCCAD for Co 00001 to locate the A/R trade account.</li>
+<li>If the system cannot locate this AAI item, the system searches for item RCCAD for Co 00000. </li>
+<li>If the system cannot locate this AAI item, the system searches for item RCINCO for Co 00001. </li>
+<li>If the system cannot locate this AAI item, the system searches for item RCINCO for Co 00000. </li>
+<li>If the system cannot locate this AAI item, the system returns an error message that the AAI is missing. It will not search for RC for Co 00000.</li>
+</ol>
+<p>The following examples show how the system searches for the account number for an A/R trade account when a G/L offset code is used and when the G/L offset code is not used.<br /><br /><strong>Example 1:</strong> <br />Search Sequence for A/R Trade Account with G/L Offset. If you enter an invoice for company 00001 with a G/L offset TRAD, the system searches for the A/R trade account according to this hierarchical sequence:</p>
+<ol>
+<li>The system searches for AAI item RCTRAD for company 00001 to locate the A/R trade account.</li>
+<li>If the system cannot locate this AAI item, the system searches for item RCTRAD for company 00000.</li>
+<li>If the system cannot locate this AAI item, the system returns an error message that the AAI is missing. It will not search for RC for Co 00000.</li>
+</ol>
+<p><br /><strong>Example 2:</strong> <br />Search Sequence for A/R Trade Account Without G/L Offset.  If you enter an invoice for company 00001, but do not enter a G/L offset (the G/L Offset field is blank), the system searches for the A/R trade account according to this hierarchical sequence:</p>
+<ol>
+<li>The system searches for AAI item RC for company 00001 to locate the A/R trade account.</li>
+<li>If the system cannot locate this AAI item, the system searches for item RC for company 00000.</li>
+<li>If the system cannot locate this AAI item, the system returns an error message that the AAI is missing.</li>
+</ol>
+<a name="aref_section317"></a><h3 class="km"><strong>Set Up Accounts Receivable Automatic Accounting Instructions (P0012)</strong></h3>
+<p>AAIs are set up in Work with Automatic Accounting Instructions (P0012). From here you can add individual AAIs, copy an existing one, or add multiple AAIs at once using the form exit 'Multiple AAIs'.</p>
+<p> <img src="../images/ar11.png" class="kmsmartresize" alt="10" title="10" width="1000"/></p>
+<p>Set up the following AAIs using P0012 for Company 00000 and company specific as required, using the account numbers set up in the Chart of Accounts (P0901).</p>
+<ul>
+<li><strong>Default Automatic Accounting Instructions</strong>
+<ul>
+<li><strong><em>RC Default Trade Account</em></strong><br />A/R Trade (holding) account. Contains Document Type AE transactions created by the GL Post (R09801). Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Business Unit is optional.</li>
+<li><strong><em>RB Default Bank Account</em></strong><br />The bank account is based on the company number entered on the receipt. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company. Whatever offset are set up for the RCxxxx AAI must also be set up for RBxxxx. For example if RCTRAD is set up, RBTRAD must also be set up. Business Unit is required. </li>
+<li><em><a name="RKD_AAI"></a><strong>RKD Discount Taken</strong></em><br />Expense account for discounts taken and created when a receipt is posted. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. </li>
+<li><strong><em>RT A/R Taxes</em></strong><br />Tax account for taxes when the invoice is posted to GL. Either RT or RTyyyy (where yyyy = value in G/L Offset field of the Customer Master record (F03012) and entered in the Tax Rate/Area set up) is used depending on which Tax Explanation Code is used.   Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Use Tax uses RT. VAT tax uses RTyyyy. Tax Explanation Code 'B' (combination of VAT and Use tax) uses both RT and RTyyyy. For this code, in the Tax Rate/Area setup, the first line is used for VAT, which requires a G/L Offset, and the second line is the Use tax, which ignores the G/L Offset field.</li>
+</ul>
+</li>
+<li><strong>Receipt Automatic Accounting Instructions</strong></li>
+<ul>
+<li><strong><em>RCUC Unapplied Cash Receipt</em></strong><br />Automatic offset account for unapplied receipts not specific to an invoice. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. If RCUC is not set up, RCxxxx is not used as the default, where xxxx is the G/L Offset. Instead an error will be issued. Business Unit is optional. If left blank, the BU from the customer's Address Book record is used.</li>
+<li><strong><em>RCLC Logged Receipts</em></strong><br />Default asset account for automatic offsets when posting a receipt for a non-identified customer. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><em><a name="RA_AAI"></a><strong>RAxx Write-off Reason Code</strong></em><br />Expense account used for write-offs. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. The xx code must be set up in User Defined Code (UDC) table 03B/RC and represents the write-off reason, such as BD for bad debit. (Example: RABD is the AAI.).  Business Unit is optional. If blank, the BU from the invoice that is being written off is used.</li>
+</ul>
+<li><strong>Miscellaneous Automatic Accounting Instructions</strong></li>
+<ul>
+<li><strong><em>RFC and RFD Delinquency Fees</em></strong><br />RFC is used to recognize revenue and RFD is used to recognize receivables. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional.</li>
+<li><strong><em>RN Deductions</em></strong><br />Suspense account for an unresolved deduction amount. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is optional. If blank, the BU of the customer on the invoice being deducted is used. </li>
+<li><strong>RD1 through RD5 A/R Drafts - Draft processing </strong>
+<ul>
+<li>RD1 = Draft Receivables </li>
+<li>RD2 = Drafts remitted </li>
+<li>RD3 = Drafts remitted for discount </li>
+<li>RD4 = Contingent Liability </li>
+<li>RD5 = Draft void/NSF (non-sufficient funds) </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+</li>
+<li><strong><em>NC Netting</em></strong><br />Credit Reimbursement Account. Used when closing a credit invoice. Creates an open voucher in Accounts Payable. NC is the receipt that closes the invoice. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+<li><strong><em>ICCC or ICH Intercompany Settlements</em></strong><br />By hub and non-hub methods. See <a href='../docs/1416193.html'>Overview of Intercompany Settlement Methods (P0000).</a></li>
+</ul>
+<li><strong>Multi-currency Automatic Accounting Instructions (Only required in Multi-currency environments)<br /></strong></li>
+<ul>
+<li><strong><em>RG and RL Multi-currency Gain/Loss</em></strong><br />Used to record realized gains/losses when invoices are paid. </li>
+<ul>
+<li>RG = gain </li>
+<li>RL = loss </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+<li><strong><em>RV and RW Multi currency Unrealized Gain/Loss</em></strong><br />Used when an invoice has not been paid to record unrealized gain/loss. </li>
+<ul>
+<li>RV = gain </li>
+<li>RW= loss </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+<li><strong><em>RRyyy Unrealized Gain/Loss Offset Account</em></strong><br />An offset used for unrealized gains/losses if different from the AR trade account. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><strong><em>RY and RZ Alternate Currency Receipt Gain/Loss</em></strong><br />Used when paying an invoice in a third currency.</li>
+<ul>
+<li>RY= gain </li>
+<li>RZ=loss </li>
+<li>Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required. </li>
+</ul>
+<li><strong><em>R8 A/R Rounding Account</em></strong><br />Records rounding differences that can occur when more than one currency is involved in a transaction. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+<li><strong><em>R7 Alternate Currency Receipt Clearing Acct</em></strong><br />Required when paying an invoice in a third currency. Set up for default Company 00000 if all companies share the same account, otherwise set up for each company using a different account. Business Unit is required.</li>
+</ul>
+</ul>
+
+
+
+
+
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

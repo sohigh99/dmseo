@@ -1,0 +1,948 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chart of Account</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: "Segoe UI", Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+        .kmnotebox {
+        background-color: #FFFFE0;
+        border-left: 10px;
+        /*border-style: dotted;*/
+      }
+
+      .kmcodeblock {
+        background-color: #B0E0E6;
+        border-left: 10px;
+        margin-left: 2%;
+        /*border-style: dotted;*/
+      }
+
+      
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Chart of Account</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Chart of Account</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--MASTER NOTE: JD Edwards EnterpriseOne General Ledger - All Versions Overview of the Chart of Accounts (MAS90691 - 01NOV18 - 2394187.1) -->
+
+<h4>Table of Contents</h4>
+ 
+
+<ul>
+<li>Overview<ul>
+<li><a href="#1">Overview</a><ul>
+</ul>
+</li>
+</ul></li>
+<li><span>Account Formats</span><ul>
+  <li><a href="#2">Account Formats</a><ul>
+</ul>
+</li>
+<li><a href="#2.1">Account Category Codes 01 - 43</a><ul>
+</ul>
+</li>
+<li><a href="#2.2">Level of Detail (LOD)</a><ul>
+</ul>
+</li>
+<li><a href="#2.3">Posting Edit Code (PEC)</a><ul>
+</ul>
+</li>
+<li><a href="#2.4">Account Flex Format Setup</a><ul>
+</ul>
+</li>
+</ul></li>
+<li><span>Defining the Chart of Accounts
+</span><ul>
+<li><a href="#3">Defining the Chart of Accounts</a><ul>
+</ul>
+</li>
+</ul></li>
+<li><span>Model Chart of Accounts
+</span><ul>
+<li><a href="#4">Model Chart of Accounts</a><ul>
+<li><a href="#4">Overview</a></li>
+<li><a href="#4.1">Setup</a></li>
+</ul>
+</li>
+</ul></li>
+<li><span>Dynamic Account Creation
+</span><ul>
+<li><a href="#5">Dynamic Account Creation</a><ul>
+<li><a href="#5">Overview</a></li>
+<li><a href="#5.2">Process</a></li>
+<li><a href="#5.3">Limitations</a></li>
+</ul>
+</li>
+</ul></li>
+<li><span>Chart of Account Revisions
+</span><ul>
+<li><a href="#6">Chart of Account Revisions</a><ul>
+<li><a href="#6">Account Revisions</a></li>
+<li><a href="#6.2">Account Inactivation</a></li>
+<li><a href="#6.3">Account Deletion</a></li>
+<li><a href="#6.4">Refresh the Chart of Accounts</a></li>
+</ul>
+</li>
+</ul></li>
+<li><span>Reviewing the Chart of Accounts
+</span><ul>
+<li><a href="#7">Reviewing the Chart of Accounts</a><ul>
+</ul>
+</li>
+<li><a href="#7.1">Online Chart of Accounts</a><ul>
+</ul>
+</li>
+<li><a href="#7.2">Chart of Accounts Report (R0909P)</a><ul>
+</ul>
+</li>
+<li><a href="#7.3">Account Master Print Reports (R09205P, R09206, R09207)</a><ul>
+</ul>
+</li>
+</ul></li>
+<li><span>Account Master Word Search
+</span><ul>
+<li><a href="#8">Account Master Word Search</a><ul>
+</ul>
+</li>
+<li"><a href="#8.1">Review Account Master Word Program (P0901WS)</a><ul>
+</ul>
+</li>
+</ul></li>
+</ul>
+<hr>
+
+<h3><a name="1"></a>Overview</h3>
+<p>A chart of accounts provides the structure for your general ledger accounts. It lists specific types of accounts, describes each account, and includes account numbers. A chart of accounts typically lists asset accounts first, followed by liability and capital accounts, and then by revenue and expense accounts. To design your chart of accounts:</p>
+<ul>
+<li>Begin your initial design with the major headings of your transactions.</li>
+<li>Then add your detailed transaction descriptions.</li>
+</ul>
+<p>Following example shows types of accounts and their associated headings:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="text-align: center;" align="center">Account</th>
+<th class="km" style="text-align: center;" align="center">Headings</th>
+</tr>
+<tr>
+<td class="km" align="center">Balance Sheet Accounts</td>
+<td class="km">Types of headings for balance sheets include:<br />
+<ul>
+<li>Assets</li>
+<li>Liabilities</li>
+<li>Owner's Equity</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">Income Statement Accounts</td>
+<td class="km">Types of headings for income statements include:<br />
+<ul>
+<li>Revenues</li>
+<li>Expenses</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>After you have a complete list of transaction descriptions, you can assign numeric values to each description.</li>
+<li>You should also allow for growth and change by leaving spaces in the account structure.</li>
+<li>Define the last balance sheet account as the account for year-to-date net income or loss.</li>
+<ul>
+<li>Balance sheet accounts must precede income statement accounts. For example, if revenues begin at 5000, define object 4999 as the net income account.</li>
+<li>This account must be a non-posting account.</li>
+<li>The system calculates the net income amount on your balance sheet.</li>
+</ul>
+</ul>
+<div class="kmnotebox">NOTE: If your balance sheet accounts do not precede your income statement accounts, your financial reports might contain unreliable results.</div>
+
+
+
+
+<p><strong>Frequently Asked Questions</strong></p>
+<p>For frequently asked questions, refer to <a href="../docs/664720.html" alt="Frequently Asked Questions Regarding the Chart of Accounts" title="Frequently Asked Questions Regarding the Chart of Accounts" target="_blank">Frequently Asked Questions Regarding the Chart of Accounts.</a></p>
+
+
+<hr>
+
+
+<h3><a name="2"></a>Account Formats</h3>
+
+<p>An account can have several formats. You are not limited to one account format when you enter data. You can use the following types of account formats:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="text-align: center;" align="center">Account<br />Format</th>
+<th class="km" style="text-align: center;" align="center">Usage</th>
+</tr>
+<tr>
+<td class="km" align="center">Business Unit.Object.Subsidiary</td>
+<td class="km">This is the standard EnterpriseOne account format. It can be setup in either of these formats:<br />
+<ul>
+<li>Business Unit.Object</li>
+<li>Business Unit.Object.Subsidiary</li>
+</ul>
+Further, each of the components imply:<br />
+<ul>
+<li>The Business Unit designates the accounting entity to charge.</li>
+<li>The Object or (Object and Subsidiary) designates the type of account to receive the amount such as asset, liability, revenue, and expense.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">Short account ID</td>
+<td class="km">
+<ul>
+<li>This number is created by the Next Numbers program when you add accounts.</li>
+<li>It is commonly referred to as the short account number and can never be changed.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">Third G/L account number</td>
+<td class="km">
+<ul>
+<li>This number consists of a free-form code, often called the third account number.</li>
+<li>Typically, the account number from a prior system is used as the third account number.</li>
+<li>No limitations exist for the characters that you can use, for example, '.' (period) and '-' (dash) are acceptable.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>  </p>
+<div class="kmnotebox">NOTE: To enter account numbers in a format other than the standard EnterpriseOne format, you must use the prefix character that is defined in General Accounting Constants (P0000). For more information on Account Symbols, refer to <a href="../docs/1434211.html" alt="Overview of General Accounting Constants (P0000)" title="Overview of General Accounting Constants (P0000)" target="_blank">Overview of General Accounting Constants (P0000).</a></div>
+
+
+
+        <widget type="staticcontent" widgetid="A20" label="Business Unit.Object.Subsidiary Format" suppressTitle="true" enableTOC="false" internalOnly="false" suppressBorder="true" icontype="Text" header="" footer="" viewstate="expanded" initLinksCount="5" moreLinksCount="10">
+<p><strong>Business Unit.Object.Subsidiary Format</strong></p>
+<p>The EnterpriseOne system commonly uses the Business Unit.Object.Subsidiary format for account numbers. You can use periods, commas, or other user-defined symbols to separate the components of the account number. The period (.) separator is the default as per General Accounting Constants. Following diagram shows the format requirements:<br /><br /><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa01.png" alt="Business Unit, Obect, Subsidiary Format" title="Business Unit, Obect, Subsidiary Format" width="1038" /></p>
+<p>  </p>
+<p class="km"><strong>Business Unit - The Where</strong></p>
+<ul>
+<li>The business unit describes where in your organization the transaction will have an impact.</li>
+<li>It represents the lowest organizational level within your business where you record all revenues, expenses, assets, liabilities, and equities.</li>
+<li>A business unit can be a department, branch office, truck, and so on.</li>
+</ul>
+<p class="km"><strong>Object.Subsidiary - The What</strong></p>
+<p>The Object.Subsidiary represents what type of transaction is being created, such as rent or supplies expense and sales revenue. Following characteristics apply to the Object.Subsidiary:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="text-align: center;">Object</th>
+<th class="km" style="text-align: center;">Subsidiary</th>
+</tr>
+<tr>
+<td class="km">An Object is a description of the transaction.</td>
+<td class="km">A Subsidiary is an expanded description of the object account.</td>
+</tr>
+<tr>
+<td class="km">An Object account is a required field for transaction entry.</td>
+<td class="km">A Subsidiary is an optional part of the account and also optional for the transaction entry.</td>
+</tr>
+<tr>
+<td class="km">An Object can be up to six alphanumeric characters, depending on your organization's setup.</td>
+<td class="km">Subsidiary can be up to eight alphanumeric characters with no spaces.</td>
+</tr>
+<tr>
+<td class="km">All Object accounts must be of the same length.</td>
+<td class="km">The length of Subsidiary can vary within chart of accounts.</td>
+</tr>
+<tr>
+<td class="km">To make data entry easier and faster, you might want to use only numbers for the object account.</td>
+<td class="km">Use the Subsidiary when you need detailed accounting activity for an object account.</td>
+</tr>
+</tbody>
+</table>
+<p class="km"><strong>Example</strong></p>
+<p>The following example shows how you can associate the object account 1110 for Cash in Bank with several subsidiary accounts:</p>
+<ul>
+<li>1110.BEAR (Bear Creek National Bank)</li>
+<li>1110.FIB (First Interstate Bank)</li>
+<li>1110.FRANCE (First Bank of France)</li>
+<li>1110.LONDON (First Bank of London)</li>
+</ul>
+
+
+
+
+
+<h4><a name="2.1"></a>Account Category Codes 01-43</h4>
+<p>You assign category codes to accounts to expand your reporting capabilities and group your accounts for reporting purposes. You use category codes 01-43 (UDC 09/01 - 09/43) for accounts in the same way that you use category codes for business units. The category codes 09/01 - 09/20 are 3 characters in length, whereas category codes 09/21 - 09/43 are 10 characters in length.</p>
+<p>The 10-character category codes are useful if your business requires an alternate chart of accounts for statutory reporting. You can use the category code and the description, rather than the account number and description, on trial balance reports, the general ledger, and general journal reports. These category codes let you build summarization logic into your reports.</p>
+<p>After you set up values for category codes 01 - 43, you assign the values to accounts in your chart of accounts. This creates a link between the accounts and the category codes and enables you to print these reports:</p>
+<ul>
+<li>Debit/Credit T/B by Cat Code (R09472).</li>
+<li>General Ledger by Category Code (R09470).</li>
+</ul>
+<p>Other key attributes are as follows:</p>
+<ul>
+<li>You can set up a version for each of the category codes that you use and specify the category code in a processing option for the program.</li>
+<li>If you assign the same category code value to more than one of your accounts, the system adds the amounts in all of the accounts and prints the total amount on the report.</li>
+</ul>
+<p class="km"><strong>Example: Category Code 21</strong></p>
+<p>Suppose you want to print a report that shows data from all of your receivable accounts. You decide to use category code 21 (UDC 09/21) for receivable accounts and set up a value REC01 for Notes Receivable, REC02 for Interest Receivable, REC03 for Accounts Receivable, and so on. You assign these values to accounts in your chart of accounts. For example, you assign the value REC01 to category code 21 for each notes receivable account. You can then print selected reports that include all of your receivable accounts.</p>
+<p>For this example, you would complete these steps:</p>
+<ol>
+<li>Set up values for REC01, REC02, and REC03 in UDC table 09/21.</li>
+<li>Use the Review and Revise Accounts program (P0901) to assign the category code values to accounts in your chart of accounts.</li>
+<li>For category code 21, assign the value REC01 for notes receivable accounts, REC02 for interest receivable accounts, and so on. To assign a category code, select a notes receivable account on the Work with Accounts form. On the Revise Single Account form, select the Category Codes 21 - 30 tab and enter REC01 in the Cat Code 21 field.</li>
+<li>Assign category code values to the remaining accounts in your chart of accounts.</li>
+<li>Run the report with data selection set to the Category Code 21 value and it will display the information pertaining to the desired Category Code 21.</li>
+</ol>
+<p class="km"><strong>Account Category Codes 24-43</strong></p>
+<p>The behavior of Account Category Codes varies from one release to another as follows:</p>
+<p class="km"><em>Xe - 8.9</em></p>
+<ul>
+<li>In Xe, ERP8.0 and 8.9 releases, only Account Category Codes 1 - 23 were available and Category Codes 24-43 did not exist.</li>
+<li>The Category Codes information is stored in Account Master (F0901) file along with rest of account information.</li>
+</ul>
+<p class="km"><em>8.10</em></p>
+<ul>
+<li>Category codes 24-43 were added in 8.10 release and were initially designed to use for China Localization.</li>
+<li>As long as the Localization Country Code is setup to 'CN' in User Profile setting, category code 24-43 field will display in the P0901.</li>
+<li>The latest category codes 24-43 are stored in the F0901C table, whereas the category codes 1 - 23 is stored in F0901 table.</li>
+</ul>
+<p class="km"><em>8.11 and later releases</em></p>
+<ul>
+<li>In 8.11 release and subsequent, the account category codes 21 - 43 were made available in the EnterpriseOne base product.</li>
+<li>No country specific user profile settings are necessary to view the category codes in the P0901 application</li>
+<li>The latest category codes 24-43 are stored in the F0901 table along with category codes 1 - 23 and rest of account information.</li>
+<li>F0901C table is obsolete in 8.11 and subsequent releases.</li>
+</ul>
+
+
+
+
+
+
+<h4><a name="2.2"></a>Level of Detail (LOD)</h4>
+<p>You assign a level of detail (LOD) to each account to control how amounts are rolled up, or summarized into a balance for reporting purposes. For example, set up levels of detail (LOD) as shown in the following graphic:<br /><br /><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa02.png" alt="Level of Detail Pyramid" title="Level of Detail Pyramid" width="664" /><br /><br />Observe the following guidelines when assigning a level of detail to an account:</p>
+<ul>
+<li>Level 9 is the most detailed and Level 1 is the least detailed.</li>
+<li>Levels 1 and 2 are reserved for company and business unit totals.</li>
+<li>Levels 8 and 9 are reserved for posting accounts in the Job Cost system.</li>
+<li>Assign the level of detail 3 to title accounts for the balance sheet - Assets, Liabilities and Equity, Revenues and Expenses.</li>
+<li>Depending on whether you want the next level of accounts underlined, assign level of detail 3 or 4 to title accounts for the income statement. Title accounts include:</li>
+<ul>
+<li>Revenues</li>
+<li>Direct costs</li>
+<li>General and administrative expenses</li>
+<li>Other income and expenses</li>
+</ul>
+<li>Examples of the other levels are:</li>
+<ul>
+<li>4: Current Assets, Fixed Assets, Current Liabilities, and so on.</li>
+<li>5: Cash, Accounts Receivable, Inventories, Salaries, and so on.</li>
+<li>6: Petty Cash, Cash in Banks, Trade Accounts Receivable, and so on.</li>
+<li>7: Petty Cash - Corporate, Petty Cash - Branch, and so on.</li>
+</ul>
+</ul>
+<div class="kmnotebox">NOTE: Do not skip levels of detail when you assign a level of detail to an account. Non-sequential levels of detail cause summarization errors in financial reports.</div>
+
+
+
+
+
+<h4><a name="2.3"></a>Posting Edit Codes (PEC)</h4>
+<p>Assign a Posting Edit Code to every Object or Object.Subsidiary account in the chart of accounts. This code determines whether the account posts to the general ledger and whether it updates the Account Balances table (F0902). With Posting Edit Codes, you can designate an Object or Object.Subsidiary account as:</p>
+<ul>
+<li>Posting</li>
+<li>Non-posting (or title)</li>
+<li>Budget</li>
+<li>Inactive</li>
+<li>Machine-generated</li>
+<li>One that requires units.</li>
+<li>One that requires or does not allow for a subledger and type.</li>
+</ul>
+<div class="kmnotebox">NOTE: If you designate an Object or Object.Subsidiary account as posting, the account must be assigned to a posting business unit.</div>
+<p class="km">Valid values of Posting Edit Code are as follows:</p>
+<table class="km" style="width: 100%;" border="1" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<th class="km" style="text-align: center;" align="center">PEC Value</th>
+<th class="km" style="text-align: center;" align="center">Description</th>
+<th class="km" style="text-align: center;" align="center">Usage</th>
+</tr>
+<tr>
+<td class="km" align="center">Blank</td>
+<td class="km">Allows all posting</td>
+<td class="km">
+<ul>
+<li>Allows transactions to post to the business unit.</li>
+<li>Posts subledgers in detailed format for every account transaction.</li>
+<li>Does not require subledger entry.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">B</td>
+<td class="km">Allows post to Budget Ledger Type</td>
+<td class="km">Only allows posting to budget ledger types starting with 'B' or 'J'.</td>
+</tr>
+<tr>
+<td class="km" align="center">I</td>
+<td class="km">Inactive account</td>
+<td class="km">
+<ul>
+<li>It inactivates the account for any transaction and does not allow posting to that account.</li>
+<li>Any account activity will be reflected on interactive forms and reports.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">L</td>
+<td class="km">Subledger and Type required - Detail</td>
+<td class="km">
+<ul>
+<li>Subledger and type are required for all transactions.</li>
+<li>Posts subledgers in detailed format for every account.</li>
+<li>The system stores the subledger and type in the Account Ledger (F0911) and Account Balances (F0902) tables.</li>
+<li>If you want to report on subledgers in the Financial Reporting feature, use this code.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">M</td>
+<td class="km">Machine-generated transactions</td>
+<td class="km">
+<p>This posting edit code allows entries that were created by the system and protects the integrity of the account. The only exception is for the JX document type, see <i>"P0911 ALLOWS ENTRY ON ACCOUNT WITH PEC=M FOR JX DOC TYPE."</i> - P0911 ALLOWS ENTRY ON ACCOUNT WITH PEC=M FOR JX DOC TYPE.</p>
+<p>JX is hard coded and it was designed to bypass PEC=M for Monetary Account Valuation program (R09415)</p>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">N</td>
+<td class="km">Non-posting</td>
+<td class="km">
+<ul>
+<li>Does not allow any post or account balance updates.</li>
+<li>Treats the Account Description as a Report row sub title.</li>
+<li>In the Job Cost system, you can still post budget quantities.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">S</td>
+<td class="km">Subledger and Type required - Summary</td>
+<td class="km">
+<ul>
+<li>Subledger and type are required for all transactions.</li>
+<li>Posts subledgers in summary format for every transaction.</li>
+<li>The system stores the subledger detail in the Account Ledger (F0911) table.</li>
+<li>This code is not valid for budget entry programs.</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td class="km" align="center">U</td>
+<td class="km">Unit quantity required</td>
+<td class="km">Unit quantities are required for all transactions.</td>
+</tr>
+<tr>
+<td class="km" align="center">X</td>
+<td class="km">Subledger and Type - Blank</td>
+<td class="km">
+<ul>
+<li>Subledger and type must be blank for all transactions.</li>
+<li>Does not allow subledger entry for the account.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="km">  </p>
+<div class="kmnotebox"><strong>NOTE:</strong> Subledger accounting uses only these posting edit codes: 'S', 'L', 'X', and Blank. For more information on Subledger Accounting, refer to <a href="../docs/1440893.html" alt="Overview of the use of Subledgers within General Accounting" title="Overview of the use of Subledgers within General Accounting" target="_blank">Overview of the use of Subledgers within General Accounting.</a></div>
+
+
+
+
+
+
+
+<h4><a name="2.4"></a>Account Flex Format Setup</h4>
+<p>The Account Flex Format Setup program (P0907) defines the structure of accounts.</p>
+<p>Open P0907 application and select "Account Flex Format" tab to access the Account Flex Format form.</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa03.png" alt="Account Flex Format Setup P0907" title="Account Flex Format Setup P0907" width="671" /></p>
+<p>This is the default and recommended Account Flex setup.</p>
+<p>You may also consider to customize the sequence and length of your account segments, depending on how you want your chart of accounts to look like. For instance, you may setup two segments for the Business Unit, where one of the segments appear before Object Account and the other after Subsidiary or an Object Account with 6 characters.</p>
+<div class="kmnotebox">NOTE: It is recommended not to change the Account Flex setup after transactions have been entered since there is no method of updating the existing chart of accounts in F0901 table and the corresponding transactions in order to align with the new account structure. Changing the structure after transactions have been entered will create discrepancies to the existing records and cause multiple errors throughout the software.</div>
+<p class="km"><strong>B, O, and S Fields</strong></p>
+<p>If you define multiple segments for the business unit, object, and subsidiary fields, the system concatenates them from left to right in ascending order based on their assigned sequence numbers. The resulting number is left-justified in the database field.</p>
+<p class="km"><em>B (Business Unit)</em></p>
+<ul>
+<li>Enter X to indicate that this segment of the GL account number is stored as part of the Business Unit field (MCU) in the database.</li>
+<li>For flexible account numbers, you can define up to six segments and use a total of 12 characters for the business unit.</li>
+</ul>
+<p class="km"><em>O (Object)</em></p>
+<ul>
+<li>Enter X to indicate that this segment of the GL account number is stored as part of the Object Account field (OBJ) in the database.</li>
+<li>For flexible account numbers, you can define up to three segments and use a total of six digits for the object account.</li>
+<li>If the object account is six digits, you should use all six digits. For example, entering 000456 is not the same as entering 456 because if you enter 456, the system enters three blank spaces to<br />fill a six digit object.</li>
+</ul>
+<p class="km"><em>S (Subsidiary)</em></p>
+<ul>
+<li>Enter X to indicate that this segment of the GL account number is stored as part of the Subsidiary field (SUB) in the database.</li>
+<li>For flexible account numbers, you can define up to four segments and use a total of eight characters for the subsidiary part of the account number.</li>
+</ul>
+<p class="km"><strong>Length</strong></p>
+<p>Enter the length of the specific segment or element for the flexible chart of accounts format. The individual elements must be greater than zero and must not exceed:</p>
+<ul>
+<li>12 (with separator) characters for the Business Unit.</li>
+<li>6 (with separator) characters for the Object Account.</li>
+<li>8 (with separator) characters for the Subsidiary account.</li>
+</ul>
+<div class="kmnotebox">NOTE: The total length including account separating characters should be less than or equal to 26.</div>
+
+<hr>
+
+
+
+
+<h3><a name="3"></a>Defining the Chart of Accounts</h3>
+<p>The Chart of Accounts can be setup in following ways:</p>
+<ul>
+<li>Work with Accounts (P0901)</li>
+<li>Accounts by Business Unit (P0901)</li>
+<li>Copy Accounts to Business Units (P09804)</li>
+</ul>
+<p>The account information is stored in the Account Master table (F0901).</p>
+<p class="km"><strong>Processing Options (P0901)</strong></p>
+<p class="km"><em>Security Tab</em></p>
+<ul>
+<li>Object</li>
+<li>Subsidiary</li>
+<li>Category Code 21 - 23</li>
+</ul>
+<p>Enter a value of '1' in the corresponding field to protect the value of field(s) which contain the Legal Account information.</p>
+
+
+
+
+<p><strong>Work with Accounts (P0901)</strong></p>
+<p>Access the Revise Single Account form (P0901) to setup an account.</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa3.1.png" alt="Work with Accounts P0901" title="Work with Accounts P0901" width="1063" /></p>
+<p class="km"><em>Budget Pattern Code</em></p>
+<p>Enter a unique three-character code that identifies a seasonal pattern. The system uses this code to calculate budget amounts for an accounting period.<br />For example:</p>
+<ul>
+<li>DNS: Do not spread annual budget among the months. You cannot set up or change this code; it is defined as part of the system.</li>
+<li>Blank: Spread annual budget evenly across all months.</li>
+<li>***: Represents a blank value.</li>
+<li>SUM (summer): Spread according to user-specified percentages.</li>
+<li>WIN (winter): Spread according to user-specified percentages.</li>
+</ul>
+<p class="km"><em>Model Account/Consolidations</em></p>
+<p>Enter a code that indicates consolidated account or business unit. Values are:</p>
+<ul>
+<li>Blank: Non-model business unit or account.</li>
+<li>M: Model business unit or account.</li>
+<li>C: Consolidated business unit or account. This is a program-generated (P10862) value and is not user-accessible.</li>
+</ul>
+<p class="km"><em>Currency Code</em></p>
+<p>A code that specifies the currency that the account uses. A currency code in this field designates an account as a monetary account. Monetary accounts are typically bank accounts.</p>
+<p>For most accounts, you will want the system to accept a transaction in any currency. In these instances, do not assign a currency code. If you want an account, such as a bank account, to accept transactions in a specific currency, assign a currency code.</p>
+<div class="kmnotebox">NOTE: This currency field only applies to AA and CA ledger types when posting by currency is activated.</div>
+<p class="km"><em>Adjustment Entry</em></p>
+<p>Select this check box to restrict the business unit and all associated accounts to adjustment entries only. This check box allows you to post adjusting entries for journal allocations, reburdening and so on, to accounts that might otherwise be closed for regular transactions. You define the document types that qualify as adjustment entries in UDC table 09/AA. Only transactions with those document types can be posted to the account. This enables you to close an account to all transactions except adjusting entries.</p>
+<p>Example: Assume that you set up account 5.8720 to allow adjustment entries only and you set up codes for XX (reburdening entry) and JA (journal allocations) in UDC table 09/AA. You create a journal entry (document type JE) for account 5.8720 and try to post the entry. The system will issue an error message because account 5.8720 allows adjustment entries only. If you change the document type on the entry to XX or JA, the system will post the entry, assuming all other posting criteria is met.</p>
+<p class="km"><em>Account ID</em></p>
+<p>A number that the system assigns to each general ledger account in the Account Master table (F0901) to uniquely identify it. It is a next number set up under "Next Account ID" for System Code - 09 (General Accounting). It is commonly referred to as the short account number and can never be changed.</p>
+
+
+
+
+<p><strong>Accounts by Business Unit (P0901)</strong></p>
+<p>This application form allows you to simultaneously enter multiple accounts for a single business unit. The grid interface also allows you to import the account information from an excel sheet.</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa3.2.png" alt="Revise Accts by Business Unit P0901" title="Revise Accts by Business Unit P0901" width="963" /></p>
+<p>You can access the Account by Business Unit form (P09801) in following ways:</p>
+<ul>
+<li>In Work with Business Units (P0006), select Row-Exit - Accts By BU</li>
+<li>In Work with Accounts (P09010, select Row-Exit - Account By BU</li>
+</ul>
+<div class="kmnotebox">NOTE: Do not modify the Object and Subsidiary fields in header.</div>
+
+
+<hr>
+
+
+
+<h3><a name="4"></a>Model Chart of Accounts</h4>
+<p>To create a model chart of accounts, you can:</p>
+<ul>
+<li>Either create one master model business unit that includes the complete chart of accounts</li>
+<li>Or create a model business unit for every business unit type and assign object accounts to it.</li>
+<li>Depending on your organizational structure, you can also create more than one model chart of accounts. For example, you can create one model for balance sheet accounts and another model for income statement (profit and loss) accounts.</li>
+</ul>
+<p>You can then use these models as a basis for your actual chart of accounts. By creating a model chart of accounts, you ensure that when you copy the accounts from the model business units into your actual (or production) business units, the accounts are standardized across business units and companies.<br /><br />Consider the following recommendations while setting up model chart of accounts:</p>
+<ul>
+<li>You should create your model chart of accounts using a consistent numbering scheme for your object accounts so that they can be copied across all business units.</li>
+<li>After you enter the business unit, object account, and subsidiary information for a new account, you can add a comment, memo, or other text.</li>
+<li>Carefully proofread your model chart of accounts to ensure that the descriptions, spelling, level of detail assignments, and posting edit codes are accurate.</li>
+<li>Revise accounts as needed to correct errors before you copy the model accounts to business units since copying the model reproduces any errors in multiple business units.</li>
+</ul>
+<p class="km"><strong>Example: Model Business Unit</strong></p>
+<p>The following graphic illustrates the structure of a business unit type for profit and loss accounts:</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa4.1.png" alt="Model Chart of Accounts" title="Model Chart of Accounts" width="573" /></p>
+<div class="kmnotebox"><strong>Prerequisite Note:</strong> Before you setup model chart of accounts, you must verify that you have set up a business unit that is designated as a model in the Model Account/Consolidation field on the Revise Business Unit (P0006) application.</div>
+
+
+
+
+<p><strong>Copy Accounts to Business Units (P09804)</strong></p>
+<p>After you create your model chart of accounts, you must review and revise it as necessary. Then you can create your actual chart of accounts by copying the object and subsidiary accounts that are assigned to a model business unit to your actual business units. This process saves time and ensures consistency throughout your account structure.</p>
+<div class="kmnotebox">NOTE: Before you copy accounts, you must verify that the model business unit from which you want to copy is accurate.</div>
+
+<h4><a name="4.1">Setup</a></h4>
+<p>You can access the Copy Accounts to Business Units form (P09804) from Work with Business Units (P0006) in following ways:</p>
+<ul>
+<li>Form-Exit - Copy Accts</li>
+<li>Row-Exit - Copy BU Acct</li>
+</ul>
+<p>The Row-Exit option will default the From Business Unit with the value of business unit being selected.</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa4.2.png" alt="Copy Accounts to Business Units P09804" title="Copy Accounts to Business Units P09804" width="1054" /></p>
+<p>You can copy:</p>
+<ul>
+<li>All or a range of object accounts from one business unit to another.</li>
+<li>Object accounts at a given level of detail.</li>
+<li>All or a range of object accounts from one business unit to multiple business units of the same business unit type.</li>
+<li>All or a range of object accounts to a specific company or across all companies.</li>
+</ul>
+<p><strong>* </strong>Batch Mode</p>
+<p>On submission, Copy Accounts to Business Units form (P09804) will call Copy Accounts to Business Units report (R09804) which will actually copy the chart of accounts from Model Business Unit to the new Business Unit. The R09804 report displays the number of accounts copied.</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa4.3.png" alt="Copy Accounts to Business Units R09804" title="Copy Accounts to Business Units R09804" width="579" /></p>
+<div class="kmnotebox">
+<p><strong>NOTE:</strong></p>
+<ul>
+<li>Copy Accounts to Business Units report (R09804) cannot be submitted standalone and can only be called from Copy Accounts to Business Units form (P09804).</li>
+<li>If R09804 gets submitted twice for the same combination of "From", "To" Business Unit and other parameters, it does not create duplicate accounts rather prints following message:</li>
+</ul>
+<blockquote>WARNING. Not All Accounts Were Created. At least one account that was to be created was found to exist already, so the existing one was not changed.</blockquote>
+</div>
+
+
+<hr>
+
+
+<h3><a name="5"></a>Dynamic Account Creation</h3>
+<h4><a name="5.1"></a>Overview</h4>
+<p>When there is a need to create all or part of the chart of accounts for a business unit, the dynamic account creation feature will create accounts in the desired business unit on an as needed basis. This provides an initial framework for a business unit's chart of account. This is accomplished by accepting an invalid account number temporarily, which is useful in these situations:</p>
+<ul>
+<li>You are not sure what the correct account number is.</li>
+<li>You are not authorized to add new accounts.</li>
+</ul>
+<p>Being able to enter an invalid account number allows you to enter a journal entry with a business unit.object account that does not yet exist in your chart of accounts.</p>
+
+
+
+
+
+<h4><a name="5.2"></a>Process</h4>
+<ol>
+<li>In P0006 application, a model business unit 'M' in the Model Account/Consolidation field must be defined for every Business Unit Type that will be used for Dynamic Account Creation. A model business unit serves as a template for the creation of other business units and may contain an extensive account structure.</li>
+<li>To temporarily accept invalid account numbers, you must select the Allow Invalid Accounts check box on the General Accounting Constants form (P0000) <a href="../docs/1434211.html" alt="Overview of General Accounting Constants (P0000)" title="Overview of General Accounting Constants (P0000)" target="_blank">General Accounting Constants (P0000)</a>.</li>
+<li>When an account number is entered into the Journal Entry program (P0911), the system validates it against the chart of accounts in the Account Master table (F0901). If the account number is not defined in the chart of accounts, the system displays "Error 043C: Account Number is Invalid" and does not accept the entry. Invalid accounts entered in the Journal Entry program (P0911) are identified by "#" preceding the account code structure (BU.OBJ.SUB). The system will issue a "Warning 107X: Dynamic Accounts Cause Error in Batch".</li>
+<li>After entering the journal entry with the invalid account, the system sets the status of the batch to Error. You must review and approve the batch before posting.</li>
+<li>When you post the journal entry batch, the system adds the account to the business unit that is used in the journal entry and removes the invalid account symbol from the account in the journal entry, only if these conditions are met:</li>
+</ol>
+<blockquote>
+<ul>
+<li>The business unit that you enter already exists in the Business Unit Master table (F0006).</li>
+<li>The object account that you enter exists in a business unit previously designated as a model.</li>
+<li>The business unit type of the business unit that you enter and that of the model must be the same.</li>
+</ul>
+</blockquote>
+
+
+
+
+<h4><a name="5.3"></a>Limitations</h4>
+<ol>
+<li>Dynamic Account Creation will not create non-posting header accounts. Header accounts are typically used for summary purposes during financial reporting and do not allow amounts to be posted to them. If you need to create a header account, use the Copy Accts to Business Units program (P09804) to copy the nonposting header accounts from the model business unit. You can also enter the account manually and assign it a posting code N on the Revise Single Account form.</li>
+<li>Dynamic Account Creation cannot be used with Flex Chart of Accounts coding. A Flex Chart of Accounts is defined as one where the account segments deviate from the standard 12-position Business Unit, 4-, 5- or 6-position Object, and 8-position Subsidiary.</li>
+</ol>
+
+
+<hr>
+
+
+
+<h3><a name="6"></a>Chart of Account Revisions</h3>
+<p>After you set up your chart of accounts, you might need to add, revise, or delete accounts for various reasons. You might need to add accounts to your chart of accounts as your business grows. You might need to revise accounts to make the levels of detail, posting edit codes, and descriptions consistent across all business units. Or you might want to delete accounts that were created in error.</p>
+
+<h4><name ="6.1"></name>Account Revisions</h4>
+<p>Revising accounts is necessary in order to maintain and update the most current information in the system. For example, you might need to:</p>
+<ul>
+<li>Revise multiple accounts that are assigned to one business unit. You might want to do this if the company has been restructured or you want to include additional information about the company.</li>
+<li>Revise one account that is assigned to many business units. You might want to change the description of the account or include additional information, particularly additional lines for a business unit description.</li>
+<li>Revise a single account.You revise a single account if you need to add or change selected information, such as alternate object and subsidiary, that is not available on other account revision forms.</li>
+<li>Add text to an existing account. You can add text to an existing account for any additional information that is related to the account.</li>
+<li>Change an account number. You can change an account number only if the new number does not already exist in the Account Master table (F0901). If you change an account number, the revision applies only to new postings. To have old balances correspond with the new account numbers, you must run the Update BU.Obj.Sub to Journal Entry Program (R09806) <a href="../docs/1390947.html" alt="E1: 09: How To Run Global Updates for Organizational and Account Structure Revisions In EnterpriseOne (P09812\P09803\P09805\R09806)" title="E1: 09: How To Run Global Updates for Organizational and Account Structure Revisions In EnterpriseOne (P09812\P09803\P09805\R09806)" target="_blank">How To Run Global Updates for Organizational and Account Structure Revisions In EnterpriseOne (P09812\P09803\P09805\R09806)</a>.</li>
+</ul>
+<div class="kmnotebox">NOTE: You can set the Security processing options for the Review and Revise Accounts program (P0901) to prevent the object and subsidiary fields from being changed if an account has a balance in the F0911 or F0902 table. If no transactions or balances exist for the account, you can change the object and subsidiary, regardless of the setting of the Security processing options.</div>
+<p>You can revise an account or multiple accounts using following forms:</p>
+<ul>
+<li>Revise Single Account (P0901) - On the Work With Accounts form (P0901), select an account to open Revise Single Account.</li>
+<li>Revise Accounts by Business Unit - On the Work With Accounts form (P0901), select an account and from the Row menu, select Account by BU.</li>
+<li>Revise Accounts by Object/Subsidiary - On the Work With Accounts form (P0901), select an account and select Account by Obj/Sub from the Row menu.</li>
+</ul>
+
+
+<h4><a name ="6.2"></a>Account Inactivation</h4>
+<p>As a policy, you might want to make unused accounts inactive. When you make an account inactive, you can neither enter nor post any transactions for the account. However, you can see the historical activity. To make an account inactive, change the posting edit code to 'I'.</p>
+
+
+
+<h4><a name="6.3"></a>Account Deletion</h4>
+<p>You cannot delete an account that has a balance in the F0911 or F0902 tables. Alternatively, you can delete accounts that do not contain transactions by running the Delete Account Master Records program (R09814). For more details on this report, refer to <i>"Overview of Delete Account Master Records Program (R09814)".</i></p>
+
+
+
+
+<h4><a name="6.4"></a>Refresh the Chart of Accounts</h4>
+<p>After you revise or delete an existing general ledger account or add a new account which updates Account Master (F0901) table, you must run the Refresh Chart of Accounts program (R0909R) to update the Chart of Accounts - Reference File table (F0909). The F0909 table is further used for Chart of Accounts reporting.<br /><br />The relationship between F0901 and F0909 table is that if you add an account with the same object and subsidiary as an existing account but with a different description or level of detail, the Refresh Chart of Accounts program retains the first occurrence of the object and subsidiary only for the chart of accounts. For example, assume account 3.5005.WEST has a description of Sales - West Virginia. You add account 1.5005.WEST with a description of Sales - Western Region. When you run the Refresh Chart of Accounts program, the system updates F0909 table with object account 5005 and the description Sales - Western Region.<br /><br />On the Work With Chart of Accounts form (P0901), select Refresh Chart of Accounts from the Report menu to submit R0909R report. You can also run this report from Batch Versions.</p>
+<p class="km"><strong>Processing Options/Data Selection</strong></p>
+<p>This report neither has any Processing Options nor Data Selection.</p>
+<div class="kmnotebox">NOTE: The Refresh Chart of Accounts program (R0909R) can take a long time to run, especially if a substantial number of accounts were revised or when working with a large chart of accounts. Hence its recommended to run the same during off business hours.</div>
+<p class="km"><strong>Reviewing the Report</strong></p>
+<p>This report does not print any output of the records being refreshed.</p>
+
+
+<hr>
+
+
+
+<h3><a name="7"></a>Reviewing the Chart of Accounts</h3>
+<p>After you create your chart of accounts or make revisions to it, you should review your object accounts across all companies and business units. By reviewing your accounts, you can:</p>
+<ul>
+<li>Locate any inconsistencies in the levels of detail.</li>
+<li>Verify that similar types of accounts are set up for financial consolidations to function properly.</li>
+<li>Determine which object account numbers are available if you need to add new accounts.</li>
+</ul>
+<p>You can review the updated chart of accounts using the following:</p>
+<ol>
+<li>Online Chart of Accounts (P0909)</li>
+<li>Chart of Accounts Report (R0909P)</li>
+<li>Account Master Print Reports (R09205P, R09206, R09207)</li>
+</ol>
+<p>  </p>
+
+
+
+
+<h4><a name="7.1"></a>1. Online Chart of Accounts (P0909)</h4>
+<p>The system displays object accounts in ascending order, regardless of business unit or company. This applications reads data from Chart of Accounts - Reference File table (F0909).<br /><br /><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa7.1.png" alt="Online Chart of Accounts P0909" title="Online Chart of Accounts P0909" width="716" /></p>
+<p>  </p>
+
+
+
+
+<h4><a name="7.2"></a>2. Chart of Accounts Report (R0909P)</h4>
+<p>To print a report, select Chart of Accounts from the Report menu from following forms:</p>
+<ul>
+<li>Work with Accounts (P0901)</li>
+<li>Online Chart of Accounts (P0909)</li>
+</ul>
+<p>You can also run this report from Batch Versions. This report also reads data from Chart of Accounts - Reference File table (F0909).</p>
+<p class="km"><strong>Processing Options</strong></p>
+<p>This report does not have any Processing Options.</p>
+<p class="km"><strong>Data Selection</strong></p>
+<p>Do not enter any data selection for the report.</p>
+<p class="km"><strong>Reviewing the Report</strong></p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa7.2.png" alt="Chart of Accounts R0909P" title="Chart of Accounts R0909P" width="555" /></p>
+<p>  </p>
+
+
+
+
+<h4><a name="7.3"></a>3. Account Master Print Reports (R09205P, R09206, R09207)</h4>
+<p>Use these reports to determine if the appropriate accounts are associated with the appropriate category reporting codes:</p>
+<ul>
+<li>R09205P - Account Master Report Cat. Code 01 - 23</li>
+<li>R09206 - Account Master Report Cat. Code 24 - 33</li>
+<li>R09207 - Account Master Report Cat. Code 34 - 43</li>
+</ul>
+<p>These reports read data from Account Master table (F0901).</p>
+<p>The processing options and data selection are the same for Account Master Report Cat. Code 01-23 (R09205P), Account Master Report Cat. Code 24-33 (R09206), and Account Master Report Cat. Code 34-43 (R09207).</p>
+<p class="km"><strong>Processing Options</strong></p>
+<p><em>Print Control Tab</em></p>
+<p>1. Unstructured Account Number</p>
+<ul>
+<li>Enter a '1' to print the Unstructured or Third Account number.<br />Default of blank will not print the third or unstructured account number.</li>
+</ul>
+<p>2. Business Unit Description</p>
+<ul>
+<li>Enter a '1' to print the description of the business unit associated with the accounts when the system changes from printing the accounts for one business unit to printing the accounts for another business unit.</li>
+<li>Default of blank will not print the business unit description.</li>
+</ul>
+<p class="km"><strong>Data Selection</strong></p>
+<p>You can provide data selection by company and business unit.</p>
+<p class="km"><span style="font-size: 12pt;"><strong>Reviewing the Report</strong></span></p>
+<p><strong>R09205P Report</strong></p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa7.3.png" alt="Account Master Print R09205P" title="Account Master Print R09205P" width="1122" /><br /><br /><strong>R09206 Report</strong><br /><br /><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa7.4.png" alt="Account Master Print R09206" title="Account Master Print R09206" width="1239" /><br /><br /><strong>R09207 Report</strong><br /><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa7.5.png" alt="Account Master Print R09207" title="Account Master Print R09207" width="1238" /></p>
+
+
+<hr>
+
+
+
+
+<h3><a name="8"></a>Account Master Word Search</h3>
+<p><strong>Build Account Master Word Search Table (R0901WS)</strong></p>
+<p>The Build Account Master Word Search Table program (R0901WS) assists in an account search by building the keywords information in the Account Master Word Search table (F0901WS). If you add, change, or delete account information, you should run this program in update mode to refresh the table and ensure that you are searching the most current information.</p>
+<div class="kmnotebox">NOTE: This program can take considerable processing time depending on the number of accounts in your system.</div>
+<p class="km"><strong>Processing Options</strong></p>
+<p><em>Mode Tab</em></p>
+<p>Process Mode</p>
+<ul>
+<li>Enter '0' to update the records.</li>
+<li>Enter '1' to delete the existing records in table before creating new records.</li>
+</ul>
+<p class="km"><strong>Data Selection</strong></p>
+<p>Do not enter any data selection for the report.</p>
+<p class="km"><strong>Reviewing the Report</strong></p>
+<p>This report does not print any output of the records being refreshed.</p>
+<p>Apart from Batch Versions, you could also run this report from Form - Exits in Account Master Word Program (P0901WS) as follows:</p>
+<ul>
+<li>Form-Exit - Update File:</li>
+</ul>
+<blockquote>This will submit the report with Processing Option - Process Mode with value '0'.</blockquote>
+<ul>
+<li>Form-Exit - Update/Delete File</li>
+</ul>
+<blockquote>This will submit the report with Processing Option - Process Mode with value '1'.</blockquote>
+
+
+
+
+
+
+<h4><a name="8.1"></a>Review Account Master Word Program (P0901WS)</h4>
+<p>The Account Master Word Search program helps you locate an account by specifying different keywords. To locate an account, enter a word or string of characters in the Search Word field. The Account Master Word Search program displays a list of all of the accounts containing that word or string of characters. For example, if you enter "accounts payable," the program displays all of the accounts that contain the word "accounts" and all of the accounts that contain the word "payable."</p>
+<p><img style="max-width: 100%; max-height: 100%;" class="kmsmartresize" src="../images/coa8.1.png" alt="Account Master Word Search P0901WS" title="Account Master Word Search P0901WS" width="467" /></p>
+<p>*Search Word</p>
+<ul>
+<li>Enter one or more words to search for an account.</li>
+<li>You must use the full word.</li>
+<li>If entering a string of words, the word string must be in the exact order as what you want to find.</li>
+<li>This program is not case-sensitive. You can enter either uppercase or lowercase characters.</li>
+<li>You cannot use a wildcard.</li>
+</ul>
+<div class="kmnotebox">Prerequisite Note: Before you use the Account Master Word Search form, you must run the Build Account Master Word Search Table program (R0901WS) to build the Account Master Word Search table (F0901WS).</div>
+<p>The Account Master Word Search program also displays accounts that contain words similar to the full name of the account. For example, if you want to search for an account that contains the words "accounts payable," you could enter "Accts Pay," "Accts," "A," "P," or "A/P." If these words are in the Word Search Equivalence Table (F91011), the program recognizes them as words equivalent to "accounts payable" and display the accounts for which you are searching.<br /><br />You can also add, change, or delete from the list of words that you want the program to ignore. For example, the Account Master Word Search program is already set to ignore "A," "About," and "After." If you enter one of these words by itself into the Search Word field, the program ignores it. The program also ignores symbols such as "/" and "%."</p>
+<div class="kmnotebox">NOTE: EnterpriseOne has a default list of equivalent and ignored words and you can choose to add or modify or delete your own words to this list using the Menu Word Search application (P95012). For more information on this, refer to <i>"Searching for Menu Items in OneWorld Explorer".</i></div>
+
+
+<p>&nbsp; </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

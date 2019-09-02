@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cache/Work File (workfile) in Procurement</title>
+<!--     <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/styles.css"> -->
+    <link href='https://fonts.googleapis.com/css?family=Oxygen:400,300,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+
+    <style>
+      body {
+        font-family: Calibri, Arial, Helvetica, sans-serif;
+/*        background-color: #FFFAFA;*/
+/*        font-size: 14px;*/
+      }
+
+      #myBtn {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        z-index: 99;
+        font-size: 18px;*/
+        border: none;
+        outline: none;
+        background-color: #2F4F4F;
+        color: white;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 4px;
+      }
+
+      #myBtn:hover {
+        background-color: #555;
+      }
+    </style>
+
+  </head>
+
+
+<body>
+  <header>
+    <nav id="header-nav" class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="index.html" class="pull-left visible-md visible-lg">
+            <div id="logo-img"></div>
+          </a>
+
+          <div class="navbar-brand">
+            <a href="../index.html"><h1>Home Page!</h1></a>
+          </div>
+
+<!--           <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form> -->
+
+        </div>
+        
+      </div><!-- .container -->
+    </nav><!-- #header-nav -->
+  </header>
+
+<button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+
+<div style="background-color:#2F4F4F;color:white;padding:0px"><h1>Cache/Work File (workfile) in Procurement</h1></div>
+<!-- <div style="background-color:lightgrey;padding:30px 30px 2500px">This example demonstrates how to create a "scroll to top" button that becomes visible when the user starts to scroll the page.</div> -->
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    document.getElementById("myBtn").style.display = "block";
+  } else {
+    document.getElementById("myBtn").style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+
+</body>
+
+
+<!-- <h1 class="km"><big><big><a name="subtitle"></a><span style="font-size: large;"><BIG>Caching in EnterpriseOne</BIG></span></big></big></h1> -->
+<!-- ================================= Purpose of Document ================================== -->
+
+<h2 class="km"><big><big><a name="section01"></a><span style="font-size: medium;"><BIG>Purpose of Document</BIG></span></big></big></h2>
+
+<p> This note is to discuss cache and workfile in EnterpriseOne procurement. This note is a trouble shooting guide when the issue is coming from cache or work file.</p>
+<p>Document discusses Work Files in Procurement (F4301Z, F4311Z, F43121Z and F4314Z) based on the list of applications below,</p>
+<ul>
+<li>P4310 - Purchase Orders</li>
+<li>P43032 - Purchase Order Generator</li>
+<li>P43060 - Order Release</li>
+<li>P43101 - Purchase Order Workbench</li>
+</ul>
+<p>Note that Purchase Order can be created/updated through multiple applications (including Sales and Manufacturing and so on). For this example, any routine which writes F4301 (Purchase Order Header)/F4311 (Purchase Order Detail) are defined as purchase order.</p>
+<p>In creating Purchase Order, temporary tables (namely Work File/Workfile/WF) such as F4301Z (PO Header Work File), F4311Z (Purchase Order Generator File), F43121Z (Receiver workfile) and F4314Z (Voucher Match Selection File) can be used to hold data temporarily before it gets committed to Purchase Order Header/Detail, PO Receipt and Voucher Match.</p>
+<p>In this note, workfile/work file stands for physical tables whereas cache stands for memory/cache or data structure. In purchase order processing cache is to be used heavily because (as temporary table stored value for limited times) cache can be referenced in any other form/application till it gets terminated.</p>
+<p>Unlike Sales Order, only P43060 (Order Release/Generate) has implementation to write work file to support consolidation (because lines can not be consolidated with cache). However R4311Z1I (PO Unedited Transaction Inbound Processor) shall not utilize work file unlike R47010 (EDI Inbound Purchase Order Edit/Create). In your running P43060 if you specify line consolidation option, which writes F4301Z/F4311Z.</p>
+
+
+<!-- ======================================== Body Starts Here =================================== -->
+
+
+<h4 class="km"> <strong>Question 1 :</strong> What are the temporary tables used in processing Procurement?</h4>
+<p><strong>Answer 1 :</strong> The tables listed below can hold transactional data in the memory or in the database but F43121Z and F4314Z are purely used for cache (long pointer data structure to hold PO receipt and Voucher Match),</p>
+<ul>
+<li>F4301Z - PO Header Work File</li>
+<li>F4311Z - Purchase Order Generator File</li>
+<li>F43121Z - Receiver workfile (Does not write physical table/file in the routine)</li>
+<li>F4314Z - Voucher Match Selection File (does not write physical file)</li>
+</ul>
+<p>cf.,</p>
+<ul>
+<li><em>R4311Z1I (PO Unedited Transaction Inbound Processor)</em></li>
+<li><em>R07071 (EDI Receiving Advice Edit/Create - Purchasing)</em></li>
+<li><em>F4301Z1 - Purchase Header Work File</em></li>
+<li><em>F4311Z1 - Purchase Order Detail Unedited Transaction Table</em></li>
+<li><em>F43121Z1 - Receipts Unedited Transaction Table</em></li>
+</ul>
+<hr />
+<h4 class="km"><strong>Question 2 :</strong> Why are temporary tables used in Processing Purchase Order?</h4>
+<p class="km"><strong>Answer 2 :</strong> The reason is to optimize performance and data integrity. For example, if a huge volume of data has to be handled, writing a temporary file can be more cost effective (by avoiding round trips to database server) than making use of cache as physical memory which has its own limitation.<br /><br />This calculation assumes the keys and indices to a certain table is left unchanged. If keys or indices are changed, the cache should still work, however the following calculation will be off. Approximately 193K will be used by the cache that is non-data related. Plus, the size of memory will be equivalent to the size of data in a certain table. In Unicode and 2 bytes Asian language, it requires two bytes per character. That is why, the usage of memory in Unicode environment will be higher than single byte environment.<br /><br />For example (based on E1 application release 9.1),<br /><br />    F4301Z = (in bytes) 193000 + (2750 * Number of rows)<br />    F4311Z = (in bytes) 193000 + (5794 * Number of rows)<br />    F43121Z = (in bytes) 193000 + (5581 * Number of rows)<br />    F4314Z = (in bytes) 193000 + (6464 * Number of rows)<br />        : Note that the size of data can be retrieved by checking F4301Z.h in include folder.</p>
+<h4 class="km"><strong>Question 3 :</strong> How does system determine whether to write cache or workfiles (work files)?</h4>
+<p><strong>Answer 3:</strong> Possible parameters are as follows:</p>
+<p>Values for parameter:</p>
+<p>    1 - Write Work File<br />    2 - Write Cache</p>
+<hr />
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>cUpdateOrWriteToWorkFile is used in opposite purpose in Sales Order Creation (In Sales Order, 1 - Write Cache, 2 - Write Work File)</li>
+<li>Batch application R4311Z1I (PO Unedited Transaction Inbound Processor) does not utilize work file (F4301Z and F4311Z) by default</li>
+<li>Actual cache is controlled by business function B4301370 (Order Cache Functions)</li>
+<li>F4301Z and F4311Z  workfiles based on CTID, PEID and TCID which is unique</li>
+<li>Note that the form W4314A is based on F4314Z File</li>
+<li>Parameter name can be (and result can be set for the parameter .cRecordWrittenToWorkFile ( 1 = Successfully wrote cache/work file, 0 - not written yet),
+<ul>
+<li>F4311FSBeginDoc.cUpdateOrWriteToWorkFile</li>
+<li>F4311EditLine.cUpdateOrWriteWorkFile</li>
+<li>F4311EndDoc.cUseWorkFilesF4311ClearWorkFiles.cUseWorkFiles</li>
+<li>CheckF4311ZRecords.cUseWorkFiles</li>
+<li>F4314EditLine.cUpdateOrWriteToWorkFile (this parameter is to use in handling F4301 and F4311)</li>
+</ul>
+</li>
+</ul>
+</div>
+<p> </p>
+<h4 class="km"><strong>Question 4: </strong> Is there a diagram to represent the flow of data through voucher match?</h4>
+<p><strong>Answer 4:</strong> Refer below flow chart</p>
+
+<p><img src="../images/powf01.png" border="0" alt="Flow of Data Manipulation " title="Flow of Data Manipulation " hspace="0" vspace="0"/></p>
+
+<hr />
+<h4 class="km"><strong>Question 5:</strong>  If there is data in these tables can it be purged?</h4>
+<p><strong>Answer 5:</strong> Yes the data from these work file tables (F4301Z, F4311Z, F43121Z, F4314Z) can be purged.<br />In general, these files are made up of columns:</p>
+<ul>
+<li>CTID - ComputeID</li>
+<li>PEID - ProcessID</li>
+<li>TCID - TransactionID</li>
+</ul>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>Cache/Work File is unique in Sales Order Entry through  CTID (ComputerID), JOBS (JobNumber) and LNIX (LineNumberXREF: For detail)</li>
+<li>Each user per application has unique key for above members the value populated in work file will be transaction specific.</li>
+<li>In deleting data from these tables the best option will be :
+<ul>
+<li>    Through Query Tools (e.g., SQLPlus, Query Analyzer and so on) issue SQL&gt; TRUNCATE TABLE</li>
+<li>    Through OMW generate table the purpose of generating the table is to synchronize table specification between JDE and Database.</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr />
+<h4 class="km"><strong>Question 6 : </strong>Can the parameters to write to cache or a workfile be changed?</h4>
+<p>Answer 6 : Do NOT change any parameters as it will cause memory error across system and you may experience slower performance.</p>
+<hr />
+<h4 class="km"><strong>Question 7 :</strong> Table (Data) Structure has been changed through baseline ESUs, what is the follow-up action?</h4>
+<p><strong>Answer 7:</strong> If there is any change in Table Structure, the table needs to be generated through EnterpriseOne OMW tools. Usually this has to be described in Special Instruction of baseline ESU that has been installed. By generating table which synchronize table specification in your Database (Update metadata in your DB), this action is MANDATORY.<br />In the log, there is cache written in F42UI002 but we cannot find this table. Is this a valid table ID? If so where can we find it?<br />Note: F42UI002 is just data structure to hold extended value of Sales Order Header Information. This data structure is defined at B4202090.h file and is referenced by B4200310.h, B4200311.h and B4200312.h files. Upon compilation JDE will assign memory for this data structure.</p>
+<hr />
+<h4 class="km"><strong>Question 8:</strong>  Which applications can create a purchase order?</h4>
+<p><strong>Answer 8 :</strong></p>
+<p>Multiple applications can create/update purchase order, simplified object list is,</p>
+<table style="border-collapse: collapse; width: 837px; height: 1506px;" border="2" cellspacing="2" cellpadding="2"><colgroup><col style="width: 71pt;" width="95" /> <col style="width: 174pt;" width="232" /> <col style="width: 65pt;" width="87" /> <col style="width: 315pt;" width="420" /></colgroup>
+<tbody>
+<tr style="height: 15pt;">
+<th class="xl65" style="height: 15pt; width: 71pt; background-color: #ffcc00;">Application ID</th>
+<th class="xl65" style="width: 174pt; background-color: #ffcc00;">Application Description</th>
+<th class="xl65" style="width: 137px; background-color: #ffcc00;">Called by</th>
+<th class="xl65" style="width: 358px; background-color: #ffcc00;">Others</th>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P13730</td>
+<td class="xl66">CAM - Manage Work Order Parts</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P17730</td>
+<td class="xl65">Work Order Parts Detail</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P3111</td>
+<td class="xl65">Work Order Parts List</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P31113</td>
+<td class="xl66">Work Order Inventory Issues</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P3112</td>
+<td class="xl65">Work Order Routing</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3157</td>
+<td class="xl66">Kanban Processing</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3161</td>
+<td class="xl66">Outside Operation Revisions</td>
+<td class="xl66" style="width: 137px;">via B3102380</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P31B69</td>
+<td class="xl66">Operation Header Parent Powerf</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P31B96</td>
+<td class="xl65">Speed Operation Update</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P31P201</td>
+<td class="xl66">Work Order Parts List</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P34004</td>
+<td class="xl66">Supply/Demand Inclusion Rules</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3401</td>
+<td class="xl66">Message Summary</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3411</td>
+<td class="xl66">MRP/MPS Detail Message Revisio</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P3413</td>
+<td class="xl66">MPS Time Series</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P400511</td>
+<td class="xl65">Return Material Authorization</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4021</td>
+<td class="xl66">Supply and Demand Inquiry</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G024</td>
+<td class="xl66">Push to Grower Block to Harves</td>
+<td class="xl66" style="width: 137px;">via B40G0180</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G03</td>
+<td class="xl66">Grower Harvest Maintenance</td>
+<td class="xl66" style="width: 137px;">via B40G0180</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G030</td>
+<td class="xl66">Speed Harvest Update</td>
+<td class="xl66" style="width: 137px;">via B40G0180</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G30</td>
+<td class="xl66">Grower Harvest and Weigh Tag R</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P40G300</td>
+<td class="xl65">Final Settlement</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P40G301</td>
+<td class="xl66">Grower Speed Weigh Tag</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P41351</td>
+<td class="xl66">Kit Selection</td>
+<td class="xl66" style="width: 137px;">via N4201050</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4210</td>
+<td class="xl66">Sales Order Entry</td>
+<td class="xl66" style="width: 137px;">via B4200310</td>
+<td class="xl66" style="width: 358px;">for ST/OT, SD/OT. PO can be created<br />&lt;Document 1390905.1&gt; E1: 42: How to maintain Order Integrity between SD/OD and ST/OT</td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43011</td>
+<td class="xl65">PO Generator</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43032</td>
+<td class="xl65">Purchase Order Generator</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43060</td>
+<td class="xl65">Blanket Order Release</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4310</td>
+<td class="xl65">Purchase Orders</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43101</td>
+<td class="xl65">Purchase Order Workbench</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4311S</td>
+<td class="xl66">Self-Service - Purchase Order</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4312</td>
+<td class="xl65">PO Receipts</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P4314</td>
+<td class="xl66">Voucher Match</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P43250</td>
+<td class="xl66">Receipt Routing Movement and D</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P43250SS</td>
+<td class="xl66">Self-Service - Movement in Rou</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P43252</td>
+<td class="xl66">Routing Ledger Inquiry</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P43253</td>
+<td class="xl66">Routing Disposition</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4332</td>
+<td class="xl65">Original Orders Entry</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43360</td>
+<td class="xl65">Release Open Quotations</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P4371</td>
+<td class="xl65">Suggested Reorder Stock Items</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43E060</td>
+<td class="xl65">Requisition Expeditor</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P43S01</td>
+<td class="xl65">SRM - PO Acknowledgement</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P44H711</td>
+<td class="xl66">Lot Start Workfile Maintenance</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">P45731</td>
+<td class="xl65">Free Goods Award</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P49650</td>
+<td class="xl66">Deliver Confirm</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P49655</td>
+<td class="xl66">Unscheduled Deliveries</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P5310</td>
+<td class="xl66">Change Request Entry</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P53301</td>
+<td class="xl66">Change Request Subcontract Det</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">P90CD015</td>
+<td class="xl66">CRM - Manage Work Order Parts</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">PCW10</td>
+<td class="xl65">Matrix Entry</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R30445A</td>
+<td class="xl66">Multi-Level Costed Bill Report</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R32491</td>
+<td class="xl66">Configured Item Segment Print</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R3411</td>
+<td class="xl66">MRP/MPS Detail Message Process</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R34410</td>
+<td class="xl65">Supplier Schedule Release Gene</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R34A490</td>
+<td class="xl66">SCP Inbound Planning Messages</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R40211Z</td>
+<td class="xl66">Recurring Orders Edited Creati</td>
+<td class="xl66" style="width: 137px;">via N4201050</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R4051</td>
+<td class="xl66">Supply and Demand Report</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4210IC</td>
+<td class="xl65">Create Intercompany Sales Orde</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R4210Z</td>
+<td class="xl66">Batch Edit and Creation</td>
+<td class="xl66" style="width: 137px;">via N4201050</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R42770</td>
+<td class="xl65">Generate Rebate Claims</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R43092Z1I</td>
+<td class="xl66">Receipt Routing Unedited Trans</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R4311Z1I</td>
+<td class="xl65">PO Unedited Transaction Inboun</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R437001</td>
+<td class="xl65">Sales Order Purchase Order Gen</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R437002</td>
+<td class="xl65">Stocked Item Reorder Point Bat</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R43E060</td>
+<td class="xl65">Batch Requisition Consolidatio</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R44H7113</td>
+<td class="xl66">Generate Homebuilder Committme</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl65" style="height: 15pt;" height="20">R47011</td>
+<td class="xl65">EDI Inbound Purchase Order Edi</td>
+<td class="xl65" style="width: 137px;"> </td>
+<td class="xl65" style="width: 358px;"> </td>
+</tr>
+<tr style="height: 15pt;">
+<td class="xl66" style="height: 15pt;" height="20">R48803</td>
+<td class="xl66">Order Type Conversion</td>
+<td class="xl66" style="width: 137px;">via B3401360</td>
+<td class="xl66" style="width: 358px;"> </td>
+</tr>
+</tbody>
+</table>
+<p> </p>
+<div class="kmnotebox">
+<p>Note:</p>
+<ul>
+<li>This list is based on EnterpriseOne application release 9.1</li>
+<li>Object reference:
+<ul>
+<li>B3102380 - WORoutingPurchaseOrderSource (Work Order Routing Purchase Order Source File)</li>
+<li>B3401360 - Process Messages MBF</li>
+<li>B40G0180 - Harvest Process Business Logic</li>
+<li>N4201050 - Kit Selection in Batch Mode</li>
+</ul>
+</li>
+</ul>
+</div>
+<p> </p>
+<hr />
+<p> </p>
+
+
+<!-- ======================================== End of Body ==================================== -->
+
+  <footer class="panel-footer">
+    <div class="container">
+      <div class="row">
+        <section id="pagebottom" class="pagebottom">
+          <!-- <p>"Click Top button to go back to the top"</p> -->
+          <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+          <form>
+            <input type="button" value="Go back!" onclick="history.back()">
+          </form>
+        </section>
+      </div>
+      <div class="text-center">&copy; Copyright Dong's Page 2019</div>
+    </div>
+  </footer>
+
+  <!-- jQuery (Bootstrap JS plugins depend on it) -->
+  <script src="../js/jquery-2.1.4.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
