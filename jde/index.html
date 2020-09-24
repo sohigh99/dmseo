@@ -106,8 +106,7 @@
         <li><a href="#section3" alt="Coursework" title="Coursework">Coursework - Academic Research &amp;Project Management</a></li> 
         <li><a href="#section0" alt="ERP Foundation & Architecture" title="ERP Foundation & Architecture">ERP/SCM Foundation and Architecture</a></li>
         <li><a href="#section1" alt="ERP Foundation & Architecture - Application Specific" title="ERP Foundation & Architecture - Application Specific">ERP/SCM SCM Foundation and Architecture - Application Specific</a></li>
-        <li><a href="#section2" alt="ERP Applications" title="ERP Applications"> How to Debug Applicaitons in ERP/SCM </a></li>
-            
+        <li><a href="#section2" alt="ERP Applications" title="ERP Applications"> How to Debug Applicaitons in ERP/SCM </a></li>            
         <li><a href="#section4" alt="Continous Learning" title="Continous Learning">Continuous Learning</a></li>
       </ul>
     </div>
@@ -129,41 +128,39 @@
 
   <h2><font color="black"><a name="section1"></a>ERP/SCM Foundation & Architecture - Application specific</font></h2>
     <ul>
+      <li><font color="black">Transaction, Transaction Processing, commit, and Rollback  </font><a href="docs/1208208.html">Transaction, Transaction Processing, Commit, and Rollback</a></li>
+          <!-- <span> The Transaction Processing is tightly related with MBF where data is handled using cache when it requires higher integrity among tables. For instance, Item Cost, Item Location, General Ledger, and Cardex for Inventory Transaction. </span><p> </p> -->
+
       <li><font color="black">Caching  </font><a href="docs/944015.html">Caching in EnterpriseOne</a></li>
         <!-- <span>This document took long time to complete and required extensive test and research. For this, various codes in the sytem level and application level are tested and analyzed. </span><p> </p> -->
+      <li><font color="black">Deadlock </font><a href="docs/1228683.html">Deadlock in EnterpriseOne</a></li>
+          <!-- <span> The deadlock can take place when there is any racing condition - two different process/thread compete to get lock information. In code-current environment, common cause of deadlock is custom code including database level add-on. To have deadlock two different processes are accessing same table with Transaction Processing on. The reason for this behavior is that TP boundaries issues blocking from sql> Begin Trans through sql> Commit Trans, or sql> Rollback Trans. So, it is important to have minimum value for JDENETTimeout because this parameter determines how long it will block. </span><p> </p> -->
+
+      <li><font color="black">JDEDB_COMMIT_MANUAL  </font><a href="docs/1513147.html">JDEDB_COMMIT_MANUAL and TP Boundaries</a></li>
+          <!-- <span>JDEDB_COMMIT_AUTO is used to put a certain table outside Transaction Processing when a certain table need accessing more than one time. The example of this configuration can be Item Location File (F41021) and Item Branch File (F4102) to update MRPC (Net Change Flag) to use during MRP running. In case you need to add a certain routine inside End Doc routine which is called with Transcation Processing, make it sure you call Auto Commit not to cause deadlock. </span><p> </p> -->
 
       <li><font color="black">Master Business Function (MBF) </font><a href="docs/1265902.html">Master Business Function in EnterpriseOne</a></li>
          <!-- <span> The Master Business Functions are the most important components of Enterprise Solutions (ERP, SCM, CRM, Commerce and so on). Commonly, the MBF compries Begin Doc to validate/default header information (business entity) and create cache for it, Edit Line to validate/default detail information (items and others) and create cache for it. Optionally, Edit Doc can be implemented either to check integrity between header cache and detail cache or to call additional routine before commit takes place. Lastly, End Doc gets called with Transaction Processing to commit cache created/validated through Begin Doc and Edit Line to commit to database.</span><p> </p> --> 
 
-      <li><font color="black">Listing of Transaction Processing  </font><a href="docs/1320968.html">Listing of Transaction Processing in EnterpriseOne</a></li>
-<!--       <span> The transaction processing is the core of enterprise solutions which manipulate various data. The applications listed here is tightly associated with MBF (Mater Business Function). Do not add any custom procedure, trigger, function when a certain table is to be manipulated in Transaction Processing (TP) boundaries, which results in the deadlock.</span><p> </p> -->
        <li><font color="black">Specification  </font><a href="docs/1142313.html">Specification in EnterpriseOne</a></li>
        <!-- <span>JDE comprises C function and its specification which determines how a user interfaces and how it is represented. This is important aspect of any enterprise solutions with the layered architecture. </span><p> </p> -->
 
-        
-
       <p><button class="button" onclick="myFunction1()">&gt;&gt;&gt;See more in E1 Foundation Area</button></p>
+      
       <div id="myFoundation">
          
           <li><font color="black">Architectural View of JD Edwards   </font><a href="docs/0000005.html">Architectural View of EnterpriseOne</a></li><span>Simplified view of JDE structure. JDE is not only client-server model rather it is more like layered structure.</span><p> </p>
          
-
-         
-
-          <li><font color="black">Transaction Processing  </font><a href="docs/1208208.html">Transaction, Transaction Processing, Commit, and Rollback</a></li><span> The Transaction Processing is tightly related with MBF where data is handled using cache when it requires higher integrity among tables. For instance, Item Cost, Item Location, General Ledger, and Cardex for Inventory Transaction. </span><p> </p>
-
-          <li><font color="black">Deadlock </font><a href="docs/1228683.html">Deadlock in EnterpriseOne</a></li><span> The deadlock can take place when there is any racing condition - two different process/thread compete to get lock information. In code-current environment, common cause of deadlock is custom code including database level add-on. To have deadlock two different processes are accessing same table with Transaction Processing on. The reason for this behavior is that TP boundaries issues blocking from sql> Begin Trans through sql> Commit Trans, or sql> Rollback Trans. So, it is important to have minimum value for JDENETTimeout because this parameter determines how long it will block. </span><p> </p>
-
-          <li><font color="black">JDEDB_COMMIT_MANUAL  </font><a href="docs/1513147.html">JDEDB_COMMIT_MANUAL and TP Boundaries</a></li><span>JDEDB_COMMIT_AUTO is used to put a certain table outside Transaction Processing when a certain table need accessing more than one time. The example of this configuration can be Item Location File (F41021) and Item Branch File (F4102) to update MRPC (Net Change Flag) to use during MRP running. In case you need to add a certain routine inside End Doc routine which is called with Transcation Processing, make it sure you call Auto Commit not to cause deadlock. </span><p> </p>
-
           <li><font color="black">Server Map (SVM920)  </font><a href="docs/1348278.html">Sever Map - SVM920</a></li><span>The tables listed in this document superceds any configuration you made which controls the data source (or, source of data) and OCM mapping. The environment is defined as the path code (the instruction set of codes which is made up of C functions and specification) and OCM (Object Configuration Management) where the latter determines the source and destination of instruction and data.</span><p> </p> 
 
           <li><font color="black">Business Function Naming Conversion  </font><a href="docs/1389392.html">Business Function Naming</a></li><span>Basic naming of business function in E1. Some of naming follows World Software naming convention which is the origin of highly distruted JD Edwards system.</span><p> </p>
 
           <li><font color="black">Functions in JAS  </font><a href="docs/1090584.html">Functions in JAS</a></li><span>Basically there are two types of functions one is business function and another is system function. There are equivalent set of system function in java and most of embedded (the associated function with data dictionary items) and trigger (either at the DD level or Table level) function have its own java code.</span><p> </p> 
+          
           <li><font color="black">Exception/Error Code in JAS  </font><a href="docs/1094464.html">Exception/Error Code in JAS when Call Object Kernel Fails on Logic Server with Error Code COSE#9999</a></li> 
 
-          <li><font color="black">Memory Violation Part I </font></span> <a href="docs/1464687.html">Memory Violation Part I</a></li><span>The corruption of memory is commonly coming when the memory allocated is different from what memory is assigned, or in referening NULL pointer in nature. The outcome can vary depending on the operating system and its compiler. Commonly, you may not get zombie kernel or memory corruption when your code is up to date. </span>
+          <li><font color="black"><strong>Memory Violation Part I </strong></font></span> <a href="docs/1464687.html">Memory Violation Part I</a></li><span>The corruption of memory is commonly coming when the memory allocated is different from what memory is assigned, or in referening NULL pointer in nature. The outcome can vary depending on the operating system and its compiler. Commonly, you may not get zombie kernel or memory corruption when your code is up to date. </span>
+          
           <li><font color="black"> Memory Violation Part II </font><a href="docs/1554611.html">Memory Violation Part II</a></li><p> </p>
 
           <li><font color="black">Interoperability Quick Reference Guide </font><a href="docs/1275030.html">Interoperability Quick Reference Guide</a></li><span>There are a few of ways to talk to the external systems - EDI, Interop, Business Services. Commonly, interop is used to audit the change made against master files or the tables associated with the master business function.</span><p> </p>
