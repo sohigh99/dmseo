@@ -82,14 +82,33 @@ function getCookie(name) {
 }
 
 
-function myFunction1() {
-  var x = document.getElementById("myFoundation");
-  if (x.style.display === "block") {
-    x.style.display = "none";
-  } else {
-    x.style.display = "block";
-  }
-}
+/* Dong, Aug 11, 2025 to set collapsable */
+document.addEventListener('DOMContentLoaded', function() {
+  const triggers = document.querySelectorAll('.collapsible-trigger');
+
+  triggers.forEach(trigger => {
+    trigger.addEventListener('click', function() {
+      const content = this.nextElementSibling; // Get the next sibling element (the content div)
+
+      if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        content.style.maxHeight = '0'; // Collapse
+      } else {
+        content.classList.add('active');
+        content.style.maxHeight = content.scrollHeight + 'px'; // Expand to content height
+      }
+    });
+  });
+});
+
+// function myFunction1() {
+//   var x = document.getElementById("myFoundation");
+//   if (x.style.display === "block") {
+//     x.style.display = "none";
+//   } else {
+//     x.style.display = "block";
+//   }
+// }
 
 
 function myFunction2() {
