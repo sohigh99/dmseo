@@ -162,7 +162,3 @@ function myFunction9() {
   }
 }
 
-/* dong test */
-#myFoundation {
-  display: none;
-}
