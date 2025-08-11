@@ -181,6 +181,7 @@ function myFunction9() {
   }
 }
 
+/* To show or hide additional contents -- minize it initial loading */
 document.addEventListener('DOMContentLoaded', function() {
   const triggers = document.querySelectorAll('.collapsible-trigger');
 
