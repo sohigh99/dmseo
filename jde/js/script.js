@@ -161,3 +161,8 @@ function myFunction9() {
     x.style.display = "block";
   }
 }
+
+/* dong test */
+#myFoundation {
+  display: none;
+}
