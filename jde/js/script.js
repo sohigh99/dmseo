@@ -182,20 +182,20 @@ function myFunction9() {
 }
 
 /* To show or hide additional contents -- minize it initial loading */
-document.addEventListener('DOMContentLoaded', function() {
-  const triggers = document.querySelectorAll('.collapsible-trigger');
+// document.addEventListener('DOMContentLoaded', function() {
+//   const triggers = document.querySelectorAll('.collapsible-trigger');
 
-  triggers.forEach(trigger => {
-    trigger.addEventListener('click', function() {
-      const content = this.nextElementSibling; // Get the next sibling element (the content div)
+//   triggers.forEach(trigger => {
+//     trigger.addEventListener('click', function() {
+//       const content = this.nextElementSibling; // Get the next sibling element (the content div)
 
-      if (content.classList.contains('active')) {
-        content.classList.remove('active');
-        content.style.maxHeight = '0'; // Collapse
-      } else {
-        content.classList.add('active');
-        content.style.maxHeight = content.scrollHeight + 'px'; // Expand to content height
-      }
-    });
-  });
-});
+//       if (content.classList.contains('active')) {
+//         content.classList.remove('active');
+//         content.style.maxHeight = '0'; // Collapse
+//       } else {
+//         content.classList.add('active');
+//         content.style.maxHeight = content.scrollHeight + 'px'; // Expand to content height
+//       }
+//     });
+//   });
+// });
