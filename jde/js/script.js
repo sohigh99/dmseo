@@ -101,14 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-// function myFunction1() {
-//   var x = document.getElementById("myFoundation");
-//   if (x.style.display === "block") {
-//     x.style.display = "none";
-//   } else {
-//     x.style.display = "block";
-//   }
-// }
+function myFunction1() {
+  var x = document.getElementById("myFoundation");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
 
 
 function myFunction2() {
