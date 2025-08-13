@@ -102,10 +102,10 @@ function getCookie(name) {
 // });
 
 /* To handle floating button at the end of ag, ga, ar, ap */
-document.getElementById('scrollToParagraphButton').addEventListener('click', function() {
-    const targetParagraph = document.getElementById('targetParagraph');
-    if (targetParagraph) {
-        targetParagraph.scrollIntoView({ behavior: 'smooth' }); // Smooth scrolling effect
-    }
-});
+// document.getElementById('scrollToParagraphButton').addEventListener('click', function() {
+//     const targetParagraph = document.getElementById('targetParagraph');
+//     if (targetParagraph) {
+//         targetParagraph.scrollIntoView({ behavior: 'smooth' }); // Smooth scrolling effect
+//     }
+// });
 
