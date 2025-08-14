@@ -82,30 +82,4 @@ function getCookie(name) {
 }
 
 
-/* Dong, Aug 11, 2025 to set collapsable */
-// document.addEventListener('DOMContentLoaded', function() {
-//   const triggers = document.querySelectorAll('.collapsible-trigger');
-
-//   triggers.forEach(trigger => {
-//     trigger.addEventListener('click', function() {
-//       const content = this.nextElementSibling; // Get the next sibling element (the content div)
-
-//       if (content.classList.contains('active')) {
-//         content.classList.remove('active');
-//         content.style.maxHeight = '0'; // Collapse
-//       } else {
-//         content.classList.add('active');
-//         content.style.maxHeight = content.scrollHeight + 'px'; // Expand to content height
-//       }
-//     });
-//   });
-// });
-
-/* To handle floating button at the end of ag, ga, ar, ap */
-// document.getElementById('scrollToParagraphButton').addEventListener('click', function() {
-//     const targetParagraph = document.getElementById('targetParagraph');
-//     if (targetParagraph) {
-//         targetParagraph.scrollIntoView({ behavior: 'smooth' }); // Smooth scrolling effect
-//     }
-// });
 
