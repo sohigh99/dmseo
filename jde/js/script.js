@@ -82,18 +82,3 @@ function getCookie(name) {
 }
 
 
-/* Back to top icon - source from https://stackoverflow.com/questions/56919081/how-to-replace-back-to-top-button-with-an-image-and-have-it-sliding-onto-off-t  */
-$(document).ready(function(){
-    $(window).scroll(function(){
-        if($(this).scrollTop() > 300){
-            $('#scroll').css("right","10px");
-        }else{
-            $('#scroll').css("right","-140px");
-        }
-    });
-    $('#scroll').click(function(){
-        $("html, body").animate({ scrollTop: 0 }, 600);
-        return false;
-    });
-});
-
