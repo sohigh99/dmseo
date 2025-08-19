@@ -81,5 +81,17 @@ function getCookie(name) {
   return null;
 }
 
-
+$(document).ready(function(){
+    $(window).scroll(function(){
+        if($(this).scrollTop() > 300){
+            $('#scroll').css("right","10px");
+        }else{
+            $('#scroll').css("right","-140px");
+        }
+    });
+    $('#scroll').click(function(){
+        $("html, body").animate({ scrollTop: 0 }, 600);
+        return false;
+    });
+});
 
