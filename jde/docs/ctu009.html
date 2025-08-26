@@ -89,7 +89,7 @@
 </body>
 
 
-<p><h1>Software Design Document for PT Matahari</h1></p>
+<p><h1>Software Design Document for eOne</h1></p>
 <p><h2>Table of Contents</h2></p>
 <!-- <ul>
   <li><span>Project Outline</span>
@@ -119,7 +119,7 @@
   <p>3.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609889">Customer Management Use Case</a></p>
   <p>3.2.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609890">Inventory Management Use Case</a></p>
   <p>3.2.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609891">Sales Order Management Use Case</a></p>
-  <p>3.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609892">Software Architecture of PT Matahari</a></p>
+  <p>3.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609892">Software Architecture of eOne</a></p>
   <p>3.3.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609893">Client-Server Architecture</a></p>
 
   <p>4&nbsp;<a href="#_Toc513609894">Sequence and State Transition Diagrams</a></p>
@@ -132,7 +132,7 @@
 
   <p>5&nbsp;<a href="#_Toc513609901">Class and Activity Diagrams</a></p>
   <p>5.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609902">Class Diagram</a></p>
-  <p>5.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609903">Class Diagram &ndash; Sales Order Entry for PT Matahari</a></p>
+  <p>5.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609903">Class Diagram &ndash; Sales Order Entry for eOne</a></p>
   <p>5.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609904">Software Design Pattern &ndash; Composite Design Pattern</a></p>
   <p>5.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609905">Activity Diagram</a></p>
   <p>5.2.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609906">Activity Diagram &ndash; Inventory Management</a></p>
@@ -148,8 +148,8 @@
   <p>7&nbsp;<a href="#_Toc513609914">Multithreading Opportunities</a></p>
   <p>7.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609915">Benefit of threads</a></p>
   <p>7.2&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609916">3 Areas to Implement Multithread</a></p>
-  <p>7.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609917">Thread-safe Code for PT Matahari</a></p>
-  <p>7.4&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609918">Performance Matrix for PT Matahari</a></p>
+  <p>7.3&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609917">Thread-safe Code for eOne</a></p>
+  <p>7.4&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609918">Performance Matrix for eOne</a></p>
 
   <p>8&nbsp;<a href="#_Toc513609919">Constraints</a></p>
   <p>8.1&nbsp;&nbsp;&nbsp;&nbsp;<a href="#_Toc513609920">Technical constraints</a></p>
@@ -163,9 +163,9 @@
 
 <h1><a name="_Toc513609875"></a>Project Outline</h1>
 <h2><a name="_Toc513609876"></a><a name="_Toc495337473"></a>Company Overview</h2>
-<p>A paint product distributer in Indonesia, PT Matahari, has more than 25 years of business with over 100 employees in many cities in Indonesia. In recent years, the demand for paint products are rising rapidly because the city councils in many cities mandated to paint commercial buildings every five years. At the same time, the rising disposable income in private sectors is elevating the demand for paint products as well. Naturally, lots of new competitors come into the market with advanced information technology as the network infrastructure in this region evolves quickly.</p>
+<p>A paint product distributer in Indonesia, eOne, has more than 25 years of business with over 100 employees in many cities in Indonesia. In recent years, the demand for paint products are rising rapidly because the city councils in many cities mandated to paint commercial buildings every five years. At the same time, the rising disposable income in private sectors is elevating the demand for paint products as well. Naturally, lots of new competitors come into the market with advanced information technology as the network infrastructure in this region evolves quickly.</p>
 <h2><a name="_Toc513609877"></a><a name="_Toc495337475"></a>Goals</h2>
-<p>It is high time for Matahari to build efficient and effective software system, a light Enterprise Resource Planning (ERP), to tackle the impending challenges. This light ERP software to develop shall enable PT Matahari to store all business entities using address book management; to maintain accurate and real-time inventory through inventory management, and to manage sales order effectively using sales order management system. This project is intended to be short and cost effective since this initiative of project is resulted from the research that most of commercial ERP software are heavy to customize and expensive to maintain.</p>
+<p>It is high time for Matahari to build efficient and effective software system, a light Enterprise Resource Planning (ERP), to tackle the impending challenges. This light ERP software to develop shall enable eOne to store all business entities using address book management; to maintain accurate and real-time inventory through inventory management, and to manage sales order effectively using sales order management system. This project is intended to be short and cost effective since this initiative of project is resulted from the research that most of commercial ERP software are heavy to customize and expensive to maintain.</p>
 
 <hr width="80%">
 
@@ -175,7 +175,7 @@
 <p><img src="../images/ctu00901.png" border="0" alt="SLDC" title="SLDC" hspace="0" vspace="0"/></p>
 
 <p>Figure 1. Software Development Life Cycle</p>
-<p>The design phases comprise the high-level design and the low-level design, where the former includes to specify major subsystems, data flow, database, and other high-level structure at an abstract level on what to build. On the other hand, low-level design is about how to build application&rsquo;s pieces entailing the detail of applications on how. Both high-level and low-level design is to meet the requirements of stakeholders from PT Matahari.</p>
+<p>The design phases comprise the high-level design and the low-level design, where the former includes to specify major subsystems, data flow, database, and other high-level structure at an abstract level on what to build. On the other hand, low-level design is about how to build application&rsquo;s pieces entailing the detail of applications on how. Both high-level and low-level design is to meet the requirements of stakeholders from eOne.</p>
 <h2><a name="_Toc513609879"></a>Big Picture</h2>
 <p>This project aims to meet the requirements in the area of the entity management, real-time inventory management, and sales order management system. The light Enterprise Resource Planning (ERP) for sales order management is depicted in figure 2 which is event driven and function specific since the ERP synchronize the flow of inventory and cash with the data in the database system.</p>
 <p><img src="../images/ctu00902.png" border="0" alt="System Overview" title="System Overview" hspace="0" vspace="0"/></p>
@@ -191,7 +191,7 @@
 </ul>
 <p>Since the enterprise solution, or software for business, requires all above characteristics, the choice of design method is function-oriented design with some other methodologies.</p>
 <h2><a name="_Toc513609881"></a>Design Method &ndash; Function-Oriented Design</h2>
-<p>The primary goal of selecting a right design model is to enable developers to create high-quality software reasonably close to on time and without exceeding the budget given. The purpose of this light ERP software is to accomplish productivity, collaboration, flexibility, streamlined process with efficiency, integration, planning, and forecasting. These attribute are achievable only when storing transaction data into database properly. Hence, the choice of design method for this project is function-oriented design method which leads to functional programming. In this approach, the architecture follows the Generally Accepted ERP software in the market as depicted in figure 3. For this project, the software design remains at the logic server for business functions and Java Application Server (JAS) for the specification using forms for interface. These pieces are essential factors when PT Matahari dealing with the daily transaction. The benefit of function-oriented architecture is that it is platform independent let alone it comes up with loose coupling between different modules and high cohesion for interfaces between the modules to implement.</p>
+<p>The primary goal of selecting a right design model is to enable developers to create high-quality software reasonably close to on time and without exceeding the budget given. The purpose of this light ERP software is to accomplish productivity, collaboration, flexibility, streamlined process with efficiency, integration, planning, and forecasting. These attribute are achievable only when storing transaction data into database properly. Hence, the choice of design method for this project is function-oriented design method which leads to functional programming. In this approach, the architecture follows the Generally Accepted ERP software in the market as depicted in figure 3. For this project, the software design remains at the logic server for business functions and Java Application Server (JAS) for the specification using forms for interface. These pieces are essential factors when eOne dealing with the daily transaction. The benefit of function-oriented architecture is that it is platform independent let alone it comes up with loose coupling between different modules and high cohesion for interfaces between the modules to implement.</p>
 
 <p><img src="../images/ctu00903.png" border="0" alt="Light ERP Architecture" title="Light ERP architecture" hspace="0" vspace="0"/></p>
 
@@ -208,13 +208,13 @@
 <p><img src="../images/ctu00904.png" border="0" alt="Iterative Prototyping" title="Iterative Prototyping" hspace="0" vspace="0"/></p>
 
 <p>Figure 4. Iterative Prototyping</p>
-<p>The prototyping design model pairs up well with functional-oriented method because this design approach is to provide PT Matahari with the tailored light ERP software which comprises multiple subsystems. This approach follows component-based software engineering (CBSE), which makes system as a loosely coupled collection of components to provide the services each other as described in good software.</p>
+<p>The prototyping design model pairs up well with functional-oriented method because this design approach is to provide eOne with the tailored light ERP software which comprises multiple subsystems. This approach follows component-based software engineering (CBSE), which makes system as a loosely coupled collection of components to provide the services each other as described in good software.</p>
 
 <hr width="80%">
 
 <h1><a name="_Toc513609882"></a>Requirements Analysis and Software Architecture</h1>
 <h2><a name="_Toc513609883"></a>Requirements Analysis</h2>
-<p>PT Matahari needs business software to manage customer, inventory, and sales order accurately in real-time basis. This software shall enable PT Matahari to plan and forecast better than its competitors in the paint distribution market.</p>
+<p>eOne needs business software to manage customer, inventory, and sales order accurately in real-time basis. This software shall enable eOne to plan and forecast better than its competitors in the paint distribution market.</p>
 <h3><a name="_Toc513609884"></a>Customer Management</h3>
 <p>Users shall enter, retrieve, and update all business parties&rsquo; information to the designated database system, which includes address book master, employee master, supplier master, business partners, and organizational entities.</p>
 <h3><a name="_Toc513609885"></a>Inventory Management</h3>
@@ -247,7 +247,7 @@
 
 <p>Figure 8. Customer Master - BPMN</p>
 <h3><a name="_Toc513609890"></a>Inventory Management Use Case</h3>
-<p>PT Matahari focusing on real-time inventory managements. As figure 7 represents, all available system are actors. Each transaction performs checking availability, add inventory, or subtract inventory.</p>
+<p>eOne focusing on real-time inventory managements. As figure 7 represents, all available system are actors. Each transaction performs checking availability, add inventory, or subtract inventory.</p>
 
 <p><img src="../images/ctu00909.png" border="0" alt="Inventory Management Use Case" title="Inventory Management Use Case" hspace="0" vspace="0"/></p>
 
@@ -269,7 +269,7 @@
 <p><img src="../images/ctu00912.png" border="0" alt="BPMN - Sales Order Management" title="BPMN - Sales Order Management" hspace="0" vspace="0"/></p>
 
 <p>Figure 12. Sales Order Management - BPMN</p>
-<h2><a name="_Toc513609892"></a>Software Architecture of PT Matahari</h2>
+<h2><a name="_Toc513609892"></a>Software Architecture of eOne</h2>
 <p>The architecture is the highest level of abstraction of system, which shows how the major pieces of the finished software will fit together and interact with each other (Stephens, 2015). The choice of style varies depending on the actual software to build. Since my project for this course is building a light Enterprise Resource Planning (ERP) software, the design model is to be the function-oriented design method in distributed environment. A simplified software is to be rebuilt similar to the commercial enterprise solutions in the market using the architectural style of Client-Server Architecture style.</p>
 <h3><a name="_Toc513609893"></a>Client-Server Architecture</h3>
 <p>Most of enterprise solutions including ERP software follows the client-server architecture style which the client sends a request, and the server returns a response. Clients and serves exchange messages in a request-response pattern using inter-process communication (IPC). A simple communication channel or, topology will be HTML client with replicated specification, (using HTTP), Java Application Server for presentation, (via JDBC), Logic server to perform logics and functions, (through ODBC), and database server in highly distributed environment. In this communication layer, Java application server is server for the HTML client, but at the same time, it is the client for the logic server. Figure 13 depicts how each servers interact with each other.</p>
@@ -277,7 +277,7 @@
 <p><img src="../images/ctu00913.png" border="0" alt="Client-Server Architecture" title="Client-Server Architecture" hspace="0" vspace="0"/></p>
 
 <p>Figure 13. Client-Server Architecture</p>
-<p>The advantage of this well know client-server architecture style is PT Matahari can have centralized data repository (Database Server), better security making use of Lightweight Directory Access Protocol (LDAP), and a single logic server is sufficient to handle all request made by clients. On the other hand, the disadvantage of this architecture is that the failure of logic server causes whole system down, the high usage of network between the application server and HTML clients.</p>
+<p>The advantage of this well know client-server architecture style is eOne can have centralized data repository (Database Server), better security making use of Lightweight Directory Access Protocol (LDAP), and a single logic server is sufficient to handle all request made by clients. On the other hand, the disadvantage of this architecture is that the failure of logic server causes whole system down, the high usage of network between the application server and HTML clients.</p>
 <p>The majority of enterprise Solutions for huge organization follows this styles including E-Business Suites (EBS), JD Edwards, and PeopleSoft. Since the primary goal of enterprise solutions is to record all transaction data into database for better planning and forecasting, the centralization and segregation nature of this style is suitable for the enterprise solutions.</p>
 
 <hr width="80%">
@@ -292,7 +292,7 @@
 <p><img src="../images/ctu00914.png" border="0" alt="Sequence Diagram" title="Sequence Diagram" hspace="0" vspace="0"/></p>
 
 <p>Figure 14. Sequence Diagram &ndash; Inventory</p>
-<p>The light ERP system to develop for PT Matahari is highly dynamic to control real-time inventory. Figure 15 depicts how replenish happens through procurement activity when the inventory level is low or below the safety stock defined.</p>
+<p>The light ERP system to develop for eOne is highly dynamic to control real-time inventory. Figure 15 depicts how replenish happens through procurement activity when the inventory level is low or below the safety stock defined.</p>
 
 <p><img src="../images/ctu00915.png" border="0" alt="Sequence Diagram - Replenish" title="Sequence Diagram - replenish" hspace="0" vspace="0"/></p>
 
@@ -304,7 +304,7 @@
 <p><img src="../images/ctu00916.png" border="0" alt="Sequence Diagram - Sales Process" title="Sequence Diagram - Sales Process" hspace="0" vspace="0"/></p>
 
 <p>Figure 16. Sequence Diagram - Sales Process</p>
-<p>Sales order starts when a customer call PT Matahari with information inventory, request date, quantity requested and so on. All commitment is sub-function of availability check. In real scenario, the status of sales order detail varies depending on the credit level, inventory availability, and work day calendar.</p>
+<p>Sales order starts when a customer call eOne with information inventory, request date, quantity requested and so on. All commitment is sub-function of availability check. In real scenario, the status of sales order detail varies depending on the credit level, inventory availability, and work day calendar.</p>
 <p>A vertical lines underneath participants is a lifeline which represents the participant sitting there and waiting for something happen. And execution specification (for example, enter Order) represents a participant is doing something. Labeled arrows with solid arrowheads (for instance, acknowledge Order) indicates synchronous message, where open arrow header (e.g., enter Order) indicates asynchronous message. And naturally dashed arrows with open arrowheads represent return messages sent in reply to a calling message.</p>
 <h2><a name="_Toc513609898"></a>State Transition Diagram</h2>
 <p>A state-transition diagram presents a sequence of states that an object goes through during its lifecycle. This diagram is to describe the changes of states for an object or a component. Here review the objects the Item Location in Inventory Management system and the Sales Order Detail file in Sales Order Management.</p>
@@ -326,7 +326,7 @@
 <p><img src="../images/ctu00919.png" border="0" alt="State Transition and Interface" title="State Transition and Interface" hspace="0" vspace="0"/></p>
 
 <p>Figure 19. State Transition and Interface</p>
-<p>There are multiple forks to represent the separation of system. Likewise, other ERP system, the system to develop for PT Matahari is focusing on the integration between modules. In this diagram, the change of status is controlled using columns order quantity (= shipped quantity + cancelled quantity + backordered quantity), and dates (order date, shipped date, cancelled date, and backordered date).</p>
+<p>There are multiple forks to represent the separation of system. Likewise, other ERP system, the system to develop for eOne is focusing on the integration between modules. In this diagram, the change of status is controlled using columns order quantity (= shipped quantity + cancelled quantity + backordered quantity), and dates (order date, shipped date, cancelled date, and backordered date).</p>
 
 <hr width="80%">
 
@@ -362,8 +362,8 @@
 
 
 <p><em>Note</em>: Above relationship is highly simplified relationship.</p>
-<h3><a name="_Toc513609903"></a>Class Diagram &ndash; Sales Order Entry for PT Matahari</h3>
-<p>Sales order entry is one of major application request by PT Matahari. Sales order is made up of Sales Order Header in relation with the customer and Sales Order Detail to hold information on the item ordered by the customer. Figure 20 depicts detail on the relationship between classes. In this figure, a rectangle represents class on top in bold. Two sections below give the class&rsquo;s properties and methods respectively.</p>
+<h3><a name="_Toc513609903"></a>Class Diagram &ndash; Sales Order Entry for eOne</h3>
+<p>Sales order entry is one of major application request by eOne. Sales order is made up of Sales Order Header in relation with the customer and Sales Order Detail to hold information on the item ordered by the customer. Figure 20 depicts detail on the relationship between classes. In this figure, a rectangle represents class on top in bold. Two sections below give the class&rsquo;s properties and methods respectively.</p>
 
 
 <p><img src="../images/ctu00920.png" border="0" alt="Class Diagram - Sales Order Entry" title="Class Diagram - Sales Order Entry" hspace="0" vspace="0"/></p>
@@ -379,7 +379,7 @@
 <p>Figure 21. Composite Design Pattern</p>
 <p>In figure 21, Cs and Ls represent Composite and Leaf respectively. This pattern suitable when categorizing business functions with master business functions, minor functions and so on. For example, Sales Order Master business function include minor function check availability but at the same time check availability is composite function which calls sub-function which can read user defined availability, safety stock, and generate supply and demand information. Hence, this composite design pattern suits for function-oriented design method as well for the enterprise solutions. &nbsp;</p>
 <h2><a name="_Toc513609905"></a>Activity Diagram</h2>
-<p>An activity diagram represents workflow for activities which optionally includes the objects. In activity diagram, arrows represents the direction of workflow. As a result, the activity diagram is a bit like a flowchart showing how work flows. This diagram will give clear flow of work to PT Matahari. In this diagram, the thick bar or fork represents parallel activities.</p>
+<p>An activity diagram represents workflow for activities which optionally includes the objects. In activity diagram, arrows represents the direction of workflow. As a result, the activity diagram is a bit like a flowchart showing how work flows. This diagram will give clear flow of work to eOne. In this diagram, the thick bar or fork represents parallel activities.</p>
 <h3><a name="_Toc513609906"></a>Activity Diagram &ndash; Inventory Management</h3>
 <p>Figure 22 depicts the activities of item availability checking.</p>
 
@@ -404,12 +404,12 @@
 
 <p>Figure 24. V-Model Representation of Verification and Validation</p>
 <h2><a name="_Toc513609909"></a><a name="_Toc509340975"></a>Validation</h2>
-<p>Validation is to check whether &ldquo;we build the right software&rdquo; which satisfied the functional requirements by PT Matahari. Figure 25 represents in different swim lane to have better view for the V-V approach (Boehm, 1979).</p>
+<p>Validation is to check whether &ldquo;we build the right software&rdquo; which satisfied the functional requirements by eOne. Figure 25 represents in different swim lane to have better view for the V-V approach (Boehm, 1979).</p>
 
 <p><img src="../images/ctu00925.png" border="0" alt="V & V Sequence" title="V&V Sequence" hspace="0" vspace="0"/></p>
 
 <p>Figure 25. Software Design V &amp; V Sequence</p>
-<p>This project aims for building a light ERP software tailored for PT Matahari which will be the backbone enterprise solution in the future. The validation step in figure 25 is to ensure that this software design document is consistent, complete, traceable, and modifiable to meet high quality requirement. &nbsp;</p>
+<p>This project aims for building a light ERP software tailored for eOne which will be the backbone enterprise solution in the future. The validation step in figure 25 is to ensure that this software design document is consistent, complete, traceable, and modifiable to meet high quality requirement. &nbsp;</p>
 <h3><a name="_Toc513609910"></a>Validation Technique &ndash; Review and Inspection</h3>
 <p>As depicted in figure 26, the review and inspection is iterative steps to validate the document and outcome with the stakeholders. This review takes place against the analysis made using use case, sequence diagram, state transition diagram, class diagram, and activity diagram in the area of customer master management, inventory management, and sales order management. This validation technique goes through 3 different steps as depicted in figure 26. &nbsp;(Kotonya et al., 2008).</p>
 
@@ -427,14 +427,14 @@
 
 
 <p>Figure 27. Inspection and Testing for Software Design Verification</p>
-<p>In inspecting the real-time inventory management for PT Matahari, make it sure that there are multiple entries for Item Master, Item Branch, Item Location, Item Cost, Item Price, and Item Ledger with all necessary columns in it including easier search of each controls. Other available techniques for verification are testing, demonstration, analysis, and cleanroom process as depicted in figure 28 (Al Saeed, 2018).</p>
+<p>In inspecting the real-time inventory management for eOne, make it sure that there are multiple entries for Item Master, Item Branch, Item Location, Item Cost, Item Price, and Item Ledger with all necessary columns in it including easier search of each controls. Other available techniques for verification are testing, demonstration, analysis, and cleanroom process as depicted in figure 28 (Al Saeed, 2018).</p>
 
 <p><img src="../images/ctu00928.png" border="0" alt="Cleanroom Process" title="Cleanroom Process" hspace="0" vspace="0"/></p>
 
 <p>Figure 28. Cleanroom Process</p>
 <h2><a name="_Toc513609913"></a><a name="_Toc509340986"></a>Traceability Matrix</h2>
 <p>Throughout validation process, the requirements Traceability Matrix links requirements to ensure that all defined requirements are being tested and verified. Table 2 and table 3 show the relationship between two matrix to enable forward and backward track and trace (Ludwig Consulting Services, 2010).</p>
-<p><i>Table 2. User Requirements Matrix for PT Matahari</i></p>
+<p><i>Table 2. User Requirements Matrix for eOne</i></p>
 
 <table style="width:50%">
   <tr>
@@ -481,7 +481,7 @@
 
 
 <p><em>Note: The numbering is simplified for easier reading</em></p>
-<p>Table 3. Functional Requirements Matrix for PT Matahari</p>
+<p>Table 3. Functional Requirements Matrix for eOne</p>
 
 <table style="width:50%">
   <tr>
@@ -631,13 +631,13 @@
 <li>The source code can be platform independent.</li>
 </ul>
 <h2><a name="_Toc513609916"></a>3 Areas to Implement Multithread</h2>
-<p>The light ERP software developing for PT Matahari requires multiple kernels to support various functionality it requires. Some of kernels required are: Universal Batch Engine (UBE) Kernel, Security Kernel for authentication, Lock Manager Kernel, Call Object Kernel to call business function written in C/C++, Network Kernel to maintain connection, Management Kernel, Scheduler Kernel, Queue Kernel to make jobs wait in the job queue, Workflow Kernel, Metadata Kernel to distribute the specification, and so on.</p>
+<p>The light ERP software developing for eOne requires multiple kernels to support various functionality it requires. Some of kernels required are: Universal Batch Engine (UBE) Kernel, Security Kernel for authentication, Lock Manager Kernel, Call Object Kernel to call business function written in C/C++, Network Kernel to maintain connection, Management Kernel, Scheduler Kernel, Queue Kernel to make jobs wait in the job queue, Workflow Kernel, Metadata Kernel to distribute the specification, and so on.</p>
 
 <p><img src="../images/ctu00932.png" border="0" alt="Sales Order Entry using Multithreading" title="Sales Order Entry using Multithreading" hspace="0" vspace="0"/></p>
 
 <p>Figure 32. Sales Order Entry using Multithread</p>
-<p>Above figure 32 depicts general routine for the application which has header and detail relationship. Users shall enter detail information row by row manually or hundreds of records using excel import or copy/paste options. As a result, these applications may cause bottleneck for the performance in general. To have maximum performance as a whole system, call object kernel which deals with business function in the interactive applications and network kernel to maintain connection among multiple kernels in logic server, and java/xml codes in Java Application Server are the best candidate for multithreading. The program logic to code for PT Matahari need building with care because supposing multithreading is crucial factor to maximize the benefit of the use of thread for the engineered light ERP system for PT Mathari.</p>
-<h2><a name="_Toc513609917"></a>Thread-safe Code for PT Matahari</h2>
+<p>Above figure 32 depicts general routine for the application which has header and detail relationship. Users shall enter detail information row by row manually or hundreds of records using excel import or copy/paste options. As a result, these applications may cause bottleneck for the performance in general. To have maximum performance as a whole system, call object kernel which deals with business function in the interactive applications and network kernel to maintain connection among multiple kernels in logic server, and java/xml codes in Java Application Server are the best candidate for multithreading. The program logic to code for eOne need building with care because supposing multithreading is crucial factor to maximize the benefit of the use of thread for the engineered light ERP system for PT Mathari.</p>
+<h2><a name="_Toc513609917"></a>Thread-safe Code for eOne</h2>
 <p>It is essential the functions to build are thread safe since these functions are managed by all object kernel with multithread configuration. To make each program code thread safe,</p>
 <ul>
 <li>Do not use global variables and statics in the function. Because any thread can access and modify it, which yields the undesired output</li>
@@ -645,13 +645,13 @@
 <li>Maximize the use of database cache for the data are concise and require low maintenance. If needed, this database cache stores same Statics</li>
 <li>Make use of existing standard APIs in C Library</li>
 </ul>
-<h2><a name="_Toc513609918"></a>Performance Matrix for PT Matahari</h2>
+<h2><a name="_Toc513609918"></a>Performance Matrix for eOne</h2>
 <p>Figure 33 depicts general performance testing process (tutorialspoint, n.d.).</p>
 
 <p><img src="../images/ctu00933.png" border="0" alt="Performance Testing" title="Performance Testing" hspace="0" vspace="0"/></p>
 
 <p>Figure 33. Performance Testing Process</p>
-<p>Performance testing is essential requirement from PT Matahari to determine whether the software was built right without affecting daily business which requires speed, scalability, stability, and reliability. Table 3 represents the sytems&rsquo;s ffunctional requirement with test case as shown in table 5. &nbsp;</p>
+<p>Performance testing is essential requirement from eOne to determine whether the software was built right without affecting daily business which requires speed, scalability, stability, and reliability. Table 3 represents the sytems&rsquo;s ffunctional requirement with test case as shown in table 5. &nbsp;</p>
 <p>Table 5. Test Case Matrix for Performance Test</p>
 
 <table style="width:60%">
@@ -729,7 +729,7 @@
 <hr width="80%">
 
 <h1><a name="_Toc513609923"></a>Summary</h1>
-<p>This software design document bridges the gap between stakeholders and developers by adhering to the software engineering methodology to build successful a light Enterprise Resources Planning solution for PT Matahari. This document focuses on the entity management, real-time inventory management, and sales order processing in detail.</p>
+<p>This software design document bridges the gap between stakeholders and developers by adhering to the software engineering methodology to build successful a light Enterprise Resources Planning solution for eOne. This document focuses on the entity management, real-time inventory management, and sales order processing in detail.</p>
 <p>This document suggests function-oriented design methodology in client-server architecture because this is proven approach for the enterprise solutions in the mark. In detail, reverse engineering is heavily used to make a workable software based on commercial software. In turn, this procedural effort of analyzing, understanding, duplicating an existing product including its components. In building core products, UML diagramming (Use Case Diagram, Sequence Diagram, State Transition Diagram, Class Diagram, and Activity Diagram) will help to communicate the project team better.</p>
 <p>&nbsp;Lastly, this document reviews multithread opportunities in Call Object Kernel, network kernel, and Java application server. This document reviews assumptions and constraints in this project. Across phases the verification and validation tools are used to comply with contains in various layers.</p>
 
