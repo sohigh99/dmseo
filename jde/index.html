@@ -214,6 +214,11 @@
       font-size: 1rem;
       transition: color 0.15s;
     }
+    .doc-list a[href^="docs/"]::after {
+      content: ' ↗';
+      font-size: 0.7em;
+      opacity: 0.4;
+    }
     .doc-list a:hover { color: var(--navy); }
     .doc-list .desc {
       display: block;
@@ -1039,6 +1044,14 @@
 <footer class="site-footer">
   <p>&copy; Dong Myeong Seo &middot; <a href="https://www.linkedin.com/in/dongseo/">LinkedIn</a> &middot; <a href="mailto:chemistryofperception@gmail.com">Contact</a></p>
 </footer>
+
+<script>
+// Open all document links in a new tab so the main page keeps its scroll position
+document.querySelectorAll('a[href^="docs/"]').forEach(function(link) {
+  link.setAttribute('target', '_blank');
+  link.setAttribute('rel', 'noopener');
+});
+</script>
 
 </body>
 </html>
